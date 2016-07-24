@@ -1,0 +1,17 @@
+﻿<ul class="list-box menu-list" data-bind="with: options">
+	<li data-bind="selector: currency, visible: $parent.displayCurrency">
+		<span data-bind="ltext: currency.caption">Currency</span>
+		<span class="go">&gt;</span>
+		<span class="value" data-bind="ltext: currency.currentValue">Any</span>
+	</li>
+	<li data-bind="selector: buyin">
+		<span data-bind="ltext: buyin.caption">Buy-in</span>
+		<span class="go">&gt;</span>
+		<span class="value" data-bind="ltext: buyin.currentValue">Any</span>
+	</li>
+	<li data-bind="selector: speed">
+		<span data-bind="ltext: speed.caption">Speed</span>
+		<span class="go">&gt;</span>
+		<span class="value" data-bind="ltext: speed.currentValue">Any</span>
+	</li>
+</ul>

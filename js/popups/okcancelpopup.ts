@@ -1,0 +1,28 @@
+﻿/// <reference path="../_references.ts" />
+/// <reference path="../poker.commanding.api.ts" />
+/// <reference path="../app.ts" />
+
+class OkCancelPopup {
+    title: KnockoutObservable<string>;
+    messages: KnockoutObservableArray<string>;
+    buttons = ko.observableArray<string>([]);
+    deferred: JQueryDeferred<() => void>;
+    customStyle = ko.observable("");
+
+    constructor() {
+        this.title = ko.observable<string>();
+        this.messages = ko.observableArray<string>();
+    }
+
+    shown() {
+        this.deferred = $.Deferred();
+    }
+    confirm() {
+        this.deferred.resolve();
+        app.closePopup();
+    }
+    cancel() {
+        this.deferred.reject();
+        app.closePopup();
+    }
+}

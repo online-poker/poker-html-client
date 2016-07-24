@@ -1,0 +1,8 @@
+﻿<!-- ko if: $data -->
+<ul class="list-box tournaments-list" data-bind="foreach: tournaments">
+    <li data-bind="command: $root.selectTournament.bind($root, $data)">
+        <tournament-list-item params="data: $data"></tournament-list-item>
+        <div style="clear: both;"></div>
+    </li>
+</ul>
+<!-- /ko -->

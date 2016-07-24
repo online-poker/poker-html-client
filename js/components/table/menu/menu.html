@@ -1,0 +1,31 @@
+﻿<div class="table-menu" data-bind="with: page">
+    <div class="table-menu-commands">
+        <button class="button btn-table" data-bind="command: toLobby, ltext: 'table.lobby'">Lobby</button>
+    </div>
+    <div class="tables-overview-containers">
+        <div class="table-view">
+            <ul class="table-preview">
+                <!-- ko foreach: selectedTables -->
+                <li class="new-webkit-gpu-layer" data-bind="command: { command: $parent.switchTable.bind($parent, $index), fast: true }, css: { selected: $index() == $parent.currentIndex(), 'not-sitting': $data.myPlayer() == null, tournament: $data.tournament() != null }">
+                    <!-- ko if: isMyTurn -->
+                    <div class="current-turn-indicator small error-icon"></div>
+                    <!-- /ko -->
+                    <div class="table-preview-cards-wrapper">
+                        <div class="table-preview-cards"
+                             data-bind="template: { name: 'player-cards-template', data: (myPlayer() == null ? null : myPlayer().HandCards()) }"></div>
+                    </div>
+                </li>
+                <!-- /ko -->
+                <!-- ko if: selectedTables().length < 4 -->
+                <li class="add-table" data-bind="command: addTable, ltext: 'table.addtable'">
+                    Add
+                </li>
+                <!-- /ko -->
+            </ul>
+        </div>
+    </div>
+    <div class="table-menu-commands right">
+        <button class="button btn-table" data-bind="command: showMenu, ltext: 'table.menu'">Menu</button>
+        <button class="button btn-table" data-bind="command: leave, ltext: 'table.leave'">Leave</button>
+    </div>
+</div>

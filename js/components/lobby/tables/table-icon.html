@@ -1,0 +1,34 @@
+﻿<!-- ko if: displayTakenSeats -->
+<!-- ko if: hasLoadingIndicator -->
+<div class="spin-container absolute" data-bind="loading: loading, spinner: loading"></div>
+<div class="loading-icon" data-bind="visible: loading"></div>
+<!-- /ko -->
+<!-- ko if: MaxPlayers == 2 -->
+<span class="table-icon table-icon-layer p2-s1" data-bind="visible: (SeatMask & (1 << 0)) != 0"></span>
+<span class="table-icon table-icon-layer p2-s2" data-bind="visible: (SeatMask & (1 << 1)) != 0"></span>
+<!-- /ko -->
+<!-- ko if: MaxPlayers == 6 -->
+<span class="table-icon table-icon-layer p6-s1" data-bind="visible: (SeatMask & (1 << 0)) != 0"></span>
+<span class="table-icon table-icon-layer p6-s2" data-bind="visible: (SeatMask & (1 << 1)) != 0"></span>
+<span class="table-icon table-icon-layer p6-s3" data-bind="visible: (SeatMask & (1 << 2)) != 0"></span>
+<span class="table-icon table-icon-layer p6-s4" data-bind="visible: (SeatMask & (1 << 3)) != 0"></span>
+<span class="table-icon table-icon-layer p6-s5" data-bind="visible: (SeatMask & (1 << 4)) != 0"></span>
+<span class="table-icon table-icon-layer p6-s6" data-bind="visible: (SeatMask & (1 << 5)) != 0"></span>
+<!-- /ko -->
+<!-- ko if: MaxPlayers == 10 -->
+<span class="table-icon table-icon-layer p10-s1" data-bind="visible: (SeatMask & (1 << 0)) != 0"></span>
+<span class="table-icon table-icon-layer p10-s2" data-bind="visible: (SeatMask & (1 << 1)) != 0"></span>
+<span class="table-icon table-icon-layer p10-s3" data-bind="visible: (SeatMask & (1 << 2)) != 0"></span>
+<span class="table-icon table-icon-layer p10-s4" data-bind="visible: (SeatMask & (1 << 3)) != 0"></span>
+<span class="table-icon table-icon-layer p10-s5" data-bind="visible: (SeatMask & (1 << 4)) != 0"></span>
+<span class="table-icon table-icon-layer p10-s6" data-bind="visible: (SeatMask & (1 << 5)) != 0"></span>
+<span class="table-icon table-icon-layer p10-s7" data-bind="visible: (SeatMask & (1 << 6)) != 0"></span>
+<span class="table-icon table-icon-layer p10-s8" data-bind="visible: (SeatMask & (1 << 7)) != 0"></span>
+<span class="table-icon table-icon-layer p10-s9" data-bind="visible: (SeatMask & (1 << 8)) != 0"></span>
+<span class="table-icon table-icon-layer p10-s10" data-bind="visible: (SeatMask & (1 << 9)) != 0"></span>
+<!-- /ko -->
+<span data-bind="attr: { class: 'table-icon p' + MaxPlayers + '-empty' }"></span>
+<!-- /ko -->
+<!-- ko ifnot: displayTakenSeats -->
+<span data-bind="attr: { class: 'table-icon p' + MaxPlayers }"></span>
+<!-- /ko -->

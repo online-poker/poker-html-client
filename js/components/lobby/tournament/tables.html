@@ -1,0 +1,15 @@
+﻿<!-- ko if: $data-->
+<div style="width: 50%; float: left;">
+  <h3 class="centered" data-bind="ltext: 'tournamentLobby.ttables.name'">Tournament tables</h3>
+  <ul class="list-box menu-list" data-bind="foreach: $root.tablesData">
+    <li class="centered" data-bind="text: name, css: { selected: selected }, command: $root.selectTable.bind($root, $data)">1</li>
+  </ul>
+</div>
+<div style="width: 50%; float: left;">
+    <h3 class="centered" data-bind="ltext: 'tournamentLobby.ttables.login'">Login</h3>
+    <ul class="list-box menu-list" data-bind="foreach: $root.getSelectedTablePlayers">
+        <li class="centered" data-bind="text: login">1</li>
+    </ul>
+</div>
+<div style="clear: both"></div>
+<!-- /ko -->

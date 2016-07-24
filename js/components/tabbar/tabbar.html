@@ -1,0 +1,10 @@
+﻿<div class="toolbar-container" data-bind="visible: visible">
+	<div class="toolbar" data-bind="foreach: items">
+		<div class="toolbar-item" data-bind="attr: { 'class': 'toolbar-item ' + (selected() ? ' selected' : '') + (disabled() ? ' disabled' : '') }, command: { command: handler, fast: true }">
+			<span class="toolbar-item-icon home" data-bind="attr: { 'class': 'toolbar-item-icon ' + cssClass + (selected() ? ' selected' : '') + (disabled() ? ' disabled' : '') }">
+			</span>
+			<span data-bind="text: caption">Page name</span>
+			<span class="toolbar-item-notice" data-bind="visible: notice">&nbsp;</span>
+		</div>
+	</div>
+</div>

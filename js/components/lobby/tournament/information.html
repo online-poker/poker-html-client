@@ -1,0 +1,205 @@
+﻿<!-- ko if: $data-->
+<!-- ko if: Description != null && Description.trim() != '' -->
+<h3 data-bind="ltext: 'tournamentLobby.description'">Description</h3>
+<ul class="list-box menu-list">
+    <li class="multi-line" data-bind="text: Description">1</li>
+</ul>
+<!-- /ko -->
+<ul class="list-box menu-list no-header">
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.totalPrizePool'">Total prize pool:</span>
+        <span class="value"><span data-bind="numericText: $parent.totalPrize">10000</span><span data-bind="currencySymbol: PrizeCurrencyId">$</span></span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.guaranteedPrizePool'">Guaranteed prize pool:</span>
+		<span class="value"><span data-bind="numericText: PrizeAmount">10000</span><span data-bind="currencySymbol: PrizeCurrencyId">$</span></span>
+	</li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.buyin'">Buy-in:</span>
+        <span class="value"><span data-bind="numericText: BuyIn"></span>+<span data-bind="numericText: JoinFee">150</span><span data-bind="currencySymbol: CurrencyId">$</span></span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.prizePlaces'">Prize places:</span>
+        <span class="value" data-bind="text: $root.prizesCount">10000</span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.minPlayers'">Min players:</span>
+        <span class="value" data-bind="text: MinPlayers">10000</span>
+    </li>
+    <!-- ko if: Status == 0 -->
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStatus'">Status:</span>
+        <span class="value">
+            <span data-bind="ltext: 'tournamentLobby.status0'">Waiting</span>
+        </span>
+    </li>
+    <!-- /ko -->
+    <!-- ko if: Status == 1 -->
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStatus'">Status:</span>
+        <span class="value">
+            <span data-bind="ltext: 'tournamentLobby.status1'">Registered</span>
+        </span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentRegistrationStarted'">Registration started:</span>
+        <span class="value" data-bind="date: RegistrationStartDate">Nov 12, 01:11</span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentRegistrationEnded'">Registration ended:</span>
+        <span class="value" data-bind="date: RegistrationEndDate">Nov 12, 01:11</span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStart'">Tournament Started:</span>
+        <span class="value" data-bind="date: StartDate">Nov 12, 01:11</span>
+    </li>
+    <!-- /ko -->
+    <!-- ko if: Status == 2 -->
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStatus'">Status:</span>
+        <span class="value">
+            <span data-bind="ltext: 'tournamentLobby.status2'">Waiting</span>
+        </span>
+    </li>
+    <!-- /ko -->
+    <!-- ko if: Status == 4 || Status == 3 -->
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStatus'">Status:</span>
+        <span class="value">
+            <span data-bind="ltext: 'tournamentLobby.status3'">Waiting</span>
+        </span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStart'">Tournament Started:</span>
+        <span class="value">
+            <span data-bind="date: StartDate"></span>
+        </span>
+    </li>
+    <!-- /ko -->
+    <!-- ko if: Status == 5 -->
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStatus'">Status:</span>
+        <span class="value">
+            <span data-bind="ltext: 'tournamentLobby.status5'">Started</span> (<span data-bind="text: $parent.duration"></span>)
+        </span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStarted'">Tournament Started:</span>
+        <span class="value">
+            <span data-bind="date: StartDate"></span>
+        </span>
+    </li>
+    <!-- /ko -->
+    <!-- ko if: Status == 6 -->
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStatus'">Status:</span>
+        <span class="value">
+            <span data-bind="ltext: 'tournamentLobby.status6'">Waiting</span>
+        </span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.participants'">Participants:</span>
+        <span class="value" data-bind="text: JoinedPlayers">100</span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStarted'">Tournament Started:</span>
+        <span class="value" data-bind="date: StartDate">Nov 12, 01:11</span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentEnded'">Tournament Ended:</span>
+        <span class="value" data-bind="date: FinishDate">Nov 12, 05:11</span>
+    </li>
+    <!-- /ko -->
+    <!-- ko if: Status == 7 -->
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStatus'">Status:</span>
+        <span class="value">
+            <span data-bind="ltext: 'tournamentLobby.status7'">Waiting</span>
+        </span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStarted'">Tournament Started:</span>
+        <span class="value" data-bind="date: StartDate">Nov 12, 01:11</span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentEnded'">Tournament Ended:</span>
+        <span class="value" data-bind="date: FinishDate">Nov 12, 05:11</span>
+    </li>
+    <!-- /ko -->
+    <!-- ko if: Status == 8 -->
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStatus'">Status:</span>
+        <span class="value">
+            <span data-bind="ltext: 'tournamentLobby.status8'">Started</span> (<span data-bind="text: $parent.lateRegistrationLeft"></span>)
+        </span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.tournamentStarted'">Tournament Started:</span>
+        <span class="value">
+            <span data-bind="date: StartDate"></span>
+        </span>
+    </li>
+    <!-- ko if: $parent.lateRegistrationRunning -->
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.lateRegistration'">Late registation:</span>
+        <span class="value">
+            <span data-bind="text: $parent.lateRegistrationLeft"></span>
+        </span>
+    </li>
+    <!-- /ko -->
+    <!-- /ko -->
+    <!-- ko if: Type == 1 -->
+    <!--Shootout tournaments not implemented-->
+    <!-- /ko -->
+    <!-- ko if: Type == 2 -->
+    <!-- /ko -->
+    <!-- ko if: Type == 3 -->
+    <!-- /ko -->
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.initialAmount'">Initial Amount:</span>
+        <span class="value"><span data-bind="numericText: StartingChipsAmount">2000</span><span data-bind="currencySymbol: CurrencyId">$</span></span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.blindUpdate'">Blind update:</span>
+        <span class="value">
+            <span data-bind="ltext: 'tournamentLobby.blindUpdateEach'">Each</span>
+            <span data-bind="numericText: BlindUpdateTime">2000</span>
+            <span data-bind="ltext: 'tournamentLobby.blindUpdateMin'">min.</span>
+        </span>
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.rebuy'">Rebuy:</span>
+        <!-- ko if: RebuyPeriodTime -->
+        <span class="value">
+            <span data-bind="numericText: RebuyPrice">2000</span>+<span data-bind="numericText: RebuyFee">2000</span><span data-bind="currencySymbol: CurrencyId">$</span> (<span data-bind="numericText: RebuyPeriodTime">2000</span> <span data-bind="ltext: 'tournamentLobby.rebuyOptions'">min. without limitation</span>)
+        </span>
+        <!-- /ko -->
+        <!-- ko ifnot: RebuyPeriodTime -->
+        <span class="value" data-bind="ltext: 'tournamentLobby.no'"></span>
+        <!-- /ko -->
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.addon'">Addon:</span>
+        <!-- ko if: AddonPeriodTime -->
+        <span class="value">
+            <span data-bind="numericText: AddonPrice">2000</span>+<span data-bind="numericText: AddonFee">2000</span><span data-bind="currencySymbol: CurrencyId">$</span> (<span data-bind="numericText: AddonPeriodTime">2000</span> <span data-bind="ltext: 'tournamentLobby.addonOptions'">min. without limitation</span>)
+        </span>
+        <!-- /ko -->
+        <!-- ko ifnot: AddonPeriodTime -->
+        <span class="value" data-bind="ltext: 'tournamentLobby.no'"></span>
+        <!-- /ko -->
+    </li>
+    <li>
+        <span data-bind="ltext: 'tournamentLobby.pause'">Pause:</span>
+        <span class="value">
+            <span data-bind="numericText: PauseTimeout">2000</span> <span data-bind="ltext: 'tournamentLobby.pauseOptions'">min. each hour</span>
+        </span>
+    </li>
+    <!--<li>
+        <span data-bind="ltext: 'tournamentLobby.lateRegistration'">Pause:</span>
+        <span class="value">
+            <span data-bind="numericText: PauseTimeout">2000</span>
+        </span>
+    </li>-->
+</ul>
+<!-- /ko -->

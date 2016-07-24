@@ -1,0 +1,30 @@
+﻿<!-- ko if: structure -->
+<div style="width: 30%; float: left;">
+    <h3 class="centered" data-bind="ltext: 'tournamentLobby.bet.level'">Level</h3>
+    <ul class="list-box menu-list" data-bind="foreach: structure">
+        <li class="centered" data-bind="numericText: Level">1</li>
+    </ul>
+</div>
+<div style="width: 40%; float: left;">
+    <h3 class="centered" data-bind="ltext: 'tournamentLobby.bet.blinds'">Blinds</h3>
+    <ul class="list-box menu-list" data-bind="foreach: structure">
+        <li class="centered">
+            <span data-bind="numericText: SmallBlind"></span>/<span data-bind="numericText: BigBlind"></span>
+        </li>
+    </ul>
+</div>
+<div style="width: 30%; float: left;">
+    <h3 class="centered" data-bind="ltext: 'tournamentLobby.bet.ante'">Ante</h3>
+    <ul class="list-box menu-list" data-bind="foreach: structure">
+        <li class="centered">
+            <!-- ko if: Ante-->
+            <span data-bind="numericText: Ante"></span>
+            <!-- /ko -->
+            <!-- ko ifnot: Ante-->
+            <span>--</span>
+            <!-- /ko -->
+        </li>
+    </ul>
+</div>
+<div style="clear: both"></div>
+<!-- /ko -->

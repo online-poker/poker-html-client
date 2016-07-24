@@ -1,0 +1,8 @@
+﻿<!-- ko if: $data -->
+<ul class="list-box tables-list" data-bind="foreach: tables">
+    <li data-bind="command: $root.selectTable.bind($root, $data)">
+        <table-list-item params="data: $data"></table-list-item>
+        <div style="clear: both;"></div>
+    </li>
+</ul>
+<!-- /ko -->

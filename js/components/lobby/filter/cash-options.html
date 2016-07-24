@@ -1,0 +1,22 @@
+﻿<ul class="list-box menu-list" data-bind="with: options">
+	<li data-bind="selector: currency, visible: $parent.displayCurrency">
+		<span data-bind="ltext: currency.caption">Currency</span>
+		<span class="go">&gt;</span>
+		<span class="value" data-bind="ltext: currency.currentValue">Any</span>
+	</li>
+	<li data-bind="selector: limits">
+		<span data-bind="ltext: limits.caption">Limits</span>
+		<span class="go">&gt;</span>
+		<span class="value" data-bind="ltext: limits.currentValue">Any</span>
+	</li>
+	<li data-bind="selector: bets">
+		<span data-bind="ltext: bets.caption">Bets</span>
+		<span class="go">&gt;</span>
+		<span class="value" data-bind="ltext: bets.currentValue">Any</span>
+	</li>
+	<li data-bind="selector: maxPlayers">
+		<span data-bind="ltext: maxPlayers.caption">Max players</span>
+		<span class="go">&gt;</span>
+		<span class="value" data-bind="ltext: maxPlayers.currentValue">Any</span>
+	</li>
+</ul>

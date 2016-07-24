@@ -1,0 +1,28 @@
+﻿<table-icon params="data: $data "></table-icon>
+<div class="table-info-container">
+    <div style="clear: both;">
+        <div class="col1">
+            <span class="primary" data-bind="text: TableName">Value</span>
+        </div>
+        <div class="col2">
+            <span class="secondary" data-bind="ltext: 'limits.limit' + PotLimitType" style="vertical-align: middle;">Value</span>
+        </div>
+    </div>
+    <div style="clear: both; padding-top: 5px; ">
+        <div class="col1">
+            <span data-bind="ltext: 'tablesList.bets'">Bets</span>
+            <span class="money-hightlight" data-bind="text: SmallBlind">10</span><span class="money-hightlight">/</span><span class="money-hightlight" data-bind="text: BigBlind">20</span><span class="money-hightlight" data-bind="currencySymbol: $root.cashOptions.currency">$</span>
+        </div>
+        <div class="col2 players-hightlight">
+            <span data-bind="ltext: 'tablesList.players'">Players</span>
+            <span data-bind="text: JoinedPlayers">0</span>
+            <span data-bind="ltext: 'common.of'">of</span>
+            <span data-bind="text: MaxPlayers">10</span>
+        </div>
+    </div>
+</div>
+<div class="indicator-container">
+	<!-- ko if: IsOpened -->
+	<span class="icon icon-tournament-status status-registered"></span>
+	<!-- /ko -->
+</div>

@@ -1,0 +1,19 @@
+{
+ "compilerOptions": {
+  "module": "amd",
+  "noImplicitAny": false,
+  "removeComments": false,
+  "target": "es5",
+  "experimentalDecorators": true,
+  "emitDecoratorMetadata": true,
+  "preserveConstEnums": true,
+  "suppressImplicitAnyIndexErrors": true,
+  "sourceMap": true,
+  "out": "js/application.js",
+  "sourceRoot": "."
+ },
+ "compileOnSave": true,
+ "exclude": [
+     "node_modules"
+ ]
+}

@@ -1,0 +1,35 @@
+﻿<!-- ko if: $data-->
+<div style="width: 30%; float: left;">
+    <h3 class="centered" data-bind="ltext: 'tournamentLobby.tplayers.login', command: $root.applyPlayersSort.bind($root, 'Login')">Login</h3>
+    <ul class="list-box menu-list" data-bind="foreach: $root.getTournamentPlayers()">
+        <li class="centered" data-bind="text: PlayerName">Player</li>
+    </ul>
+</div>
+<div style="width: 40%; float: left;">
+    <h3 class="centered" data-bind="ltext: 'tournamentLobby.tplayers.place', command: $root.applyPlayersSort.bind($root, 'Prize')">Place</h3>
+    <ul class="list-box menu-list" data-bind="foreach: $root.getTournamentPlayers()">
+        <li class="centered">
+            <!-- ko if: Prize-->
+            <span data-bind="numericText: Prize"></span>
+            <!-- /ko -->
+            <!-- ko ifnot: Prize-->
+            <span>--</span>
+            <!-- /ko -->
+        </li>
+    </ul>
+</div>
+<div style="width: 30%; float: left;">
+    <h3 class="centered" data-bind="ltext: 'tournamentLobby.tplayers.stack', command: $root.applyPlayersSort.bind($root, 'Stack')">Stack</h3>
+    <ul class="list-box menu-list" data-bind="foreach: $root.getTournamentPlayers()">
+        <li class="centered">
+            <!-- ko if: Stack-->
+            <span data-bind="numericText: Stack"></span>
+            <!-- /ko -->
+            <!-- ko ifnot: Stack-->
+            <span>--</span>
+            <!-- /ko -->
+        </li>
+    </ul>
+</div>
+<div style="clear: both"></div>
+<!-- /ko -->

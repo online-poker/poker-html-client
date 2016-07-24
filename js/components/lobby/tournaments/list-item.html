@@ -1,0 +1,69 @@
+﻿<!-- ko if: Type == 2 -->
+<span class="tournament-icon"></span>
+<div class="tournaments-info-container">
+	<div style="padding-bottom: 2px;">
+		<span class="primary" data-bind="text: TournamentName">Tournament Name</span>
+	</div>
+	<div style="clear: both;">
+		<div class="col1">
+			<span class="secondary" data-bind="date: StartDate">4 Nov 10:30</span>
+			<br />
+			<span class="secondary" data-bind="ltext: 'tournamentsList.status'">Status</span>
+			<span class="secondary" data-bind="ltext: 'tournamentLobby.status' + Status">Registered</span>
+			<!-- ko if: Status == 5 -->
+			<span class="secondary" data-bind="text: duration">Идет 1:42</span>
+			<!-- /ko -->
+		</div>
+		<div class="col2">
+			<span class="secondary players-hightlight" data-bind="ltext: 'tournamentsList.players'">Players</span>
+			<span class="secondary players-hightlight" data-bind="text: JoinedPlayers">0</span><span class="secondary players-hightlight" data-bind="ltext: 'common.of'">/</span><span class="secondary players-hightlight" data-bind="text: MaxPlayers">10</span>
+			<br />
+			<span class="secondary" data-bind="ltext: 'tournamentsList.buyin'">Buyin</span>
+			<span class="secondary money-hightlight" data-bind="text: BuyInAmount">10</span><span class="secondary money-hightlight">+</span><span class="secondary money-hightlight" data-bind="text: EntryMoneyAmount">20</span><span class="money-hightlight" data-bind="currencySymbol: $parent.currency">$</span>
+		</div>
+	</div>
+</div>
+<!-- /ko -->
+<!-- ko if: Type == 3 -->
+<span class="sng-icon"></span>
+<div class="sng-info-container">
+	<div style="clear: both;">
+		<div class="col1">
+			<span class="primary" data-bind="text: TournamentName">Tournament Name</span>
+			<span class="secondary" data-bind="ltext: 'tournamentLobby.status' + Status">Registered</span>
+		</div>
+		<div class="col2">
+			<span class="secondary players-hightlight" data-bind="ltext: 'tournamentsList.players'">Players</span>
+			<span class="secondary players-hightlight" data-bind="text: JoinedPlayers">0</span><span class="secondary players-hightlight" data-bind="ltext: 'common.of'">/</span><span class="secondary players-hightlight" data-bind="text: MaxPlayers">10</span>
+			<br />
+			<span class="secondary" data-bind="ltext: 'tournamentsList.buyin'">Buyin</span>
+			<span class="secondary money-hightlight"
+				  data-bind="text: BuyInAmount">10</span><span class="secondary money-hightlight">+</span><span class="secondary money-hightlight"
+																											data-bind="text: EntryMoneyAmount">20</span><span class="money-hightlight" data-bind="currencySymbol: $parent.currency">$</span>
+		</div>
+	</div>
+</div>
+<!-- /ko -->
+<div class="indicator-container">
+	<!-- ko if: IsPaused -->
+	<span class="icon icon-tournament-status status-paused"></span>
+	<!-- /ko -->
+	<!-- ko ifnot: IsPaused -->
+	<!-- ko if: Status == 1 -->
+	<span class="icon icon-tournament-status status1"></span>
+	<!-- /ko -->
+	<!-- ko if: Status == 5 -->
+	<span class="icon icon-tournament-status status5"></span>
+	<!-- /ko -->
+	<!-- ko if: Status == 8 -->
+	<span class="icon icon-tournament-status status8"></span>
+	<!-- /ko -->
+	<!-- ko if: (Status != 5 && Status != 1 && Status != 8) -->
+	<span data-bind="attr: { class: 'icon icon-tournament-status status' + Status }"></span>
+	<!-- /ko -->
+	<!-- /ko -->
+	<!-- ko if: (IsRegistered) -->
+	<span data-bind="attr: { class: 'icon icon-tournament-status secondary status-registered' }"></span>
+	<!-- /ko -->
+</div>
+<div style="clear:both"></div>
