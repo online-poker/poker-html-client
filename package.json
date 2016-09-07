@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/online-poker/poker-html-client#readme",
   "devDependencies": {
-    "typescript": "^1.6.2"
+    "typescript": "^1.8.10"
   }
 }
