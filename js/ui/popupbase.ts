@@ -2,6 +2,7 @@
 
 import * as ko from "knockout";
 import { App } from "../app";
+import { debugSettings } from "../debugsettings";
 
 declare var app: App;
 

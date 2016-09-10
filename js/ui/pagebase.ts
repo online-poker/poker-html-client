@@ -2,6 +2,8 @@
 /// <reference path="page.ts" />
 /* tslint:disable:no-string-literal */
 
+import { debugSettings } from "../debugsettings";
+
 export class PageBase implements Page {
     /**
     * Indicating whether page is currently visible

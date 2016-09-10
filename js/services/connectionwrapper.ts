@@ -6,6 +6,7 @@ declare var baseUrl: string;
 import * as timeService from "../timeService";
 import { ConnectionService } from "./connectionservice";
 import { slowInternetService, connectionService } from "./index";
+import { debugSettings } from "../debugsettings";
 
 export class ConnectionWrapper {
     terminated = false;

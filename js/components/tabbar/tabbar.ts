@@ -1,6 +1,7 @@
 ﻿/// <reference types="knockout" />
 
 import ko = require("knockout");
+import { debugSettings } from "../../debugsettings";
 
 class TabBarItem {
     name: string;

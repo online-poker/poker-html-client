@@ -5,6 +5,7 @@
 declare var apiHost: string;
 
 import ko = require("knockout");
+import { settings } from "./settings";
 import { App } from "./app";
 
 declare var app: App;

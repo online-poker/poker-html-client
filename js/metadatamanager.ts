@@ -1,12 +1,11 @@
-﻿/// <reference path="_references.ts" />
-/// <reference types="knockout" />
-/// <reference path="poker.commanding.api.ts" />
+﻿/// <reference path="poker.commanding.api.ts" />
 /// <reference path="poker.commanding.api.d.ts" />
-/// <reference path="services/imagepreloadservice.ts" />
 
 declare var apiHost: string;
 
+import * as ko from "knockout";
 import { imagePreloadService } from "./services";
+import { debugSettings } from "./debugsettings";
 
 class MetadataManager {
     online = ko.observable("-");

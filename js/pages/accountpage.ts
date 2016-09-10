@@ -10,6 +10,7 @@
 import * as ko from "knockout";
 import * as authManager from "../authManager";
 import { PageBase } from "../ui/pagebase";
+import { settings } from "../settings";
 import { App } from "../app";
 
 declare var apiHost: string;

@@ -20,13 +20,15 @@ import { TournamentView } from "./tournamentView";
 import { TablePlaces } from "./tableplaces";
 import { HandHistory } from "./handhistory";
 import { PlayerMessage } from "./playerMessage";
-import { slowInternetService, connectionService } from "../services";
+import { slowInternetService, connectionService, soundManager } from "../services";
 import { SlowInternetService } from "../services/slowinternetservice";
 import { ConnectionWrapper } from "../services/connectionwrapper";
 import { SimplePopup } from "../popups/simplepopup";
 import { App } from "../app";
 import { ActionBlock } from "./actionblock";
 import { GameActionsQueue } from "./gameactionsqueue";
+import { debugSettings } from "../debugsettings";
+import { settings } from "../settings";
 
 declare var apiHost: string;
 declare var app: App;

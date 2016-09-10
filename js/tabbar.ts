@@ -1,6 +1,8 @@
 ﻿/// <reference types="knockout" />
 /// <reference path="./debugsettings.ts" />
 
+import { debugSettings } from "./debugsettings";
+
 class TabBarItem {
     name: string;
     caption: string;
@@ -16,7 +18,7 @@ class TabBarItem {
     }
 }
 
-class TabBar {
+export class TabBar {
     items: KnockoutObservableArray<TabBarItem>;
     visible: KnockoutObservable<boolean>;
 

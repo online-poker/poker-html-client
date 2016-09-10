@@ -12,6 +12,7 @@ import { slowInternetService, connectionService } from "../services";
 import { ConnectionWrapper } from "../services/connectionwrapper";
 import { SimplePopup } from "../popups/simplepopup";
 import { appConfig } from "../appconfig";
+import { debugSettings } from "../debugsettings";
 import { App } from "../app";
 
 declare var apiHost: string;

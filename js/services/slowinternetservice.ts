@@ -3,6 +3,7 @@
 /// <reference path="connectionservice.ts" />
 
 import { connectionService } from "./index";
+import { debugSettings } from "../debugsettings";
 import { App } from "../app";
 
 declare var app: App;

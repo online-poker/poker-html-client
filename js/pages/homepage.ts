@@ -14,6 +14,8 @@ import * as metadataManager from "../metadatamanager";
 import * as authManager from "../authManager";
 import { PageBase } from "../ui/pagebase";
 import { keyboardActivationService } from "../services";
+import { debugSettings } from "../debugsettings";
+import { settings } from "../settings";
 
 declare var app: App;
 

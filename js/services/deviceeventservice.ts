@@ -1,9 +1,10 @@
-﻿
+﻿import { debugSettings } from "../debugsettings";
+
 /**
 * Service which provides ability to subscribe on the 
 * device events.
 */
-class DeviceEventService {
+export class DeviceEventService {
     ready: Signal;
     active: Signal;
     resignActive: Signal;
@@ -47,5 +48,3 @@ class DeviceEventService {
         this.resume.dispatch();
     }
 }
-
-var deviceEvents = new DeviceEventService();

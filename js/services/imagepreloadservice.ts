@@ -1,5 +1,7 @@
 ﻿/// <reference path="../_references.ts" />
 
+import { debugSettings } from "../debugsettings";
+
 export class ImagePreloadService {
     preload(url: string, useAbsolute = true) {
         var self = this;

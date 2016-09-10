@@ -16,6 +16,8 @@ import { ConnectionWrapper } from "../services/connectionwrapper";
 import * as broadcastService from "../services/broadcastservice";
 import { SimplePopup } from "../popups/simplepopup";
 import * as authManager from "../authManager";
+import { debugSettings } from "../debugsettings";
+import { settings } from "../settings";
 
 declare var apiHost: string;
 

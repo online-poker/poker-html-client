@@ -5,6 +5,7 @@ declare var baseUrl: string;
 
 import { ConnectionWrapper } from "./connectionwrapper";
 import { slowInternetService } from "./index";
+import { debugSettings } from "../debugsettings";
 
 export class ConnectionService {
     static stateConversion = {

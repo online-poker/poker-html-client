@@ -10,6 +10,8 @@ import * as ko from "knockout";
 import { App } from "../app";
 import { TournamentOptions } from "./lobbypage";
 import { PageBase } from "../ui/pagebase";
+import { debugSettings } from "../debugsettings";
+import { reloadManager } from "../services";
 
 declare var app: App;
 

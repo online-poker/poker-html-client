@@ -4,6 +4,7 @@
 import * as ko from "knockout";
 import { App } from "../app";
 import { PageBase } from "../ui/pagebase";
+import { reloadManager } from "../services";
 
 declare var apiHost: string;
 declare var app: App;

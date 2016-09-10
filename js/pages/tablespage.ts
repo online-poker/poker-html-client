@@ -13,11 +13,13 @@ import * as ko from "knockout";
 import { App } from "../app";
 import * as metadataManager from "../metadatamanager";
 import * as tableManager from "../table/tablemanager";
-import { connectionService } from "../services";
+import { connectionService, reloadManager, deviceEvents, soundManager } from "../services";
 import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
 import { uiManager } from "../services/uimanager";
 import { PageBase } from "../ui/pagebase";
+import { debugSettings } from "../debugsettings";
+import { settings } from "../settings";
 
 declare var app: App;
 

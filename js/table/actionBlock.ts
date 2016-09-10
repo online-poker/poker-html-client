@@ -8,6 +8,7 @@ import { TablePlaceModel } from "./tabpleplacemodel";
 import { TableView } from "./tableView";
 import * as authManager from "../authManager";
 import { appConfig } from "../appconfig";
+import { debugSettings } from "../debugsettings";
 
 declare var apiHost: string;
 declare var app: App;

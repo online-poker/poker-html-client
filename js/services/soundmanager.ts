@@ -1,7 +1,9 @@
 ﻿/// <reference path="../_references.ts" />
 /// <reference path="../platform.d.ts" />
 
-class SoundManager {
+import * as ko from "knockout";
+
+export class SoundManager {
     enabled = ko.observable(false);
     tableSoundsEnabled = ko.observable(false);
     playFold() {
@@ -90,5 +92,3 @@ class SoundManager {
 		/* tslint:enable:no-string-literal */
     }
 }
-
-var soundManager = new SoundManager();

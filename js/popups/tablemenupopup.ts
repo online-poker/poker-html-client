@@ -6,6 +6,7 @@
 import { TournamentView } from "../table/tournamentview";
 import { App } from "../app";
 import * as authManager from "../authManager";
+import { settings } from "../settings";
 
 declare var apiHost: string;
 declare var app: App;

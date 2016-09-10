@@ -1,4 +1,4 @@
-﻿/// <reference path="./_references.ts" />
+﻿import * as ko from "knockout";
 
 class Settings {
     login: KnockoutObservable<string>;
@@ -85,4 +85,4 @@ class Settings {
     }
 }
 
-var settings = new Settings();
+export var settings = new Settings();

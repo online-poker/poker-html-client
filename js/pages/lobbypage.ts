@@ -17,6 +17,8 @@ import * as timeService from "../timeService";
 import * as tableManager from "../table/tablemanager";
 import { PageBase } from "../ui/pagebase";
 import { appConfig } from "../appconfig";
+import { debugSettings } from "../debugsettings";
+import { reloadManager } from "../services";
 
 declare var app: App;
 

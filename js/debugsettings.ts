@@ -126,4 +126,4 @@ class DebugSettings {
     }
 }
 
-var debugSettings = new DebugSettings();
+export var debugSettings = new DebugSettings();

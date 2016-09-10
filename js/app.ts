@@ -28,12 +28,16 @@ import * as timeService from "./timeService";
 import * as metadataManager from "./metadatamanager";
 import { SimplePopup } from "./popups/simplepopup";
 import * as authManager from "./authManager";
+import { settings } from "./settings";
 import * as broadcastService from "./services/broadcastservice";
 import {
     slowInternetService,
     keyboardActivationService,
     connectionService,
-    imagePreloadService
+    imagePreloadService,
+    deviceEvents,
+    reloadManager,
+    soundManager
 } from "./services";
 import * as tableManager from "./table/tablemanager";
 import { HomePage, LobbyPageBlock, CashierPageBlock, TablesPage, InfoPageBlock, OtherPageBlock } from "./pages";
@@ -57,6 +61,8 @@ import {
     AuthPopup
 } from "./popups";
 import { uiManager, UIManager } from "./services/uimanager";
+import { TabBar } from "./tabbar";
+import { debugSettings } from "./debugsettings";
 
 export class App {
     currentPopup: string = null;
@@ -632,7 +638,6 @@ export class App {
         var self = this;
         timeService.start();
         settings.soundEnabled.subscribe(function (value) {
-            soundManager.enabled(value);
         });
         settings.loadSettings();
 		settings.isGuest.subscribe(function (value) {

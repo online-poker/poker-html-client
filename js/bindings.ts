@@ -6,10 +6,11 @@ import ko = require("knockout");
 import * as moment from "moment";
 import { App } from "./app";
 import * as timeService from "./timeService";
+import { debugSettings } from "./debugsettings";
 
 declare var app: App;
 
-
+export function registerBindings() {
 // Binding set loading variable for short amount of time.
 ko.bindingHandlers["loading"] = {
     update: function (element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
@@ -85,8 +86,20 @@ ko.bindingHandlers["image"] = imageBindingHandler;
 ko.bindingHandlers["ltext"] = {
     update: function (element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
 			viewModel: any, bindingContext: KnockoutBindingContext) {
-        var lockey = <string>ko.utils.unwrapObservable(valueAccessor());
-        var value = _(lockey);
+        const parameters = ko.utils.unwrapObservable(valueAccessor());
+        if (parameters === null || parameters === undefined) {
+            return '';
+        }
+
+        let value: string;
+        if (typeof parameters === "string") {
+            value = _(parameters);
+        } else if (typeof parameters === "Function") {
+            value = _(parameters);
+        } else {
+            value = _(parameters.key, parameters.params);
+        }
+        
         ko.bindingHandlers.text.update(element, () => value, allBindingsAccessor, viewModel, bindingContext);
     }
 };
@@ -639,3 +652,4 @@ ko.bindingHandlers["fadeTable"] = {
         ko.utils.domNodeDisposal.addDisposeCallback(element, () => subscription.dispose());
     }
 };
+}

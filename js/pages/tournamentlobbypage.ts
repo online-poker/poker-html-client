@@ -13,6 +13,8 @@ import * as tableManager from "../table/tablemanager";
 import * as timeService from "../timeservice";
 import * as authManager from "../authManager";
 import { PageBase } from "../ui/pagebase";
+import { debugSettings } from "../debugsettings";
+import { reloadManager } from "../services";
 
 declare var apiHost: string;
 declare var app: App;
