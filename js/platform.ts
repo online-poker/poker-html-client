@@ -1,4 +1,4 @@
-﻿/// <reference path="../Scripts/typings/jquery/jquery.d.ts" />
+﻿/// <reference types="jquery" />
 /// <reference path="platform.d.ts" />
 
 class Platform implements PlatformInterface {

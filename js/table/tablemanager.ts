@@ -196,7 +196,7 @@ class TableManager {
                 SimplePopup.display(_("tournament.tournaments"), messages);
             }, 2000);
         });
-        return $.when(tablesRequest, tournamentsRequest);
+        return $.when<any>(tablesRequest, tournamentsRequest);
     }
     selectTableCommandHandler(parameters: any[]): void {
 		// Do nothing.

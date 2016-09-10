@@ -12,8 +12,5 @@
   "out": "js/application.js",
   "sourceRoot": "."
  },
- "compileOnSave": true,
- "exclude": [
-     "node_modules"
- ]
+ "compileOnSave": true
 }

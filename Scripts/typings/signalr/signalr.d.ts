@@ -1,10 +1,9 @@
 // Type definitions for SignalR 1.0
-// Project: http://www.asp.net/signalr
+
 // Definitions by: Boris Yankov <https://github.com/borisyankov/>, T. Michael Keesey <https://github.com/keesey/>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
-
-/// <reference path="../jquery/jquery.d.ts" />
+/// <reference types="jquery" />
 
 interface HubMethod {
     (callback: (data: string) => void ): any;

@@ -7,7 +7,7 @@ class CustomPopup extends PopupBase {
     messages: KnockoutObservableArray<string>;
     buttons = ko.observableArray<string>([]);
     actions = ko.observableArray<Function>([]);
-    deferred: JQueryDeferred<() => void>;
+    deferred: JQueryDeferred<any>;
 
     constructor() {
         super();

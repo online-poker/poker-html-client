@@ -1,4 +1,4 @@
-/// <reference path="../Scripts/typings/jquery/jquery.d.ts" />
+/// <reference types="jquery" />
 /// <reference path="debugsettings.ts" />
 /// <reference path="appconfig.ts" />
 /// <reference path="pages/homepage.ts" />

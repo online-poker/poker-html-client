@@ -251,7 +251,7 @@ class LobbyPage extends PageBase {
             self.loading(false);
         };
         this.loading(true);
-        $.when(this.refreshTables(), this.refreshTournaments(2), this.refreshTournaments(3)).pipe(resetLoading, resetLoading);
+        $.when<any>(this.refreshTables(), this.refreshTournaments(2), this.refreshTournaments(3)).pipe(resetLoading, resetLoading);
 	}
     showGames() {
         if (this.slider.currentIndex() === 0) {

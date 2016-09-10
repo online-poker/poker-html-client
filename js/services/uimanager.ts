@@ -1,4 +1,4 @@
-﻿/// <reference path="../../Scripts/typings/jquery/jquery.d.ts" />
+﻿/// <reference types="jquery" />
 /// <reference path="../pageblock.ts" />
 /// <reference path="../app.ts" />
 
