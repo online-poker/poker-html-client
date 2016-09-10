@@ -1,4 +1,4 @@
-/// <reference path="../../Scripts/typings/knockout/knockout.d.ts" />
+/// <reference types="knockout" />
 /// <reference path="../app.ts" />
 /// <reference path="../ui/pagebase.ts" />
 /// <reference path="../messages.ts" />
@@ -7,10 +7,17 @@
 /// <reference path="../poker.commanding.api.ts" />
 
 declare var apiHost: string;
-declare var metadataManager: MetadataManager;
+
+import { App } from "../app";
+import * as timeService from "../timeService";
+import * as metadataManager from "../metadatamanager";
+import * as authManager from "../authManager";
+import { PageBase } from "../ui/pagebase";
+import { keyboardActivationService } from "../services";
+
 declare var app: App;
 
-class HomePage extends PageBase {
+export class HomePage extends PageBase {
     online: KnockoutObservable<string>;
     registered: KnockoutObservable<string>;
     news = ko.observableArray<string>([]);

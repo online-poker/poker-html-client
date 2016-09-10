@@ -1,8 +1,7 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../app.ts" />
+﻿import * as ko from "knockout";
+import { PopupBase } from "../ui/popupbase";
 
-class NewsPopup extends PopupBase {
+export class NewsPopup extends PopupBase {
     link = ko.observable<string>();
     url = ko.observable<string>();
     title = ko.observable<string>();

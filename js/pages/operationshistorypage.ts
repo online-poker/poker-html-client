@@ -1,8 +1,14 @@
 ﻿/// <reference path="../_references.ts" />
 /// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../app.ts" />
 
-class OperationsHistoryPage extends PageBase implements KnockoutValidationGroup {
+import * as ko from "knockout";
+import { App } from "../app";
+import { PageBase } from "../ui/pagebase";
+
+declare var apiHost: string;
+declare var app: App;
+
+export class OperationsHistoryPage extends PageBase implements KnockoutValidationGroup {
     from: KnockoutObservable<string>;
     to: KnockoutObservable<string>;
     errors: KnockoutValidationErrors;

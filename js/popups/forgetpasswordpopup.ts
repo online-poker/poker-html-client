@@ -1,11 +1,13 @@
 ﻿/// <reference path="../_references.ts" />
 /// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../app.ts" />
-/// <reference path="../authmanager.ts" />
 
 declare var apiHost: string;
 
-class ForgetPasswordPopup extends PopupBase implements KnockoutValidationGroup {
+import * as ko from "knockout";
+import { SimplePopup } from "../popups/simplepopup";
+import { PopupBase } from "../ui/popupbase";
+
+export class ForgetPasswordPopup extends PopupBase implements KnockoutValidationGroup {
     login: KnockoutObservable<string>;
     email: KnockoutObservable<string>;
     errors: KnockoutValidationErrors;

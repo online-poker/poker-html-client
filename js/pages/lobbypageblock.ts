@@ -4,7 +4,15 @@
 /// <reference path="tournamentslistpage.ts" />
 /// <reference path="tournamentlobbypage.ts" />
 
-class LobbyPageBlock extends PageBlock {
+import { App } from "../app";
+import { TournamentLobbyPage } from "./tournamentlobbypage";
+import { TablesListPage } from "./tableslistpage";
+import { LobbyPage } from "./lobbypage";
+import { TournamentsListPage } from "./tournamentslistpage";
+
+declare var app: App;
+
+export class LobbyPageBlock extends PageBlock {
     sngListPage: TournamentsListPage;
     tournamentsListPage: TournamentsListPage;
     lobbyPage: LobbyPage;

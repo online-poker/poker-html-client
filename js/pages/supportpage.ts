@@ -1,4 +1,4 @@
-﻿/// <reference path="../../Scripts/typings/knockout/knockout.d.ts" />
+﻿/// <reference types="knockout" />
 /// <reference path="../app.ts" />
 /// <reference path="../ui/page.ts" />
 /// <reference path="../messages.ts" />
@@ -7,7 +7,16 @@
 /// <reference path="../poker.commanding.api.ts" />
 /// <reference path="../authmanager.ts" />
 
-class SupportPage extends PageBase implements KnockoutValidationGroup {
+import * as ko from "knockout";
+import { App } from "../app";
+import { SimplePopup } from "../popups/simplepopup";
+import { PageBase } from "../ui/pagebase";
+import { keyboardActivationService } from "../services"; 
+
+declare var apiHost: string;
+declare var app: App;
+
+export class SupportPage extends PageBase implements KnockoutValidationGroup {
     displayFullName = false;
     displaySubject = false;
 

@@ -4,6 +4,11 @@
 
 declare var apiHost: string;
 
+import ko = require("knockout");
+import { App } from "./app";
+
+declare var app: App;
+
 class AuthManager {
     authenticated: KnockoutObservable<boolean>;
     login: KnockoutObservable<string>;
@@ -81,3 +86,4 @@ class AuthManager {
 }
 
 var authManager: AuthManager = new AuthManager();
+export = authManager;

@@ -5,7 +5,10 @@
 /// <reference path="../timeService.ts" />
 /* tslint:disable:no-bitwise */
 
-class TablePlaceModel {
+import * as ko from "knockout";
+import * as timeService from "../timeService";
+
+export class TablePlaceModel {
     /**
     * Default avatar for unspecified images, and 
     * images from unknown locations.

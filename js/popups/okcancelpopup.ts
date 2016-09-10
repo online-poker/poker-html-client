@@ -2,7 +2,12 @@
 /// <reference path="../poker.commanding.api.ts" />
 /// <reference path="../app.ts" />
 
-class OkCancelPopup {
+import * as ko from "knockout";
+import { App } from "../app";
+
+declare var app: App;
+
+export class OkCancelPopup {
     title: KnockoutObservable<string>;
     messages: KnockoutObservableArray<string>;
     buttons = ko.observableArray<string>([]);

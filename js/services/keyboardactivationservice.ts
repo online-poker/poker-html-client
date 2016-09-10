@@ -3,7 +3,13 @@
 /// <reference path="../app.ts" />
 /* tslint:disable:no-string-literal */
 
-class KeyboardActivationService {
+import * as timeService from "../timeService";
+import { uiManager } from "./uimanager";
+import { App } from "../app";
+
+declare var app: App;
+
+export class KeyboardActivationService {
     static keyboardShowModifier = "keyboard-shown";
     lastPage: string = null;
     lastPageBlock: string = null;
@@ -94,5 +100,3 @@ class KeyboardActivationService {
         this.removeStyles();
     }
 }
-
-var keyboardActivationService = new KeyboardActivationService();

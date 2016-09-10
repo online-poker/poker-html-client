@@ -4,49 +4,32 @@
 /// <reference path="../commandmanager.ts" />
 /// <reference path="runtimesettings.ts" />
 /// <reference path="gameactionsqueue.ts" />
-/// <reference path="actionblock.ts" />
-/// <reference path="tabpleplacemodel.ts" />
-/// <reference path="tableplaces.ts" />
 /// <reference path="chipitem.ts" />
 /// <reference path="tableCardsPlace.ts" />
 /// <reference path="animationsettings.ts" />
 /// <reference path="cardsHelper.ts" />
 /// <reference path="hand.ts" />
-/// <reference path="handhistory.ts" />
-/// <reference path="../timeservice.ts" />
 /* tslint:disable:no-bitwise */
 
-class PlayerMessage {
-    messageId: number;
-    sender: string;
-    message: KnockoutObservable<string>;
-    fullMessage: KnockoutComputed<string>;
-    date: string;
-    isMy: KnockoutObservable<boolean>;
-    isAdmin: boolean;
+import * as ko from "knockout";
+import * as moment from "moment";
+import * as timeService from "../timeService";
+import * as authManager from "../authmanager";
+import { TablePlaceModel } from "./tabpleplacemodel";
+import { TournamentView } from "./tournamentView";
+import { TablePlaces } from "./tableplaces";
+import { HandHistory } from "./handhistory";
+import { PlayerMessage } from "./playerMessage";
+import { slowInternetService, connectionService } from "../services";
+import { SlowInternetService } from "../services/slowinternetservice";
+import { ConnectionWrapper } from "../services/connectionwrapper";
+import { SimplePopup } from "../popups/simplepopup";
+import { App } from "../app";
+import { ActionBlock } from "./actionblock";
+import { GameActionsQueue } from "./gameactionsqueue";
 
-    constructor(messageId: number, sender: string, message: string) {
-        var self = this;
-        this.messageId = messageId;
-        this.isAdmin = false;
-        if (sender.toLowerCase() === "admin") {
-            this.isAdmin = true;
-        }
-
-        this.isMy = ko.observable(authManager.login() === sender);
-        authManager.authenticated.subscribe(function () {
-            self.isMy(authManager.login() === sender);
-        });
-
-        this.sender = sender;
-        this.message = ko.observable(message);
-        var d = new Date();
-        this.date = d.getHours() + ":" + d.getMinutes();
-        this.fullMessage = ko.computed(function () {
-            return "[" + self.date + "]" + this.sender + " - " + this.message();
-        }, this);
-    }
-}
+declare var apiHost: string;
+declare var app: App;
 
 class SystemMessage {
     messageId: number;
@@ -57,7 +40,7 @@ class SystemMessage {
     }
 }
 
-class TableView {
+export class TableView {
     public tableName: KnockoutObservable<string>;
 
     /**

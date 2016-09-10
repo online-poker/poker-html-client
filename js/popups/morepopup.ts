@@ -1,10 +1,17 @@
 ﻿/// <reference path="../_references.ts" />
 /// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../app.ts" />
 /// <reference path="../authmanager.ts" />
 /// <reference path="../settings.ts" />
 
-class MorePopup {
+declare var apiHost: string;
+
+import * as ko from "knockout";
+import { App } from "../app";
+import * as authManager from "../authManager";
+
+declare var app: App;
+
+export class MorePopup {
     authenticated: KnockoutObservable<boolean>;
     login: KnockoutComputed<string>;
     amount: KnockoutObservable<number>;

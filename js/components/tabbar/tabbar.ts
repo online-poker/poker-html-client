@@ -1,4 +1,4 @@
-﻿/// <reference path="../../../Scripts/typings/knockout/knockout.d.ts" />
+﻿/// <reference types="knockout" />
 
 import ko = require("knockout");
 

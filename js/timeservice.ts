@@ -1,8 +1,10 @@
-﻿/// <reference path="./_references.ts" />
+﻿/// <reference types="knockout" />
+/// <reference types="moment" />
 /// <reference path="table/runtimesettings.ts" />
 /// <reference path="debugsettings.ts" />
 
 declare var apiHost: string;
+import * as moment from "moment";
 
 class TimeService {
     currentTime: KnockoutObservable<string>;
@@ -89,3 +91,5 @@ class TimeService {
 }
 
 var timeService = new TimeService();
+
+export = timeService;

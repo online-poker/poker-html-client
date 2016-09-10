@@ -3,7 +3,12 @@
 /// <reference path="withdrawalpage.ts" />
 /// <reference path="operationshistorypage.ts" />
 
-class CashierPageBlock extends PageBlock {
+import { AccountPage } from "./accountpage";
+import { RatingPage } from "./ratingpage";
+import { OperationsHistoryPage } from "./operationshistorypage";
+import { WithdrawalPage } from "./withdrawalpage";
+
+export class CashierPageBlock extends PageBlock {
     accountPage: AccountPage;
     ratingPage: RatingPage;
     constructor() {

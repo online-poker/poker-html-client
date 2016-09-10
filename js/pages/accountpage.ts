@@ -1,4 +1,4 @@
-﻿/// <reference path="../../Scripts/typings/knockout/knockout.d.ts" />
+﻿/// <reference types="knockout" />
 /// <reference path="../app.ts" />
 /// <reference path="../ui/pagebase.ts" />
 /// <reference path="../messages.ts" />
@@ -6,6 +6,14 @@
 /// <reference path="../metadatamanager.ts" />
 /// <reference path="../poker.commanding.api.ts" />
 /// <reference path="../authmanager.ts" />
+
+import * as ko from "knockout";
+import * as authManager from "../authManager";
+import { PageBase } from "../ui/pagebase";
+import { App } from "../app";
+
+declare var apiHost: string;
+declare var app: App;
 
 interface AccountPagePlayerAccountModel {
     currencyName: string;
@@ -26,7 +34,7 @@ interface AccountPagePlayerModel {
     stars: number;
 }
 
-class AccountPage extends PageBase {
+export class AccountPage extends PageBase {
     cashierCaption: KnockoutObservable<string>;
     loading: KnockoutObservable<boolean>;
     player: KnockoutObservable<any>;

@@ -2,9 +2,15 @@
 /// <reference path="../app.ts" />
 /// <reference path="../ui/pagebase.ts" />
 /// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../table/tablemanager.ts" />
 
-class TablesListPage extends PageBase {
+import { App } from "../app";
+import { PageBase } from "../ui/pagebase";
+import * as tableManager from "../table/tablemanager";
+
+declare var apiHost: string;
+declare var app: App;
+
+export class TablesListPage extends PageBase {
     tablesCaption: KnockoutComputed<string>;
     tables: KnockoutObservableArray<any>;
     loading: KnockoutObservable<boolean>;

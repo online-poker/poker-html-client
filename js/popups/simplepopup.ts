@@ -2,7 +2,14 @@
 /// <reference path="../poker.commanding.api.ts" />
 /// <reference path="../app.ts" />
 
-class SimplePopup extends PopupBase {
+import * as ko from "knockout";
+import { App } from "../app";
+import { PopupBase } from "../ui/popupbase";
+import * as timeService from "../timeService";
+
+declare var app: App;
+
+export class SimplePopup extends PopupBase {
     title: KnockoutObservable<string>;
     messages: KnockoutObservableArray<string>;
 

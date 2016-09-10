@@ -1,10 +1,11 @@
-﻿/// <reference path="tableview.ts" />
-/* tslint:disable:no-empty */
+﻿/* tslint:disable:no-empty */
+
+import { TableView } from "./tableview";
 
 /**
 * Base class for the table monitoring.
 */
-class TableMonitor {
+export class TableMonitor {
     /**
     * Initializes a new instance of the table monitor
     */

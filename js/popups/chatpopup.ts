@@ -3,7 +3,16 @@
 /// <reference path="../ui/chatcontrol.ts" />
 /// <reference path="../table/tableview.ts" />
 
-class ChatPopup {
+import { ChatControl } from "../ui/chatcontrol";
+import { PlayerMessage } from "../table/playermessage";
+import { TableView } from "../table/tableview";
+import * as timeService from "../timeservice";
+import { App } from "../app";
+
+declare var apiHost: string;
+declare var app: App;
+
+export class ChatPopup {
     control: ChatControl;
     caption: KnockoutObservable<string>;
     currentMessage: KnockoutObservable<string>;

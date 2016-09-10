@@ -1,5 +1,4 @@
-﻿/// <reference path="../../Scripts/typings/knockout/knockout.d.ts" />
-/// <reference path="../app.ts" />
+﻿/// <reference path="../app.ts" />
 /// <reference path="../ui/page.ts" />
 /// <reference path="../messages.ts" />
 /// <reference path="../languagemanager.ts" />
@@ -7,7 +6,17 @@
 /// <reference path="../poker.commanding.api.ts" />
 /// <reference path="../authmanager.ts" />
 
-class ChatPage implements Page {
+import * as ko from "knockout";
+import { PlayerMessage } from "../table/playerMessage";
+import * as timeService from "../timeService";
+import { connectionService, keyboardActivationService } from "../services";
+import { SimplePopup } from "../popups/simplepopup";
+import { App } from "../app";
+
+declare var apiHost: string;
+declare var app: App;
+
+export class ChatPage implements Page {
     currentMessage: KnockoutObservable<string>;
     messages: KnockoutObservableArray<PlayerMessage>;
     loading: KnockoutObservable<boolean>;

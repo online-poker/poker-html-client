@@ -7,7 +7,16 @@
 
 declare var apiHost: string;
 
-class AuthPopup extends PopupBase implements KnockoutValidationGroup {
+import * as ko from "knockout";
+import { PopupBase } from "../ui/popupbase";
+import * as authManager from "../authmanager";
+import { keyboardActivationService } from "../services";
+import { App } from "../app";
+
+declare var apiHost: string;
+declare var app: App;
+
+export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
     login: KnockoutObservable<string>;
     password: KnockoutObservable<string>;
     validationLogin = ko.observable<string>().extend({ required: true, maxLength: 12 });

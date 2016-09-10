@@ -1,8 +1,12 @@
 ﻿/// <reference path="../_references.ts" />
 /// <reference path="../table/tableManager.ts" />
-/// <reference path="connectionwrapper.ts" />
 
-class ConnectionService {
+declare var baseUrl: string;
+
+import { ConnectionWrapper } from "./connectionwrapper";
+import { slowInternetService } from "./index";
+
+export class ConnectionService {
     static stateConversion = {
         0: "connecting",
         1: "connected",
@@ -103,5 +107,3 @@ class ConnectionService {
         }
     }
 }
-
-var connectionService = new ConnectionService();

@@ -1,6 +1,7 @@
-﻿/// <reference path="../../../Scripts/typings/knockout/knockout.d.ts" />
+﻿/// <reference types="knockout" />
 
 import ko = require("knockout");
+import * as timeService from "../../timeService";
 
 class TimeBlockComponent {
     private currentTime: KnockoutComputed<string>;

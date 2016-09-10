@@ -1,4 +1,4 @@
-﻿/// <reference path="../../Scripts/typings/knockout/knockout.d.ts" />
+﻿/// <reference types="knockout" />
 /// <reference path="../app.ts" />
 /// <reference path="../ui/page.ts" />
 /// <reference path="../messages.ts" />
@@ -6,9 +6,13 @@
 /// <reference path="../poker.commanding.api.ts" />
 
 declare var apiHost: string;
+
+import { App } from "../app";
+import * as metadataManager from "../metadatamanager";
+
 declare var app: App;
 
-class SettingsPage implements Page {
+export class SettingsPage implements Page {
     online: KnockoutObservable<string>;
     registered: KnockoutObservable<string>;
     captionLabel: KnockoutComputed<string>;

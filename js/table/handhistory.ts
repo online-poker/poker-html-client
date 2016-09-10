@@ -1,7 +1,10 @@
 ﻿/// <reference path="../_references.ts" />
 /// <reference path="tablemonitor.ts" />
 
-interface PlayerWinInformation {
+import { TableView } from "./tableview";
+import { TableMonitor } from "./tablemonitor";
+
+export interface PlayerWinInformation {
     id: number;
     login: string;
     cards: string[];
@@ -13,7 +16,7 @@ interface PlayerWinInformation {
 /**
 * Class which performs collection of hand history
 */
-class HandHistory extends TableMonitor {
+export class HandHistory extends TableMonitor {
     detailedOperations: KnockoutObservableArray<string>;
     shortOperations: KnockoutObservableArray<string>;
     players: string[];

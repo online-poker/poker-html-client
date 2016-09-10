@@ -1,10 +1,12 @@
 ﻿/// <reference path="_references.ts" />
-/// <reference path="../Scripts/typings/knockout/knockout.d.ts" />
+/// <reference types="knockout" />
 /// <reference path="poker.commanding.api.ts" />
 /// <reference path="poker.commanding.api.d.ts" />
 /// <reference path="services/imagepreloadservice.ts" />
 
 declare var apiHost: string;
+
+import { imagePreloadService } from "./services";
 
 class MetadataManager {
     online = ko.observable("-");
@@ -17,6 +19,12 @@ class MetadataManager {
     ready: Function;
     failed: Function;
 
+    public setReady(value: Function) {
+        this.ready = value;
+    }
+    public setFailed(value: Function) {
+        this.failed = value;
+    }
     update() {
         var self = this;
         var metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
@@ -193,3 +201,4 @@ class MetadataManager {
 }
 
 var metadataManager = new MetadataManager();
+export = metadataManager;

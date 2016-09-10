@@ -5,7 +5,15 @@
 
 declare var apiHost: string;
 
-class AddMoneyPopup implements KnockoutValidationGroup {
+import * as ko from "knockout";
+import { SimplePopup } from "../popups/simplepopup";
+import { PopupBase } from "../ui/popupbase";
+import { TableView } from "../table/tableview";
+import { App } from "../app";
+
+declare var app: App;
+
+export class AddMoneyPopup implements KnockoutValidationGroup {
     buyin: KnockoutObservable<number>;
     minBuyin: KnockoutObservable<number>;
     maxBuyin: KnockoutObservable<number>;

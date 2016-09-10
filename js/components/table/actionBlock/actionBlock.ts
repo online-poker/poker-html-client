@@ -1,6 +1,7 @@
-﻿/// <reference path="../../../../Scripts/typings/knockout/knockout.d.ts" />
+﻿/// <reference types="knockout" />
 
 import ko = require("knockout");
+import { ActionBlock } from "../../../table/actionblock";
 
 class ActionBlockComponent {
     private actionBlock: ActionBlock

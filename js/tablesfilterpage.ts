@@ -1,8 +1,7 @@
-﻿/// <reference path="./_references.ts" />
-/// <reference path="poker.commanding.api.ts" />
-/// <reference path="app.ts" />
+﻿import * as ko from "knockout"; 
+import { PageBase } from "./ui/pagebase";
 
-class TablesFilterPage extends PageBase {
+export class TablesFilterPage extends PageBase {
     oldpassword: KnockoutObservable<string>;
     password: KnockoutObservable<string>;
     confirmpassword: KnockoutObservable<string>;

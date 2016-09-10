@@ -1,17 +1,21 @@
-﻿/// <reference path="../../Scripts/typings/knockout/knockout.d.ts" />
+﻿/// <reference types="knockout" />
 /// <reference path="../app.ts" />
 /// <reference path="../ui/pagebase.ts" />
 /// <reference path="../messages.ts" />
 /// <reference path="../languagemanager.ts" />
-/// <reference path="../metadatamanager.ts" />
 /// <reference path="../poker.commanding.api.ts" />
 /// <reference path="../authmanager.ts" />
 
 declare var apiHost: string;
-declare var metadataManager: MetadataManager;
+
+import { App } from "../app";
+import * as metadataManager from "../metadatamanager";
+import * as authManager from "../authManager";
+import { PageBase } from "../ui/pagebase";
+
 declare var app: App;
 
-class WithdrawalPage extends PageBase {
+export class WithdrawalPage extends PageBase {
     player: KnockoutObservable<any>;
     withdrawalMethods: KnockoutObservableArray<any>;
     withdrawalMethod: KnockoutObservable<number>;

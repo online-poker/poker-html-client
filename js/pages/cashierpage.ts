@@ -1,4 +1,4 @@
-/// <reference path="../../Scripts/typings/knockout/knockout.d.ts" />
+/// <reference types="knockout" />
 /// <reference path="../app.ts" />
 /// <reference path="../ui/pagebase.ts" />
 /// <reference path="../messages.ts" />
@@ -9,7 +9,14 @@
 /// <reference path="../services/_allservices.ts" />
 
 declare var apiHost: string;
-declare var metadataManager: MetadataManager;
+
+import * as ko from "knockout";
+import { App } from "../app";
+import * as metadataManager from "../metadatamanager";
+import * as authManager from "../authManager";
+import { PageBase } from "../ui/pagebase";
+import { accountService } from "../services";
+
 declare var app: App;
 
 class CashierPage extends PageBase {

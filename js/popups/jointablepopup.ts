@@ -4,8 +4,14 @@
 /// <reference path="../authmanager.ts" />
 
 declare var apiHost: string;
+import * as ko from "knockout";
+import { TableView } from "../table/tableview";
+import { SimplePopup } from "./simplepopup";
+import { App } from "../app";
 
-class JoinTablePopup implements KnockoutValidationGroup {
+declare var app: App;
+
+export class JoinTablePopup implements KnockoutValidationGroup {
     buyin: KnockoutObservable<number>;
     minBuyin: KnockoutObservable<number>;
     maxBuyin: KnockoutObservable<number>;

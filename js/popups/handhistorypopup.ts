@@ -1,13 +1,22 @@
 ﻿/// <reference path="../_references.ts" />
-/// <reference path="../table/tableview.ts" />
-/// <reference path="../ui/popupbase.ts" />
+
+import * as ko from "knockout";
+import { TableView } from "../table/tableview";
+import { PlayerWinInformation } from "../table/handhistory";
+import { GameActionsQueue } from "../table/gameactionsqueue";
+import { SimplePopup } from "../popups/simplepopup";
+import { PopupBase } from "../ui/popupbase";
+import { appConfig } from "../appconfig";
+import { App } from "../app";
+
+declare var app: App;
 
 enum HandHistoryDisplayMode {
     Short = 1,
     Detailed,
 }
 
-class HandHistoryPopup extends PopupBase {
+export class HandHistoryPopup extends PopupBase {
     detailedOperations: KnockoutObservableArray<string>;
     shortOperations: KnockoutObservableArray<string>;
     tableView: KnockoutObservable<TableView>;

@@ -1,6 +1,6 @@
 ﻿/// <reference path="../_references.ts" />
 
-class ImagePreloadService {
+export class ImagePreloadService {
     preload(url: string, useAbsolute = true) {
         var self = this;
         var absoluteUrl = useAbsolute ? this.getAbsoluteUrl(url) : url;
@@ -75,5 +75,3 @@ class ImagePreloadService {
         }
     }
 }
-
-var imagePreloadService = new ImagePreloadService();

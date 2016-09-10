@@ -2,7 +2,14 @@
 /// <reference path="../poker.commanding.api.ts" />
 /// <reference path="../app.ts" />
 
-class SelectAvatarPopup extends PopupBase {
+import * as ko from "knockout";
+import { PopupBase } from "../ui/popupbase";
+import * as metadataManager from "../metadatamanager";
+import { App } from "../app";
+
+declare var app: App;
+
+export class SelectAvatarPopup extends PopupBase {
     avatars = ko.observableArray<string>();
     selectedAvatar = ko.observable<string>();
     selected = new signals.Signal();

@@ -1,7 +1,10 @@
 ﻿/// <reference path="../_references.ts" />
 /// <reference path="tabpleplacemodel.ts" />
 
-class TablePlaces {
+import * as ko from "knockout";
+import { TablePlaceModel } from "./tabpleplacemodel";
+
+export class TablePlaces {
     placesRefreshTrigger: KnockoutObservable<{}>;
 
     place1: KnockoutObservable<TablePlaceModel>;

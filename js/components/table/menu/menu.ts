@@ -1,6 +1,7 @@
-﻿/// <reference path="../../../../Scripts/typings/knockout/knockout.d.ts" />
+﻿/// <reference types="knockout" />
 
 import ko = require("knockout");
+import { TablesPage } from "../../../pages/TablesPage";
 
 class TableMenuComponent {
     private page: TablesPage;

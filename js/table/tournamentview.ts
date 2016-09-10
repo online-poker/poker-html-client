@@ -1,10 +1,23 @@
 ﻿/// <reference path="../_references.ts" />
-/// <reference path="../authmanager.ts" />
 /// <reference path="../commandmanager.ts" />
 /// <reference path="../popups/_allpopups.ts" />
 /// <reference path="runtimesettings.ts" />
 
-class TournamentView {
+import * as ko from "knockout";
+import * as timeService from "../timeService";
+import * as tableManager from "./tablemanager";
+import * as authManager from "../authmanager";
+import * as metadataManager from "../metadatamanager";
+import { slowInternetService, connectionService } from "../services";
+import { ConnectionWrapper } from "../services/connectionwrapper";
+import { SimplePopup } from "../popups/simplepopup";
+import { appConfig } from "../appconfig";
+import { App } from "../app";
+
+declare var apiHost: string;
+declare var app: App;
+
+export class TournamentView {
     tournamentData = ko.observable<TournamentDefinition>(null);
     loading = ko.observable(false);
 

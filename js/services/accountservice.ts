@@ -5,7 +5,10 @@
 
 declare var apiHost: string;
 
-class AccountService {
+import { slowInternetService } from "./index";
+import * as authManager from "../authmanager";
+
+export class AccountService {
     getAccount() {
         var result = $.Deferred();
         var realMoneySupported = true;
@@ -51,5 +54,3 @@ class AccountService {
         return result;
     }
 }
-
-var accountService = new AccountService();

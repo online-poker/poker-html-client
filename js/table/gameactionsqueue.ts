@@ -1,5 +1,7 @@
 ﻿/// <reference path="../_references.ts" />
 
+import { wait } from "../services/timedeferred";
+
 interface QueueWorker {
     /**
     * Executes worker and generates deferred which executing operation
@@ -7,7 +9,7 @@ interface QueueWorker {
     (): JQueryPromise<any>;
 }
 
-class GameActionsQueue {
+export class GameActionsQueue {
     static logging: boolean = false;
     static waitDisabled = false;
 
@@ -57,7 +59,7 @@ class GameActionsQueue {
     wait(timeout: number) {
         if (!GameActionsQueue.waitDisabled && timeout > 0) {
             this.push(() => {
-                return $.wait(timeout);
+                return wait(timeout);
             });
         }
     }
@@ -69,7 +71,7 @@ class GameActionsQueue {
     injectWait(timeout: number) {
         if (!GameActionsQueue.waitDisabled && timeout > 0) {
             this.inject(() => {
-                return $.wait(timeout);
+                return wait(timeout);
             });
         }
     }

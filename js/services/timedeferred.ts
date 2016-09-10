@@ -1,8 +1,9 @@
 ﻿/// <reference types="jquery" />
 /// <reference path="../typings/jquery.d.ts" />
+import * as timeService from "../timeService";
 
-$.wait = function (time) {
+export function wait(time) {
     return $.Deferred(function (dfd) {
         timeService.setTimeout(dfd.resolve, time);
     });
-};
+}

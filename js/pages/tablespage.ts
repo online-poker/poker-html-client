@@ -1,4 +1,4 @@
-﻿/// <reference path="../../Scripts/typings/knockout/knockout.d.ts" />
+﻿/// <reference types="knockout" />
 /// <reference path="../app.ts" />
 /// <reference path="../ui/pagebase.ts" />
 /// <reference path="../messages.ts" />
@@ -8,10 +8,20 @@
 /// <reference path="../authmanager.ts" />
 
 declare var apiHost: string;
-declare var metadataManager: MetadataManager;
+
+import * as ko from "knockout";
+import { App } from "../app";
+import * as metadataManager from "../metadatamanager";
+import * as tableManager from "../table/tablemanager";
+import { connectionService } from "../services";
+import { TableView } from "../table/tableview";
+import * as timeService from "../timeservice";
+import { uiManager } from "../services/uimanager";
+import { PageBase } from "../ui/pagebase";
+
 declare var app: App;
 
-class TablesPage extends PageBase {
+export class TablesPage extends PageBase {
     currentTable: KnockoutComputed<TableView>;
     selectedTables: KnockoutComputed<TableView[]>;
     currentIndex: KnockoutComputed<number>;

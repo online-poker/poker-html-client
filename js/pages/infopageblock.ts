@@ -2,7 +2,10 @@
 /// <reference path="infopage.ts" />
 /// <reference path="supportpage.ts" />
 
-class InfoPageBlock extends PageBlock {
+import { SupportPage } from "./supportpage";
+import { InfoPage } from "./infopage";
+
+export class InfoPageBlock extends PageBlock {
     constructor() {
         super("info", "pagesList", new InfoPage());
         this.requireAuthentication = false;

@@ -8,9 +8,19 @@
 /* tslint:disable:no-bitwise */
 
 declare var apiHost: string;
+
+import * as ko from "knockout";
+import * as moment from "moment";
+import { App } from "../app";
+import * as metadataManager from "../metadatamanager";
+import * as timeService from "../timeService";
+import * as tableManager from "../table/tablemanager";
+import { PageBase } from "../ui/pagebase";
+import { appConfig } from "../appconfig";
+
 declare var app: App;
 
-class CashOptions {
+export class CashOptions {
     currency: KnockoutObservable<number>;
     limits: KnockoutObservable<number>;
     bets: KnockoutObservable<number>;
@@ -63,7 +73,7 @@ class CashOptions {
     }
 }
 
-class TournamentOptions {
+export class TournamentOptions {
     currency: KnockoutObservable<number>;
     buyin: KnockoutObservable<number>;
     speed: KnockoutObservable<number>;
@@ -121,7 +131,7 @@ interface LobbyTournamentItemEx extends LobbyTournamentItem {
     duration: string;
 }
 
-class LobbyPage extends PageBase {
+export class LobbyPage extends PageBase {
     online: KnockoutObservable<string>;
     registered: KnockoutObservable<string>;
     captionLabel: KnockoutComputed<string>;

@@ -1,5 +1,7 @@
 ﻿/// <reference path="../popups/simplepopup.ts" />
 
+import { SimplePopup } from "../popups/simplepopup";
+
 /**
 * Manages broadcast services
 */
@@ -14,3 +16,4 @@ class BroadcastService {
 }
 
 var broadcastService = new BroadcastService();
+export = broadcastService;

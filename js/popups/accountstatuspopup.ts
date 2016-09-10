@@ -6,7 +6,16 @@
 
 declare var apiHost: string;
 
-class AccountStatusPopup extends PopupBase {
+import * as ko from "knockout";
+import { PopupBase } from "../ui/popupbase";
+import * as authManager from "../authmanager";
+import { accountService } from "../services";
+import { App } from "../app";
+
+declare var apiHost: string;
+declare var app: App;
+
+export class AccountStatusPopup extends PopupBase {
     loading: KnockoutObservable<boolean>;
     information: KnockoutObservable<AccountServiceInformation>;
     loginName: KnockoutObservable<string>;

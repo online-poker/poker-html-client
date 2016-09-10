@@ -1,7 +1,12 @@
 ﻿/// <reference path="../_references.ts" />
 /// <reference path="../poker.commanding.api.ts" />
 
-class ChatControl {
+import * as ko from "knockout";
+import * as moment from "moment";
+import * as timeService from "../timeService";
+import { connectionService } from "../services";
+
+export class ChatControl {
     currentMessage: KnockoutObservable<string>;
     messages: KnockoutObservableArray<string>;
     loading: KnockoutObservable<boolean>;

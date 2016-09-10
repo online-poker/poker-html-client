@@ -1,8 +1,18 @@
-﻿/// <reference path="tableslider.ts" />
-/// <reference path="tableview.ts" />
-/// <reference path="../typings/signalr.d.ts" />
+﻿/// <reference path="../typings/signalr.d.ts" />
 
-class ActionBlock {
+import * as ko from "knockout";
+import { App } from "../app";
+import { TableSlider } from "./tableSlider";
+import { PlayerMessage } from "./playerMessage";
+import { TablePlaceModel } from "./tabpleplacemodel";
+import { TableView } from "./tableView";
+import * as authManager from "../authManager";
+import { appConfig } from "../appconfig";
+
+declare var apiHost: string;
+declare var app: App;
+
+export class ActionBlock {
     public tableSlider: TableSlider;
     public dealsAllowed: KnockoutObservable<boolean>;
     public buttonsEnabled: KnockoutObservable<boolean>;

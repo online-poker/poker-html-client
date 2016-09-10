@@ -24,9 +24,41 @@
 /// <reference path="typings/spin.d.ts" />
 /// <reference path="typings/signalr.d.ts" />
 
-declare var metadataManager: MetadataManager;
+import * as timeService from "./timeService";
+import * as metadataManager from "./metadatamanager";
+import { SimplePopup } from "./popups/simplepopup";
+import * as authManager from "./authManager";
+import * as broadcastService from "./services/broadcastservice";
+import {
+    slowInternetService,
+    keyboardActivationService,
+    connectionService,
+    imagePreloadService
+} from "./services";
+import * as tableManager from "./table/tablemanager";
+import { HomePage, LobbyPageBlock, CashierPageBlock, TablesPage, InfoPageBlock, OtherPageBlock } from "./pages";
+import {
+    MorePopup,
+    AccountStatusPopup,
+    TableMenuPopup,
+    SelectAvatarPopup,
+    SlowConnectionPopup,
+    RegistrationPopup,
+    OkCancelPopup,
+    NewsPopup,
+    JoinTablePopup,
+    HandHistoryPopup,
+    ForgetPasswordPopup,
+    CustomPopup,
+    ContinueForgetPasswordPopup,
+    ChangePasswordPopup,
+    AddMoneyPopup,
+    ChatPopup,
+    AuthPopup
+} from "./popups";
+import { uiManager, UIManager } from "./services/uimanager";
 
-class App {
+export class App {
     currentPopup: string = null;
     homePage: HomePage;
     lobbyPageBlock: LobbyPageBlock;
@@ -477,7 +509,7 @@ class App {
                 tableManager.getCurrentTablesAndTournaments().done(function () {
                     self.establishConnection();
                     self.fullyInitialized = true;
-                    metadataManager.ready = null;
+                    metadataManager.setReady(null);
                 }).fail(failHandler);
             }).fail(failHandler);
         };
@@ -655,12 +687,12 @@ class App {
         }
 
         this.setupClosePopupOnClick();
-        metadataManager.failed = () => {
+        metadataManager.setFailed(() => {
             slowInternetService.onConnectionSlow();
             slowInternetService.onDisconnected();
             self.metadataUpdateFailed();
-        };
-        metadataManager.ready = function () {
+        });
+        metadataManager.setReady(function () {
             // Adjust height
             var toolpadHeight = platformInfo.hasTabBar() ? 49 : 15;
             var logoHeight = 102;
@@ -717,7 +749,7 @@ class App {
                 self.terminateConnection();
                 self.loadTablesAndTournaments(newValue);
             });
-        };
+        });
 
         slowInternetService.initialize();
         var hasInternet = slowInternetService.hasInternet();
@@ -1265,3 +1297,5 @@ class App {
 		/* tslint:enable:no-unused-expression no-string-literal */
 	}
 }
+
+declare var app: App;

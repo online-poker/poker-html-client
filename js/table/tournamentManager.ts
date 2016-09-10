@@ -3,7 +3,8 @@
 /// <reference path="../app.ts" />
 /// <reference path="../commandmanager.ts" />
 /// <reference path="tableview.ts" />
-/// <reference path="tournamentview.ts" />
+
+import { TournamentView } from "./tournamentView";
 
 class TournamentManager {
     /**

@@ -3,7 +3,14 @@
 /// <reference path="../app.ts" />
 /* tslint:disable:no-bitwise */
 
-class TableMenuPopup {
+import { TournamentView } from "../table/tournamentview";
+import { App } from "../app";
+import * as authManager from "../authManager";
+
+declare var apiHost: string;
+declare var app: App;
+
+export class TableMenuPopup {
     soundEnabled: KnockoutComputed<boolean>;
     autoSwitchTables: KnockoutComputed<boolean>;
     autoHideCards: KnockoutComputed<boolean>;

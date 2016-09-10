@@ -5,7 +5,14 @@
 
 declare var apiHost: string;
 
-class ContinueForgetPasswordPopup extends PopupBase implements KnockoutValidationGroup {
+import * as ko from "knockout";
+import { SimplePopup } from "../popups/simplepopup";
+import { PopupBase } from "../ui/popupbase";
+import { App } from "../app";
+
+declare var app: App;
+
+export class ContinueForgetPasswordPopup extends PopupBase implements KnockoutValidationGroup {
     token: KnockoutObservable<string>;
     password: KnockoutObservable<string>;
     confirmPassword: KnockoutObservable<string>;

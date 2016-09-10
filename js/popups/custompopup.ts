@@ -2,7 +2,10 @@
 /// <reference path="../poker.commanding.api.ts" />
 /// <reference path="../app.ts" />
 
-class CustomPopup extends PopupBase {
+import * as ko from "knockout";
+import { PopupBase } from "../ui/popupbase";
+
+export class CustomPopup extends PopupBase {
     title: KnockoutObservable<string>;
     messages: KnockoutObservableArray<string>;
     buttons = ko.observableArray<string>([]);

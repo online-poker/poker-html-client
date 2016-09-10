@@ -5,7 +5,14 @@
 
 declare var apiHost: string;
 
-class ChangePasswordPopup extends PopupBase implements KnockoutValidationGroup {
+import * as ko from "knockout";
+import { SimplePopup } from "../popups/simplepopup";
+import { PopupBase } from "../ui/popupbase";
+import { App } from "../app";
+
+declare var app: App;
+
+export class ChangePasswordPopup extends PopupBase implements KnockoutValidationGroup {
     oldPassword = ko.observable<string>().extend({ required: true });
     password: KnockoutObservable<string>;
     confirmPassword: KnockoutObservable<string>;

@@ -28,4 +28,4 @@ class AppConfig {
     };
 }
 
-var appConfig = new AppConfig();
+export var appConfig = new AppConfig();

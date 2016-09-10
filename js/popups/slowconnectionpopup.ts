@@ -4,7 +4,11 @@
 
 declare var apiHost: string;
 
-class SlowConnectionPopup extends PopupBase implements KnockoutValidationGroup {
+import * as ko from "knockout";
+import * as timeService from "../timeService";
+import { PopupBase } from "../ui/popupbase";
+
+export class SlowConnectionPopup extends PopupBase implements KnockoutValidationGroup {
     allowRetry: KnockoutObservable<boolean>;
     caption: KnockoutObservable<string>;
     message: KnockoutObservable<string>;

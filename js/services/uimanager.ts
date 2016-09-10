@@ -1,8 +1,11 @@
 ﻿/// <reference types="jquery" />
 /// <reference path="../pageblock.ts" />
-/// <reference path="../app.ts" />
 
-class UIManager {
+import { App } from "../app";
+
+declare var app: App;
+
+export class UIManager {
     currentPageContainer: string;
     effectivePageContainer: string;
     currentPage: string;
@@ -157,4 +160,4 @@ class UIManager {
     }
 }
 
-var uiManager = new UIManager();
+export var uiManager = new UIManager();

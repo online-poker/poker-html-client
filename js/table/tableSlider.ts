@@ -1,7 +1,10 @@
 ﻿/// <reference path="../_references.ts" />
-/// <reference path="../timeService.ts" />
 
-class TableSlider {
+import * as ko from "knockout";
+import * as timeService from "../timeService";
+import { TablePlaceModel } from "./tabpleplacemodel";
+
+export class TableSlider {
     public current: KnockoutObservable<number>;
     public currentValue: KnockoutComputed<string>;
     public minimum: KnockoutObservable<number>;

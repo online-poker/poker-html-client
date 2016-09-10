@@ -1,9 +1,14 @@
 /// <reference path="./_references.ts" />
 /// <reference path="./selector.ts" />
-/// <reference path="./app.ts" />
 /* tslint:disable:no-string-literal */
 
 import ko = require("knockout");
+import * as moment from "moment";
+import { App } from "./app";
+import * as timeService from "./timeService";
+
+declare var app: App;
+
 
 // Binding set loading variable for short amount of time.
 ko.bindingHandlers["loading"] = {

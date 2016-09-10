@@ -3,7 +3,11 @@
 
 declare var baseUrl: string;
 
-class ConnectionWrapper {
+import * as timeService from "../timeService";
+import { ConnectionService } from "./connectionservice";
+import { slowInternetService, connectionService } from "./index";
+
+export class ConnectionWrapper {
     terminated = false;
     constructor(public connection: HubConnection) {
         var self = this;

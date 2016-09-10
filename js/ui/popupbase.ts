@@ -1,7 +1,11 @@
-﻿/// <reference path="../_references.ts" />
-/* tslint:disable:no-string-literal */
+﻿/* tslint:disable:no-string-literal */
 
-class PopupBase {
+import * as ko from "knockout";
+import { App } from "../app";
+
+declare var app: App;
+
+export class PopupBase {
     visible: KnockoutObservable<boolean>;
 
     constructor() {

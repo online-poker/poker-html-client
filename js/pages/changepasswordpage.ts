@@ -1,8 +1,8 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../app.ts" />
+﻿import * as ko from "knockout";
+import { PageBase } from "../ui/pagebase";
+import { App } from "../app";
 
-class ChangePasswordPage extends PageBase implements KnockoutValidationGroup {
+export class ChangePasswordPage extends PageBase implements KnockoutValidationGroup {
     oldpassword: KnockoutObservable<string>;
     password: KnockoutObservable<string>;
     confirmpassword: KnockoutObservable<string>;

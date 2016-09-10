@@ -2,7 +2,7 @@
 /// <reference path="page.ts" />
 /* tslint:disable:no-string-literal */
 
-class PageBase implements Page {
+export class PageBase implements Page {
     /**
     * Indicating whether page is currently visible
     */

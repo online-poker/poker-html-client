@@ -1,4 +1,4 @@
-﻿/// <reference path="../../Scripts/typings/knockout/knockout.d.ts" />
+﻿/// <reference types="knockout" />
 /// <reference path="../app.ts" />
 /// <reference path="../ui/page.ts" />
 /// <reference path="../messages.ts" />
@@ -7,7 +7,14 @@
 /// <reference path="../poker.commanding.api.ts" />
 /// <reference path="../authmanager.ts" />
 
-class InfoPage extends PageBase {
+import { App } from "../app";
+import * as authManager from "../authManager";
+import { keyboardActivationService } from "../services";
+import { PageBase } from "../ui/pagebase";
+
+declare var app: App;
+
+export class InfoPage extends PageBase {
     constructor() {
         super();
     }

@@ -1,11 +1,13 @@
 ﻿/// <reference path="../pageblock.ts" />
-/// <reference path="settingspage.ts" />
-/// <reference path="changepasswordpage.ts" />
-/// <reference path="ratingpage.ts" />
-/// <reference path="chatpage.ts" />
-/// <reference path="accountpage.ts" />
 
-class OtherPageBlock extends PageBlock {
+import { App } from "../app";
+import { AccountPage } from "./accountpage";
+import { RatingPage } from "./ratingpage";
+import { SettingsPage } from "./settingspage";
+import { ChatPage } from "./chatpage";
+import { ChangePasswordPage } from "./changepasswordpage";
+
+export class OtherPageBlock extends PageBlock {
     changePasswordPage: ChangePasswordPage;
     morePage: SettingsPage;
     ratingPage: RatingPage;

@@ -1,4 +1,4 @@
-﻿/// <reference path="../../Scripts/typings/knockout/knockout.d.ts" />
+﻿/// <reference types="knockout" />
 /// <reference path="../app.ts" />
 /// <reference path="../ui/page.ts" />
 /// <reference path="../messages.ts" />
@@ -7,7 +7,12 @@
 /// <reference path="../poker.commanding.api.ts" />
 /// <reference path="../authmanager.ts" />
 
-class RatingPage implements Page {
+import { App } from "../app";
+
+declare var apiHost: string;
+declare var app: App;
+
+export class RatingPage implements Page {
     ratings = ko.observableArray<UserRating>();
     loading = ko.observable(false);
 

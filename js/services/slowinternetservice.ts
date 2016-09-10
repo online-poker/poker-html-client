@@ -2,7 +2,12 @@
 /// <reference path="../app.ts" />
 /// <reference path="connectionservice.ts" />
 
-class SlowInternetService {
+import { connectionService } from "./index";
+import { App } from "../app";
+
+declare var app: App;
+
+export class SlowInternetService {
     static popupName = "slowConnection";
     offline: boolean;
     manualDisconnect: boolean;
@@ -170,5 +175,3 @@ class SlowInternetService {
         }
     }
 }
-
-var slowInternetService = new SlowInternetService();

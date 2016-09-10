@@ -1,10 +1,19 @@
 ﻿/// <reference path="../_references.ts" />
 /// <reference path="../poker.commanding.api.ts" />
 /// <reference path="../app.ts" />
-/// <reference path="../ui/popupbase.ts" />
 /// <reference path="../services/websiteService.ts" />
 
-class RegistrationPopup extends PopupBase implements KnockoutValidationGroup {
+import * as ko from "knockout";
+import { PopupBase } from "../ui/popupbase";
+import * as metadataManager from "../metadatamanager";
+import * as authManager from "../authmanager";
+import { SimplePopup } from "./simplepopup";
+import { App } from "../app";
+
+declare var apiHost: string;
+declare var app: App;
+
+export class RegistrationPopup extends PopupBase implements KnockoutValidationGroup {
     login: KnockoutObservable<string>;
     email: KnockoutObservable<string>;
     firstName: KnockoutObservable<string>;

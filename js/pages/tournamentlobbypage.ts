@@ -4,6 +4,19 @@
 /// <reference path="../poker.commanding.api.ts" />
 /// <reference path="../authmanager.ts" />
 
+import * as ko from "knockout";
+import * as moment from "moment";
+import { App } from "../app";
+import * as metadataManager from "../metadatamanager";
+import { SimplePopup } from "../popups/simplepopup";
+import * as tableManager from "../table/tablemanager";
+import * as timeService from "../timeservice";
+import * as authManager from "../authManager";
+import { PageBase } from "../ui/pagebase";
+
+declare var apiHost: string;
+declare var app: App;
+
 interface TournamentTablePlayerView {
     id: number;
     login: string;
@@ -17,7 +30,7 @@ interface TournamentTableListView {
     players: TournamentTablePlayerView[];
 }
 
-class TournamentLobbyPage extends PageBase {
+export class TournamentLobbyPage extends PageBase {
     loading: KnockoutObservable<boolean>;
     tournamentId = 0;
     tournamentData: KnockoutObservable<TournamentDefinition>;

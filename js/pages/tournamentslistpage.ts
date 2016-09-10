@@ -4,7 +4,16 @@
 /// <reference path="../poker.commanding.api.ts" />
 /* tslint:disable:no-bitwise */
 
-class TournamentsListPage extends PageBase {
+declare var apiHost: string;
+
+import * as ko from "knockout";
+import { App } from "../app";
+import { TournamentOptions } from "./lobbypage";
+import { PageBase } from "../ui/pagebase";
+
+declare var app: App;
+
+export class TournamentsListPage extends PageBase {
     tournamentsCaption: KnockoutComputed<string>;
     tournaments: KnockoutObservableArray<LobbyTournamentItem>;
     loading: KnockoutObservable<boolean>;

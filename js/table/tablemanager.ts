@@ -2,12 +2,22 @@
 /// <reference path="../authmanager.ts" />
 /// <reference path="../app.ts" />
 /// <reference path="../commandmanager.ts" />
-/// <reference path="tableview.ts" />
-/// <reference path="tournamentview.ts" />
 /// <reference path="../services/connectionservice.ts" />
 /// <reference path="../services/broadcastservice.ts" />
 /// <reference path="../services/duplicatefinder.ts" />
 /* tslint:disable:no-bitwise no-use-before-declare */
+
+import * as ko from "knockout";
+import * as timeService from "../timeService";
+import { TableView } from "./tableview";
+import { TournamentView } from "./tournamentview";
+import { slowInternetService, connectionService } from "../services";
+import { ConnectionWrapper } from "../services/connectionwrapper";
+import * as broadcastService from "../services/broadcastservice";
+import { SimplePopup } from "../popups/simplepopup";
+import * as authManager from "../authManager";
+
+declare var apiHost: string;
 
 class TableManager {
     tables: KnockoutObservableArray<TableView>;
@@ -1113,3 +1123,4 @@ class TableManager {
 }
 
 var tableManager = new TableManager();
+export = tableManager;
