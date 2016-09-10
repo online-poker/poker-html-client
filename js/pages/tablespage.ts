@@ -1,13 +1,4 @@
-﻿/// <reference types="knockout" />
-/// <reference path="../app.ts" />
-/// <reference path="../ui/pagebase.ts" />
-/// <reference path="../messages.ts" />
-/// <reference path="../languagemanager.ts" />
-/// <reference path="../metadatamanager.ts" />
-/// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../authmanager.ts" />
-
-declare var apiHost: string;
+﻿declare var apiHost: string;
 
 import * as ko from "knockout";
 import { App } from "../app";
@@ -129,6 +120,9 @@ export class TablesPage extends PageBase {
         var currentWidth = $("body").width();
         if (currentWidth >= 1024 || (currentWidth == 768 && $("body").height() == 0)) {
             viewportLandscapeWidth = 1024;
+            if (currentWidth >= 1920) {
+                viewportLandscapeWidth = 1920;
+            }
         }
 
         if (currentWidth < 360) {

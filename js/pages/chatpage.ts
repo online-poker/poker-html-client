@@ -1,12 +1,4 @@
-﻿/// <reference path="../app.ts" />
-/// <reference path="../ui/page.ts" />
-/// <reference path="../messages.ts" />
-/// <reference path="../languagemanager.ts" />
-/// <reference path="../metadatamanager.ts" />
-/// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../authmanager.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { PlayerMessage } from "../table/playerMessage";
 import * as timeService from "../timeService";
 import { connectionService, keyboardActivationService } from "../services";

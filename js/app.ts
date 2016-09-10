@@ -638,6 +638,7 @@ export class App {
         var self = this;
         timeService.start();
         settings.soundEnabled.subscribe(function (value) {
+            soundManager.enabled(value);
         });
         settings.loadSettings();
 		settings.isGuest.subscribe(function (value) {

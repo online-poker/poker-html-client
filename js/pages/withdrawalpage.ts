@@ -1,12 +1,4 @@
-﻿/// <reference types="knockout" />
-/// <reference path="../app.ts" />
-/// <reference path="../ui/pagebase.ts" />
-/// <reference path="../messages.ts" />
-/// <reference path="../languagemanager.ts" />
-/// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../authmanager.ts" />
-
-declare var apiHost: string;
+﻿declare var apiHost: string;
 
 import { App } from "../app";
 import * as metadataManager from "../metadatamanager";

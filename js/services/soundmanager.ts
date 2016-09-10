@@ -89,6 +89,11 @@ export class SoundManager {
             });
             media.play();
         }
+
+        if (window["Audio"] != null) {
+            var audio = new Audio(fileName);
+            audio.play();
+        }
 		/* tslint:enable:no-string-literal */
     }
 }

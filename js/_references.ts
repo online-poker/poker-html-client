@@ -14,5 +14,4 @@
 /// <reference path="poker.commanding.api.d.ts" />
 /// <reference path="ui/ui.d.ts" /> 
 
-/// <reference path="messages.ts" />
 /// <reference path="languagemanager.ts" />

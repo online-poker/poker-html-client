@@ -1,13 +1,4 @@
-﻿/// <reference types="knockout" />
-/// <reference path="../app.ts" />
-/// <reference path="../ui/page.ts" />
-/// <reference path="../messages.ts" />
-/// <reference path="../languagemanager.ts" />
-/// <reference path="../metadatamanager.ts" />
-/// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../authmanager.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { App } from "../app";
 import { SimplePopup } from "../popups/simplepopup";
 import { PageBase } from "../ui/pagebase";
