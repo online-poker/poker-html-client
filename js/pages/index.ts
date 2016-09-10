@@ -5,3 +5,4 @@ export { CashierPageBlock } from "./cashierpageblock";
 export { InfoPageBlock } from "./infopageblock";
 export { OtherPageBlock } from "./otherpageblock";
 export { TablesPage } from "./tablespage";
+export { SeatPage } from "./SeatPage";

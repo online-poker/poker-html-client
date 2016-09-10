@@ -40,7 +40,15 @@ import {
     soundManager
 } from "./services";
 import * as tableManager from "./table/tablemanager";
-import { HomePage, LobbyPageBlock, CashierPageBlock, TablesPage, InfoPageBlock, OtherPageBlock } from "./pages";
+import {
+    HomePage,
+    LobbyPageBlock,
+    CashierPageBlock,
+    TablesPage,
+    InfoPageBlock,
+    OtherPageBlock,
+    SeatPage
+} from "./pages";
 import {
     MorePopup,
     AccountStatusPopup,
@@ -70,6 +78,7 @@ export class App {
     lobbyPageBlock: LobbyPageBlock;
     cashierPageBlock: CashierPageBlock;
     tablesPage: TablesPage;
+    seatsPage: SeatPage;
     infoPageBlock: InfoPageBlock;
     otherPageBlock: OtherPageBlock;
     authPopup: AuthPopup;
@@ -115,6 +124,7 @@ export class App {
         this.lobbyPageBlock = new LobbyPageBlock();
         this.cashierPageBlock = new CashierPageBlock();
         this.tablesPage = new TablesPage();
+        this.seatsPage = new SeatPage();
 
         this.authPopup = new AuthPopup();
         this.forgetPasswordPopup = new ForgetPasswordPopup();
@@ -138,6 +148,7 @@ export class App {
 
         this.bindSubPage("home", self.homePage);
         this.bindSubPage("tables", self.tablesPage);
+        this.bindSubPage("seats", self.seatsPage);
 
         this.bindPopup("auth", self.authPopup);
         this.bindPopup("forgetPassword", self.forgetPasswordPopup);

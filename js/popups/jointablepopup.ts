@@ -8,6 +8,7 @@ import * as ko from "knockout";
 import { TableView } from "../table/tableview";
 import { SimplePopup } from "./simplepopup";
 import { App } from "../app";
+import { appConfig } from "../appconfig";
 
 declare var app: App;
 
@@ -63,6 +64,9 @@ export class JoinTablePopup implements KnockoutValidationGroup {
                 self.minBet(tableData.SmallBlind);
                 self.maxBet(tableData.BigBlind);
                 self.updateEntries();
+                if (appConfig.game.seatMode) {
+                    app.executeCommand("page.seats");
+                }
             } else {
                 SimplePopup.display(_("joinTable.caption"), _("errors." + data.Status));
             }
