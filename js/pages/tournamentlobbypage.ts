@@ -65,7 +65,7 @@ export class TournamentLobbyPage extends PageBase {
 
     constructor() {
         super();
-        var self = this;
+        const self = this;
         this.tournamentData = ko.observable<TournamentDefinition>(null);
         this.tablesData = ko.observableArray<TournamentTableListView>([]);
         this.tournamentData.subscribe(function (data) {
@@ -74,10 +74,10 @@ export class TournamentLobbyPage extends PageBase {
                 return;
             }
 
-            var result = [];
-            for (var i = 0; i < data.TournamentTables.length; i++) {
-                var table = data.TournamentTables[i];
-                var tableModel: TournamentTableListView = {
+            const result = [];
+            for (let i = 0; i < data.TournamentTables.length; i++) {
+                const table = data.TournamentTables[i];
+                const tableModel: TournamentTableListView = {
                     id: table.TableId,
                     name: table.TableName,
                     isClosed: table.IsClosed,
@@ -105,7 +105,7 @@ export class TournamentLobbyPage extends PageBase {
             self.refreshTournament();
         });
         this.lateRegistrationAllowed = ko.computed(function () {
-            var data = self.tournamentData();
+            const data = self.tournamentData();
             if (data === null) {
                 return false;
             }
@@ -113,7 +113,7 @@ export class TournamentLobbyPage extends PageBase {
             return data.RegistrationEndDate > data.StartDate;
         }, this);
         this.totalPrize = ko.computed(function () {
-            var tdata = self.tournamentData();
+            const tdata = self.tournamentData();
             if (tdata === null) {
                 return null;
             }
@@ -121,19 +121,19 @@ export class TournamentLobbyPage extends PageBase {
             return tdata.PrizeAmount + (tdata.CollectedPrizeAmount || 0);
         }, this);
         this.stackInformation = ko.computed(function () {
-            var data = self.tournamentData();
+            const data = self.tournamentData();
             if (data === null) {
                 return null;
             }
 
-            var activePlayers = data.TournamentPlayers.filter(function (item) {
+            const activePlayers = data.TournamentPlayers.filter(function (item) {
                 return item.Status === 2;
             });
-            var maxStack = 0;
-            var minStack = 10000000000;
-            var stackSum = 0;
+            let maxStack = 0;
+            let minStack = 10000000000;
+            let stackSum = 0;
             activePlayers.forEach(function (item) {
-                var stack = item.Stack === null ? 0 : item.Stack;
+                const stack = item.Stack === null ? 0 : item.Stack;
                 if (stack > maxStack) {
                     maxStack = stack;
                 }
@@ -145,20 +145,20 @@ export class TournamentLobbyPage extends PageBase {
                 stackSum += stackSum;
             });
 
-            var avgStack = stackSum / activePlayers.length;
-            var result = _("tournamentLobby.stackInformation")
+            const avgStack = stackSum / activePlayers.length;
+            const result = _("tournamentLobby.stackInformation")
                 .replace("#max", maxStack.toString())
                 .replace("#min", minStack.toString())
                 .replace("#avg", avgStack.toFixed(0));
             return result;
         }, this);
         this.participantsInformation = ko.computed(function () {
-            var data = self.tournamentData();
+            const data = self.tournamentData();
             if (data == null) {
                 return null;
             }
 
-            var activePlayers = data.TournamentPlayers.filter(function (item) {
+            const activePlayers = data.TournamentPlayers.filter(function (item) {
                 return item.Status === 2;
             });
             return _("tournamentLobby.participantsInformation")
@@ -167,7 +167,7 @@ export class TournamentLobbyPage extends PageBase {
                 .replace("#playersCount", activePlayers.length.toString());
         }, this);
         this.betLevelInformation = ko.computed(function () {
-            var data = self.tournamentData();
+            const data = self.tournamentData();
             if (data == null) {
                 return null;
             }
@@ -176,13 +176,13 @@ export class TournamentLobbyPage extends PageBase {
                 return null;
             }
 
-            var betStructure = metadataManager.bets[data.WellKnownBetStructure]
+            const betStructure = metadataManager.bets[data.WellKnownBetStructure]
                 .sort((a, b) => a.Level - b.Level);
 
             // Values in the betStructure is starting from 1, be caution.
             // Different methods could produce different indexation.
-            var betLevel = betStructure.length < data.BetLevel ? betStructure.length : data.BetLevel;
-            var currentBets = betStructure.filter(_ => _.Level === betLevel)[0];
+            const betLevel = betStructure.length < data.BetLevel ? betStructure.length : data.BetLevel;
+            const currentBets = betStructure.filter(_ => _.Level === betLevel)[0];
             if (currentBets.Ante !== null && currentBets.Ante !== 0) {
                 return _("tournamentLobby.betStructureWithAnte")
                     .replace("#sb", currentBets.SmallBlind.toString())
@@ -196,14 +196,14 @@ export class TournamentLobbyPage extends PageBase {
         }, this);
 
         this.getBetStructure = ko.computed(function () {
-            var data = self.tournamentData();
+            const data = self.tournamentData();
             if (data == null) {
                 return [];
             }
 
-            var currentPlayers = data.JoinedPlayers;
-            var prizeStructure = metadataManager.bets[data.WellKnownBetStructure];
-            var sortedPrizes = prizeStructure.sort(function (a, b) {
+            const currentPlayers = data.JoinedPlayers;
+            const prizeStructure = metadataManager.bets[data.WellKnownBetStructure];
+            const sortedPrizes = prizeStructure.sort(function (a, b) {
                 return a.Level > b.Level
                     ? 1
                     : (a.Level < b.Level ? -1 : 0);
@@ -211,24 +211,24 @@ export class TournamentLobbyPage extends PageBase {
             return sortedPrizes;
         }, this);
         this.getTournamentPlayers = ko.computed(() => {
-            var tdata = self.tournamentData();
+            const tdata = self.tournamentData();
             if (tdata === null || tdata === undefined) {
                 return null;
             }
-            var players = tdata.TournamentPlayers,
+            let players = tdata.TournamentPlayers,
                 modifier = self.playersSortOrder() === "asc" ? 1 : -1;
-            var sortByName = (a: TournamentPlayerDefinition, b: TournamentPlayerDefinition) => {
+            const sortByName = (a: TournamentPlayerDefinition, b: TournamentPlayerDefinition) => {
                 return a.PlayerName > b.PlayerName ? modifier : a.PlayerName < b.PlayerName ? -modifier : 0;
             };
-            var sortByPlace = (a: TournamentPlayerDefinition, b: TournamentPlayerDefinition) => {
-                var aPrize = a.Prize === null ? 0 : a.Prize;
-                var bPrize = b.Prize === null ? 0 : b.Prize;
+            const sortByPlace = (a: TournamentPlayerDefinition, b: TournamentPlayerDefinition) => {
+                const aPrize = a.Prize === null ? 0 : a.Prize;
+                const bPrize = b.Prize === null ? 0 : b.Prize;
                 return aPrize > bPrize ? modifier : aPrize < bPrize ? -modifier : sortByName(a, b);
             };
-            var sortByStack = (a: TournamentPlayerDefinition, b: TournamentPlayerDefinition) => {
+            const sortByStack = (a: TournamentPlayerDefinition, b: TournamentPlayerDefinition) => {
                 if (a.Prize === null && b.Prize === null) {
-                    var aStack = a.Stack === null ? 0 : a.Stack;
-                    var bStack = b.Stack === null ? 0 : b.Stack;
+                    const aStack = a.Stack === null ? 0 : a.Stack;
+                    const bStack = b.Stack === null ? 0 : b.Stack;
                     return aStack > bStack ? modifier : aStack < bStack ? -modifier : -sortByPlace(a, b);
                 } else {
                     if (a.Prize === null) {
@@ -257,17 +257,17 @@ export class TournamentLobbyPage extends PageBase {
             return players;
         }, this);
         this.authenticated = ko.computed(function () {
-            var value = authManager.authenticated();
+            const value = authManager.authenticated();
             return value;
         }, this);
         this.tablesAvailable = ko.computed(function () {
-            var data = self.tournamentData();
+            const data = self.tournamentData();
             return data != null
                 && data.TournamentTables != null
                 && data.TournamentTables.length > 0;
         }, this);
         this.tournamentCaption = ko.computed(function () {
-            var data = self.tournamentData();
+            const data = self.tournamentData();
             if (data === null) {
                 return;
             }
@@ -280,7 +280,7 @@ export class TournamentLobbyPage extends PageBase {
                 .replace("#number", data.TournamentId.toString());
         }, this);
         this.getSelectedTablePlayers = ko.computed(function () {
-            var selectedTables = self.tablesData().filter(function (item) {
+            const selectedTables = self.tablesData().filter(function (item) {
                 return item.selected();
             });
             if (selectedTables.length < 1) {
@@ -295,7 +295,7 @@ export class TournamentLobbyPage extends PageBase {
                 return false;
             }
 
-            var tdata = self.tournamentData();
+            const tdata = self.tournamentData();
             if (tdata === null) {
                 return false;
             }
@@ -309,7 +309,7 @@ export class TournamentLobbyPage extends PageBase {
                 return false;
             }
 
-            var tdata = self.tournamentData();
+            const tdata = self.tournamentData();
             if (tdata === null) {
                 return false;
             }
@@ -322,12 +322,12 @@ export class TournamentLobbyPage extends PageBase {
                 return false;
             }
 
-            var tdata = self.tournamentData();
+            const tdata = self.tournamentData();
             if (tdata === null) {
                 return false;
             }
 
-            var tplayer = tdata.TournamentPlayers.filter(function (item) {
+            const tplayer = tdata.TournamentPlayers.filter(function (item) {
                 return item.PlayerId === authManager.loginId();
             });
 
@@ -343,12 +343,12 @@ export class TournamentLobbyPage extends PageBase {
                 return false;
             }
 
-            var tdata = self.tournamentData();
+            const tdata = self.tournamentData();
             if (tdata === null) {
                 return false;
             }
 
-            var tplayer = tdata.TournamentPlayers.filter(function (item) {
+            const tplayer = tdata.TournamentPlayers.filter(function (item) {
                 return item.PlayerId === authManager.loginId();
             });
 
@@ -367,38 +367,38 @@ export class TournamentLobbyPage extends PageBase {
             return timeService.currentTime();
         }, this);
         this.duration = ko.pureComputed(function () {
-            var tdata = self.tournamentData();
+            const tdata = self.tournamentData();
             if (tdata == null) {
                 return "";
             }
 
-            var startDate = moment(tdata.StartDate);
-            var currentMoment = moment().add(timeService.timeDiff, "ms");
-            var duration = moment.duration(currentMoment.diff(startDate));
-            var m = duration.minutes();
+            const startDate = moment(tdata.StartDate);
+            const currentMoment = moment().add(timeService.timeDiff, "ms");
+            const duration = moment.duration(currentMoment.diff(startDate));
+            const m = duration.minutes();
             return duration.hours() + _("common.hours") + _("common.timeseparator") + (m < 10 ? "0" + m : "" + m) + _("common.minutes");
         }, this);
         this.lateRegistrationLeft = ko.pureComputed(function () {
-            var tdata = self.tournamentData();
+            const tdata = self.tournamentData();
             if (tdata == null) {
                 return "";
             }
 
-            var startDate = moment(tdata.StartDate);
-            var registrationEndDate = moment(tdata.RegistrationEndDate);
-            var currentMoment = moment().add(timeService.timeDiff, "ms");
-            var duration = moment.duration(currentMoment.diff(registrationEndDate));
-            var m = duration.minutes();
+            const startDate = moment(tdata.StartDate);
+            const registrationEndDate = moment(tdata.RegistrationEndDate);
+            const currentMoment = moment().add(timeService.timeDiff, "ms");
+            const duration = moment.duration(currentMoment.diff(registrationEndDate));
+            const m = duration.minutes();
             return duration.hours() + _("common.hours") + _("common.timeseparator") + (m < 10 ? "0" + m : "" + m) + _("common.minutes");
         }, this);
         this.lateRegistrationRunning = ko.pureComputed(function () {
-            var tdata = self.tournamentData();
+            const tdata = self.tournamentData();
             if (tdata == null) {
                 return false;
             }
 
-            var registrationEndDate = moment(tdata.RegistrationEndDate);
-            var currentMoment = moment().add(timeService.timeDiff, "ms");
+            const registrationEndDate = moment(tdata.RegistrationEndDate);
+            const currentMoment = moment().add(timeService.timeDiff, "ms");
             if (currentMoment.diff(registrationEndDate)) {
                 return false;
             }
@@ -407,22 +407,22 @@ export class TournamentLobbyPage extends PageBase {
         }, this);
 
         this.prizesCount = ko.computed(function () {
-            var data = self.tournamentData();
+            const data = self.tournamentData();
             if (data === null) {
                 return null;
             }
 
-            var currentPlayers = data.JoinedPlayers;
-            var prizeStructure = metadataManager.prizes[data.WellKnownPrizeStructure];
-            var sortedPrizes = prizeStructure.sort(function (a, b) {
+            const currentPlayers = data.JoinedPlayers;
+            const prizeStructure = metadataManager.prizes[data.WellKnownPrizeStructure];
+            const sortedPrizes = prizeStructure.sort(function (a, b) {
                 return a.MaxPlayer > b.MaxPlayer
                     ? 1
                     : (a.MaxPlayer < b.MaxPlayer ? -1 : 0);
             });
-            var filteredPrizes = sortedPrizes.filter(function (a) {
+            const filteredPrizes = sortedPrizes.filter(function (a) {
                 return a.MaxPlayer >= currentPlayers;
             });
-			var currentPrize: TournamentPrizeStructure;
+            let currentPrize: TournamentPrizeStructure;
             if (filteredPrizes.length === 0) {
                 currentPrize = sortedPrizes[0];
             } else {
@@ -431,7 +431,7 @@ export class TournamentLobbyPage extends PageBase {
 
             return currentPrize.PrizeLevel.length;
         }, this);
-        var scrollTriggerCounter = 0;
+        let scrollTriggerCounter = 0;
         this.scrollTrigger = ko.computed(function () {
             self.loading();
             self.currentView();
@@ -446,16 +446,15 @@ export class TournamentLobbyPage extends PageBase {
     }
     activate() {
         super.activate();
-        var self = this;
         this.refreshTournament();
         if (PageBlock.useDoubleView) {
             app.lobbyPageBlock.lobbyPage.filterLocked(true);
         }
 
-        reloadManager.setReloadCallback(() => self.refreshTournament());
+        reloadManager.setReloadCallback(() => this.refreshTournament());
     }
     selectTable(table: TournamentTableListView) {
-        var tables = this.tablesData();
+        const tables = this.tablesData();
         tables.forEach(function (item) {
             item.selected(false);
         });
@@ -469,20 +468,19 @@ export class TournamentLobbyPage extends PageBase {
     }
     refreshTournament(): JQueryPromise<any> {
         if (this.tournamentId === 0) {
-            var x: JQueryXHR;
             return $.Deferred().resolve({ Status: "Ok", Data: null });
         }
 
-        var self = this;
-        var tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        const self = this;
+        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
         this.loading(true);
         return tournamentApi.GetTournament(this.tournamentId, function (data) {
             if (data.Status === "Ok") {
-                var tournamentData: TournamentDefinition = data.Data;
+                const tournamentData: TournamentDefinition = data.Data;
                 self.log("Informaton about tournament ", self.tournamentId, " received: ", data.Data);
                 self.log(tournamentData.TournamentName);
                 self.tournamentData(tournamentData);
-                var tplayer = tournamentData.TournamentPlayers.filter(_ => _.PlayerId === authManager.loginId());
+                const tplayer = tournamentData.TournamentPlayers.filter(_ => _.PlayerId === authManager.loginId());
                 if (tournamentData.Status === TournamentStatus.Started
                     || tournamentData.Status === TournamentStatus.LateRegistration) {
                     // Connect to the tournament so player could monitor game on it
@@ -509,22 +507,22 @@ export class TournamentLobbyPage extends PageBase {
         app.lobbyPageBlock.showSecondary(this.parentView);
     }
     register() {
-        var self = this;
-        var tournament = self.tournamentData();
-        var name = tournament.TournamentName;
-        var joinAmount = tournament.JoinFee + tournament.BuyIn;
-		/* tslint:disable:no-string-literal */
-		var numericTextBinding = <any>ko.bindingHandlers["numericText"];
-		/* tslint:enable:no-string-literal */
-        var joinAmountString = numericTextBinding.withCommas(joinAmount.toFixed(0));
-        var api = new OnlinePoker.Commanding.API.Account(apiHost);
+        const self = this;
+        const tournament = self.tournamentData();
+        const name = tournament.TournamentName;
+        const joinAmount = tournament.JoinFee + tournament.BuyIn;
+        /* tslint:disable:no-string-literal */
+        const numericTextBinding = <any>ko.bindingHandlers["numericText"];
+        /* tslint:enable:no-string-literal */
+        const joinAmountString = numericTextBinding.withCommas(joinAmount.toFixed(0));
+        const api = new OnlinePoker.Commanding.API.Account(apiHost);
         self.loading(true);
         api.GetPersonalAccount(function (data) {
             self.loading(false);
             if (data.Status === "Ok") {
-                var personalAccountData = <PersonalAccountData>data.Data;
-                var balance = 0;
-                var tournament = self.tournamentData();
+                const personalAccountData = <PersonalAccountData>data.Data;
+                let balance = 0;
+                const tournament = self.tournamentData();
                 if (tournament.CurrencyId === 1) {
                     balance = personalAccountData.RealMoney;
                 } else {
@@ -541,17 +539,17 @@ export class TournamentLobbyPage extends PageBase {
         });
     }
     unregister() {
-        var self = this;
-        var tournament = self.tournamentData();
-        var name = tournament.TournamentName;
-        var operationTitle = _("tournamentLobby.registrationCancelled");
+        const self = this;
+        const tournament = self.tournamentData();
+        const name = tournament.TournamentName;
+        const operationTitle = _("tournamentLobby.registrationCancelled");
         app.prompt(
             _("tournamentLobby.tournamentRegistrationCancelPromptCaption"),
             [_("tournamentLobby.tournamentRegistrationCancelPrompt").replace("#name", name)])
             .done(function () {
                 self.loading(true);
-                var tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-				tournamentApi.CancelRegistration(self.tournamentId, function (data) {
+                const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+                tournamentApi.CancelRegistration(self.tournamentId, function (data) {
                     self.loading(false);
                     if (data.Status === "Ok") {
                         self.log("Registration cancelled");
@@ -573,15 +571,15 @@ export class TournamentLobbyPage extends PageBase {
         this.currentView(view);
     }
     viewGame() {
-        var tablesView = 2;
+        const tablesView = 2;
         if (this.currentView() !== tablesView) {
             this.currentView(tablesView);
         } else {
-            var selectedTable = this.tablesData().filter((_) => {
+            const selectedTable = this.tablesData().filter((_) => {
                 return _.selected();
             });
             if (selectedTable.length !== 0) {
-                var table = selectedTable[0];
+                const table = selectedTable[0];
                 if (!table.isClosed) {
                     this.showTournamentTable(selectedTable[0].id);
                 }
@@ -589,7 +587,7 @@ export class TournamentLobbyPage extends PageBase {
         }
     }
     continueGame() {
-        var tournamentView = tableManager.getTournamentById(this.tournamentId);
+        const tournamentView = tableManager.getTournamentById(this.tournamentId);
         this.showTournamentTable(tournamentView.currentTableId);
     }
     showTable(table: TournamentTableDefinition) {
@@ -643,22 +641,22 @@ export class TournamentLobbyPage extends PageBase {
     * @param tableId Number Id of the tournament table to show.
     */
     private showTournamentTable(tableId: number) {
-        var self = this;
-        var tableView = tableManager.getTableById(tableId);
+        const self = this;
+        const tableView = tableManager.getTableById(tableId);
         if (tableView === null) {
             this.loading(true);
-            var tdata = this.tournamentData();
-            var api = new OnlinePoker.Commanding.API.Game(apiHost);
-			var currentTournamentTitle = _("tournamentLobby.caption", { "number": tdata.TournamentId });
+            const tdata = this.tournamentData();
+            const api = new OnlinePoker.Commanding.API.Game(apiHost);
+            const currentTournamentTitle = _("tournamentLobby.caption", { "number": tdata.TournamentId });
             api.GetTable(tableId).then(function (data) {
                 if (data.Status === "Ok") {
-                    var tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+                    const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
                     tapi.GetTournament(tdata.TournamentId).then(function (tournamentData) {
                         if (data.Status === "Ok") {
                             self.loading(false);
                             tableManager.selectTournament(tournamentData.Data, false);
                             tableManager.selectTable(data.Data, true);
-                            var currentTable = tableManager.getTableById(tableId);
+                            const currentTable = tableManager.getTableById(tableId);
                             if (currentTable != null) {
                                 currentTable.tournament(tableManager.getTournamentById(tdata.TournamentId));
                                 app.showSubPage("tables");
@@ -687,20 +685,20 @@ export class TournamentLobbyPage extends PageBase {
         }
     }
     private promptRegister(currentBalance: number) {
-        var self = this;
-        var tournament = self.tournamentData();
-        var name = tournament.TournamentName;
-        var joinAmount = tournament.JoinFee + tournament.BuyIn;
-		/* tslint:disable:no-string-literal */
-        var numericTextBinding = <any>ko.bindingHandlers["numericText"];
-		/* tslint:enable:no-string-literal */
-        var joinAmountString = numericTextBinding.withCommas(joinAmount.toFixed(0));
+        const self = this;
+        const tournament = self.tournamentData();
+        const name = tournament.TournamentName;
+        const joinAmount = tournament.JoinFee + tournament.BuyIn;
+        /* tslint:disable:no-string-literal */
+        const numericTextBinding = <any>ko.bindingHandlers["numericText"];
+        /* tslint:enable:no-string-literal */
+        const joinAmountString = numericTextBinding.withCommas(joinAmount.toFixed(0));
         if (currentBalance < joinAmount) {
             SimplePopup.display(_("tournamentLobby.tournamentRegistrationPromptCaption"), _("tournamentLobby.insufficientFunds"));
             return;
         }
 
-        var balanceString = numericTextBinding.withCommas(currentBalance.toFixed(0));
+        const balanceString = numericTextBinding.withCommas(currentBalance.toFixed(0));
         app.prompt(
             _("tournamentLobby.tournamentRegistrationPromptCaption"),
             [
@@ -710,7 +708,7 @@ export class TournamentLobbyPage extends PageBase {
             ])
             .done(function () {
                 self.loading(true);
-                var tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+                const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
                 tournamentApi.Register(self.tournamentId, function (data) {
                     self.loading(false);
                     if (data.Status === "Ok") {

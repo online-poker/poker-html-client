@@ -38,8 +38,8 @@ export class ContinueForgetPasswordPopup extends PopupBase implements KnockoutVa
         super.shown(args);
     }
     confirm() {
-        var self = this;
-        var isValid = this.isValid();
+        const self = this;
+        const isValid = this.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;
@@ -48,7 +48,7 @@ export class ContinueForgetPasswordPopup extends PopupBase implements KnockoutVa
         if (!this.loading()) {
             self.loading(true);
             self.errorMessage(null);
-            var accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
+            const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
             accountApi.ResetPassword(this.token(), this.password(), function (data) {
                 if (data.Status === "Ok") {
                     self.token(null);

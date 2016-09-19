@@ -19,15 +19,15 @@ export class ChatPage implements Page {
         this.currentMessage = ko.observable<string>();
         this.messages = ko.observableArray<PlayerMessage>([]);
         this.loading = ko.observable(false);
-        var self = this;
+        const self = this;
         connectionService.newConnection.add(function () {
-            var chatHub = connectionService.currentConnection.connection.createHubProxy("chat");
-            var handler = (...msg: any[]) => {
-                var messageId = msg[0];
-                var tableId = msg[1];
-                var type = msg[2];
-                var sender = msg[3];
-                var message = msg[4];
+            const chatHub = connectionService.currentConnection.connection.createHubProxy("chat");
+            const handler = (...msg: any[]) => {
+                const messageId = msg[0];
+                const tableId = msg[1];
+                const type = msg[2];
+                const sender = msg[3];
+                const message = msg[4];
                 if (tableId !== 0) {
                     return;
                 }
@@ -42,17 +42,13 @@ export class ChatPage implements Page {
         });
     }
     deactivate() {
-        //$.connection.Chat.server.leave(0);
         if (this.timeoutHandler !== 0) {
             timeService.clearTimeout(this.timeoutHandler);
         }
     }
     activate() {
-        var self = this;
+        const self = this;
         this.loading(true);
-        //$.connection.hub.start().done(function () {
-            //$.connection.Chat.server.join(0);
-        //});
         this.timeoutHandler = timeService.setTimeout(function () {
             self.loading(false);
             self.timeoutHandler = 0;
@@ -63,13 +59,13 @@ export class ChatPage implements Page {
         app.lobbyPageBlock.showLobby();
     }
     send() {
-        var self = this;
-        var message = this.currentMessage();
+        const self = this;
+        const message = this.currentMessage();
         if (message === "" || message === null) {
             return;
         }
 
-        var api = new OnlinePoker.Commanding.API.Chat(apiHost);
+        const api = new OnlinePoker.Commanding.API.Chat(apiHost);
         api.Send(0, message, (data, textStatus, jqXHR) => {
             if (data.Status !== "Ok") {
                 SimplePopup.display(_("chat.sendingMessage"), _("errors." + data.Status));
@@ -80,7 +76,7 @@ export class ChatPage implements Page {
         this.currentMessage("");
     }
     addMessage(messageId: number, sender: string, message: string) {
-        var m = new PlayerMessage(messageId, sender, message);
+        const m = new PlayerMessage(messageId, sender, message);
         if (this.messages().some((item) => item.messageId === messageId)) {
             // Skip adding message if it is already in the list.
             return;
@@ -91,7 +87,7 @@ export class ChatPage implements Page {
             this.messages.pop();
         }
 
-        var messages = this.messages();
+        const messages = this.messages();
         this.messages([]);
         this.messages(messages);
     }

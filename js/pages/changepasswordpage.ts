@@ -10,7 +10,7 @@ export class ChangePasswordPage extends PageBase implements KnockoutValidationGr
     isValid: () => boolean;
 
     constructor() {
-		super();
+        super();
         App.addTabBarItemMapping("more", "changePassword");
         this.oldpassword = ko.observable<string>().extend({ required: true });
         this.password = ko.observable<string>().extend({ required: true });

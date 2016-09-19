@@ -36,7 +36,6 @@ export class HomePage extends PageBase {
 
     constructor() {
         super();
-        var self = this;
         this.online = metadataManager.online;
         this.registered = metadataManager.registered;
         this.captionLabel = ko.computed(function () {
@@ -54,8 +53,8 @@ export class HomePage extends PageBase {
         this.authenticatedUser = ko.computed(function () {
             return authManager.login();
         }, this);
-        authManager.authenticated.subscribe(function (value) {
-            self.banners(metadataManager.smallBanners);
+        authManager.authenticated.subscribe((value) => {
+            this.banners(metadataManager.smallBanners);
         });
     }
     deactivate(pageName?: string) {
@@ -65,7 +64,6 @@ export class HomePage extends PageBase {
     }
     activate(pageName?: string) {
         super.activate(pageName);
-        var self = this;
         this.update();
         this.username(settings.login());
         this.password(settings.password());
@@ -79,15 +77,14 @@ export class HomePage extends PageBase {
     }
     update() {
         this.logNews("Updating home page");
-        var self = this;
-        var metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
+        const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
         metadataManager.updateOnline();
-        metadataApi.GetNews(function (data) {
+        metadataApi.GetNews((data) => {
             if (data.Status === "Ok") {
-                self.news(data.Data);
-                var i = 0;
+                this.news(data.Data);
+                let i = 0;
                 if (data.Data.length > 0 && i < data.Data.length) {
-                    self.currentNews(data.Data[i]);
+                    this.currentNews(data.Data[i]);
                 }
             }
         });
@@ -97,16 +94,15 @@ export class HomePage extends PageBase {
         app.showSubPage("lobby");
     }
     login() {
-        var self = this;
-        var username = this.username();
-        var password = this.password();
+        const username = this.username();
+        const password = this.password();
         if (username === null || username.trim() === "") {
-            self.errorMessage(_("homePage.userRequired"));
+            this.errorMessage(_("homePage.userRequired"));
             return;
         }
 
         if (password == null || password.trim() === "") {
-            self.errorMessage(_("homePage.passwordRequired"));
+            this.errorMessage(_("homePage.passwordRequired"));
             return;
         }
 
@@ -118,18 +114,18 @@ export class HomePage extends PageBase {
 
         app.processing(true);
         authManager.authenticate(username, password, this.rememberMe())
-            .pipe(function (status: string) {
+            .pipe((status: string) => {
                 app.processing(false);
                 if (status === "Ok") {
-                    self.errorMessage(null);
-                    self.username("");
-                    self.password("");
+                    this.errorMessage(null);
+                    this.username("");
+                    this.password("");
                     app.lobbyPageBlock.showLobby();
                 } else {
                     if (status) {
-                        self.errorMessage(_("errors." + status));
+                        this.errorMessage(_("errors." + status));
                     } else {
-                        self.errorMessage(_("auth.unspecifiedError"));
+                        this.errorMessage(_("auth.unspecifiedError"));
                     }
                 }
             }, function () {
@@ -137,24 +133,23 @@ export class HomePage extends PageBase {
             });
     }
     logout() {
-		// do nothing.
+        // do nothing.
     }
     forgetPassword() {
         app.showPopup("forgetPassword");
     }
     startNews() {
-        var self = this;
         this.stopNews();
-        var i = 0;
-        this.intervalHandle = timeService.setInterval(function () {
+        let i = 0;
+        this.intervalHandle = timeService.setInterval(() => {
             i++;
-            if (self.news().length <= i) {
-                self.logNews("Reset iteration counter to 0 because " + i.toString() + " bigger then " + self.news().length);
+            if (this.news().length <= i) {
+                this.logNews("Reset iteration counter to 0 because " + i.toString() + " bigger then " + this.news().length);
                 i = 0;
             }
 
-            self.logNews("Setting news item " + i.toString());
-            self.currentNews(self.news()[i]);
+            this.logNews("Setting news item " + i.toString());
+            this.currentNews(this.news()[i]);
         }, 20 * 1000);
     }
     stopNews() {
@@ -164,16 +159,15 @@ export class HomePage extends PageBase {
         }
     }
     startBanner() {
-        var self = this;
         this.stopBanner();
-        var j = 0;
-        this.bannerIntervalHandle = timeService.setInterval(function () {
+        let j = 0;
+        this.bannerIntervalHandle = timeService.setInterval(() => {
             j++;
-            if (self.banners().length <= j) {
+            if (this.banners().length <= j) {
                 j = 0;
             }
 
-            self.currentBanner(self.banners()[j]);
+            this.currentBanner(this.banners()[j]);
         }, 4 * 1000);
     }
     stopBanner() {
@@ -189,15 +183,14 @@ export class HomePage extends PageBase {
     * Performs one click authorization as a guest.
     */
     loginAsGuest() {
-        var self = this;
         app.processing(true);
-        authManager.loginAsGuest().then(function (status) {
+        authManager.loginAsGuest().then((status) => {
             app.processing(false);
             if (!status) {
-                self.errorMessage(_("auth.unspecifiedError"));
+                this.errorMessage(_("auth.unspecifiedError"));
             } else {
                 if (status !== "Ok") {
-                    self.errorMessage(_("errors." + status));
+                    this.errorMessage(_("errors." + status));
                 } else {
                     app.lobbyPageBlock.showLobby();
                 }

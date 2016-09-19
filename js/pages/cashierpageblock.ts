@@ -12,12 +12,12 @@ export class CashierPageBlock extends PageBlock {
     accountPage: AccountPage;
     ratingPage: RatingPage;
     constructor() {
-        var accountPage = new AccountPage();
+        const accountPage = new AccountPage();
         super("cashier", "account", accountPage);
         this.accountPage = accountPage;
         this.ratingPage = new RatingPage();
         this.requireAuthentication = true;
-        //this.addSecondary("account", this.accountPage);
+        // this.addSecondary("account", this.accountPage);
         this.addSecondary("rating", this.ratingPage, true);
         this.currentPage = "rating";
         this.addSecondary("operationsHistory", new OperationsHistoryPage());

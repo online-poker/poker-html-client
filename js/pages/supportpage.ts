@@ -2,7 +2,7 @@
 import { App } from "../app";
 import { SimplePopup } from "../popups/simplepopup";
 import { PageBase } from "../ui/pagebase";
-import { keyboardActivationService } from "../services"; 
+import { keyboardActivationService } from "../services";
 
 declare var apiHost: string;
 declare var app: App;
@@ -53,8 +53,8 @@ export class SupportPage extends PageBase implements KnockoutValidationGroup {
         super.deactivate(pageName);
     }
     send() {
-        var self = this;
-        var isValid = this.isValid();
+        const self = this;
+        const isValid = this.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;
@@ -67,7 +67,7 @@ export class SupportPage extends PageBase implements KnockoutValidationGroup {
         this.loading(true);
         this.errorMessage(null);
         this.errors.showAllMessages(false);
-        var api = new OnlinePoker.Commanding.API.Support(apiHost);
+        const api = new OnlinePoker.Commanding.API.Support(apiHost);
         api.ContactUs(this.fullName(), this.email(), this.subject(), this.body()).then((data) => {
             self.loading(false);
             if (data.Status === "Ok") {

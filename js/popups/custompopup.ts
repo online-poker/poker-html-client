@@ -27,8 +27,8 @@ export class CustomPopup extends PopupBase {
         this.deferred.reject();
     }
     execute(index: number) {
-        var action = this.actions()[index];
-        var result = action();
+        const action = this.actions()[index];
+        const result = action();
         super.close();
         if (result === undefined) {
             this.deferred.reject();

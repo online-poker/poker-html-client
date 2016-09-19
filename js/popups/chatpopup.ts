@@ -30,16 +30,15 @@ export class ChatPopup {
         this.messages = ko.observableArray<PlayerMessage>([]);
     }
     attach(view: TableView) {
-        var self = this;
         if (this.subscription !== null) {
             this.subscription.dispose();
             this.subscription = null;
         }
 
         this.tableView = view;
-        self.messages(this.tableView.messages());
-        this.subscription = this.tableView.messages.subscribe(function (value) {
-            self.messages(value);
+        this.messages(this.tableView.messages());
+        this.subscription = this.tableView.messages.subscribe((value) => {
+            this.messages(value);
         });
     }
     send() {

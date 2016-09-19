@@ -73,11 +73,10 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
     * Selects avatar from list of predefined avatars
     */
     selectPicture() {
-        var self = this;
         app.showPopup("selectAvatar", metadataManager.avatars);
-        app.selectAvatarPopup.selected.addOnce(function (avatarUrl) {
+        app.selectAvatarPopup.selected.addOnce((avatarUrl) => {
             if (avatarUrl != null) {
-                self.imageUrl(avatarUrl);
+                this.imageUrl(avatarUrl);
             }
 
             app.showPopup("registration", true);
@@ -87,14 +86,13 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
     * Selects avatar from the gallery.
     */
     uploadPicture() {
-        var self = this;
-        var captureSuccess = function (imageData: string) {
+        const captureSuccess = (imageData: string) => {
             app.suppressResume = true;
-            self.imageFile(imageData);
+            this.imageFile(imageData);
         };
 
         // capture error callback
-        var captureError = function (message) {
+        const captureError = function (message) {
             app.suppressResume = true;
             console.log("Error code: " + message, null, "Capture Error");
         };
@@ -106,8 +104,8 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
         });
     }
     confirm() {
-        var self = this;
-        var isValid = this.isValid();
+        const self = this;
+        const isValid = this.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             this.moveToError();
@@ -115,13 +113,13 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
         }
 
         this.loading(true);
-        var accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
-        var additionalProperties = {
+        const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
+        const additionalProperties = {
             ImageUrl: this.imageUrl(),
             ImageDataBase64: this.imageFile()
         };
         accountApi.Register(this.login(), this.email(), this.password(), this.firstName(), this.lastName(),
-			this.patronymicName(), this.country(), this.city(), additionalProperties, [], function (data) {
+            this.patronymicName(), this.country(), this.city(), additionalProperties, [], function (data) {
             if (data.Status === "Ok") {
                 self.close();
                 SimplePopup.display(_("auth.registration"), _("auth.registrationsuccess"));

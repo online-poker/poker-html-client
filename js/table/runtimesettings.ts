@@ -21,7 +21,7 @@
         * Value indicating whether play sound of deal cards
         */
         dealCardsEnabled: false
-    }
+    };
 }
 
 var runtimeSettings = new RuntimeSettings();

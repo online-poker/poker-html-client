@@ -34,10 +34,10 @@ export class AccountPage extends PageBase {
     constructor() {
         super();
         App.addTabBarItemMapping("cashier", "account");
-        var self = this;
+        const self = this;
         this.cashierCaption = ko.observable<string>();
         this.loading = ko.observable(false);
-        var emptyElement = {
+        const emptyElement = {
             login: "",
             email: "",
             firstName: "",
@@ -70,10 +70,10 @@ export class AccountPage extends PageBase {
             return;
         }
 
-        var self = this;
-        var realMoneySupported = !settings.isGuest();
-        var gameMoneySupported = settings.isGuest();
-        var pointsSupported = true;
+        const self = this;
+        const realMoneySupported = !settings.isGuest();
+        const gameMoneySupported = settings.isGuest();
+        const pointsSupported = true;
         this.loading(true);
         this.requestData(realMoneySupported, gameMoneySupported, pointsSupported).then(
             () => self.loading(false),
@@ -87,17 +87,17 @@ export class AccountPage extends PageBase {
     }
 
     private requestData(realMoneySupported: boolean, gameMoneySupported: boolean, pointsSupported: boolean) {
-        var self = this;
-        var api = new OnlinePoker.Commanding.API.Account(apiHost);
+        const self = this;
+        const api = new OnlinePoker.Commanding.API.Account(apiHost);
         return api.GetPlayerDefinition(function (data) {
             self.loading(false);
-            var personalAccountData = <PlayerDefinition>data.Data;
+            const personalAccountData = <PlayerDefinition>data.Data;
             console.log(personalAccountData);
             if (!self.visible()) {
                 return;
             }
 
-            var accountsData = <AccountPagePlayerAccountModel[]>[];
+            const accountsData = <AccountPagePlayerAccountModel[]>[];
             if (realMoneySupported) {
                 accountsData.push({
                     currencyName: "currency.realmoney",
@@ -125,7 +125,7 @@ export class AccountPage extends PageBase {
                 });
             }
 
-            var status = "status0";
+            let status = "status0";
             if (parseInt(personalAccountData.Properties.Points, 10) >= 100000) {
                 status = "status1";
             }

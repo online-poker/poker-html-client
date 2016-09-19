@@ -4,8 +4,6 @@
 /// <reference path="../authmanager.ts" />
 /// <reference path="../services/_allservices.ts" />
 
-declare var apiHost: string;
-
 import * as ko from "knockout";
 import { PopupBase } from "../ui/popupbase";
 import * as authManager from "../authmanager";
@@ -38,12 +36,11 @@ export class AccountStatusPopup extends PopupBase {
         this.smallBlind = ko.observable<number>();
         this.bigBlind = ko.observable<number>();
 
-        var self = this;
-        this.tableInformation = ko.computed(function() {
-            return _("accountStatus.tableInfo", { name: self.tableName() });
+        this.tableInformation = ko.computed(() => {
+            return _("accountStatus.tableInfo", { name: this.tableName() });
         }, this);
-        this.betInformation = ko.computed(function() {
-            return _("accountStatus.betInfo", { sb: self.smallBlind(), bb: self.bigBlind() });
+        this.betInformation = ko.computed(() => {
+            return _("accountStatus.betInfo", { sb: this.smallBlind(), bb: this.bigBlind() });
         }, this);
     }
 
@@ -51,7 +48,7 @@ export class AccountStatusPopup extends PopupBase {
         super.shown();
         this.requestData();
         this.loginName(authManager.login());
-        var tableView = app.tablesPage.currentTable();
+        const tableView = app.tablesPage.currentTable();
 
         this.tableName(tableView.model.TableName);
         this.smallBlind(tableView.model.SmallBlind);
@@ -64,7 +61,7 @@ export class AccountStatusPopup extends PopupBase {
             return;
         }
 
-        var currentTable = app.tablesPage.currentTable();
+        const currentTable = app.tablesPage.currentTable();
         app.addMoneyPopup.tableView(currentTable);
         super.close();
         app.showPopup("addMoney").done(function (results: { name: string; result: any }) {
@@ -75,12 +72,11 @@ export class AccountStatusPopup extends PopupBase {
     }
 
     private requestData() {
-        var self = this;
         this.loading(true);
 
-        accountService.getAccount().done(function(result: AccountServiceInformation) {
-            self.loading(false);
-            self.information(result);
+        accountService.getAccount().done((result: AccountServiceInformation) => {
+            this.loading(false);
+            this.information(result);
         }).fail(function() {
             app.closePopup();
         });

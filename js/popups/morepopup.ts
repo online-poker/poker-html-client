@@ -22,7 +22,7 @@ export class MorePopup {
     visible = ko.observable(false);
 
     constructor() {
-        var self = this;
+        const self = this;
         this.authenticated = ko.computed(function () {
             return authManager.authenticated();
         }, this);
@@ -44,9 +44,9 @@ export class MorePopup {
             return;
         }
 
-        var self = this;
+        const self = this;
         this.loading(true);
-        var api = new OnlinePoker.Commanding.API.Account(apiHost);
+        const api = new OnlinePoker.Commanding.API.Account(apiHost);
         $.when(this.updateAccountData(), this.updateMessagesStatus()).then(function () {
             self.loading(false);
         }, function () {
@@ -86,12 +86,12 @@ export class MorePopup {
     * Starts request for the account data.
     */
     private updateAccountData() {
-        var self = this;
-        var api = new OnlinePoker.Commanding.API.Account(apiHost);
+        const self = this;
+        const api = new OnlinePoker.Commanding.API.Account(apiHost);
         return api.GetPlayerDefinition(null).then(function (data) {
             if (data.Status === "Ok") {
-                var personalAccountData = data.Data;
-                var total = settings.isGuest() ? personalAccountData.GameMoney : personalAccountData.RealMoney;
+                const personalAccountData = data.Data;
+                const total = settings.isGuest() ? personalAccountData.GameMoney : personalAccountData.RealMoney;
                 self.amount(total);
                 self.points(personalAccountData.Points);
             } else {
@@ -106,8 +106,8 @@ export class MorePopup {
     * Starts requesting message status
     */
     private updateMessagesStatus() {
-        var self = this;
-        var mapi = new OnlinePoker.Commanding.API.Message(apiHost);
+        const self = this;
+        const mapi = new OnlinePoker.Commanding.API.Message(apiHost);
         return mapi.GetInboxMessages(0, 20, 1 /* Unread */, false, null).then(function (data) {
             if (data.Status === "Ok") {
                 if (data.Data.Messages.length > 0) {

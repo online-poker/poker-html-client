@@ -42,23 +42,23 @@ export class JoinTablePopup implements KnockoutValidationGroup {
         this.errorMessage = ko.observable<string>();
     }
     shown(): void {
-        var self = this;
-        var accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
+        const self = this;
+        const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
         self.loading(true);
         accountApi.GetPersonalAccount(function (data) {
             self.loading(false);
             if (data.Status === "Ok") {
-                var personalAccountData = data.Data;
-                var tableData = self.tableView().model;
-                var balance = 0;
-                var currencyId = tableData.CurrencyId;
+                const personalAccountData = data.Data;
+                const tableData = self.tableView().model;
+                let balance = 0;
+                const currencyId = tableData.CurrencyId;
                 if (currencyId === 1) {
                     balance = personalAccountData.RealMoney;
                 } else {
                     balance = personalAccountData.GameMoney;
                 }
 
-                var tableView = self.tableView();
+                const tableView = self.tableView();
                 self.accountTotal(balance);
                 self.tableName(tableData.TableName);
                 self.minBet(tableData.SmallBlind);
@@ -76,8 +76,8 @@ export class JoinTablePopup implements KnockoutValidationGroup {
         });
     }
     confirm() {
-        var self = this;
-        var isValid = this.isValid();
+        const self = this;
+        const isValid = this.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;
@@ -103,8 +103,8 @@ export class JoinTablePopup implements KnockoutValidationGroup {
             return;
         }
 
-        var seat = this.seatNumber();
-        var amount = this.buyin();
+        const seat = this.seatNumber();
+        const amount = this.buyin();
         this.loading(true);
         this.tableView().sit(seat, amount).then(function () {
             self.loading(false);
@@ -121,10 +121,10 @@ export class JoinTablePopup implements KnockoutValidationGroup {
         });
     }
     private updateEntries() {
-        var self = this;
-        var tableView = self.tableView();
-        var tableData = self.tableView().model;
-        var baseMinimalBuyIn = tableView.minimalBuyIn() * tableData.BigBlind;
+        const self = this;
+        const tableView = self.tableView();
+        const tableData = self.tableView().model;
+        const baseMinimalBuyIn = tableView.minimalBuyIn() * tableData.BigBlind;
         self.minBuyin(Math.max(baseMinimalBuyIn, tableView.minimalPlayerBuyIn()));
         self.maxBuyin(20 * baseMinimalBuyIn);
         self.buyin(Math.max(2 * baseMinimalBuyIn, tableView.minimalPlayerBuyIn()));

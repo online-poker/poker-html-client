@@ -43,33 +43,33 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
         this.processing = ko.observable(false);
     }
     shown(): void {
-        var self = this;
-        var accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
+        const self = this;
+        const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
         self.loading(true);
         self.processing(false);
         accountApi.GetPersonalAccount(function (data) {
             self.loading(false);
             if (data.Status === "Ok") {
-                var personalAccountData = data.Data;
-                var tableData = self.tableView().model;
-                var balance = 0;
-                var currencyId = tableData.CurrencyId;
+                const personalAccountData = data.Data;
+                const tableData = self.tableView().model;
+                let balance = 0;
+                const currencyId = tableData.CurrencyId;
                 if (currencyId === 1) {
                     balance = personalAccountData.RealMoney;
                 } else {
                     balance = personalAccountData.GameMoney;
                 }
 
-                var tableView = self.tableView();
-                var myPlayer = tableView.myPlayer();
-                var totalBet = (myPlayer.TotalBet() === null ? 0 : myPlayer.TotalBet()) + myPlayer.Bet();
-                var tableTotal = totalBet + myPlayer.Money();
+                const tableView = self.tableView();
+                const myPlayer = tableView.myPlayer();
+                const totalBet = (myPlayer.TotalBet() === null ? 0 : myPlayer.TotalBet()) + myPlayer.Bet();
+                const tableTotal = totalBet + myPlayer.Money();
                 self.accountTotal(balance);
                 self.tableName(tableData.TableName);
                 self.minBet(tableData.SmallBlind);
                 self.maxBet(tableData.BigBlind);
-                var baseMinimalBuyIn = tableView.minimalBuyIn() * tableData.BigBlind;
-                var maxBuyIn = (20 * baseMinimalBuyIn) - tableTotal;
+                const baseMinimalBuyIn = tableView.minimalBuyIn() * tableData.BigBlind;
+                const maxBuyIn = (20 * baseMinimalBuyIn) - tableTotal;
                 self.minBuyin(1);
                 self.maxBuyin(maxBuyIn);
                 self.buyin(Math.min(2 * baseMinimalBuyIn, maxBuyIn));
@@ -82,8 +82,8 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
             });
     }
     confirm() {
-        var self = this;
-        var isValid = this.isValid();
+        const self = this;
+        const isValid = this.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;
@@ -118,7 +118,7 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
             return;
         }
 
-        var amount = this.buyin();
+        const amount = this.buyin();
         self.processing(true);
         this.tableView().addBalance(amount).then(function () {
             self.processing(false);

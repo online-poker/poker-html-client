@@ -42,10 +42,9 @@ export class TournamentsListPage extends PageBase {
     }
     activate() {
         super.activate();
-        var self = this;
         this.refreshTournaments(false);
 
-        reloadManager.setReloadCallback(() => self.refreshTournaments(true));
+        reloadManager.setReloadCallback(() => this.refreshTournaments(true));
     }
     setOptions(tournamentType: number, options: TournamentOptions): void {
         this.tournamentType = tournamentType;
@@ -57,14 +56,14 @@ export class TournamentsListPage extends PageBase {
         }
 
         this.loading(true);
-        var self = this;
-        var tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        const self = this;
+        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
 
-        var options = this.options;
-        var prizeCurrency = options.currency();
-        var tournamentTypeMask = 1 << this.tournamentType;
-		var speed = options.speed() === 0 ? 0 : 1 << options.speed();
-        var buyin = options.buyin() === 0 ? 0 : 1 << options.buyin();
+        const options = this.options;
+        const prizeCurrency = options.currency();
+        const tournamentTypeMask = 1 << this.tournamentType;
+        const speed = options.speed() === 0 ? 0 : 1 << options.speed();
+        const buyin = options.buyin() === 0 ? 0 : 1 << options.buyin();
         self.tournaments([]);
         tournamentApi.GetTournaments(prizeCurrency, tournamentTypeMask, speed, buyin, null, function (data) {
             self.loading(false);

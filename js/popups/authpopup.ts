@@ -5,8 +5,6 @@
 /// <reference path="../settings.ts" />
 /// <reference path="../ui/popupbase.ts" />
 
-declare var apiHost: string;
-
 import * as ko from "knockout";
 import { PopupBase } from "../ui/popupbase";
 import * as authManager from "../authmanager";
@@ -45,14 +43,14 @@ export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
         super.shown(args);
     }
     logon() {
-        var self = this;
+        const self = this;
         if (authManager.authenticated()) {
             return;
         }
 
         this.validationLogin(this.login());
         this.validationPassword(this.password());
-        var isValid = this.isValid();
+        const isValid = this.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;
@@ -60,9 +58,9 @@ export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
 
         if (!this.loading()) {
             this.loading(true);
-            var login = this.login();
-            var password = this.password();
-            var rememberMe = this.rememberMe();
+            const login = this.login();
+            const password = this.password();
+            const rememberMe = this.rememberMe();
             self.errorMessage(null);
             authManager.authenticate(login, password, rememberMe).done(function (result: string) {
                 if (result === "Ok") {
@@ -84,7 +82,7 @@ export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
         }
     }
     registration() {
-		// Do nothing.
+        // Do nothing.
     }
     forgetPassword() {
         app.showPopup("forgetPassword");

@@ -11,18 +11,18 @@ export class RatingPage implements Page {
         App.addTabBarItemMapping("more", "rating");
     }
     deactivate() {
-		// Do nothing.
+        // Do nothing.
     }
     activate() {
-        var self = this;
+        const self = this;
         this.loading(true);
-        var api = new OnlinePoker.Commanding.API.Account(apiHost);
+        const api = new OnlinePoker.Commanding.API.Account(apiHost);
         api.GetBestPlayers().done(function (data, status) {
             self.loading(false);
             if (data.Status === "Ok") {
-                var ratings = <UserRating[]>data.Data;
+                const ratings = <UserRating[]>data.Data;
                 ratings.forEach((_: any) => {
-                    var points = parseInt(_.Points, 10);
+                    const points = parseInt(_.Points, 10);
                     _.IsGold = points >= 500000;
                     _.IsSilver = points >= 200000 && points < 500000;
                     _.IsBronse = points >= 100000 && points < 200000;

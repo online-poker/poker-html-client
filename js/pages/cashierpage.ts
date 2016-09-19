@@ -17,7 +17,7 @@ class CashierPage extends PageBase {
 
     constructor() {
         super();
-        var self = this;
+        const self = this;
         this.loading = ko.observable(false);
         this.cashierCaption = ko.observable<string>();
         authManager.authenticated.subscribe(function (newValue) {
@@ -39,7 +39,7 @@ class CashierPage extends PageBase {
     }
     activate() {
         super.activate();
-        var self = this;
+        const self = this;
         if (!authManager.authenticated()) {
             app.showPopup("auth");
         } else {
@@ -49,10 +49,10 @@ class CashierPage extends PageBase {
         reloadManager.setReloadCallback(() => self.updateInformation());
     }
     updateInformation() {
-        var self = this;
-        var realMoneySupported = true;
-        var gameMoneySupported = false;
-        var api = new OnlinePoker.Commanding.API.Account(apiHost);
+        const self = this;
+        const realMoneySupported = true;
+        const gameMoneySupported = false;
+        const api = new OnlinePoker.Commanding.API.Account(apiHost);
         self.loading(true);
         accountService.getAccount().done(function(result: AccountServiceInformation) {
             self.loading(false);

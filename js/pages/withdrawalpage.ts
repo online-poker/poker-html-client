@@ -17,7 +17,7 @@ export class WithdrawalPage extends PageBase {
     constructor() {
         super();
         App.addTabBarItemMapping("cashier", "withdrawal");
-        var self = this;
+        const self = this;
         this.withdrawalAmount = ko.observable(null);
         this.withdrawalMethod = ko.observable(null);
         this.withdrawalMethods = ko.observableArray([
@@ -28,9 +28,9 @@ export class WithdrawalPage extends PageBase {
         this.accountNumber = ko.observable(null);
         authManager.authenticated.subscribe(function (newValue) {
             if (newValue) {
-                var api = new OnlinePoker.Commanding.API.Account(apiHost);
+                const api = new OnlinePoker.Commanding.API.Account(apiHost);
                 api.GetPersonalAccount(function (data) {
-                    var personalAccountData = data.Data;
+                    const personalAccountData = data.Data;
                     self.player({
                         login: authManager.login(),
                         amount: personalAccountData.RealMoney

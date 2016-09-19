@@ -79,7 +79,7 @@ export class HandHistory extends TableMonitor {
                 continue;
             }
 
-            const playerId = parseInt(pid, 10)
+            const playerId = parseInt(pid, 10);
             const playerName = this.players[pid];
             const winAmount = winners.reduce<number>(function (prev, item) {
                 if (item.PlayerId !== playerId) {

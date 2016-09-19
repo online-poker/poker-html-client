@@ -37,8 +37,8 @@ export class ChangePasswordPopup extends PopupBase implements KnockoutValidation
         super.shown(args);
     }
     confirm() {
-        var self = this;
-        var isValid = this.isValid();
+        const self = this;
+        const isValid = this.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;
@@ -47,7 +47,7 @@ export class ChangePasswordPopup extends PopupBase implements KnockoutValidation
         if (!this.loading()) {
             self.loading(true);
             self.errorMessage(null);
-            var accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
+            const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
             accountApi.ChangePassword(this.oldPassword(), this.password(), function (data) {
                 if (data.Status === "Ok") {
                     self.loading(false);

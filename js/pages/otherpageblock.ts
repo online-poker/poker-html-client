@@ -24,7 +24,7 @@ export class OtherPageBlock extends PageBlock {
         this.ratingPage = new RatingPage();
         this.changePasswordPage = new ChangePasswordPage();
         this.chatPage = new ChatPage();
-		this.requireAuthentication = true;
+        this.requireAuthentication = true;
         this.currentPage = "account";
         this.addSecondary("more", this.morePage);
         this.addSecondary("rating", this.ratingPage);

@@ -17,14 +17,14 @@ export class LobbyPageBlock extends PageBlock {
     tournamentsListPage: TournamentsListPage;
     lobbyPage: LobbyPage;
     tournamentLobbyPage: TournamentLobbyPage;
-	tablesListPage: TablesListPage;
+    tablesListPage: TablesListPage;
 
     constructor() {
         let lobbyPage = new LobbyPage();
         super("lobby", "filter", lobbyPage);
 
         this.lobbyPage = lobbyPage;
-		this.tablesListPage = new TablesListPage();
+        this.tablesListPage = new TablesListPage();
         this.addSecondary("tablesList", this.tablesListPage);
         this.tournamentLobbyPage = new TournamentLobbyPage();
         App.addTabBarItemMapping("lobby", "tournamentLobby");

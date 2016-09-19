@@ -19,14 +19,13 @@ export class SlowConnectionPopup extends PopupBase implements KnockoutValidation
 
     constructor() {
         super();
-        var self = this;
         this.index = ko.observable(0);
         this.message = ko.observable(_("connection.slow"));
         this.retryCaption = ko.observable(_("connection.retry"));
         this.onretry = null;
 
-        this.caption = ko.computed(function() {
-            return _("connection.caption" + self.index().toString());
+        this.caption = ko.computed(() => {
+            return _("connection.caption" + this.index().toString());
         });
         this.allowRetry = ko.observable(false);
     }
@@ -40,14 +39,13 @@ export class SlowConnectionPopup extends PopupBase implements KnockoutValidation
         super.close();
     }
     startUpdatingCaption() {
-        var self = this;
         if (this.handle !== null) {
             this.stopUpdatingCaption();
         }
 
-        this.handle = timeService.setInterval(function () {
+        this.handle = timeService.setInterval(() => {
             if (runtimeSettings.updateTimer) {
-                self.index((self.index() + 1) % 4);
+                this.index((this.index() + 1) % 4);
             }
         }, 300);
     }

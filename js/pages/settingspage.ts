@@ -22,12 +22,11 @@ export class SettingsPage implements Page {
     }
 
     deactivate() {
-		// Do nothing.
+        // Do nothing.
     }
     activate() {
         this.update();
     }
     update() {
-        var self = this;
     }
 }

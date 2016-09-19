@@ -42,8 +42,8 @@ export class HandHistoryPopup extends PopupBase {
     }
     shown(): void {
         super.shown();
-        var view = this.tableView();
-        var lastHand = view.lastHandHistory();
+        const view = this.tableView();
+        const lastHand = view.lastHandHistory();
         this.detailedOperations(lastHand.detailedOperations());
         this.shortOperations(lastHand.shortOperations());
         this.cards(lastHand.cards());

@@ -19,7 +19,6 @@ export class TablesListPage extends PageBase {
 
     constructor() {
         super();
-        var self = this;
         this.tables = ko.observableArray([]);
         this.tablesCaption = ko.computed(function () {
             return _("tablesList.headerCaption")
@@ -27,8 +26,8 @@ export class TablesListPage extends PageBase {
         }, this);
         this.loading = ko.observable(false);
 
-        tableManager.tables.subscribe(function () {
-            self.updateOpenedTables();
+        tableManager.tables.subscribe(() => {
+            this.updateOpenedTables();
         });
     }
     deactivate() {
@@ -36,10 +35,9 @@ export class TablesListPage extends PageBase {
     }
     activate() {
         super.activate();
-        var self = this;
         this.refreshTables(false);
 
-        reloadManager.setReloadCallback(() => self.refreshTables(true));
+        reloadManager.setReloadCallback(() => this.refreshTables(true));
     }
     refreshTables(force: boolean) {
         if (this.loading() && !force) {
@@ -47,18 +45,18 @@ export class TablesListPage extends PageBase {
         }
 
         this.loading(true);
-        var self = this;
-        var gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        var privateTables = false;
-        var fullTables = null;
+        const self = this;
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const privateTables = false;
+        const fullTables = null;
 
-        var lobbyPage = app.lobbyPageBlock.lobbyPage;
-		/* tslint:disable:no-bitwise */
-        var maxPlayers = lobbyPage.cashOptions.maxPlayers() === 0 ? 0 : 1 << lobbyPage.cashOptions.maxPlayers();
-        var betLevels = lobbyPage.cashOptions.bets() === 0 ? 0 : 1 << (lobbyPage.cashOptions.bets() - 1);
-		/* tslint:enable:no-bitwise */
-        var moneyType = lobbyPage.cashOptions.currency();
-        var limitType = lobbyPage.cashOptions.limits();
+        const lobbyPage = app.lobbyPageBlock.lobbyPage;
+        /* tslint:disable:no-bitwise */
+        const maxPlayers = lobbyPage.cashOptions.maxPlayers() === 0 ? 0 : 1 << lobbyPage.cashOptions.maxPlayers();
+        const betLevels = lobbyPage.cashOptions.bets() === 0 ? 0 : 1 << (lobbyPage.cashOptions.bets() - 1);
+        /* tslint:enable:no-bitwise */
+        const moneyType = lobbyPage.cashOptions.currency();
+        const limitType = lobbyPage.cashOptions.limits();
         gameApi.GetTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType, function (data) {
             self.loading(false);
             if (!self.visible()) {
@@ -67,7 +65,7 @@ export class TablesListPage extends PageBase {
 
             if (data.Status === "Ok") {
                 self.log("Informaton about tables received: ", data.Data);
-                var tables = <any[]>data.Data;
+                const tables = <any[]>data.Data;
                 tables.forEach(function (item) {
                     item.IsOpened = tableManager.isOpened(item.TableId);
                 });
@@ -75,8 +73,8 @@ export class TablesListPage extends PageBase {
             }
         });
     }
-	updateOpenedTables() {
-        var tables = this.tables();
+    updateOpenedTables() {
+        const tables = this.tables();
         tables.forEach(function (item) {
             item.IsOpened = tableManager.isOpened(item.TableId);
         });

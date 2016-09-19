@@ -155,7 +155,7 @@ export class LobbyPage extends PageBase {
 
     constructor() {
         super();
-		var self = this;
+        const self = this;
 
         App.addTabBarItemMapping("lobby", "tablesFilter");
         App.addTabBarItemMapping("lobby", "tournamentsFilter");
@@ -209,7 +209,7 @@ export class LobbyPage extends PageBase {
 
         tableManager.tables.subscribe(function () {
             self.updateOpenedTables();
-		});
+        });
     }
 
     deactivate(pageName?: string) {
@@ -227,15 +227,15 @@ export class LobbyPage extends PageBase {
             return;
         }
 
-        var self = this;
+        const self = this;
         this.showFilterSlider(PageBlock.useDoubleView);
         this.showItemsListSlider(!PageBlock.useDoubleView);
         if (pageName === "lobby") {
             this.update(false);
             if (!PageBlock.useDoubleView) {
                 if (ko.contextFor($(".sub-page.filter .swipe")[0]).$swiper) {
-					ko.contextFor($(".sub-page.filter .swipe")[0]).$swiper.enable(false);
-				}
+                    ko.contextFor($(".sub-page.filter .swipe")[0]).$swiper.enable(false);
+                }
             }
 
             reloadManager.setReloadCallback(() => self.update(true));
@@ -243,7 +243,7 @@ export class LobbyPage extends PageBase {
         super.activate(pageName);
     }
     updateOpenedTables() {
-        var tables = this.tables();
+        const tables = this.tables();
         tables.forEach(function (item) {
             item.IsOpened = tableManager.isOpened(item.TableId);
         });
@@ -253,18 +253,18 @@ export class LobbyPage extends PageBase {
     update(force: boolean) {
         if (this.loading() && !force) {
             return;
-	}
+    }
 
-        var self = this;
+        const self = this;
         metadataManager.updateOnline();
 
         // Added reloading of the all information.
-        var resetLoading = function () {
+        const resetLoading = function () {
             self.loading(false);
         };
         this.loading(true);
         $.when<any>(this.refreshTables(), this.refreshTournaments(2), this.refreshTournaments(3)).pipe(resetLoading, resetLoading);
-	}
+    }
     showGames() {
         if (this.slider.currentIndex() === 0) {
             app.lobbyPageBlock.showSecondary("tablesList");
@@ -281,16 +281,16 @@ export class LobbyPage extends PageBase {
         }
     }
     refreshTables() {
-        var self = this;
-        var gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        var privateTables = false;
-        var fullTables = null;
+        const self = this;
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const privateTables = false;
+        const fullTables = null;
 
-        var options = this.cashOptions;
-        var maxPlayers = options.maxPlayers() === 0 ? 0 : 1 << options.maxPlayers();
-        var betLevels = options.bets();
-        var moneyType = options.currency();
-        var limitType = options.limits();
+        const options = this.cashOptions;
+        const maxPlayers = options.maxPlayers() === 0 ? 0 : 1 << options.maxPlayers();
+        const betLevels = options.bets();
+        const moneyType = options.currency();
+        const limitType = options.limits();
         return gameApi.GetTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType, function (data) {
             if (!self.visible()) {
                 return;
@@ -298,7 +298,7 @@ export class LobbyPage extends PageBase {
 
             if (data.Status === "Ok") {
                 self.log("Informaton about tables received: ", data.Data);
-                var tables = <any[]>data.Data;
+                const tables = <any[]>data.Data;
                 tables.forEach(function (item) {
                     item.IsOpened = tableManager.isOpened(item.TableId);
                 });
@@ -307,15 +307,15 @@ export class LobbyPage extends PageBase {
         });
     }
     refreshTournaments(tournamentType) {
-        var self = this;
-        var tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        const self = this;
+        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
 
-        var options = tournamentType === 2 ? this.tournamentOptions : this.sngOptions;
-        var prizeCurrency = options.currency();
-        var tournamentTypeMask = 1 << tournamentType;
-        var speed = options.speed() === 0 ? 0 : 1 << options.speed();
-        var buyin = options.buyin();
-        var maxPlayers = options.maxPlayers() === 0 ? 0 : 1 << (options.maxPlayers() - 1);
+        const options = tournamentType === 2 ? this.tournamentOptions : this.sngOptions;
+        const prizeCurrency = options.currency();
+        const tournamentTypeMask = 1 << tournamentType;
+        const speed = options.speed() === 0 ? 0 : 1 << options.speed();
+        const buyin = options.buyin();
+        const maxPlayers = options.maxPlayers() === 0 ? 0 : 1 << (options.maxPlayers() - 1);
         return tournamentApi.GetTournaments(prizeCurrency, tournamentTypeMask, speed, buyin, maxPlayers, function (data) {
             if (!self.visible()) {
                 return;
@@ -323,15 +323,15 @@ export class LobbyPage extends PageBase {
 
             if (data.Status === "Ok") {
                 self.log("Informaton about tournaments received: ", data.Data);
-                var enchance = (item: LobbyTournamentItem) => {
-                    var result = <LobbyTournamentItemEx>item;
-                    var startDate = moment(item.StartDate);
-                    var currentMoment = moment().add(timeService.timeDiff, "ms");
-                    var duration = moment.duration(currentMoment.diff(startDate));
-                    var m = duration.minutes();
+                const enchance = (item: LobbyTournamentItem) => {
+                    const result = <LobbyTournamentItemEx>item;
+                    const startDate = moment(item.StartDate);
+                    const currentMoment = moment().add(timeService.timeDiff, "ms");
+                    const duration = moment.duration(currentMoment.diff(startDate));
+                    const m = duration.minutes();
                     result.duration = duration.hours() + _("common.hours")
-						+ _("common.timeseparator")
-						+ (m < 10 ? "0" + m : "" + m) + _("common.minutes");
+                        + _("common.timeseparator")
+                        + (m < 10 ? "0" + m : "" + m) + _("common.minutes");
                     return result;
                 };
                 if (tournamentType === 2) {
@@ -390,8 +390,8 @@ export class LobbyPage extends PageBase {
         }
     }
     refresh() {
-        var self = this;
-        var resetLoading = function () {
+        const self = this;
+        const resetLoading = function () {
             self.loading(false);
         };
         metadataManager.updateOnline();

@@ -15,7 +15,7 @@ export class ForgetPasswordPopup extends PopupBase implements KnockoutValidation
     errorMessage: KnockoutObservable<string>;
     loading: KnockoutObservable<boolean>;
     constructor() {
-		super();
+        super();
         this.login = ko.observable<string>();
         this.email = ko.observable<string>();
         this.errors = ko.validation.group(this);
@@ -23,8 +23,8 @@ export class ForgetPasswordPopup extends PopupBase implements KnockoutValidation
         this.loading = ko.observable(false);
     }
     confirm() {
-        var self = this;
-        var isValid = this.isValid();
+        const self = this;
+        const isValid = this.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;
@@ -32,7 +32,7 @@ export class ForgetPasswordPopup extends PopupBase implements KnockoutValidation
 
         if (!this.loading()) {
             self.loading(true);
-            var accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
+            const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
             accountApi.RequestResetPassword(this.login(), this.email(), function (data) {
                 self.loading(false);
                 if (data.Status === "Ok") {
@@ -47,7 +47,7 @@ export class ForgetPasswordPopup extends PopupBase implements KnockoutValidation
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 self.loading(false);
-            });;
+            });
         }
     }
 }
