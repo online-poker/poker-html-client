@@ -1,15 +1,19 @@
 /// <reference path="poker.commanding.api.ts" />
 
 // Interface
-interface SignalR {
-    Game: {
-        server: GameHubServer;
-        client: GameHubClient;
-    };
-	Chat: {
-        server: ChatHubServer;
-        client: ChatHubClient;
-    };
+declare namespace SignalR {
+    namespace Hub {
+        interface Connection {
+            Game: {
+                server: GameHubServer;
+                client: GameHubClient;
+            };
+            Chat: {
+                server: ChatHubServer;
+                client: ChatHubClient;
+            };
+        }
+    }
 }
 
 interface GameHubServer {

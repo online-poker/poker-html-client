@@ -10,7 +10,7 @@ import { debugSettings } from "../debugsettings";
 
 export class ConnectionWrapper {
     terminated = false;
-    constructor(public connection: HubConnection) {
+    constructor(public connection: SignalR.Hub.Connection) {
         var self = this;
         connection.connectionSlow(() => {
             if (self.terminated) {
@@ -161,7 +161,7 @@ export class ConnectionWrapper {
 
         return startConnection;
     }
-    private onConnectionStateChanged(state: SignalRStateChange) {
+    private onConnectionStateChanged(state: SignalR.StateChanged) {
         this.logEvent("SignalR state changed from: " + ConnectionService.stateConversion[state.oldState]
             + " to: " + ConnectionService.stateConversion[state.newState]);
 

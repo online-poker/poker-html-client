@@ -1,5 +1,7 @@
-﻿/// <reference path="../../Scripts/typings/signalr/signalr.d.ts" />
-
-interface HubConnection {
-    createHubProxies(): any;
+﻿declare namespace SignalR {
+    namespace Hub {
+        interface Connection {
+            createHubProxies(): any;
+        }
+    }
 }

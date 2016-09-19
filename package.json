@@ -31,9 +31,13 @@
     "@types/cordova-plugin-network-information": "0.0.2",
     "@types/cordova-plugin-splashscreen": "0.0.2",
     "@types/cordova-plugin-statusbar": "0.0.2",
+    "@types/jasmine": "^2.2.33",
     "@types/jquery": "^1.10.31",
     "@types/knockout": "^3.4.33",
+    "@types/knockout.validation": "0.0.31",
     "@types/moment": "^2.13.0",
+    "@types/requirejs": "^2.1.26",
+    "@types/signalr": "^2.2.31",
     "poker-server-api": "0.0.2",
     "typescript": "^2.0.2"
   }
