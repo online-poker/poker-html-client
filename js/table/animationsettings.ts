@@ -27,12 +27,12 @@
     }
 
     static androidSettings() {
-        var settings = new AnimationSettings();
+        const settings = new AnimationSettings();
         return settings;
     }
 
     static tabletSettings() {
-        var settings = new AnimationSettings();
+        const settings = new AnimationSettings();
         settings.dealCardsTime = 500;
         return settings;
     }

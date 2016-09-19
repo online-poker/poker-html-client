@@ -21,8 +21,6 @@ export class UIManager {
     static pageMappings: string[] = [];
 
     constructor() {
-        var self = this;
-
         this.currentPageContainer = null;
         this.effectivePageContainer = null;
         this.currentPage = null;
@@ -38,10 +36,10 @@ export class UIManager {
             return;
         }
 
-        var nextPageBlockObject = this.getPageBlock(pageBlockName);
+        const nextPageBlockObject = this.getPageBlock(pageBlockName);
         if (this.currentPageBlock !== null) {
             this.pageBlockHiding.dispatch(this.currentPageBlock);
-            var currentPageBlockObject = this.getPageBlock(this.currentPageBlock);
+            const currentPageBlockObject = this.getPageBlock(this.currentPageBlock);
             if (currentPageBlockObject !== null) {
                 currentPageBlockObject.hideBlock();
             } else {
@@ -64,24 +62,24 @@ export class UIManager {
     }
     showPage(pageName: string) {
         this.logPage("Showing page '" + pageName + "'");
-		if (typeof window !== "undefined") {
-			if (this.currentPageContainer !== null) {
-				$(".page." + this.currentPageContainer).css("display", "none");
-			}
-		}
+        if (typeof window !== "undefined") {
+            if (this.currentPageContainer !== null) {
+                $(".page." + this.currentPageContainer).css("display", "none");
+            }
+        }
 
         this.currentPageContainer = pageName;
         if (pageName !== "initialization") {
             this.effectivePageContainer = pageName;
         }
 
-		if (typeof window !== "undefined") {
-			$(".page." + pageName).css("display", "block");
-			$(".page .sub-page.selector").css("display", "none");
-		}
+        if (typeof window !== "undefined") {
+            $(".page." + pageName).css("display", "block");
+            $(".page .sub-page.selector").css("display", "none");
+        }
     }
     showSubPage(pageName: string) {
-        var nextPageObject = this.getSubPage(pageName);
+        const nextPageObject = this.getSubPage(pageName);
         if (nextPageObject !== null) {
             if (nextPageObject.canActivate !== undefined) {
                 if (!nextPageObject.canActivate()) {
@@ -97,12 +95,12 @@ export class UIManager {
         this.currentPage = pageName;
         this.activateSubPage(pageName);
 
-		if (typeof window !== "undefined") {
-			$(".page .sub-page.selector").css("display", "none");
-		}
+        if (typeof window !== "undefined") {
+            $(".page .sub-page.selector").css("display", "none");
+        }
     }
     deactivateSubPage(pageName: string) {
-        var pageObject = this.getSubPage(pageName);
+        const pageObject = this.getSubPage(pageName);
         if (pageObject != null) {
             pageObject.deactivate();
         }
@@ -111,7 +109,7 @@ export class UIManager {
         $(".page .sub-page." + pageName).css("display", "none");
     }
     activateSubPage(pageName: string) {
-        var nextPageObject = this.getSubPage(pageName);
+        const nextPageObject = this.getSubPage(pageName);
         if (nextPageObject != null) {
             nextPageObject.activate();
         }
@@ -125,9 +123,9 @@ export class UIManager {
     * @param pageBlockName String Name of the page block to get.
     */
     getPageBlock(pageBlockName: string) {
-		if (!app.hasOwnProperty(pageBlockName + "PageBlock")) {
-			return null;
-		}
+        if (!app.hasOwnProperty(pageBlockName + "PageBlock")) {
+            return null;
+        }
 
         return <PageBlock>app[pageBlockName + "PageBlock"];
     }
@@ -138,8 +136,8 @@ export class UIManager {
     */
     getSubPage(subPageName: string) {
         if (!app.hasOwnProperty(subPageName + "Page")) {
-			return null;
-		}
+            return null;
+        }
 
         return <Page>app[subPageName + "Page"];
     }

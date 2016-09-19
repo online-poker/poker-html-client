@@ -15,5 +15,5 @@ class BroadcastService {
     }
 }
 
-var broadcastService = new BroadcastService();
+const broadcastService = new BroadcastService();
 export = broadcastService;

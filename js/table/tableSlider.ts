@@ -13,14 +13,14 @@ export class TableSlider {
     private step: number;
     private minRelative: number;
     private maxRelative: number;
-    private translator: (number) => number;
+    private translator: (x: number) => number;
 
     constructor() {
-        var self = this;
+        const self = this;
         this.current = ko.observable<number>(null);
         this.currentValue = ko.computed<string>({
             read: function () {
-                var ivalue = self.current();
+                const ivalue = self.current();
                 if (ivalue === null) {
                     return null;
                 }
@@ -28,7 +28,7 @@ export class TableSlider {
                 return ivalue.toString();
             },
             write: function (value) {
-                var ivalue = parseInt(value, 10);
+                let ivalue = parseInt(value, 10);
                 if (isNaN(ivalue) || !isFinite(ivalue)) {
                     return;
                 }
@@ -48,18 +48,18 @@ export class TableSlider {
         this.maximum = ko.observable<number>();
         this.position = ko.computed<number>({
             read: function () {
-                var pixelDistance = self.maxRelative - self.minRelative;
+                const pixelDistance = self.maxRelative - self.minRelative;
                 if (pixelDistance === 0) {
                     return self.maxRelative;
                 }
 
-                var delta = self.maximum() - self.minimum();
+                const delta = self.maximum() - self.minimum();
                 if (delta === 0) {
                     return self.maxRelative;
                 }
 
-                var ratio = pixelDistance / delta;
-                var currentRelative = Math.floor(ratio * (self.current() - self.minimum()));
+                const ratio = pixelDistance / delta;
+                const currentRelative = Math.floor(ratio * (self.current() - self.minimum()));
 
                 return self.minRelative + currentRelative;
             },
@@ -74,22 +74,22 @@ export class TableSlider {
                     return;
                 }
 
-                var pixelDistance = self.maxRelative - self.minRelative;
+                const pixelDistance = self.maxRelative - self.minRelative;
                 if (pixelDistance === 0) {
                     self.current(self.minimum());
                     return;
                 }
 
-                var delta = self.maximum() - self.minimum();
+                const delta = self.maximum() - self.minimum();
                 if (delta === 0) {
                     self.current(self.minimum());
                     return;
                 }
 
-                var ratio = delta / pixelDistance;
-                var currentAbsolute = Math.floor(ratio * (value - self.minRelative));
+                const ratio = delta / pixelDistance;
+                let currentAbsolute = Math.floor(ratio * (value - self.minRelative));
                 // Round currentAbsolute to step
-                var currentAbsoluteAligned = Math.floor(currentAbsolute / self.step) * self.step;
+                const currentAbsoluteAligned = Math.floor(currentAbsolute / self.step) * self.step;
                 if ((currentAbsolute - currentAbsoluteAligned) < (currentAbsoluteAligned + self.step - currentAbsolute)) {
                     currentAbsolute = currentAbsoluteAligned;
                 } else {
@@ -116,7 +116,7 @@ export class TableSlider {
     * @param maxRelative Number Maximum coordinate in the relative coordinates.
     * @param translator Function Function which translate the page coordinates to the relative coordinates.
     */
-    setBounds(minRelative: number, maxRelative: number, translator: (number) => number) {
+    setBounds(minRelative: number, maxRelative: number, translator: (x: number) => number) {
         this.minRelative = minRelative;
         this.maxRelative = maxRelative;
         this.translator = translator;
@@ -132,13 +132,13 @@ export class TableSlider {
         this.step = step;
     }
     increase() {
-        var current = this.current();
+        let current = this.current();
         current = Math.min(current + this.step, this.maximum());
         this.current(current);
         this.position.notifySubscribers();
     }
     decrease() {
-        var current = this.current();
+        let current = this.current();
         current = Math.max(current - this.step, this.minimum());
         this.current(current);
         this.position.notifySubscribers();
@@ -156,16 +156,16 @@ export class TableSlider {
         return false;
     }
     fixupValue() {
-        var self = this;
+        const self = this;
         this.currentValue(this.current().toFixed());
         timeService.setTimeout(function () {
-            var c = self.current();
+            const c = self.current();
             self.current(0);
             self.current(c);
         }, 10);
     }
     selectManually(event: MouseEvent) {
-        var relativePosition = this.translator(event.pageX);
+        const relativePosition = this.translator(event.pageX);
         this.setPosition(relativePosition);
     }
     setPosition(relativePosition: number) {

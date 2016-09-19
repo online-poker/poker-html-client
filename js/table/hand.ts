@@ -2,7 +2,7 @@
 // v1.0.0
 /* tslint:disable:no-bitwise */
 
-module HoldemHand {
+namespace HoldemHand {
     export interface HandRepresentation {
         Cards: number[];
         Suits: number[];
@@ -50,10 +50,10 @@ module HoldemHand {
         /// handTypeRanks array.
         /// < / remarks>
 
-        var rankCountBitMask = 0,  // index of the card.
+        let rankCountBitMask = 0,  // index of the card.
             o = 0,
             rankBitMask;
-        for (var i = -1; i < 5; i++, o = Math.pow(2, hand.Cards[i] * 4)) {
+        for (let i = -1; i < 5; i++, o = Math.pow(2, hand.Cards[i] * 4)) {
             rankCountBitMask += o * ((rankCountBitMask / o & 15) + 1);
         }
 
@@ -67,7 +67,7 @@ module HoldemHand {
             | 1 << hand.Cards[3]
             | 1 << hand.Cards[4];
         rankCountBitMask -= ((rankBitMask / (rankBitMask & -rankBitMask) === 31) || (rankBitMask === 0x403c) ? 3 : 1);
-        var temp = <any>(hand.Suits[0] === (hand.Suits[0] | hand.Suits[1] | hand.Suits[2] | hand.Suits[3] | hand.Suits[4]));
+        const temp = <any>(hand.Suits[0] === (hand.Suits[0] | hand.Suits[1] | hand.Suits[2] | hand.Suits[3] | hand.Suits[4]));
         return rankCountBitMask - temp * ((rankBitMask === 0x7c00) ? -5 : 1);
     }
 
@@ -92,8 +92,8 @@ module HoldemHand {
     }
 
     export function getHandTypeEx(hand: HandRepresentation) {
-        var isSameSuit = hand.Suits[0] === (hand.Suits[0] | hand.Suits[1] | hand.Suits[2] | hand.Suits[3] | hand.Suits[4]);
-        var sortedCards = hand.Cards.slice(0);
+        const isSameSuit = hand.Suits[0] === (hand.Suits[0] | hand.Suits[1] | hand.Suits[2] | hand.Suits[3] | hand.Suits[4]);
+        let sortedCards = hand.Cards.slice(0);
         sortedCards = sortedCards.sort(function (left, right) {
             if (left < right) {
                 return 1;
@@ -105,7 +105,7 @@ module HoldemHand {
 
             return 0;
         });
-        var isStraight = sortedCards[0] === sortedCards[1] + 1
+        let isStraight = sortedCards[0] === sortedCards[1] + 1
             && sortedCards[1] === sortedCards[2] + 1
             && sortedCards[2] === sortedCards[3] + 1
             && sortedCards[3] === sortedCards[4] + 1;
@@ -124,7 +124,7 @@ module HoldemHand {
             };
         }
 
-        var isCare = (sortedCards[0] === sortedCards[1]
+        const isCare = (sortedCards[0] === sortedCards[1]
             && sortedCards[1] === sortedCards[2]
             && sortedCards[2] === sortedCards[3])
             || (sortedCards[1] === sortedCards[2]
@@ -144,7 +144,7 @@ module HoldemHand {
             };
         }
 
-        var isFullHouse = (sortedCards[0] === sortedCards[1]
+        const isFullHouse = (sortedCards[0] === sortedCards[1]
             && sortedCards[1] === sortedCards[2]
             && sortedCards[3] === sortedCards[4])
             || (sortedCards[0] === sortedCards[1]
@@ -255,11 +255,11 @@ module HoldemHand {
         ///    of k element in the set with n elements.
         ///    </summary>
         /// </signature>
-        var result: number[][] = [],
+        let result: number[][] = [],
             comb: number[] = [];
 
         function next_comb(comb: number[], k: number, n: number) {
-            var i: number;
+            let i: number;
             if (comb.length === 0) {
                 for (i = 0; i < k; ++i) {
                     comb[i] = i;
@@ -286,7 +286,7 @@ module HoldemHand {
         }
 
         while (next_comb(comb, k, n)) {
-            var nextPermutation = comb.slice(null);
+            const nextPermutation = comb.slice(null);
             result.push(nextPermutation);
         }
 
@@ -294,7 +294,7 @@ module HoldemHand {
     }
 
     export function decodeScore(score: number) {
-        var result = [];
+        const result = [];
         result.push((score & 15));
         score = score >> 4;
         result.push((score & 15));
@@ -306,10 +306,10 @@ module HoldemHand {
     }
 
     export function getPokerScore(cards: number[]) {
-        var tempCards = cards.slice(0),
+        const tempCards = cards.slice(0),
             cardsCount = {};
-        for (var i = 0; i < 5; i++) {
-            var cardValue = tempCards[i];
+        for (let i = 0; i < 5; i++) {
+            const cardValue = tempCards[i];
             cardsCount[cardValue] = (cardsCount[cardValue] >= 1) ? cardsCount[cardValue] + 1 : 1;
         }
 
@@ -341,10 +341,10 @@ module HoldemHand {
             return { Status: HandParseResultStatus.InvalidHand };
         }
 
-        var cardStr = str.replace(/A/g, "14").replace(/K/g, "13").replace(/Q/g, "12")
+        let cardStr = str.replace(/A/g, "14").replace(/K/g, "13").replace(/Q/g, "12")
             .replace(/J/g, "11").replace(/♠|♣|♥|♦/g, ",");
-        var cards = <any[]>cardStr.replace(/\s/g, "").slice(0, -1).split(",");
-        var suits = <any[]>str.match(/♠|♣|♥|♦/g);
+        const cards = <any[]>cardStr.replace(/\s/g, "").slice(0, -1).split(",");
+        const suits = <any[]>str.match(/♠|♣|♥|♦/g);
         if (cards === null) {
             return { Status: HandParseResultStatus.CardsMissing };
         }
@@ -357,20 +357,20 @@ module HoldemHand {
             return { Status: HandParseResultStatus.AllCardsShouldHaveOneSuit };
         }
 
-        var o = {}, keyCount = 0, j, i;
-        for (i = 0; i < cards.length; i++) {
-            var e = cards[i] + suits[i];
+        let o = {}, keyCount = 0, j, i;
+        for (let i = 0; i < cards.length; i++) {
+            const e = cards[i] + suits[i];
             o[e] = 1;
         }
-        for (j in o) {
+        for (let j in o) {
             if (o.hasOwnProperty(j)) {
                 keyCount++;
             }
         }
 
-        var insufficientCards = cards.length < 5;
-        var duplicateCards = cards.length !== keyCount;
-        var status: HandParseResultStatus;
+        const insufficientCards = cards.length < 5;
+        const duplicateCards = cards.length !== keyCount;
+        let status: HandParseResultStatus;
         if (insufficientCards && duplicateCards) {
             status = HandParseResultStatus.InsufficientCardsAndDuplicates;
         } else if (insufficientCards) {
@@ -381,11 +381,11 @@ module HoldemHand {
             status = HandParseResultStatus.Ok;
         }
 
-		for (i = 0; i < cards.length; i++) {
+        for (let i = 0; i < cards.length; i++) {
             cards[i] -= 0; // Conversion to the numbers.
         }
 
-        for (i = 0; i < suits.length; i++) {
+        for (let i = 0; i < suits.length; i++) {
             // Convert the suit characters to the numbers.
             // Since unicode symbols starts with 0x2660 (9824) Unicode symbols 
             suits[i] = Math.pow(2, (suits[i].charCodeAt(0) - 9824));
@@ -402,15 +402,15 @@ module HoldemHand {
         /// <returns>Rank of the card across all possible hands.</returns>
         /// <remarks>This function could accept hands from 5 to 7 cards.</remarks>
 
-        var totalCardsCount = hand.Cards.length;
-        var permutations = getCombinations(5, totalCardsCount);
-        var maxRank = 0,
+        const totalCardsCount = hand.Cards.length;
+        const permutations = getCombinations(5, totalCardsCount);
+        let maxRank = 0,
             winIndex = 10,
             winningScore = -1,
             wci: number[];
 
         // Generate permuted version of the original array.
-        var applyPermutation5 = function (source: number[], permutation: number[]) {
+        const applyPermutation5 = function (source: number[], permutation: number[]) {
             return [
                 source[permutation[0]],
                 source[permutation[1]],
@@ -420,12 +420,12 @@ module HoldemHand {
             ];
         };
 
-        for (var i = 0; i < permutations.length; i++) {
-            var currentPermutation = permutations[i];
-            var cs = applyPermutation5(hand.Cards, currentPermutation);
-            var ss = applyPermutation5(hand.Suits, currentPermutation);
+        for (let i = 0; i < permutations.length; i++) {
+            const currentPermutation = permutations[i];
+            const cs = applyPermutation5(hand.Cards, currentPermutation);
+            const ss = applyPermutation5(hand.Suits, currentPermutation);
 
-            var index = getHandType({ Cards: cs, Suits: ss });
+            const index = getHandType({ Cards: cs, Suits: ss });
 
             if (handTypeRanks[index] > maxRank) {
                 maxRank = handTypeRanks[index];
@@ -434,7 +434,7 @@ module HoldemHand {
                 winningScore = getPokerScore(cs);
             } else if (handTypeRanks[index] === maxRank) {
                 // If by chance we have a tie, find the best one
-                var score1 = getPokerScore(cs);
+                const score1 = getPokerScore(cs);
                 if (score1 > winningScore) {
                     wci = currentPermutation.slice(0);
                 }

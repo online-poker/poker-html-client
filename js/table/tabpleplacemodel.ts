@@ -123,7 +123,7 @@ export class TablePlaceModel {
         // Here should be added checks for the safe locations,
         // images from which could be loaded.
         if (data.PlayerUrl !== null) {
-            var isSafeLocation = data.PlayerUrl !== "";
+            const isSafeLocation = data.PlayerUrl !== "";
             this.PlayerUrl = ko.observable(isSafeLocation ? data.PlayerUrl : TablePlaceModel.DefaultAvatarUrl);
         } else {
             this.PlayerUrl = ko.observable(TablePlaceModel.DefaultAvatarUrl);
@@ -133,8 +133,8 @@ export class TablePlaceModel {
         this.IsDealer = ko.observable(data.IsDealer);
         this.Money = ko.observable(data.Money);
         this.Seat = ko.observable(data.Seat);
-        var cards = decodeCardsArray(data.Cards || null);
-        var cardClasses = convertToCards(cards);
+        const cards = decodeCardsArray(data.Cards || null);
+        const cardClasses = convertToCards(cards);
         this.RawCards = ko.observableArray(cards);
         this.Cards = ko.observableArray(cardClasses);
         this.HandCards = ko.observableArray(cardClasses);
@@ -149,7 +149,7 @@ export class TablePlaceModel {
         this.Status = ko.observable(data.Status);
         this.WinAmount = ko.observable(data.WinAmount || null);
         this.TotalBet = ko.observable(data.TotalBet || null);
-        var hasCards = cards == null ? null : true;
+        const hasCards = cards == null ? null : true;
         this.WasInGame = ko.observable(data.WasInGame == null ? hasCards : data.WasInGame);
         this.IsCardsFolded = ko.observable(false);
         this.Card1Hightlighted = ko.observable(false);
@@ -157,7 +157,7 @@ export class TablePlaceModel {
         this.CardsHightlighted = ko.observable(false);
         this.CurrentAction = ko.observable<string>();
 
-        var self = this;
+        const self = this;
         this.IsCardsAnimating = ko.computed(function () {
             return self.IsDealCards() || self.IsFoldCards();
         }, this);
@@ -247,7 +247,7 @@ export class TablePlaceModel {
             console.warn("Passed undefined cards to the TablePlaceModel.setCards");
         }
 
-        var cardsClasses = convertToCards(cards);
+        const cardsClasses = convertToCards(cards);
         this.RawCards(cards || null);
         this.Cards(cardsClasses);
         this.HandCards(cardsClasses);
@@ -263,9 +263,8 @@ export class TablePlaceModel {
     * Starts displaying action which player was perform during last turn.
     */
     startAction(action: string) {
-        var self = this;
         this.CurrentAction(action);
-        this.CurrentActionTimer = timeService.setTimeout(() => self.clearAction(), 2000);
+        this.CurrentActionTimer = timeService.setTimeout(() => this.clearAction(), 2000);
     }
 
     /**
@@ -280,9 +279,8 @@ export class TablePlaceModel {
     * Starts displaying chat message from player.
     */
     displayChatMessage(message: string) {
-        var self = this;
         this.LastChatMessage(message);
-        this.LastChatMessageTimer = timeService.setTimeout(() => self.clearChatMessage(), 2000);
+        this.LastChatMessageTimer = timeService.setTimeout(() => this.clearChatMessage(), 2000);
     }
 
     /**
@@ -306,18 +304,18 @@ export class TablePlaceModel {
             return null;
         }
 
-        var myCards = this.RawCards();
+        const myCards = this.RawCards();
         if (myCards === null || myCards === undefined || myCards.length === 0) {
             return null;
         }
 
-        var totalCards = <number[]>[];
+        let totalCards = <number[]>[];
         if (tableCards !== null) {
             totalCards = totalCards.concat(tableCards);
         }
 
         totalCards = totalCards.concat(myCards);
-        var handRepresentation = {
+        let handRepresentation = {
             Cards: [],
             Suits: []
         };
@@ -325,8 +323,8 @@ export class TablePlaceModel {
             handRepresentation.Cards.push((card % 13) + 2);
             handRepresentation.Suits.push(1 << (card / 13));
         });
-        var rank = HoldemHand.getCardRank(handRepresentation);
-        var winnerCards = [];
+        const rank = HoldemHand.getCardRank(handRepresentation);
+        let winnerCards = [];
         rank.WinnerCardsSet.forEach(function (item) {
             winnerCards.push(totalCards[item]);
         });
@@ -338,12 +336,12 @@ export class TablePlaceModel {
             handRepresentation.Cards.push((card % 13) + 2);
             handRepresentation.Suits.push(1 << (card / 13));
         });
-        var type = HoldemHand.getHandTypeEx(handRepresentation);
-        var typeIndex = HoldemHand.handTypeRanks[type.Type];
-        var base = _("table.combination.c" + typeIndex.toString());
+        const type = HoldemHand.getHandTypeEx(handRepresentation);
+        const typeIndex = HoldemHand.handTypeRanks[type.Type];
+        const base = _("table.combination.c" + typeIndex.toString());
 
         if (typeIndex === 1) {
-			return base.replace("##c1", HoldemHand.cardValue(type.Cards[0]))
+            return base.replace("##c1", HoldemHand.cardValue(type.Cards[0]))
                 .replace("##c2", HoldemHand.cardValue(type.Cards[1]))
                 .replace("##c3", HoldemHand.cardValue(type.Cards[2]))
                 .replace("##c4", HoldemHand.cardValue(type.Cards[3]))

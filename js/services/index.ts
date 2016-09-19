@@ -6,6 +6,8 @@ import { ImagePreloadService } from "./imagepreloadservice";
 import { ReloadManager } from "./reloadmanager";
 import { DeviceEventService } from "./deviceeventservice";
 import { SoundManager } from "./soundmanager";
+import { OrientationService } from "./orientationservice";
+import { PushService } from "./pushservice";
 
 export var keyboardActivationService = new KeyboardActivationService();
 export var slowInternetService = new SlowInternetService();
@@ -15,3 +17,5 @@ export var imagePreloadService = new ImagePreloadService();
 export var reloadManager = new ReloadManager();
 export var deviceEvents = new DeviceEventService();
 export var soundManager = new SoundManager();
+export var orientationService = new OrientationService();
+export var pushService = new PushService();

@@ -19,10 +19,10 @@ class LanguageManager {
             return "";
         }
 
-        var parts: string[] = message.split(".");
-        var currentProvider = this.getProvider();
-        for (var i = 0; i < parts.length; i++) {
-            var propertyName = parts[i];
+        const parts: string[] = message.split(".");
+        let currentProvider = this.getProvider();
+        for (let i = 0; i < parts.length; i++) {
+            const propertyName = parts[i];
 
             currentProvider = currentProvider[propertyName];
             if (currentProvider == null) {
@@ -41,10 +41,10 @@ class LanguageManager {
             return template;
         }
 
-        var result = template;
-        for (var propName in parameters) {
+        let result = template;
+        for (let propName in parameters) {
             if (parameters.hasOwnProperty(propName)) {
-                var value = parameters[propName];
+                let value = parameters[propName];
                 if (value === null || value === undefined) {
                     value = "";
                 } else {

@@ -49,7 +49,7 @@ class Settings {
         this.setItemNumber("reload.lastTime", this.lastTime(), 0);
     }
     getItemBoolean(name: string, defaultValue: boolean = false) {
-        var item = <string>localStorage.getItem(name);
+        const item = <string>localStorage.getItem(name);
         if (item === null) {
             return defaultValue;
         }

@@ -25,17 +25,17 @@ class MetadataManager {
         this.failed = value;
     }
     update() {
-        var self = this;
-        var metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
-        var result = $.Deferred();
-        var failHandler = function () {
+        const self = this;
+        const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
+        const result = $.Deferred();
+        const failHandler = function () {
             if (self.failed !== null) {
                 self.failed();
             }
 
             result.reject();
         };
-        var successHander = function () {
+        const successHander = function () {
             if (self.ready !== null) {
                 self.ready();
             }
@@ -43,7 +43,7 @@ class MetadataManager {
             result.resolve();
         };
 
-        var bannersRequest = metadataApi.GetBanners(self.getBannerFormat());
+        const bannersRequest = metadataApi.GetBanners(self.getBannerFormat());
         $.when(bannersRequest).done(function (data: ApiResult<BannerData[]>, status) {
             if (data.Status !== "Ok") {
                 return;
@@ -54,30 +54,14 @@ class MetadataManager {
             }
 
             imagePreloadService.preload(data.Data[0].Url);
-            //var fileTransfer = new FileTransfer();
-            //var uri = encodeURI(data.Data[0].Url);
-            //var fileURL = cordova.file.cacheDirectory + "/bigbanner.jpg";
-            //fileTransfer.download(
-            //    uri,
-            //    fileURL,
-            //    function (entry) {
-            //        console.log("download complete: " + entry.toURL());
-            //    },
-            //    function (error) {
-            //        console.log("download error source " + error.source);
-            //        console.log("download error target " + error.target);
-            //        console.log("upload error code" + error.code);
-            //    }
-            //);
-
         });
-        var smallBannersRequest = metadataApi.GetBanners(self.getSmallBannerFormat());
+        const smallBannersRequest = metadataApi.GetBanners(self.getSmallBannerFormat());
         $.when(smallBannersRequest).done(function (data: ApiResult<BannerData[]>, status) {
             if (data.Status !== "Ok") {
                 return;
             }
 
-            for (var i = 0; i < data.Data.length; i++) {
+            for (let i = 0; i < data.Data.length; i++) {
                 imagePreloadService.preload(data.Data[i].Url);
             }
         });
@@ -88,13 +72,13 @@ class MetadataManager {
             bannersRequest,
             smallBannersRequest)
             .done(function (onlinePlayersDataResult, prizeStructureDataResult, betStructureDataResult,
-					avatarsDataResult, bannersDataResult, smallBannersDataResult) {
-                var onlinePlayersData = onlinePlayersDataResult[0];
-                var prizeStructureData = prizeStructureDataResult[0];
-                var betStructureData = betStructureDataResult[0];
-                var avatarsData = avatarsDataResult[0];
-                var bannersData = <ApiResult<BannerData[]>>bannersDataResult[0];
-                var smallBannersData = <ApiResult<BannerData[]>>smallBannersDataResult[0];
+                    avatarsDataResult, bannersDataResult, smallBannersDataResult) {
+                const onlinePlayersData = onlinePlayersDataResult[0];
+                const prizeStructureData = prizeStructureDataResult[0];
+                const betStructureData = betStructureDataResult[0];
+                const avatarsData = avatarsDataResult[0];
+                const bannersData = <ApiResult<BannerData[]>>bannersDataResult[0];
+                const smallBannersData = <ApiResult<BannerData[]>>smallBannersDataResult[0];
                 if (onlinePlayersData.Status !== "Ok"
                     || prizeStructureData.Status !== "Ok"
                     || betStructureData.Status !== "Ok"
@@ -129,9 +113,9 @@ class MetadataManager {
         return result;
     }
     versionCheck() {
-        var self = this;
-        var result = $.Deferred();
-        var metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
+        const self = this;
+        const result = $.Deferred();
+        const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
         metadataApi.VersionCheck().then(function (serverInformation) {
             if (serverInformation.ServerApiVersion > OnlinePoker.Commanding.API.version) {
                 if (serverInformation.MinimumClientApiVersion <= OnlinePoker.Commanding.API.version) {
@@ -146,8 +130,8 @@ class MetadataManager {
         return result;
     }
     updateOnline() {
-        var self = this;
-        var metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
+        const self = this;
+        const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
         return metadataApi.GetOnlinePlayers().then(function (onlinePlayers) {
             self.registered(onlinePlayers.Data[1].toString());
             self.online(onlinePlayers.Data[0].toString());
@@ -199,5 +183,5 @@ class MetadataManager {
     }
 }
 
-var metadataManager = new MetadataManager();
+let metadataManager = new MetadataManager();
 export = metadataManager;

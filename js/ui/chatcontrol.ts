@@ -20,20 +20,19 @@ export class ChatControl {
         this.tableId = ko.observable(0);
     }
     initialize() {
-        var self = this;
-        connectionService.newConnection.add(function () {
-            var chatHub = connectionService.currentConnection.connection.createHubProxy("chat");
-            var handler = (...msg: any[]) => {
-                var messageId = msg[0];
-                var tableId: number = msg[1];
-                var type = msg[2];
-                var sender = msg[3];
-                var message = msg[4];
-                if (tableId !== self.tableId()) {
+        connectionService.newConnection.add(() => {
+            const chatHub = connectionService.currentConnection.connection.createHubProxy("chat");
+            const handler = (...msg: any[]) => {
+                const messageId = msg[0];
+                const tableId: number = msg[1];
+                const type = msg[2];
+                const sender = msg[3];
+                const message = msg[4];
+                if (tableId !== this.tableId()) {
                     return;
                 }
 
-                self.append(messageId, tableId, type, sender, message);
+                this.append(messageId, tableId, type, sender, message);
             };
             chatHub.on("Message", handler);
             connectionService.terminatedConnection.addOnce(function () {
@@ -42,36 +41,33 @@ export class ChatControl {
         });
     }
     append(messageId: number, tableId: number, type: string, sender: string, message: string) {
-        var self = this;
         this.loading(false);
-        var m = this.messages();
+        const m = this.messages();
         this.messages(["[" + sender + "] " + message].concat(m));
     }
     attachToHub() {
-        var self = this;
         this.loading(true);
-        var wrapper = connectionService.currentConnection;
-        wrapper.buildStartConnection()().done(function () {
+        const wrapper = connectionService.currentConnection;
+        wrapper.buildStartConnection()().done(() => {
             if (wrapper.terminated) {
                 return;
             }
 
-            wrapper.connection.Chat.server.join(self.tableId());
+            wrapper.connection.Chat.server.join(this.tableId());
         });
-        this.timeoutHandler = timeService.setTimeout(function () {
-            self.loading(false);
-            self.timeoutHandler = 0;
+        this.timeoutHandler = timeService.setTimeout(() => {
+            this.loading(false);
+            this.timeoutHandler = 0;
         }, 2000);
     }
     detachFromHub() {
-        var self = this;
-        var wrapper = connectionService.currentConnection;
-        wrapper.buildStartConnection()().done(function () {
+        const wrapper = connectionService.currentConnection;
+        wrapper.buildStartConnection()().done(() => {
             if (wrapper.terminated) {
                 return;
             }
 
-            wrapper.connection.Chat.server.leave(self.tableId());
+            wrapper.connection.Chat.server.leave(this.tableId());
         });
         this.messages([]);
         if (this.timeoutHandler !== 0) {

@@ -15,11 +15,11 @@ class TournamentPrizeInformationComponent {
     private structure: KnockoutComputed<TournamentPrizeStructureView[]>;
 
     constructor(params: { data: KnockoutObservable<TournamentDefinition> }) {
-        var self = this;
+        const self = this;
         this.data = params.data;
 
         this.totalPrize = ko.computed(function () {
-            var tdata = self.data();
+            const tdata = self.data();
             if (tdata == null) {
                 return null;
             }
@@ -27,31 +27,31 @@ class TournamentPrizeInformationComponent {
             return tdata.PrizeAmount + (tdata.CollectedPrizeAmount || 0);
         }, this);
         this.structure = ko.computed(function () {
-            var data = self.data();
+            const data = self.data();
             if (data == null) {
                 return [];
             }
 
-            var currentPlayers = data.JoinedPlayers;
-            var prizeStructure = metadataManager.prizes[data.WellKnownPrizeStructure];
-            var sortedPrizes = prizeStructure.sort(function (a, b) {
+            const currentPlayers = data.JoinedPlayers;
+            const prizeStructure = metadataManager.prizes[data.WellKnownPrizeStructure];
+            const sortedPrizes = prizeStructure.sort(function (a, b) {
                 return a.MaxPlayer > b.MaxPlayer
                     ? 1
                     : (a.MaxPlayer < b.MaxPlayer ? -1 : 0);
             });
-            var filteredPrizes = sortedPrizes.filter(function (a) {
+            const filteredPrizes = sortedPrizes.filter(function (a) {
                 return a.MaxPlayer >= currentPlayers;
             });
-			var currentPrize: TournamentPrizeStructure;
+            let currentPrize: TournamentPrizeStructure;
             if (filteredPrizes.length === 0) {
                 currentPrize = sortedPrizes[0];
             } else {
                 currentPrize = filteredPrizes[0];
             }
 
-            var i = 1;
-            var result = <TournamentPrizeStructureView[]>[];
-            var totalPrize = self.totalPrize();
+            const i = 1;
+            const result = <TournamentPrizeStructureView[]>[];
+            const totalPrize = self.totalPrize();
             currentPrize.PrizeLevel.forEach(function (item, index) {
                 result.push({
                     place: index + 1,

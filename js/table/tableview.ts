@@ -210,7 +210,7 @@ export class TableView {
         ///     <summary>Updates the information about the table from the server</summary>
         ///     <param name="tableId" type="Number">Id of the table for which view has to be created.</param>
         /// </signature>
-        var self = this;
+        const self = this;
         this.tableId = tableId;
         this.tableName = ko.observable(model === null ? "0" : model.TableName);
         this.connecting = ko.observable(true);
@@ -250,14 +250,14 @@ export class TableView {
             if (window.innerWidth >= 1024 || window.innerHeight >= 1024) {
                 this.chipWidth = 60;
                 if (window.innerWidth >= 1920 || window.innerHeight >= 1920) {
-                    this.chipWidth = 2*63;
+                    this.chipWidth = 2 * 63;
                 }
             }
         }
 
         this.myPlayer = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var p = self.places().filter((item) => {
+            const p = self.places().filter((item) => {
                 return item.PlayerName() === self.currentLogin();
             });
             if (p.length > 0) {
@@ -268,12 +268,12 @@ export class TableView {
         }, this).extend({ notify: "always" });
 
         this.myPlayerInGame = ko.computed(function () {
-            var gid = self.gameId();
+            const gid = self.gameId();
             if (gid === null || gid === 0) {
                 return false;
             }
 
-            var myself = self.myPlayer();
+            const myself = self.myPlayer();
             if (myself === null) {
                 return false;
             }
@@ -291,7 +291,7 @@ export class TableView {
                 return -1;
             }
 
-            var pass = self.timePass();
+            let pass = self.timePass();
             pass = pass === null ? 0 : pass;
             return 30 - pass;
         });
@@ -306,7 +306,7 @@ export class TableView {
         });
         this.currentPlayer = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var p = self.places().filter((item) => {
+            const p = self.places().filter((item) => {
                 return item.IsCurrent();
             });
             if (p.length > 0) {
@@ -318,8 +318,8 @@ export class TableView {
 
         this.activePlayersCount = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var activePlayersCount = self.places().reduce((prev: number, value: TablePlaceModel) => {
-                var isActive = value.WasInGame() && (value.Cards() !== null);
+            const activePlayersCount = self.places().reduce((prev: number, value: TablePlaceModel) => {
+                const isActive = value.WasInGame() && (value.Cards() !== null);
                 return prev + (isActive ? 1 : 0);
             }, 0);
             return activePlayersCount;
@@ -327,7 +327,7 @@ export class TableView {
 
         this.myPlayerWasInGame = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var myself = self.myPlayer();
+            const myself = self.myPlayer();
             if (myself === null) {
                 return false;
             }
@@ -337,13 +337,13 @@ export class TableView {
 
         this.turnEnabled = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var cp = self.currentPlayer();
+            const cp = self.currentPlayer();
             if (cp === null) {
                 return false;
             }
 
-            var activePlayersCount = this.places().reduce((prev: number, value: TablePlaceModel) => {
-                var isActive = value.WasInGame() && (value.Cards() !== null);
+            const activePlayersCount = this.places().reduce((prev: number, value: TablePlaceModel) => {
+                const isActive = value.WasInGame() && (value.Cards() !== null);
                 return prev + (isActive ? 1 : 0);
             }, 0);
             return (cp.PlayerName() === self.currentLogin()) && activePlayersCount > 1;
@@ -351,7 +351,7 @@ export class TableView {
 
         this.isMyTurn = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var cp = self.myPlayer();
+            const cp = self.myPlayer();
             if (cp === null || !cp.IsInGameStatus()) {
                 return false;
             }
@@ -369,7 +369,7 @@ export class TableView {
 
         this.notMyTurn = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var cp = self.myPlayer();
+            const cp = self.myPlayer();
             if (cp === null || !cp.IsInGameStatus()) {
                 return false;
             }
@@ -383,7 +383,7 @@ export class TableView {
 
         this.isInGame = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var cp = self.myPlayer();
+            const cp = self.myPlayer();
             if (cp === null || !cp.IsInGameStatus()) {
                 return false;
             }
@@ -393,7 +393,7 @@ export class TableView {
 
         this.maximumBet = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var result = 0;
+            let result = 0;
             result = self.places().reduce(function (previousValue: number, currentValue: TablePlaceModel) {
                 return Math.max(previousValue, currentValue.Bet());
             }, 0);
@@ -402,10 +402,10 @@ export class TableView {
 
         this.allBetsRounded = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var playersInGame = self.places().filter(value => value.WasInGame()).length;
-            var activePlayers = self.places().filter(value => value.WasInGame() && (value.Cards() !== null));
-            var maxBet = self.maximumBet();
-            var allRounded = activePlayers.filter(player => (player.Bet() === maxBet) || (player.Money() === 0)).length
+            const playersInGame = self.places().filter(value => value.WasInGame()).length;
+            const activePlayers = self.places().filter(value => value.WasInGame() && (value.Cards() !== null));
+            const maxBet = self.maximumBet();
+            const allRounded = activePlayers.filter(player => (player.Bet() === maxBet) || (player.Money() === 0)).length
                 === activePlayers.length;
             if (allRounded && (self.actionsCount() >= playersInGame)) {
                 return true;
@@ -416,7 +416,7 @@ export class TableView {
 
         this.currentBet = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var result = self.places().reduce(function (previousValue: number, currentValue: TablePlaceModel) {
+            const result = self.places().reduce(function (previousValue: number, currentValue: TablePlaceModel) {
                 if (currentValue.IsCurrent()) {
                     return currentValue.Bet();
                 }
@@ -428,7 +428,7 @@ export class TableView {
 
         this.myBet = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var myPlayer = self.myPlayer();
+            const myPlayer = self.myPlayer();
             if (myPlayer === null) {
                 return 0;
             }
@@ -438,7 +438,7 @@ export class TableView {
 
         this.currentTotalBet = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var result = self.places().reduce(function (previousValue: number, currentValue: TablePlaceModel) {
+            const result = self.places().reduce(function (previousValue: number, currentValue: TablePlaceModel) {
                 if (currentValue.IsCurrent()) {
                     return currentValue.TotalBet();
                 }
@@ -454,25 +454,25 @@ export class TableView {
 
         this.minimumRaiseAmount = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var currentPlayer = self.myPlayer();
+            const currentPlayer = self.myPlayer();
             if (currentPlayer === null) {
                 return null;
             }
 
-            var cb = self.currentBet();
-            var mb = 2 * (self.lastRaise() - cb) - self.checkOrCallAmount();
+            const cb = self.currentBet();
+            let mb = 2 * (self.lastRaise() - cb) - self.checkOrCallAmount();
             mb = Math.max(mb, self.bigBlind());
             mb = Math.min(mb, currentPlayer.Money());
-            var addon = cb + self.checkOrCallAmount();
-            var raiseAmount = mb + addon;
-            var maxAmountOfMoneyForOtherActivePlayers = self.maxAmountOfMoneyForOtherActivePlayers();
+            const addon = cb + self.checkOrCallAmount();
+            let raiseAmount = mb + addon;
+            const maxAmountOfMoneyForOtherActivePlayers = self.maxAmountOfMoneyForOtherActivePlayers();
             raiseAmount = Math.min(raiseAmount, maxAmountOfMoneyForOtherActivePlayers);
             return raiseAmount;
         }, this);
 
         this.isSitOut = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var currentPlayer = this.myPlayer();
+            const currentPlayer = this.myPlayer();
             if (currentPlayer === null) {
                 return false;
             }
@@ -481,7 +481,7 @@ export class TableView {
         }, this);
 
         this.maxAmountOfMoneyForOtherActivePlayers = ko.computed(function () {
-            var result = 0;
+            let result = 0;
             result = self.places().reduce(function (previousValue: number, currentValue: TablePlaceModel) {
                 if (currentValue.PlayerName() === self.currentLogin()) {
                     return previousValue;
@@ -501,28 +501,28 @@ export class TableView {
         }).extend({ notify: "always" });
 
         this.maximumRaiseAmount = ko.computed(function () {
-            var currentPlayer = self.myPlayer();
+            const currentPlayer = self.myPlayer();
             if (currentPlayer === null) {
                 return null;
             }
 
-            var max = self.maxAmountOfMoneyForOtherActivePlayers();
-            var bet = currentPlayer.Bet();
-            var money = currentPlayer.Money();
+            const max = self.maxAmountOfMoneyForOtherActivePlayers();
+            const bet = currentPlayer.Bet();
+            const money = currentPlayer.Money();
             return Math.min(money + bet, max) - bet;
         }, this).extend({ notify: "always" });
 
         this.totalPot = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var totalBetsOnTable = self.places().reduce((prev: number, item: TablePlaceModel) => {
+            const totalBetsOnTable = self.places().reduce((prev: number, item: TablePlaceModel) => {
                 return prev + item.Bet();
             }, 0);
-            var potsArray = self.pots();
+            const potsArray = self.pots();
             if (potsArray === null) {
                 return totalBetsOnTable;
             }
 
-            var pots = potsArray.reduce((prev: number, item: number) => {
+            const pots = potsArray.reduce((prev: number, item: number) => {
                 return prev + item;
             }, 0);
 
@@ -531,7 +531,7 @@ export class TableView {
 
         this.totalPotCaption = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
-            var totalPot = self.totalPot();
+            const totalPot = self.totalPot();
             if (totalPot === null || totalPot === 0) {
                 return null;
             }
@@ -541,7 +541,7 @@ export class TableView {
         }, this);
 
         this.tableBetsCaption = ko.computed(function () {
-            var hasAnte = self.ante() != null;
+            const hasAnte = self.ante() != null;
             if (hasAnte) {
                 return _("table.betsWithAnte", { sb: self.smallBlind(), bb: self.bigBlind(), ante: self.ante() });
             }
@@ -550,7 +550,7 @@ export class TableView {
         }, this);
 
         this.couldAddChips = ko.pureComputed(function () {
-            var me = self.myPlayer();
+            const me = self.myPlayer();
             if (me == null) {
                 return false;
             }
@@ -559,9 +559,9 @@ export class TableView {
                 return false;
             }
 
-            var totalBet = (me.TotalBet() == null ? 0 : me.TotalBet());
-            var baseMinimalBuyIn = self.minimalBuyIn() * self.model.BigBlind;
-            var tableTotal = totalBet + me.Money() + me.Bet();
+            const totalBet = (me.TotalBet() == null ? 0 : me.TotalBet());
+            const baseMinimalBuyIn = self.minimalBuyIn() * self.model.BigBlind;
+            const tableTotal = totalBet + me.Money() + me.Bet();
             return (20 * baseMinimalBuyIn) > tableTotal;
         }, this);
 
@@ -574,16 +574,16 @@ export class TableView {
     * Gets current cards combination
     */
     public getCurrentCombination() {
-        var my = this.myPlayer();
+        const my = this.myPlayer();
         if (my == null) {
             return null;
         }
 
-        var tableCards = this.tableCards.tableCardsData();
+        const tableCards = this.tableCards.tableCardsData();
         return my.getCombination(tableCards);
     }
     startTimer(startTime: number = 1) {
-        var self: TableView = this;
+        const self: TableView = this;
         if (this.frozen()) {
             return;
         }
@@ -591,7 +591,7 @@ export class TableView {
         self.timePass(startTime);
         this.timerInterval = timeService.setInterval(function () {
             if (runtimeSettings.updateTimer) {
-                var time = self.timePass();
+                const time = self.timePass();
                 self.timePass(time + 1);
                 if (self.timeLeft() === 7) {
                     if (self.currentPlayer() === self.myPlayer()) {
@@ -614,7 +614,7 @@ export class TableView {
         /// <signature>
         ///     <summary>Updates the information about the table from the server</summary>
         /// </signature>
-        var self = this;
+        const self = this;
         if (this.connectingRequest !== null && this.connectingRequest.state() === "pending") {
             // Re-schedule updating information.
             this.connectingRequest.fail(function () {
@@ -627,14 +627,14 @@ export class TableView {
         }
 
         this.connecting(true);
-        var currentLoadingRequest = $.Deferred();
+        const currentLoadingRequest = $.Deferred();
         this.clearTimer();
-        var wrapper = connectionService.currentConnection;
-        var hubId = wrapper.connection.id;
-        var connectionInfo = "HID:" + hubId;
+        const wrapper = connectionService.currentConnection;
+        let hubId = wrapper.connection.id;
+        const connectionInfo = "HID:" + hubId;
         this.log("Connecting to table " + this.tableId + " on connection " + connectionInfo);
-        var startConnection = app.buildStartConnection();
-        var api = new OnlinePoker.Commanding.API.Game(apiHost);
+        const startConnection = app.buildStartConnection();
+        const api = new OnlinePoker.Commanding.API.Game(apiHost);
         api.SetOpenCardsParameters(this.tableId, !settings.autoHideCards(), null);
         startConnection().then(function () {
             if (wrapper.terminated) {
@@ -644,9 +644,9 @@ export class TableView {
             hubId = wrapper.connection.id;
             self.log("Attempting to connect to table and chat over connection " + hubId);
 
-            var joinTableRequest = self.joinTable(wrapper);
-            var joinChatRequest = self.joinChat(wrapper);
-            var joinRequest = $.when(joinTableRequest, joinChatRequest);
+            const joinTableRequest = self.joinTable(wrapper);
+            const joinChatRequest = self.joinChat(wrapper);
+            const joinRequest = $.when(joinTableRequest, joinChatRequest);
             currentLoadingRequest.progress(function (command: string) {
                 self.log("Receiving request to cancel all joining operations");
                 joinTableRequest.notify(command);
@@ -665,9 +665,9 @@ export class TableView {
                     return;
                 }
 
-				var message: string;
+                let message: string;
                 if (result2 == null) {
-                    var taskFailed;
+                    let taskFailed;
                     if (result1[2] === joinTableRequest) {
                         taskFailed = "join table";
                     } else {
@@ -698,20 +698,20 @@ export class TableView {
         }
     }
     joinTable(wrapper: ConnectionWrapper, maxAttempts = 3) {
-        var self = this;
-        var result = $.Deferred();
+        const self = this;
+        const result = $.Deferred();
         if (maxAttempts === 0 || wrapper.terminated) {
             this.log("Stop connecting to table");
             result.reject("Stop connecting to table", false);
             return result;
         }
 
-        var hubId = connectionService.currentConnection.connection.id;
-        var connectionInfo = "HID:" + hubId;
+        const hubId = connectionService.currentConnection.connection.id;
+        const connectionInfo = "HID:" + hubId;
         this.log("Joining table on connection " + connectionInfo);
-        var cancelled = false;
-        var subsequentDeferred: JQueryDeferred<any> = null;
-        var cancelOperation = function () {
+        const cancelled = false;
+        let subsequentDeferred: JQueryDeferred<any> = null;
+        const cancelOperation = function () {
             self.log("Cancelling join table request");
             result.reject("Cancelled", true);
         };
@@ -723,7 +723,7 @@ export class TableView {
             }
 
             self.log("Executing Game.join on connection " + wrapper.connection.id + " in state " + wrapper.connection.state);
-            var operation = wrapper.connection.Game.server.join(self.tableId)
+            const operation = wrapper.connection.Game.server.join(self.tableId)
                 .then(function () {
                     if (wrapper.terminated) {
                         cancelOperation();
@@ -737,7 +737,7 @@ export class TableView {
                         return;
                     }
 
-                    var message = "" + <string>error;
+                    let message = "" + <string>error;
                     self.log("Failed to join table " + self.tableId + ", " + connectionInfo + ". Reason: " + message);
                     if (message.indexOf("Connection was disconnected before invocation result was received.") >= 0) {
                         self.log("Stopped connecting to table since underlying connection is broken");
@@ -768,20 +768,20 @@ export class TableView {
         return result;
     }
     joinChat(wrapper: ConnectionWrapper, maxAttempts = 3) {
-        var self = this;
-        var result = $.Deferred();
+        const self = this;
+        const result = $.Deferred();
         if (maxAttempts === 0 || wrapper.terminated) {
             this.log("Stop connecting to table chat");
             result.reject("Stop connecting to table chat", false);
             return result;
         }
 
-        var cancelled = false;
-        var subsequentDeferred: JQueryDeferred<any> = null;
-        var cancelOperation = function () {
+        const cancelled = false;
+        let subsequentDeferred: JQueryDeferred<any> = null;
+        const cancelOperation = function () {
             self.log("Cancelling join table request");
             result.reject("Cancelled", true);
-		};
+        };
 
         wrapper.buildStartConnection()().pipe(function () {
             if (wrapper.terminated) {
@@ -790,7 +790,7 @@ export class TableView {
             }
 
             self.log("Executing Game.join on connection " + wrapper.connection.id + " in state " + wrapper.connection.state);
-            var operation = wrapper.connection.Chat.server.join(self.tableId)
+            const operation = wrapper.connection.Chat.server.join(self.tableId)
                 .then(function () {
                     if (wrapper.terminated) {
                         cancelOperation();
@@ -831,17 +831,17 @@ export class TableView {
         /// <signature>
         ///     <summary>Updates the information about the table from the server</summary>
         /// </signature>
-        var self = this;
+        const self = this;
         // HACK: Game server should correctly leave from table.
         // Looks like when calling leave status stop receiving player specific 
         // notifications. Which is looks like SignalR connection is not correctly 
         // removed from the corresponding group.
-        //connectionService.currentConnection.connection.Game.server.leave(this.tableId);
-        //connectionService.currentConnection.connection.Chat.server.leave(this.tableId);
+        // connectionService.currentConnection.connection.Game.server.leave(this.tableId);
+        // connectionService.currentConnection.connection.Chat.server.leave(this.tableId);
     }
 
     setDealer(dealerSeat) {
-        var players = this.places();
+        const players = this.places();
         players.forEach((p) => {
             if (p.Seat() === dealerSeat) {
                 p.IsDealer(true);
@@ -849,11 +849,11 @@ export class TableView {
                 p.IsDealer(null);
             }
         });
-        //this.places(players);
+        // this.places(players);
     }
 
     setCurrent(currentPlayerId: number) {
-        var players = this.places();
+        const players = this.places();
         players.forEach((p) => {
             if (p.PlayerId() === currentPlayerId) {
                 p.IsCurrent(true);
@@ -872,9 +872,9 @@ export class TableView {
         ///     <param name="amount" type="Number">Amount of money which player bring to the table</param>
         /// </signature>
         this.logGameEvent("Player " + playerId + " sit on the seat " + seat);
-        var places = this.places();
+        const places = this.places();
 
-        var playerModel = new TablePlaceModel({
+        const playerModel = new TablePlaceModel({
             PlayerId: playerId,
             PlayerName: playerName,
             PlayerUrl: playerUrl,
@@ -891,7 +891,7 @@ export class TableView {
         this.actionBlock.updateNeedBB();
         this.actionBlock.updateBlocks();
         if (playerName === this.currentLogin()) {
-            var api = new OnlinePoker.Commanding.API.Game(apiHost);
+            const api = new OnlinePoker.Commanding.API.Game(apiHost);
             api.SetOpenCardsParameters(this.tableId, !settings.autoHideCards(), null);
         }
     }
@@ -900,20 +900,20 @@ export class TableView {
         ///     <summary>Standup player from the table.</summary>
         ///     <param name="playerId" type="Number">Id of the player which join the table</param>
         /// </signature>
-        var places = this.places();
-		var lastAmount = 0;
-        for (var p in places) {
-			if (!places.hasOwnProperty(p)) {
-				continue;
-			}
+        const places = this.places();
+        let lastAmount = 0;
+        for (let p in places) {
+            if (!places.hasOwnProperty(p)) {
+                continue;
+            }
 
-            var currentPlayer = places[p];
+            const currentPlayer = places[p];
             if (currentPlayer.PlayerId() === playerId) {
                 if (currentPlayer.WasInGame()) {
                     this.actionsCount(Math.max(0, this.actionsCount() - 1));
                 }
 
-				lastAmount = currentPlayer.Money();
+                lastAmount = currentPlayer.Money();
                 this.tablePlaces.standup(currentPlayer.Seat());
                 break;
             }
@@ -921,7 +921,7 @@ export class TableView {
 
         // If we no longer on the table then leave it.
         if (this.myPlayer() === null) {
-			this.minimalPlayerBuyIn(lastAmount);
+            this.minimalPlayerBuyIn(lastAmount);
             this.updateCurrentCombination();
         }
 
@@ -938,18 +938,16 @@ export class TableView {
         this.startTimer();
     }
     onOpened() {
-        var self = this;
         this.pushCallback(() => {
-            self.opened(true);
+            this.opened(true);
         });
     }
     onClosed() {
-        var self = this;
         this.pushCallback(() => {
-            self.opened(false);
-            self.tablePlaces.clear();
-            self.pots([]);
-            self.tableCards.clear();
+            this.opened(false);
+            this.tablePlaces.clear();
+            this.pots([]);
+            this.tableCards.clear();
         });
     }
     onPaused() {
@@ -982,12 +980,12 @@ export class TableView {
     * @param lastMessageId Last id of the message.
     */
     onTableStatusInfo(players: PlayerStatusInfo[], pots: number[], cards: string, dealerSeat: number, buyIn: number,
-		baseBuyIn: number, leaveTime, timePass: number, currentPlayerId: number, lastRaise: number, gameId: number,
-		authenticated: boolean, actionsCount: number, frozen: boolean, opened: boolean, pauseDate: number,
-		lastMessageId: number) {
-        var tablePlayers = <TablePlayer[]>[];
-        for (var i = 0; i < players.length; i++) {
-            var p = <TablePlayer><any>players[i];
+        baseBuyIn: number, leaveTime, timePass: number, currentPlayerId: number, lastRaise: number, gameId: number,
+        authenticated: boolean, actionsCount: number, frozen: boolean, opened: boolean, pauseDate: number,
+        lastMessageId: number) {
+        const tablePlayers = <TablePlayer[]>[];
+        for (let i = 0; i < players.length; i++) {
+            const p = <TablePlayer><any>players[i];
             tablePlayers.push(p);
         }
 
@@ -1001,7 +999,7 @@ export class TableView {
         if (opened) {
             this.gameId(gameId);
             this.actionsCount(actionsCount);
-            var gameFinished = gameId === 0 || gameId === null;
+            const gameFinished = gameId === 0 || gameId === null;
             this.gameFinished(gameFinished);
             this.gameStarted(!gameFinished);
             this.prizesDistributed(this.gameFinished());
@@ -1010,7 +1008,7 @@ export class TableView {
                 this.gameFinished(true);
             }
 
-            var cardsArr = decodeCardsArray(cards);
+            const cardsArr = decodeCardsArray(cards);
             this.setCards(cardsArr);
             this.setDealer(dealerSeat);
 
@@ -1042,7 +1040,7 @@ export class TableView {
             this.actionBlock.resetWaitBB();
             this.actionBlock.processing(false);
             this.actionBlock.updateBlocks();
-            var myself = this.myPlayer();
+            const myself = this.myPlayer();
             if (myself != null) {
                 this.actionBlock.updateAutomaticActionsText(myself.Money(), this.maximumBet() - this.myBet());
             }
@@ -1082,7 +1080,7 @@ export class TableView {
             this.clearNotification();
         }
 
-        var combinations: string[] = [];
+        const combinations: string[] = [];
         this.cardsReceived = false;
         this.combinations(combinations);
         this.gamePlayers(players.map((item) => item.PlayerId));
@@ -1111,7 +1109,7 @@ export class TableView {
         }
     }
     startDealCards() {
-        var self = this;
+        const self = this;
         this.queue.pushCallback(() => {
             self.logGameEvent("Deal cards to players");
             self.places().forEach(function (value) {
@@ -1130,14 +1128,13 @@ export class TableView {
         });
     }
     onGameStarted(gameId: number, players: GamePlayerStartInformation[], actions: GameActionStartInformation[], dealerSeat: number) {
-        var self = this;
         this.queue.pushCallback(() => {
-            self.onGameStartedCore(gameId, players, actions, dealerSeat);
-            self.handHistory.onGameStarted(gameId, players, actions, dealerSeat);
+            this.onGameStartedCore(gameId, players, actions, dealerSeat);
+            this.handHistory.onGameStarted(gameId, players, actions, dealerSeat);
         });
-        var isInGame = players.some(_ => _.PlayerId === authManager.loginId());
+        const isInGame = players.some(_ => _.PlayerId === authManager.loginId());
         if (!isInGame) {
-            self.startDealCards();
+            this.startDealCards();
         }
     }
     onGameFinished(gameId: number, winners: GameWinnerModel[], rake: number) {
@@ -1149,54 +1146,54 @@ export class TableView {
         ///     </param>
         ///     <param name="rake" type="Number">Amount of rake paid.</param>
         /// </signature>
-        var self = this;
+        const self = this;
         this.queue.wait(this.animationSettings.finishGamePrePause);
         this.queue.pushCallback(() => {
             this.logGameEvent("Game finished");
             self.gameFinished(true);
             self.gameStarted(false);
             self.gamePlayers([]);
-            var places = self.places();
+            const places = self.places();
             self.finishAnimation(places);
 
-            var c: string[] = [];
-            var needHightlightCards = true;
-            var activePlayersCount = this.activePlayersCount();
+            const c: string[] = [];
+            let needHightlightCards = true;
+            const activePlayersCount = this.activePlayersCount();
             this.logGameEvent("Active players count", activePlayersCount);
             needHightlightCards = activePlayersCount > 1;
             if (needHightlightCards) {
                 self.tableCards.CardsHightlighted(true);
             }
 
-            for (var w in winners) {
+            for (let w in winners) {
                 if (!winners.hasOwnProperty(w)) {
-					continue;
-				}
+                    continue;
+                }
 
-				var currentWinner = winners[w];
+                const currentWinner = winners[w];
                 if (c.indexOf(currentWinner.CardsDescription) === -1) {
                     c.push(currentWinner.CardsDescription);
                 }
 
-                for (var p in places) {
+                for (let p in places) {
                     if (!places.hasOwnProperty(p)) {
-						continue;
-					}
+                        continue;
+                    }
 
-					var currentPlayer = places[p];
+                    const currentPlayer = places[p];
                     if (needHightlightCards) {
                         currentPlayer.CardsHightlighted(true);
                     }
 
                     if (currentPlayer.PlayerId() === currentWinner.PlayerId) {
-                        var winnerCards = <number[]>[];
-                        var tableCards = self.tableCards.tableCardsData();
+                        let winnerCards = <number[]>[];
+                        const tableCards = self.tableCards.tableCardsData();
                         if (tableCards != null) {
                             winnerCards = winnerCards.concat(tableCards);
                         }
 
                         winnerCards = winnerCards.concat(currentPlayer.RawCards());
-                        var handRepresentation = {
+                        const handRepresentation = {
                             Cards: [],
                             Suits: []
                         };
@@ -1205,7 +1202,7 @@ export class TableView {
                             handRepresentation.Suits.push(1 << (card / 13));
                         });
                         if (winnerCards.length === 7 && needHightlightCards) {
-                            var rank = HoldemHand.getCardRank(handRepresentation);
+                            const rank = HoldemHand.getCardRank(handRepresentation);
                             rank.WinnerCardsSet.forEach(function (cardIndex) {
                                 if (cardIndex === 5) {
                                     currentPlayer.Card1Hightlighted(true);
@@ -1280,7 +1277,7 @@ export class TableView {
             this.tableCards.CardsHightlighted(false);
             this.setCards([]);
             this.pots([]);
-            var places = this.places();
+            const places = this.places();
             places.forEach(function (item) {
                 item.prepareForNewGame();
             });
@@ -1288,11 +1285,11 @@ export class TableView {
     }
     onPlayerStatusCore(playerId: number, status: number) {
         this.logGameEvent("onPlayerStatus", playerId, status);
-        var self = this;
-        var places = this.places();
+        const self = this;
+        const places = this.places();
         places.forEach((p) => {
             if (p.PlayerId() === playerId) {
-                var saveMask = 16;
+                const saveMask = 16;
                 p.Status(status | (p.Status() & saveMask));
                 if (playerId === authManager.loginId()) {
                     if (p.IsSitoutStatus()) {
@@ -1306,17 +1303,16 @@ export class TableView {
         this.actionBlock.updateBlocks();
     }
     onPlayerStatus(playerId: number, status: number) {
-        var self = this;
         this.queue.pushCallback(() => {
-            self.onPlayerStatusCore(playerId, status);
+            this.onPlayerStatusCore(playerId, status);
         });
     }
     onPlayerCardsCore(playerId: number, cards: number[]) {
-        var self = this;
-        var oldCardsReceived = this.cardsReceived;
+        const self = this;
+        const oldCardsReceived = this.cardsReceived;
         this.cardsReceived = true;
-        var myPlayer = this.myPlayer();
-        var isHoleCards = false;
+        const myPlayer = this.myPlayer();
+        let isHoleCards = false;
         if (myPlayer != null) {
             // If this is first cards received then this is our cards
             // Allow deals only when your cards is recived.
@@ -1341,11 +1337,11 @@ export class TableView {
         }
 
         this.logGameEvent("onPlayerCards", playerId, convertToCards(cards));
-        var places = this.places();
+        const places = this.places();
         places.forEach((p) => {
             if (p.PlayerId() === playerId) {
-                var myself = self.currentLogin() === p.PlayerName();
-                var couldDisplayOtherCards = myself || self.combinations().length > 0;
+                const myself = self.currentLogin() === p.PlayerName();
+                let couldDisplayOtherCards = myself || self.combinations().length > 0;
                 couldDisplayOtherCards = true;
                 if (couldDisplayOtherCards) {
                     p.setCards(cards);
@@ -1358,7 +1354,7 @@ export class TableView {
         }
     }
     onPlayerCards(playerId: number, cards: number[]) {
-        var self = this;
+        const self = this;
         this.queue.pushCallback(() => {
             if (!self.cardsReceived) {
                 if (playerId === authManager.loginId()) {
@@ -1375,33 +1371,32 @@ export class TableView {
         });
     }
     onPlayerCardsMucked(playerId: number) {
-        var self = this;
         this.queue.pushCallback(() => {
-            var currentPlayer = this.tablePlaces.getPlaceByPlayerId(playerId);
-            self.foldCardsForPlayer(currentPlayer, true, this.animationSettings.foldAnimationTimeout / 2);
+            const currentPlayer = this.tablePlaces.getPlaceByPlayerId(playerId);
+            this.foldCardsForPlayer(currentPlayer, true, this.animationSettings.foldAnimationTimeout / 2);
         });
     }
     updateBetsAndMoney(currentPlayer: TablePlaceModel, type: number, amount: number) {
-        var playerId = currentPlayer.PlayerId();
-        var myself = this.myPlayer();
-        var totalBet = (currentPlayer.TotalBet() === null ? 0 : currentPlayer.TotalBet());
-        var currentBet = currentPlayer.Bet();
-        var maximumBet = this.maximumBet();
-        var amountPlaced = amount - currentBet;
+        const playerId = currentPlayer.PlayerId();
+        const myself = this.myPlayer();
+        const totalBet = (currentPlayer.TotalBet() === null ? 0 : currentPlayer.TotalBet());
+        const currentBet = currentPlayer.Bet();
+        const maximumBet = this.maximumBet();
+        const amountPlaced = amount - currentBet;
         if (type === 6) {
             currentPlayer.Money(currentPlayer.Money() + amount);
             this.handHistory.onReturnMoney(playerId, amount);
             return;
         }
 
-        var newMoney = currentPlayer.Money() - amountPlaced;
+        const newMoney = currentPlayer.Money() - amountPlaced;
         currentPlayer.Money(newMoney);
 
         // If player raise then update last raise amount.
         // We have to do that before current bet for the player is changed,
         // Since calculation depends on the amount of last bet.
         if (type === 3) {
-            var raiseAmount = amount;
+            const raiseAmount = amount;
 
             // Since we have raise in this round, then we no longer could
             // do bets.
@@ -1498,14 +1493,14 @@ export class TableView {
             return;
         }
 
-        var myself = this.myPlayer();
+        const myself = this.myPlayer();
 
         // If player folds then cards should be hidden.
-        var currentCards = currentPlayer.Cards();
+        const currentCards = currentPlayer.Cards();
         currentPlayer.startFoldAnimation();
         // Current player is not active, but it not yet folded cards.
-        var activePlayersCount = this.activePlayersCount() - 1;
-        var displayFoldedCards = myself !== null
+        const activePlayersCount = this.activePlayersCount() - 1;
+        const displayFoldedCards = myself !== null
             && currentPlayer.PlayerId() === myself.PlayerId()
             && activePlayersCount > 1
             && !forceAnimation;
@@ -1521,13 +1516,13 @@ export class TableView {
         this.queue.injectWait(duration);
     }
     finishFoldAnimation() {
-		// Do nothing.
+        // Do nothing.
     }
     onBetCore(playerId: number, type: number, amount: number, nextPlayerId: number) {
         this.logGameEvent("Doing bet of type " + type);
-        var places = this.places();
-        var myself = this.myPlayer();
-        var currentPlayer = this.tablePlaces.getPlaceByPlayerId(playerId);
+        const places = this.places();
+        const myself = this.myPlayer();
+        const currentPlayer = this.tablePlaces.getPlaceByPlayerId(playerId);
         if (currentPlayer === null) {
             this.logGameEvent("No player sitting on the table.");
             return;
@@ -1535,7 +1530,7 @@ export class TableView {
 
         this.updateBetsAndMoney(currentPlayer, type, amount);
 
-        var isMyTurn = myself !== null && nextPlayerId === myself.PlayerId();
+        const isMyTurn = myself !== null && nextPlayerId === myself.PlayerId();
         // Don's enable buttons until cards would be recived for players.
         if (this.cardsReceived) {
             this.actionBlock.buttonsEnabled(true);
@@ -1544,7 +1539,7 @@ export class TableView {
             }
         }
 
-        var forcedBets = type === 1 || type === 5;
+        const forcedBets = type === 1 || type === 5;
         if (!(forcedBets && nextPlayerId === 0)) {
             this.setCurrent(nextPlayerId);
 
@@ -1558,12 +1553,12 @@ export class TableView {
 
         // this.refreshPlaces();
 
-        var userActions = type === 3 || type === 4 || type === 2;
+        const userActions = type === 3 || type === 4 || type === 2;
         if (userActions) {
             this.actionsCount(this.actionsCount() + 1);
         }
 
-        var allBetsRounded = this.allBetsRounded();
+        const allBetsRounded = this.allBetsRounded();
         this.logGameEvent("All bets rounded", allBetsRounded);
         if (allBetsRounded) {
             this.actionBlock.buttonsEnabled(false);
@@ -1571,7 +1566,7 @@ export class TableView {
         }
 
         if (myself !== null) {
-            var requiredBet = this.maximumBet() - this.myBet();
+            const requiredBet = this.maximumBet() - this.myBet();
             this.actionBlock.updateSupportDirectAmountStatus(requiredBet);
             if (nextPlayerId === myself.PlayerId()) {
                 if (!allBetsRounded && userActions) {
@@ -1616,15 +1611,14 @@ export class TableView {
         ///     <param name="amount" type="Number">Amount of money which player put in the bet</param>
         ///     <param name="nextPlayerId" type="Number">Id of the player which join the table</param>
         /// </signature>
-        var self = this;
         this.queue.pushCallback(() => {
-            self.onBetCore(playerId, type, amount, nextPlayerId);
-            self.handHistory.onBet(playerId, type, amount, nextPlayerId);
+            this.onBetCore(playerId, type, amount, nextPlayerId);
+            this.handHistory.onBet(playerId, type, amount, nextPlayerId);
         });
     }
     startMovingChipsToPotAnimation() {
         this.logGameEvent("Moving chips to center");
-        var places = this.places();
+        const places = this.places();
         this.places().forEach(function (value) {
             value.IsBetAnimationLocked(false);
             value.IsMovingBetToPot(true);
@@ -1633,7 +1627,7 @@ export class TableView {
     }
     onMoveMoneyToPot(amount: number[]) {
         // Trigger animation.
-        var self = this;
+        const self = this;
         this.actionBlock.buttonsEnabled(false);
         this.queue.wait(this.animationSettings.movingMoneyToPotPrePause);
         this.queue.pushCallback(() => {
@@ -1645,7 +1639,7 @@ export class TableView {
             self.setPots(amount);
 
             self.logGameEvent("Clearing bets");
-            var places = self.places();
+            const places = self.places();
             self.places().forEach(function (value) {
                 value.collectBet();
             });
@@ -1658,8 +1652,8 @@ export class TableView {
         });
     }
     onMoneyAdded(playerId: number, amount: number) {
-        var self = this;
-        var places = this.places();
+        const self = this;
+        const places = this.places();
         places.forEach(function (value) {
             if (value.PlayerId() === playerId) {
                 // Add money only if player not currently eligible to be in game.
@@ -1673,14 +1667,14 @@ export class TableView {
     }
     setPots(amount: number[]) {
         // Add first number to the last pot.
-        var currentPots = this.pots();
-        var skipCollectingPot = (currentPots.length === amount.length
+        const currentPots = this.pots();
+        const skipCollectingPot = (currentPots.length === amount.length
             && currentPots[currentPots.length - 1] === amount[currentPots.length - 1]);
         if (!skipCollectingPot) {
             this.handHistory.onMoveMoneyToPot(amount);
         }
 
-        var main = amount[0];
+        let main = amount[0];
         if (this.pots().length === 0) {
             // First pot created.
             this.handHistory.onPotCreated(1, main);
@@ -1694,7 +1688,7 @@ export class TableView {
 
         // Append other amounts to the end of stack.
         // and generate split pots
-        for (var i = Math.max(1, currentPots.length); i < amount.length; i++) {
+        for (let i = Math.max(1, currentPots.length); i < amount.length; i++) {
             if (currentPots[i] !== amount[i]) {
                 this.handHistory.onPotCreated(i + 1, amount[i]);
             }
@@ -1717,10 +1711,10 @@ export class TableView {
         }
 
         this.sitting = true;
-        var self = this;
+        const self = this;
         app.requireAuthentication().done(function (authenticated) {
             if (authenticated) {
-                var currentPlayer = self.myPlayer();
+                const currentPlayer = self.myPlayer();
                 if (currentPlayer === null) {
                     app.joinTablePopup.tableView(self);
                     app.joinTablePopup.seatNumber(seat);
@@ -1732,14 +1726,14 @@ export class TableView {
         });
     }
     rebuy() {
-        var self = this;
-        var tournamentView = this.tournament();
-        var tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        const self = this;
+        const tournamentView = this.tournament();
+        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
         tapi.Rebuy(tournamentView.tournamentId, false).then((data) => {
             if (data.Status === "Ok") {
                 self.hasPendingMoney(true);
                 if (!self.hasPlayersWithoutMoney()) {
-                    //self.clearNotification();
+                    // self.clearNotification();
                 }
 
                 SimplePopup.display(_("tableMenu.rebuy"), _("tableMenu.rebuySuccess"));
@@ -1751,14 +1745,14 @@ export class TableView {
             });
     }
     doubleRebuy() {
-        var self = this;
-        var tournamentView = this.tournament();
-        var tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        const self = this;
+        const tournamentView = this.tournament();
+        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
         tapi.Rebuy(tournamentView.tournamentId, true).then((data) => {
             if (data.Status === "Ok") {
                 self.hasPendingMoney(true);
                 if (!self.hasPlayersWithoutMoney()) {
-                    //self.clearNotification();
+                    // self.clearNotification();
                 }
 
                 SimplePopup.display(_("tableMenu.doublerebuy"), _("tableMenu.doublerebuySuccess"));
@@ -1770,17 +1764,17 @@ export class TableView {
             });
     }
     addon() {
-        var self = this;
-        var tournamentView = this.tournament();
-        var tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        const self = this;
+        const tournamentView = this.tournament();
+        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
         tapi.Addon(tournamentView.tournamentId).then((data) => {
             if (data.Status === "Ok") {
                 self.hasPendingMoney(true);
                 if (!self.hasPlayersWithoutMoney()) {
-                    //self.clearNotification();
+                    // self.clearNotification();
                 }
 
-                //self.tournament().addonCount(self.tournament().addonCount() + 1);
+                // self.tournament().addonCount(self.tournament().addonCount() + 1);
                 SimplePopup.display(_("tableMenu.addon"), _("tableMenu.addonSuccess"));
             } else {
                 SimplePopup.display(_("tableMenu.addon"), _("errors." + data.Status));
@@ -1790,33 +1784,33 @@ export class TableView {
             });
     }
     showRebuyPrompt() {
-        var self = this;
-        var tdata = this.tournament().tournamentData();
-        var prompt = [_("table.rebuyPrompt", { price: tdata.RebuyFee + tdata.RebuyPrice })];
+        const self = this;
+        const tdata = this.tournament().tournamentData();
+        const prompt = [_("table.rebuyPrompt", { price: tdata.RebuyFee + tdata.RebuyPrice })];
         app.prompt(_("table.rebuyPromptCaption"), prompt).then(function () {
             self.rebuy();
         });
     }
     showDoubleRebuyPrompt() {
-        var self = this;
-        var tdata = this.tournament().tournamentData();
-		var prompt = [_("table.doubleRebuyPrompt", { price: 2 * (tdata.RebuyFee + tdata.RebuyPrice) })];
+        const self = this;
+        const tdata = this.tournament().tournamentData();
+        const prompt = [_("table.doubleRebuyPrompt", { price: 2 * (tdata.RebuyFee + tdata.RebuyPrice) })];
         app.prompt(_("table.doubleRebuyPromptCaption"), prompt).then(function () {
             self.doubleRebuy();
         });
     }
     showAddonPrompt() {
-        var self = this;
-        var tdata = this.tournament().tournamentData();
-        var prompt = [_("table.addonPrompt", { price: tdata.AddonFee + tdata.AddonPrice })];
+        const self = this;
+        const tdata = this.tournament().tournamentData();
+        const prompt = [_("table.addonPrompt", { price: tdata.AddonFee + tdata.AddonPrice })];
         app.prompt(_("table.addonPromptCaption"), prompt).then(function () {
             self.addon();
         });
     }
     sit(seat: number, amount: number) {
-        var self = this;
-        var gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        var result = $.Deferred();
+        const self = this;
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const result = $.Deferred();
         gameApi.Sit(self.tableId, seat, amount, function (data, textStatus, jqXHR) {
             // report on successfull seating.
             if (data.Status === "OperationNotValidAtThisTime") {
@@ -1840,11 +1834,11 @@ export class TableView {
         ///     <param name="seat" type="Number">Seat where player willing to join</param>
         ///     <param name="tableView" type="TableView">Table view where to join</param>
         /// </signature>
-        var self = this;
-        var result = $.Deferred<void>();
+        const self = this;
+        const result = $.Deferred<void>();
         if (self.myPlayer() != null) {
-            var tournament = this.tournament();
-			var messages: string[];
+            const tournament = this.tournament();
+            let messages: string[];
             if (tournament == null) {
                 messages = [_("table.standupPrompt")];
             } else {
@@ -1872,8 +1866,8 @@ export class TableView {
         return result;
     }
     standup() {
-        var self = this;
-        var gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const self = this;
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
         gameApi.Standup(this.tableId, function (data, textStatus, jqXHR) {
             // report on successfull seating.
             if (data.Status === "AuthorizationError") {
@@ -1888,22 +1882,22 @@ export class TableView {
         ///     <param name="seat" type="Number">Seat where player willing to join</param>
         ///     <param name="tableView" type="TableView">Table view where to join</param>
         /// </signature>
-        var self = this;
-        var targetPlayer = this.tablePlaces.getPlaceBySeat(seat);
-        var playerId = targetPlayer.PlayerId();
+        const self = this;
+        const targetPlayer = this.tablePlaces.getPlaceBySeat(seat);
+        const playerId = targetPlayer.PlayerId();
 
-        var amount = prompt("Укажите сумму для пополнения счета?", "1000");
+        const amount = prompt("Укажите сумму для пополнения счета?", "1000");
         if (amount) {
             this.addBalance(Number(amount));
         }
     }
 
     addBalance(amount: number) {
-        var self = this;
-        var places = this.places();
-        var targetPlayer = this.myPlayer();
-        var gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        var result = $.Deferred();
+        const self = this;
+        const places = this.places();
+        const targetPlayer = this.myPlayer();
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const result = $.Deferred();
         gameApi.AddBalance(this.tableId, amount, function (data, textStatus, jqXHR) {
             // report on successfull seating.
             if (data.Status !== "Ok") {
@@ -1924,15 +1918,15 @@ export class TableView {
     }
 
     addMessage(messageId: number, sender: string, message: string) {
-        var messageExists = this.messages().filter(_ => _.messageId === messageId).length > 0;
+        const messageExists = this.messages().filter(_ => _.messageId === messageId).length > 0;
         if (!messageExists) {
-            var m = new PlayerMessage(messageId, sender, message);
+            const m = new PlayerMessage(messageId, sender, message);
             this.messages.unshift(m);
             while (this.messages().length > 100) {
                 this.messages.pop();
             }
 
-            var messages = this.messages();
+            const messages = this.messages();
             this.messages([]);
             this.messages(messages);
         }
@@ -1941,7 +1935,7 @@ export class TableView {
             return;
         }
 
-        var player = this.getPlayerByLogin(sender);
+        const player = this.getPlayerByLogin(sender);
         if (player != null) {
             player.displayChatMessage(message);
         }
@@ -1952,7 +1946,7 @@ export class TableView {
             return;
         }
 
-        var m = new SystemMessage(messageId, message);
+        const m = new SystemMessage(messageId, message);
         this.systemMessages.unshift(m);
         while (this.systemMessages().length > 100) {
             this.systemMessages.pop();
@@ -1968,17 +1962,16 @@ export class TableView {
     }
 
     sendMessage() {
-        var chatApi = new OnlinePoker.Commanding.API.Chat(apiHost);
-        var self = this;
-        chatApi.Send(this.tableId, this.chatMessage(), function (data, textStatus, jqXHR) {
-            self.chatMessage("");
+        const chatApi = new OnlinePoker.Commanding.API.Chat(apiHost);
+        chatApi.Send(this.tableId, this.chatMessage(), (data, textStatus, jqXHR) => {
+            this.chatMessage("");
         });
     }
 
     fold() {
-        var self = this;
+        const self = this;
         this.actionBlock.buttonsEnabled(false);
-        var gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
         gameApi.Fold(this.tableId, function (data, status, jqXHR) {
             if (data.Status === "OperationNotValidAtThisTime") {
                 return;
@@ -1993,9 +1986,9 @@ export class TableView {
     }
 
     checkOrCall() {
-        var self = this;
+        const self = this;
         this.actionBlock.buttonsEnabled(false);
-        var gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
         gameApi.CheckOrCall(this.tableId, function (data, status, jqXHR) {
             if (data.Status === "OperationNotValidAtThisTime") {
                 return;
@@ -2010,10 +2003,10 @@ export class TableView {
     }
 
     betOrRaise() {
-        var self = this;
+        const self = this;
         this.actionBlock.buttonsEnabled(false);
-        var gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        var amount: number = this.currentRaise() - this.currentBet();
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const amount: number = this.currentRaise() - this.currentBet();
         gameApi.BetOrRaise(this.tableId, amount, function (data, status, jqXHR) {
             if (data.Status === "OperationNotValidAtThisTime") {
                 return;
@@ -2028,10 +2021,10 @@ export class TableView {
     }
 
     onOpenCards(cards: number[]) {
-        var self = this;
+        const self = this;
         this.queue.pushCallback(() => {
             self.actionsCount(0);
-            var currentCardsOpened = self.tableCards.tableCards().length;
+            const currentCardsOpened = self.tableCards.tableCards().length;
             self.tableCards.openCards(cards);
             self.handHistory.onOpenCards(cards);
             if (currentCardsOpened === 0 && cards.length === 3) {
@@ -2070,8 +2063,8 @@ export class TableView {
     }
 
     comeBack() {
-        var self = this;
-        var gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const self = this;
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
         return gameApi.ComeBack(this.tableId, function (data, status, jqXHR) {
             if (data.Status === "OperationNotValidAtThisTime") {
                 return;
@@ -2084,8 +2077,8 @@ export class TableView {
     }
 
     sitOut() {
-        var self = this;
-        var gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const self = this;
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
         gameApi.SitOut(this.tableId, function (data, status, jqXHR) {
             if (data.Status === "OperationNotValidAtThisTime") {
                 return;
@@ -2108,17 +2101,17 @@ export class TableView {
         app.showPopup("handHistory");
     }
     rotate(offset: number) {
-        var myself = this.myPlayer();
+        const myself = this.myPlayer();
         if (myself == null) {
             return;
         }
 
-        var currentOffset = this.tablePlaces.getRealOffset(myself.Seat());
+        const currentOffset = this.tablePlaces.getRealOffset(myself.Seat());
         if (currentOffset === offset) {
             return;
         }
 
-        var self = this;
+        const self = this;
         app.prompt(_("table.changeplace"),
             [_("table.doyouwantchangeplace")]).done(function () {
                 self.tablePlaces.rotate(offset - currentOffset);
@@ -2134,8 +2127,8 @@ export class TableView {
     * if player lose game.
     */
     displayRebuyOrAddonTime() {
-        var self = this;
-        var tournamentView = this.tournament();
+        const self = this;
+        const tournamentView = this.tournament();
 
         // Display notification about rebuy or addon prompt
         // only for tournament games.
@@ -2153,10 +2146,10 @@ export class TableView {
             // This time should be 500ms bigger then the actual time specified 
             // on the server, to accomodate for the 500ms update period.
             this.displayingRebuyAddonNotification = true;
-            var totalDuration = 10.5;
-            var i = 0;
-			var messageTemplate: string;
-			var popupCaption: string;
+            const totalDuration = 10.5;
+            let i = 0;
+            let messageTemplate: string;
+            let popupCaption: string;
             if (tournamentView.rebuyAllowed()) {
                 messageTemplate = "table.waitingForOtherPlayersRebuy";
                 popupCaption = "table.tournamentGameFinishedRebuyCaption";
@@ -2168,7 +2161,7 @@ export class TableView {
             }
 
             this.notificationHandleInterval = timeService.setInterval(() => {
-                var secondsLeft = Math.floor(totalDuration - (i / 2));
+                const secondsLeft = Math.floor(totalDuration - (i / 2));
                 self.showNotification(_(messageTemplate, { time: secondsLeft }));
                 app.customPopup.title(_(popupCaption, { time: secondsLeft }));
                 i++;
@@ -2183,7 +2176,7 @@ export class TableView {
     }
 
     proposeRebuyOrAddon() {
-        var tournamentView = this.tournament();
+        const tournamentView = this.tournament();
         if (tournamentView !== null && this.myPlayer() !== null && this.myPlayer().Money() === 0 && !this.hasPendingMoney()) {
             if (tournamentView.rebuyAllowed()) {
                 this.proposeBuyRebuy();
@@ -2199,15 +2192,15 @@ export class TableView {
     * Propose buying rebuy or double rebuy
     */
     proposeBuyRebuy() {
-        var self = this;
-        var player = this.myPlayer();
+        const self = this;
+        const player = this.myPlayer();
         if (player === null) {
             return;
         }
 
         if (player.Money() === 0 && !this.hasPendingMoney()) {
             // Display popup with three buttons.
-            var result = $.Deferred<void>();
+            const result = $.Deferred<void>();
             app.promptEx(
                 _("table.tournamentGameFinishedCaption"),
                 [_("table.tournamentGameFinishedRebuy")],
@@ -2233,8 +2226,8 @@ export class TableView {
     * Propose buying addon
     */
     proposeBuyAddon() {
-        var self = this;
-        var player = this.myPlayer();
+        const self = this;
+        const player = this.myPlayer();
         if (player == null) {
             console.warn("Proposing but addon when no active player");
             return;
@@ -2242,7 +2235,7 @@ export class TableView {
 
         if (player.Money() === 0 && !this.hasPendingMoney() && this.tournament().addonCount() === 0) {
             // Display popup with two buttons.
-            var result = $.Deferred<void>();
+            const result = $.Deferred<void>();
             app.promptEx(
                 _("table.tournamentGameFinishedCaption"),
                 [_("table.tournamentGameFinishedAddon")],
@@ -2261,7 +2254,6 @@ export class TableView {
     * Show table notification
     */
     public showNotification(message: string) {
-        var self = this;
         this.notification(message);
         this.hasNotification(true);
     }
@@ -2270,11 +2262,10 @@ export class TableView {
     * Show table notification for specific period of time
     */
     public showNotificationWithDelay(message: string, duration: number) {
-        var self = this;
         this.clearNotification();
         this.showNotification(message);
         this.notificationHandleTimeout = timeService.setTimeout(() => {
-            self.clearNotification();
+            this.clearNotification();
         }, duration);
     }
 
@@ -2309,18 +2300,17 @@ export class TableView {
         }
 
         if (this.pauseDate() != null) {
-            var self = this;
-            var updateDescription = () => {
-                var pauseEnds = moment(self.pauseDate()).add(self.tournament().tournamentData().PauseTimeout, "minutes");
-                var currentMoment = moment().add(timeService.timeDiff, "ms");
-                var diff = pauseEnds.diff(currentMoment);
+            const updateDescription = () => {
+                const pauseEnds = moment(this.pauseDate()).add(this.tournament().tournamentData().PauseTimeout, "minutes");
+                const currentMoment = moment().add(timeService.timeDiff, "ms");
+                const diff = pauseEnds.diff(currentMoment);
                 if (diff < 0) {
-                    self.clearPauseMessage();
+                    this.clearPauseMessage();
                     return;
                 }
 
-                var duration = moment.duration(diff);
-                self.pauseDescription(_("table.gameContinue", { startTime: duration.humanize(true) }));
+                const duration = moment.duration(diff);
+                this.pauseDescription(_("table.gameContinue", { startTime: duration.humanize(true) }));
             };
             this.pauseDescriptionHandle = timeService.setInterval(updateDescription, 500);
         }
@@ -2332,22 +2322,22 @@ export class TableView {
         this.updatePauseDescription();
     }
 
-	/**
-	* Finish animation on the table
-	*/
-	private finishAnimation(places: TablePlaceModel[]) {
-		for (var p in places) {
-			if (!places.hasOwnProperty(p)) {
-				continue;
-			}
+    /**
+    * Finish animation on the table
+    */
+    private finishAnimation(places: TablePlaceModel[]) {
+        for (let p in places) {
+            if (!places.hasOwnProperty(p)) {
+                continue;
+            }
 
-            var currentPlayer = places[p];
-			currentPlayer.Bet(null);
-			if (currentPlayer.IsFoldCards()) {
-				currentPlayer.finishFoldAnimation();
-			}
-		}
-	}
+            const currentPlayer = places[p];
+            currentPlayer.Bet(null);
+            if (currentPlayer.IsFoldCards()) {
+                currentPlayer.finishFoldAnimation();
+            }
+        }
+    }
 
     /**
     * Updates current combination based on table status.
@@ -2371,16 +2361,16 @@ export class TableView {
     * Initializes the hand history
     */
     private initHandHistory() {
-        var self = this;
+        const self = this;
         this.handHistory = new HandHistory(this);
         this.lastHandHistory = ko.observable<HandHistory>();
         this.hasPreviousHand = ko.computed(function () {
-            var lastHand = self.lastHandHistory();
+            const lastHand = self.lastHandHistory();
             return lastHand != null
                 && lastHand.id != null;
         }, this);
         this.currentHandCaption = ko.computed(function () {
-            var currentGame = self.gameId();
+            const currentGame = self.gameId();
             if (currentGame == null) {
                 return "";
             }
@@ -2388,7 +2378,7 @@ export class TableView {
             return _("table.currentHand", { id: currentGame });
         }, this);
         this.previousHandCaption = ko.computed(function () {
-            var lastHand = self.lastHandHistory();
+            const lastHand = self.lastHandHistory();
             if (lastHand == null) {
                 return "";
             }
@@ -2409,7 +2399,7 @@ export class TableView {
     * Get player place by login
     */
     private getPlayerByLogin(login: string) {
-        var filteredPlaces = this.places().filter(_ => _.PlayerName() === login);
+        const filteredPlaces = this.places().filter(_ => _.PlayerName() === login);
         if (filteredPlaces.length === 0) {
             return null;
         }
@@ -2432,7 +2422,7 @@ export class TableView {
     * Record log message
     */
     private log(message: string, ...params: any[]) {
-        var settings = debugSettings.tableView;
+        const settings = debugSettings.tableView;
         if (!this.isLogEnabled()) {
             return;
         }
@@ -2444,7 +2434,7 @@ export class TableView {
     * Record log message
     */
     private logGameEvent(message: string, ...params: any[]) {
-        var settings = debugSettings.tableView;
+        const settings = debugSettings.tableView;
         if (!settings.traceGameEvents) {
             return;
         }
@@ -2456,7 +2446,7 @@ export class TableView {
     * Checks whether logging on this table is enabled.
     */
     private isLogEnabled() {
-        var settings = debugSettings.tableView;
+        const settings = debugSettings.tableView;
         if (!settings.trace) {
             if (settings.traceTables == null) {
                 return false;

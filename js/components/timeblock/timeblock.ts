@@ -7,7 +7,6 @@ class TimeBlockComponent {
     private currentTime: KnockoutComputed<string>;
 
     constructor(params: { data: KnockoutObservable<TournamentDefinition> }) {
-        var self = this;
         this.currentTime = ko.computed(function () {
             return timeService.currentTime();
         }, this);

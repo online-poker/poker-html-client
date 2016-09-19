@@ -42,7 +42,7 @@ export class ConnectionService {
             return;
         }
 
-        var connection = $.hubConnection(baseUrl);
+        const connection = $.hubConnection(baseUrl);
         connection.logging = $.connection.hub.logging;
         if (authToken == null) {
             connection.qs = null;
@@ -50,7 +50,6 @@ export class ConnectionService {
             connection.qs = { "token": authToken };
         }
 
-        var self = this;
         this.isDisconnected = true;
         this.currentConnection = new ConnectionWrapper(connection);
         $.extend(connection, connection.createHubProxies());
@@ -66,25 +65,25 @@ export class ConnectionService {
             return;
         }
 
+        let hubId: string;
         if (this.currentConnection.connection == null) {
-            var hubId = this.currentConnection.connection.id;
+            hubId = this.currentConnection.connection.id;
         } else {
             hubId = "NULL";
         }
 
-        var connectionInfo = "HID:" + hubId;
+        const connectionInfo = "HID:" + hubId;
         this.logEvent("Terminating connection " + connectionInfo);
-        var oldConnection = this.currentConnection;
+        const oldConnection = this.currentConnection;
         this.currentConnection.terminateConnection();
         this.currentConnection = null;
         this.terminatedConnection.dispatch(oldConnection);
     }
     establishConnection(maxAttempts = 3) {
-        var self = this;
-        var attempts = this.attempts++;
+        const attempts = this.attempts++;
         this.lastAttempt = attempts;
         this.cancelConnection();
-        var result = this.currentConnection.establishConnection(maxAttempts);
+        const result = this.currentConnection.establishConnection(maxAttempts);
         this.lastConnection = result;
         return result;
     }

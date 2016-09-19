@@ -27,7 +27,7 @@ export class TabBar {
         this.visible = ko.observable(true);
     }
     addItem(name: string, caption: string, cssClass: string, action: Function) {
-        var item = new TabBarItem();
+        const item = new TabBarItem();
         item.name = name;
         item.caption = caption;
         item.cssClass = cssClass;
@@ -38,7 +38,7 @@ export class TabBar {
         this.items.push(item);
     }
     isSelected(name: string): boolean {
-        var result = false;
+        let result = false;
         this.items().forEach(function (item) {
             if (item.name === name) {
                 result = item.selected();
@@ -80,7 +80,7 @@ export class TabBar {
 
     private log(message: string, ...params: any[]) {
         if (debugSettings.application.debugTabbar) {
-            var traceFunction = <Function>console.trace;
+            const traceFunction = <Function>console.trace;
             traceFunction.bind(console, message, params)();
         }
     }

@@ -16,7 +16,7 @@ class Slider {
     enabled = ko.observable(true);
 
     constructor() {
-        var self = this;
+        const self = this;
         this.items = [];
         this.currentIndex = ko.observable(0);
         this.currentIndex1 = ko.computed<number>({
@@ -31,7 +31,7 @@ class Slider {
             owner: this
         });
         this.current = ko.computed(function () {
-            var index = this.currentIndex();
+            const index = this.currentIndex();
             if (index < 0 || index >= this.items.length) {
                 return null;
             }
@@ -39,7 +39,7 @@ class Slider {
             return self.items[index];
         }, this);
         this.next = ko.computed(function () {
-            var index = this.currentIndex();
+            let index = this.currentIndex();
             if (index < 0 || index >= this.items.length) {
                 return null;
             }
@@ -52,7 +52,7 @@ class Slider {
             return self.items[index];
         }, this);
         this.prev = ko.computed(function () {
-            var index = this.currentIndex();
+            let index = this.currentIndex();
             if (index < 0 || index >= this.items.length) {
                 return null;
             }
@@ -66,7 +66,7 @@ class Slider {
         }, this);
     }
     addOption(caption: string, childTemplate: string, callback: Function): SliderItem {
-        var item = new SliderItem();
+        const item = new SliderItem();
         item.caption = caption;
         item.childTemplate = childTemplate;
         item.action = callback;
@@ -79,7 +79,7 @@ class Slider {
             return;
         }
 
-        var index = this.currentIndex();
+        let index = this.currentIndex();
         index = index + 1;
         if (index >= this.items.length) {
             index = 0;
@@ -92,7 +92,7 @@ class Slider {
             return;
         }
 
-        var index = this.currentIndex();
+        let index = this.currentIndex();
         index = index - 1;
         if (index < 0) {
             index = this.items.length - 1;

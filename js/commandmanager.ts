@@ -10,7 +10,7 @@ class CommandManager {
         this.commands[commandName] = handler;
     }
     executeCommand(commandName: string, parameters: any[]= []): any {
-        var handler: CommandHandler = this.commands[commandName];
+        const handler: CommandHandler = this.commands[commandName];
         if (handler == null) {
             console.log("Command call " + commandName + " not executed, since no handler registered");
             return null;
@@ -20,4 +20,5 @@ class CommandManager {
     }
 }
 
-var commandManager = new CommandManager();
+let commandManager = new CommandManager();
+export = commandManager;

@@ -20,17 +20,17 @@ class ChipItem {
     }
 
     public getData(amount: number) {
-        var self = this;
-        var list = [1, 5, 10, 50, 100, 500].map((item) => (item * self.baseAmount()));
-        var stack = this.calculateStackSimple(amount, list);
+        const self = this;
+        const list = [1, 5, 10, 50, 100, 500].map((item) => (item * self.baseAmount()));
+        const stack = this.calculateStackSimple(amount, list);
         return this.transform(stack);
     }
 
     public transform(stack: ChipStack[]) {
-        var result = <number[][]>[];
-        for (var i = 0; i < stack.length; i++) {
-            var item = <number[]>[];
-            for (var j = 0; j < stack[i].amount; j++) {
+        const result = <number[][]>[];
+        for (let i = 0; i < stack.length; i++) {
+            const item = <number[]>[];
+            for (let j = 0; j < stack[i].amount; j++) {
                 item.push(stack[i].type);
             }
 
@@ -41,7 +41,7 @@ class ChipItem {
     }
 
     public calculateStack(amount: number, chipAmounts: number[]) {
-        var stack = this.calculateStackInternal(amount, chipAmounts);
+        let stack = this.calculateStackInternal(amount, chipAmounts);
         if (stack.length > this.maxStackCount) {
             stack = this.calculateStackInternal(amount, chipAmounts.slice(0, stack.length - 1));
             if (stack.length > this.maxStackCount) {
@@ -72,9 +72,9 @@ class ChipItem {
             return <ChipStack[]>[];
         }
 
-        var item1 = this.calculateStackSimpleInternal(amount, chipAmounts, false);
+        const item1 = this.calculateStackSimpleInternal(amount, chipAmounts, false);
         if (item1.difference > 0) {
-            var item2 = this.calculateStackSimpleInternal(item1.difference, chipAmounts, true);
+            const item2 = this.calculateStackSimpleInternal(item1.difference, chipAmounts, true);
             if (item2.count === 0) {
                 return [{
                     amount: Math.max(item1.count, 1),
@@ -105,10 +105,10 @@ class ChipItem {
     }
 
     private calculateStackSimpleInternal(amount: number, chipAmounts: number[], allowOveradd: boolean): ChipStackCalcIntermediate {
-        var self = this;
-        var minimumAmount = chipAmounts[0];
-        var intermediate = chipAmounts.filter(ca => amount >= ca);
-        var upperBound: number;
+        const self = this;
+        const minimumAmount = chipAmounts[0];
+        let intermediate = chipAmounts.filter(ca => amount >= ca);
+        let upperBound: number;
         if (intermediate.length === 0) {
             upperBound = minimumAmount;
         } else {
@@ -124,8 +124,8 @@ class ChipItem {
             }
         }
 
-        var effectiveChipsAmount = chipAmounts.filter(ca => ca <= upperBound);
-        var target: {
+        const effectiveChipsAmount = chipAmounts.filter(ca => ca <= upperBound);
+        let target: {
             amount: number;
             chipsAmount: number;
             difference: number
@@ -163,8 +163,8 @@ class ChipItem {
                     difference: amount - (item.amount * item.chipsAmount)
                 };
             });
-        var difference = target.map(item => Math.abs(item.difference)).reduce((prev, curr) => Math.min(prev, curr), Number.MAX_VALUE);
-        var minimalSlice = target.filter(item => Math.abs(item.difference) === difference)[0];
+        const difference = target.map(item => Math.abs(item.difference)).reduce((prev, curr) => Math.min(prev, curr), Number.MAX_VALUE);
+        const minimalSlice = target.filter(item => Math.abs(item.difference) === difference)[0];
         return {
             difference: minimalSlice.difference,
             count: minimalSlice.chipsAmount,
@@ -172,12 +172,12 @@ class ChipItem {
         };
     }
 
-    private calculateStackInternal(amount: number, chipAmounts: number[]): ChipStack[]{
-        var result = [];
-        var amountLeft = amount;
-        for (var i = 0; i < chipAmounts.length; i++) {
-            var chipAmount = chipAmounts[i];
-            var chipsQty = Math.floor(amountLeft / chipAmount);
+    private calculateStackInternal(amount: number, chipAmounts: number[]): ChipStack[] {
+        const result = [];
+        let amountLeft = amount;
+        for (let i = 0; i < chipAmounts.length; i++) {
+            const chipAmount = chipAmounts[i];
+            const chipsQty = Math.floor(amountLeft / chipAmount);
             if (chipsQty === 0) {
                 continue;
             }

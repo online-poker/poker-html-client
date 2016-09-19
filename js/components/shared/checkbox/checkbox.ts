@@ -19,22 +19,22 @@ class Checkbox {
     color: KnockoutObservable<string>;
 
     constructor(params: CheckboxParameters, componentInfo?: KnockoutComponentTypes.ComponentInfo) {
-        var checked = params.checked;
-        if (typeof checked === 'boolean') {
+        const checked = params.checked;
+        if (typeof checked === "boolean") {
             this.checked = ko.observable(checked);
         } else {
             this.checked = checked;
         }
 
-        var label = params.label;
-        if (typeof label === 'string') {
+        const label = params.label;
+        if (typeof label === "string") {
             this.label = ko.observable(label);
         } else {
             this.label = label;
         }
 
-        var right = params.right;
-        if (typeof right === 'boolean') {
+        const right = params.right;
+        if (typeof right === "boolean") {
             this.right = ko.observable(right);
         } else {
             if (right) {
@@ -44,14 +44,14 @@ class Checkbox {
             }
         }
 
-        var color = params.color;
-        if (typeof color === 'string') {
+        const color = params.color;
+        if (typeof color === "string") {
             this.color = ko.observable(color);
         } else {
             if (color) {
                 this.color = color;
             } else {
-                this.color = ko.observable('unknown');
+                this.color = ko.observable("unknown");
             }
         }
     }

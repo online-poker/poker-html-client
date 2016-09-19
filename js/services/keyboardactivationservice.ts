@@ -16,13 +16,12 @@ export class KeyboardActivationService {
     lastPopup: string = null;
 
     setup() {
-        var self = this;
         if (window["Keyboard"]) {
-            var supported = true;
+            let supported = true;
             if (window["device"]) {
                 if (device.platform === "iOS") {
-                    var iOS70 = device.version.indexOf("7.0") === 0;
-                    var iOS6X = device.version.indexOf("6") === 0;
+                    const iOS70 = device.version.indexOf("7.0") === 0;
+                    const iOS6X = device.version.indexOf("6") === 0;
                     if (!iOS70 && !iOS6X) {
                         // apply only to the iOS 6.x and 7.0
                         supported = false;
@@ -38,28 +37,28 @@ export class KeyboardActivationService {
                 console.log("Native keyboard adjust is not available. Do our best to provide better UI.");
             }
 
-            Keyboard.onshow = function () {
+            Keyboard.onshow = () => {
                 if (supported) {
-                    self.applyStyles();
+                    this.applyStyles();
                 }
             };
-            Keyboard.onhiding = function () {
+            Keyboard.onhiding = () => {
                 document.body.scrollLeft = 0;
             };
-            Keyboard.onhide = function () {
-                timeService.setTimeout(function () {
-                    self.forceHideKeyboard();
+            Keyboard.onhide = () => {
+                timeService.setTimeout(() => {
+                    this.forceHideKeyboard();
                 }, 1);
             };
         } else {
             let enableKeyboardEmulationOnDesktop = false;
             if (enableKeyboardEmulationOnDesktop) {
-                var selector = "input[type='text'], input[type='password'], input[type='date'], input[type='number']";
-                $("body").on("focus", selector, function (event) {
-                    self.applyStyles();
+                const selector = "input[type='text'], input[type='password'], input[type='date'], input[type='number']";
+                $("body").on("focus", selector, (event) => {
+                    this.applyStyles();
                 });
-                $("body").on("blur", selector, function (event) {
-                    self.removeStyles();
+                $("body").on("blur", selector, (event) => {
+                    this.removeStyles();
                 });
             }
         }
@@ -92,7 +91,7 @@ export class KeyboardActivationService {
         }
     }
     forceHideKeyboard() {
-        var activeElement = <HTMLElement>document.activeElement;
+        const activeElement = <HTMLElement>document.activeElement;
         if (activeElement !== null) {
             activeElement.blur();
         }

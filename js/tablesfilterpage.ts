@@ -1,4 +1,4 @@
-﻿import * as ko from "knockout"; 
+﻿import * as ko from "knockout";
 import { PageBase } from "./ui/pagebase";
 
 export class TablesFilterPage extends PageBase {
@@ -9,7 +9,7 @@ export class TablesFilterPage extends PageBase {
     isValid: () => boolean;
 
     constructor() {
-		super();
+        super();
         this.oldpassword = ko.observable<string>().extend({ required: true });
         this.password = ko.observable<string>().extend({ required: true });
         this.confirmpassword = ko.observable<string>().extend({ required: true });

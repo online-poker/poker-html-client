@@ -30,6 +30,7 @@ import { SimplePopup } from "./popups/simplepopup";
 import * as authManager from "./authManager";
 import { settings } from "./settings";
 import * as broadcastService from "./services/broadcastservice";
+import * as commandManager from "./commandManager";
 import {
     slowInternetService,
     keyboardActivationService,
@@ -37,7 +38,9 @@ import {
     imagePreloadService,
     deviceEvents,
     reloadManager,
-    soundManager
+    soundManager,
+    orientationService,
+    pushService
 } from "./services";
 import * as tableManager from "./table/tablemanager";
 import {
@@ -114,7 +117,7 @@ export class App {
     private savedPopup: string = null;
 
     constructor() {
-        var self = this;
+        const self = this;
 
         this.loadPromises = [];
         // register pages.
@@ -177,53 +180,53 @@ export class App {
 
         this.mainSelector = new Selector();
         if (typeof window !== "undefined") {
-			var mainSelectorElement = $(".page.main .sub-page.selector")[0];
-			ko.applyBindings(this.mainSelector, mainSelectorElement);
-		}
+            const mainSelectorElement = $(".page.main .sub-page.selector")[0];
+            ko.applyBindings(this.mainSelector, mainSelectorElement);
+        }
 
         this.initializeTabbar();
         this.initializeConnection();
 
         // var progressBackgroundElement = $(".progress-background")[0];
         // ko.applyBindings(this, progressBackgroundElement);
-		if (typeof window !== "undefined") {
-			this.processing.subscribe(function (newValue) {
-				if (newValue) {
-					$(".progress-background").show();
-				} else {
-					$(".progress-background").hide();
-				}
-			});
-		}
+        if (typeof window !== "undefined") {
+            this.processing.subscribe(function (newValue) {
+                if (newValue) {
+                    $(".progress-background").show();
+                } else {
+                    $(".progress-background").hide();
+                }
+            });
+        }
 
         // show startup page
         uiManager.showPage("initialization");
 
-		if (typeof window !== "undefined") {
-			var opts = {
-				lines: 13, // The number of lines to draw
-				length: 4, // The length of each line
-				width: 2, // The line thickness
-				radius: 6, // The radius of the inner circle
-				corners: 1, // Corner roundness (0..1)
-				rotate: 0, // The rotation offset
-				direction: 1, // 1: clockwise, -1: counterclockwise
-				color: "#fff", // #rgb or #rrggbb or array of colors
-				speed: 1, // Rounds per second
-				trail: 60, // Afterglow percentage
-				shadow: false, // Whether to render a shadow
-				hwaccel: false, // Whether to use hardware acceleration
-				className: "spinner", // The CSS class to assign to the spinner
-				zIndex: 2e9, // The z-index (defaults to 2000000000)
-				top: "auto", // Top position relative to parent in px
-				left: "auto" // Left position relative to parent in px
-			};
-			this.spinner = new Spinner(opts);
-			var target = document.getElementById("spinner");
-			this.spinner.spin(target);
-			var progressTarget = document.getElementById("progress-spinner");
-			this.progressSpinner = new Spinner(opts).spin(progressTarget);
-		}
+        if (typeof window !== "undefined") {
+            const opts = {
+                lines: 13, // The number of lines to draw
+                length: 4, // The length of each line
+                width: 2, // The line thickness
+                radius: 6, // The radius of the inner circle
+                corners: 1, // Corner roundness (0..1)
+                rotate: 0, // The rotation offset
+                direction: 1, // 1: clockwise, -1: counterclockwise
+                color: "#fff", // #rgb or #rrggbb or array of colors
+                speed: 1, // Rounds per second
+                trail: 60, // Afterglow percentage
+                shadow: false, // Whether to render a shadow
+                hwaccel: false, // Whether to use hardware acceleration
+                className: "spinner", // The CSS class to assign to the spinner
+                zIndex: 2e9, // The z-index (defaults to 2000000000)
+                top: "auto", // Top position relative to parent in px
+                left: "auto" // Left position relative to parent in px
+            };
+            this.spinner = new Spinner(opts);
+            const target = document.getElementById("spinner");
+            this.spinner.spin(target);
+            const progressTarget = document.getElementById("progress-spinner");
+            this.progressSpinner = new Spinner(opts).spin(progressTarget);
+        }
 
         this.popupClosed = new signals.Signal();
     }
@@ -237,10 +240,10 @@ export class App {
             app.lobbyPageBlock.showLobby();
         });
         this.tabBar.addItem("tables", _("tabbar.tables"), "tables", function () {
-            var currentTable = app.tablesPage.currentTable();
+            const currentTable = app.tablesPage.currentTable();
             if (currentTable === null || currentTable.model === null) {
                 console.warn("No tables opened. Could not open tables page");
-				SimplePopup.display(_("menu.tables"), _("tablesList.noTablesSelected"));
+                SimplePopup.display(_("menu.tables"), _("tablesList.noTablesSelected"));
                 return;
             }
 
@@ -249,12 +252,12 @@ export class App {
         });
         this.tabBar.addItem("cashier", _("tabbar.cashier"), "cashier", function () {
             app.executeCommand("pageblock.cashier");
-            //app.executeCommand("pageblock.other");
+            // app.executeCommand("pageblock.other");
         });
         this.tabBar.addItem("more", _("tabbar.more"), "more", function () {
-            var currentTabBarItem = UIManager.getTabBarItemForPage(uiManager.currentPageBlock);
-            var isMoreSelected = app.tabBar.isSelected("more");
-            var isMoreOpened = $("body").hasClass("more-opened");
+            const currentTabBarItem = UIManager.getTabBarItemForPage(uiManager.currentPageBlock);
+            const isMoreSelected = app.tabBar.isSelected("more");
+            const isMoreOpened = $("body").hasClass("more-opened");
             if (isMoreOpened) {
                 app.tabBar.select("more", false);
                 app.tabBar.select(currentTabBarItem, true);
@@ -272,32 +275,32 @@ export class App {
         });
         this.tabBar.enable("tables", false);
 
-		if (typeof window !== "undefined") {
-			var tabBarElement = $(".toolbar-container")[0];
-			ko.applyBindings(this.tabBar, tabBarElement);
-		}
+        if (typeof window !== "undefined") {
+            const tabBarElement = $(".toolbar-container")[0];
+            ko.applyBindings(this.tabBar, tabBarElement);
+        }
 
         uiManager.subPageHiding.add(function (blockHiding: string) {
-            var name = UIManager.getTabBarItemForPage(blockHiding);
+            const name = UIManager.getTabBarItemForPage(blockHiding);
             app.tabBar.select(name, false);
         });
         uiManager.subPageShowing.add(function (blockShowing: string) {
-            var name = UIManager.getTabBarItemForPage(blockShowing);
+            const name = UIManager.getTabBarItemForPage(blockShowing);
             app.tabBar.select(name, true);
         });
         uiManager.pageBlockHiding.add(function (blockHiding: string) {
-            var name = UIManager.getTabBarItemForPage(blockHiding);
+            const name = UIManager.getTabBarItemForPage(blockHiding);
             app.tabBar.select(name, false);
         });
         uiManager.pageBlockShowing.add(function (blockShowing: string) {
-            var name = UIManager.getTabBarItemForPage(blockShowing);
+            const name = UIManager.getTabBarItemForPage(blockShowing);
             app.tabBar.select(name, true);
         });
         uiManager.pageBlockHidden.add(function (pageBlock: string) {
             if (app.tabBar.isSelected("more")) {
                 if (pageBlock !== "more" && !app.morePopup.visible()) {
                     app.tabBar.select("more", false);
-    }
+                }
 
                 app.hideMoreBlock();
             }
@@ -319,22 +322,22 @@ export class App {
         deviceEvents.initialize();
     }
     onResign() {
-        var self = app;
+        const self = app;
         self.logEvent("Application resign active");
         // Wrap code in the timeout to prevent application from freezing.
         self.terminateConnection();
     }
     onActive() {
-        var self = app;
+        const self = app;
         self.logEvent("Application active");
         // Wrap code in the timeout to prevent application from freezing.
         self.establishConnection();
     }
     onPause() {
-        var self = app;
-        var device: Device = window.device;
+        const self = app;
+        const device: Device = window.device;
         if (platformInfo.isTablet) {
-            orientationService.disableRotation = false;
+            orientationService.enableRotation();
         }
 
         if (platformInfo.reloadOnResume) {
@@ -380,8 +383,8 @@ export class App {
         self.terminateConnection();
     }
     onResume() {
-        var self = app;
-        var device: Device = window.device;
+        const self = app;
+        const device: Device = window.device;
         if (platformInfo.reloadOnResume) {
             // Reload to the main page with special configuration parameter
             self.showSplash();
@@ -403,11 +406,11 @@ export class App {
         self.logEvent("Resume application");
         timeService.start();
         self.showSplash();
-        var target = document.getElementById("spinner");
+        const target = document.getElementById("spinner");
         self.spinner.spin(target);
-        var pageBeforeClosing = uiManager.effectivePageContainer;
-        var pageBlockBeforeClosing = uiManager.currentPageBlock;
-        var subPageBeforeClosing = uiManager.currentPage;
+        let pageBeforeClosing = uiManager.effectivePageContainer;
+        let pageBlockBeforeClosing = uiManager.currentPageBlock;
+        let subPageBeforeClosing = uiManager.currentPage;
         if (pageBeforeClosing === "initialization" || pageBeforeClosing === null) {
             pageBeforeClosing = "main";
             pageBlockBeforeClosing = "home";
@@ -419,7 +422,7 @@ export class App {
         self.setInitializationState();
         orientationService.setLastOrientation();
         if (platformInfo.isTablet) {
-            orientationService.disableRotation = true;
+            orientationService.suppressRotation();
         }
 
         if (slowInternetService.fatalError) {
@@ -437,12 +440,12 @@ export class App {
             slowInternetService.onOffline();
             self.hideSplash();
             slowInternetService.setRetryHandler(function () {
-				self.updateMetadataOnResume(pageBeforeClosing, pageBlockBeforeClosing, subPageBeforeClosing);
-			});
+                self.updateMetadataOnResume(pageBeforeClosing, pageBlockBeforeClosing, subPageBeforeClosing);
+            });
         }
     }
     updateMetadataOnResume(lastPage, pageBlockBeforeClosing, subPageBeforeClosing) {
-        var self = this;
+        const self = this;
         if (debugSettings.initialization.stopOnResume) {
             return;
         }
@@ -454,14 +457,14 @@ export class App {
             return;
         }
 
-        var failHandler = function () {
+        const failHandler = function () {
             console.log("Failed updating metadata on resume, rescheduling attempt.");
             slowInternetService.showReconnectFailedPopup();
             slowInternetService.setRetryHandler(() => {
                 self.updateMetadataOnResume(lastPage, pageBlockBeforeClosing, subPageBeforeClosing);
             });
         };
-        var successPath = () => {
+        const successPath = () => {
             self.preloadTableImages();
             metadataManager.update().done(function () {
                 tableManager.initialize();
@@ -506,19 +509,19 @@ export class App {
         this.versionCheck(successPath);
     }
     updateMetadataOnLaunch() {
-        var self = this;
+        const self = this;
         if (debugSettings.initialization.stopOnLaunch) {
             return;
         }
 
         console.log("Launch intialization of metadata first time");
-        var failHandler = function () {
+        const failHandler = function () {
             console.log("Failed updating metadata for first time, rescheduling attempt.");
             slowInternetService.setRetryHandler(() => {
                 self.updateMetadataOnLaunch();
             });
         };
-        var successPath = () => {
+        const successPath = () => {
             self.preloadTableImages();
             metadataManager.update().done(function () {
                 self.spinner.stop();
@@ -547,14 +550,14 @@ export class App {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady() {
-        var device: Device = window.device;
+        const device: Device = window.device;
         if (device != null && device.available) {
             if (device.platform.toLowerCase() === "ios") {
                 if (device.version.toString().indexOf("7.0") === 0) {
                     StatusBar.overlaysWebView(false);
-					/* tslint:disable:no-string-literal */
+                    /* tslint:disable:no-string-literal */
                     ko.bindingHandlers["image"].options.enabled = false;
-					/* tslint:enable:no-string-literal */
+                    /* tslint:enable:no-string-literal */
                     runtimeSettings.showNewsAfterLogin = false;
                 }
             }
@@ -565,8 +568,8 @@ export class App {
         }
 
         // Recalculate width of the landscape mode.
-        var currentWidth = $("body").width();
-        if (currentWidth == 1024) {
+        const currentWidth = $("body").width();
+        if (currentWidth === 1024) {
             platformInfo.isTablet = true;
         }
 
@@ -600,7 +603,7 @@ export class App {
             });
     }
     setupMenu() {
-        var self = this;
+        const self = this;
         menu.initialize([
             { id: 1, order: 1, name: _("menu.home") },
             { id: 2, order: 1, name: _("menu.lobby") },
@@ -646,43 +649,43 @@ export class App {
     }
     // Update DOM on a Received Event
     receivedEvent(id) {
-        var self = this;
+        const self = this;
         timeService.start();
         settings.soundEnabled.subscribe(function (value) {
             soundManager.enabled(value);
         });
         settings.loadSettings();
-		settings.isGuest.subscribe(function (value) {
-			if (authManager.authenticated() && !value) {
-				app.lobbyPageBlock.lobbyPage.cashOptions.currency(1);
-				app.lobbyPageBlock.lobbyPage.sngOptions.currency(1);
-				app.lobbyPageBlock.lobbyPage.tournamentOptions.currency(1);
-			} else {
-				app.lobbyPageBlock.lobbyPage.cashOptions.currency(2);
-				app.lobbyPageBlock.lobbyPage.sngOptions.currency(2);
-				app.lobbyPageBlock.lobbyPage.tournamentOptions.currency(2);
-			}
-		});
-		authManager.authenticated.subscribe(function (value) {
-			if (value && !settings.isGuest()) {
-				app.lobbyPageBlock.lobbyPage.cashOptions.currency(1);
-				app.lobbyPageBlock.lobbyPage.sngOptions.currency(1);
-				app.lobbyPageBlock.lobbyPage.tournamentOptions.currency(1);
-			} else {
-				app.lobbyPageBlock.lobbyPage.cashOptions.currency(2);
-				app.lobbyPageBlock.lobbyPage.sngOptions.currency(2);
-				app.lobbyPageBlock.lobbyPage.tournamentOptions.currency(2);
-			}
-		});
+        settings.isGuest.subscribe(function (value) {
+            if (authManager.authenticated() && !value) {
+                app.lobbyPageBlock.lobbyPage.cashOptions.currency(1);
+                app.lobbyPageBlock.lobbyPage.sngOptions.currency(1);
+                app.lobbyPageBlock.lobbyPage.tournamentOptions.currency(1);
+            } else {
+                app.lobbyPageBlock.lobbyPage.cashOptions.currency(2);
+                app.lobbyPageBlock.lobbyPage.sngOptions.currency(2);
+                app.lobbyPageBlock.lobbyPage.tournamentOptions.currency(2);
+            }
+        });
+        authManager.authenticated.subscribe(function (value) {
+            if (value && !settings.isGuest()) {
+                app.lobbyPageBlock.lobbyPage.cashOptions.currency(1);
+                app.lobbyPageBlock.lobbyPage.sngOptions.currency(1);
+                app.lobbyPageBlock.lobbyPage.tournamentOptions.currency(1);
+            } else {
+                app.lobbyPageBlock.lobbyPage.cashOptions.currency(2);
+                app.lobbyPageBlock.lobbyPage.sngOptions.currency(2);
+                app.lobbyPageBlock.lobbyPage.tournamentOptions.currency(2);
+            }
+        });
         $.when(this.loadPromises).done(function () {
             keyboardActivationService.setup();
             self.setupTouchActivation();
         });
         this.setInitializationState();
-        var startPage = "main";
+        let startPage = "main";
         if (this.getParameterByName("restore") === "true") {
-            var currentTime = new Date();
-            var timeDiff = currentTime.valueOf() - settings.lastTime();
+            const currentTime = new Date();
+            const timeDiff = currentTime.valueOf() - settings.lastTime();
             if (timeDiff > 1000 * 60 * 20) {
                 authToken = null;
                 startPage = "main";
@@ -700,7 +703,7 @@ export class App {
 
         this.setDesiredOrientation();
         if (platformInfo.isTablet) {
-            orientationService.disableRotation = true;
+            orientationService.suppressRotation();
         }
 
         this.setupClosePopupOnClick();
@@ -711,10 +714,10 @@ export class App {
         });
         metadataManager.setReady(function () {
             // Adjust height
-            var toolpadHeight = platformInfo.hasTabBar() ? 49 : 15;
-            var logoHeight = 102;
-            var noLogoHeight = 57;
-            var pageHeaderHeight = 58;
+            const toolpadHeight = platformInfo.hasTabBar() ? 49 : 15;
+            const logoHeight = 102;
+            let noLogoHeight = 57;
+            const pageHeaderHeight = 58;
             if (platformInfo.hasTabBar()) {
                 $(".page.main").addClass("has-toolbar");
             }
@@ -722,9 +725,9 @@ export class App {
             noLogoHeight = window.innerHeight - toolpadHeight - noLogoHeight - platformInfo.statusBarHeight();
             $(".popup-container.scroll-container").css("max-height", noLogoHeight);
 
-            var device: Device = window.device;
-            var tournamentLobbyAdjustment = 57;
-            var lobbyAdjustment = 0;
+            const device: Device = window.device;
+            let tournamentLobbyAdjustment = 57;
+            let lobbyAdjustment = 0;
             if (device != null && device.available) {
                 if (device.platform.toLowerCase() === "ios") {
                     tournamentLobbyAdjustment = 57;
@@ -750,9 +753,9 @@ export class App {
             authManager.authenticated.subscribe(function (newValue) {
                 self.updateTabbar(newValue, tableManager.tables());
                 if (newValue && metadataManager.banners != null) {
-                    var filteredBanners = metadataManager.banners.filter(_ => _.Id > settings.lastBannerId()).sort((a, b) => a.Id - b.Id);
+                    const filteredBanners = metadataManager.banners.filter(_ => _.Id > settings.lastBannerId()).sort((a, b) => a.Id - b.Id);
                     if (filteredBanners.length > 0) {
-                        var currentBanner = filteredBanners[0];
+                        const currentBanner = filteredBanners[0];
                         settings.lastBannerId(currentBanner.Id);
                         settings.saveSettings();
                         if (runtimeSettings.showNewsAfterLogin) {
@@ -769,7 +772,7 @@ export class App {
         });
 
         slowInternetService.initialize();
-        var hasInternet = slowInternetService.hasInternet();
+        const hasInternet = slowInternetService.hasInternet();
         console.log("Detecting internet status..." + hasInternet ? "connected" : "not connected");
         if (hasInternet) {
             slowInternetService.setRetryHandler(null);
@@ -782,7 +785,7 @@ export class App {
         }
     }
     loadTablesAndTournaments(authenticated: boolean) {
-        var self = this;
+        const self = this;
         if (authenticated) {
             tableManager.getCurrentTablesAndTournaments().done(function () {
                 self.establishConnection();
@@ -796,20 +799,20 @@ export class App {
         }
     }
     setInitializationState() {
-        var parentElement = document.getElementById("deviceready");
-        var listeningElement = parentElement.querySelector(".listening");
-        var receivedElement = parentElement.querySelector(".received");
+        const parentElement = document.getElementById("deviceready");
+        const listeningElement = parentElement.querySelector(".listening");
+        const receivedElement = parentElement.querySelector(".received");
 
         listeningElement.setAttribute("style", "display:none;");
         receivedElement.setAttribute("style", "display:block;");
     }
     setFailedState() {
-        var parentElement = document.getElementById("deviceready");
-        var listeningElement = parentElement.querySelector(".listening");
-        var receivedElement = parentElement.querySelector(".received");
+        const parentElement = document.getElementById("deviceready");
+        const listeningElement = parentElement.querySelector(".listening");
+        const receivedElement = parentElement.querySelector(".received");
 
         receivedElement.setAttribute("style", "display:none;");
-        var failedElement = parentElement.querySelector(".failed");
+        const failedElement = parentElement.querySelector(".failed");
         failedElement.setAttribute("style", "display:block;");
     }
     metadataUpdateFailed() {
@@ -824,8 +827,8 @@ export class App {
         }
     }
     initializeConnection() {
-        var self = this;
-        //connectionService.initializeConnection();
+        const self = this;
+        // connectionService.initializeConnection();
         connectionService.recoverableError.add(function () {
             self.establishConnection();
         });
@@ -835,7 +838,7 @@ export class App {
         connectionService.terminateConnection(forceDisconnect);
     }
     establishConnection(maxAttempts = 3) {
-        var self = this;
+        const self = this;
         // This part should be moved up to the stack to remove dependency on other services 
         // in the connection management.
         connectionService.initializeConnection();
@@ -848,7 +851,7 @@ export class App {
             slowInternetService.manualDisconnect = false;
             tableManager.connectTables();
             tableManager.connectTournaments();
-            var connection = wrapper.connection;
+            const connection = wrapper.connection;
             try {
                 self.logEvent("Joining lobby chat.");
                 connection.Chat.server.join(0);
@@ -858,13 +861,13 @@ export class App {
             }
 
             self.logEvent("Listening lobby chat messages.");
-            var chatHub = connection.createHubProxy("chat");
+            const chatHub = connection.createHubProxy("chat");
             chatHub.on("Message", function (...msg: any[]) {
-                var messageId = msg[0];
-                var tableId = msg[1];
-                var type = msg[2];
-                var sender = msg[3];
-                var message = msg[4];
+                const messageId = msg[0];
+                const tableId = msg[1];
+                const type = msg[2];
+                const sender = msg[3];
+                const message = msg[4];
                 if (tableId !== 0) {
                     return;
                 }
@@ -881,9 +884,9 @@ export class App {
         return connectionService.buildStartConnection();
     }
     updateTabbar(authenticated, tables) {
-        var self = this;
+        const self = this;
         if (authenticated) {
-            var tablesEnabled = tables.length > 0;
+            const tablesEnabled = tables.length > 0;
             self.tabBar.enable("tables", tablesEnabled);
         } else {
             self.tabBar.enable("tables", false);
@@ -900,16 +903,15 @@ export class App {
         UIManager.addTabBarItemMapping(tabBarItem, pageName);
     }
     showSelector(selectorCaption: string, options: SelectorItem[], success: Function) {
-        var self = this;
-        var successCallback = (item: SelectorItem) => {
+        const successCallback = (item: SelectorItem) => {
             $(".page .page-block." + uiManager.currentPageBlock).css("display", "block");
             $(".page .sub-page." + uiManager.currentPage).css("display", "block");
             $(".page .sub-page.selector").css("display", "none");
             success(item);
         };
-        var cancelCallback = (item: SelectorItem) => {
+        const cancelCallback = (item: SelectorItem) => {
             $(".page .page-block." + uiManager.currentPageBlock).css("display", "block");
-			$(".page .sub-page." + uiManager.currentPage).css("display", "block");
+            $(".page .sub-page." + uiManager.currentPage).css("display", "block");
             $(".page .sub-page.selector").css("display", "none");
         };
         $(".page .page-block." + uiManager.currentPageBlock).css("display", "none");
@@ -918,9 +920,9 @@ export class App {
         this.mainSelector.setParams(selectorCaption, options, successCallback, cancelCallback);
     }
     bindPageBlock(pageBlockName: string, viewModel: PageBlock) {
-        var self = this;
+        const self = this;
         commandManager.registerCommand("pageblock." + pageBlockName, function () {
-            var requireAuthentication = viewModel.requireAuthentication;
+            const requireAuthentication = viewModel.requireAuthentication;
             if (!requireAuthentication) {
                 if (!viewModel.requireGuestAuthentication) {
                     self.showPageBlock(pageBlockName);
@@ -940,15 +942,15 @@ export class App {
             }
         });
 
-        for (var i = 0; i < viewModel.loadPromises.length; i++) {
-			var item = viewModel.loadPromises[i];
+        for (let i = 0; i < viewModel.loadPromises.length; i++) {
+            const item = viewModel.loadPromises[i];
             this.loadPromises.push(item);
         }
     }
     bindSubPage(pageName: string, viewModel: any) {
-        var self = this;
+        const self = this;
         commandManager.registerCommand("page." + pageName, function () {
-            var requireAuthentication = viewModel.requireAuthentication || false;
+            const requireAuthentication = viewModel.requireAuthentication || false;
             if (!requireAuthentication) {
                 self.showSubPage(pageName);
             } else {
@@ -961,10 +963,10 @@ export class App {
         });
 
         if (typeof window === "undefined") {
-			return;
-		}
+            return;
+        }
 
-        var pagejElement = $(".page .sub-page." + pageName);
+        const pagejElement = $(".page .sub-page." + pageName);
         if (pagejElement.length === 0) {
             console.error("Could not bind sub page " + pageName + " since DOM element not found.");
             return;
@@ -975,10 +977,10 @@ export class App {
             return;
         }
 
-        var pageElement = pagejElement[0];
+        const pageElement = pagejElement[0];
         if (!pageElement.hasChildNodes()) {
-            var templateSource: string = <any>pagejElement.data("template");
-            var pageLoadPromise = $.get(templateSource, "text/html").then(function (data: string) {
+            const templateSource: string = <any>pagejElement.data("template");
+            const pageLoadPromise = $.get(templateSource, "text/html").then(function (data: string) {
                 pagejElement.html(data);
                 try {
                     ko.applyBindings(viewModel, pageElement);
@@ -993,15 +995,15 @@ export class App {
         ko.applyBindings(viewModel, pageElement);
     }
     bindPopup(popup: string, viewModel: any): void {
-        var self = this;
+        const self = this;
         commandManager.registerCommand("popup." + popup, function () {
             self.showPopup(popup);
         });
         if (typeof window === "undefined") {
-			return;
-		}
+            return;
+        }
 
-        var popupjElement = $(".popup." + popup);
+        const popupjElement = $(".popup." + popup);
         if (popupjElement.length === 0) {
             console.error("Could not bind popup " + popup + " since DOM element not found.");
             return;
@@ -1012,9 +1014,9 @@ export class App {
             return;
         }
 
-        var popupElement = popupjElement[0];
+        const popupElement = popupjElement[0];
         if (!popupElement.hasChildNodes()) {
-            var templateSource : string = <any>popupjElement.data("template");
+            const templateSource: string = <any>popupjElement.data("template");
             $.get(templateSource, "text/html").then(function (data) {
                 popupjElement.html(data);
                 try {
@@ -1029,12 +1031,12 @@ export class App {
         ko.applyBindings(viewModel, popupElement);
     }
     bindUIElement(className: string, viewModel: any): void {
-        var self = this;
+        const self = this;
         if (typeof window === "undefined") {
-			return;
-		}
+            return;
+        }
 
-        var uiElement = $(className);
+        const uiElement = $(className);
         if (uiElement.length === 0) {
             console.error("Could not bind UI element with class " + className + " since DOM element not found.");
             return;
@@ -1045,9 +1047,9 @@ export class App {
             return;
         }
 
-        var domElement = uiElement[0];
+        const domElement = uiElement[0];
         if (!domElement.hasChildNodes()) {
-            var templateSource: string = <any>uiElement.data("template");
+            const templateSource: string = <any>uiElement.data("template");
             $.get(templateSource, "text/html").then(function (data) {
                 uiElement.html(data);
                 try {
@@ -1074,53 +1076,53 @@ export class App {
 
         this.currentPopup = popupName;
         console.log("Show popup " + popupName);
-        var result = $.Deferred<PopupResult>();
+        const result = $.Deferred<PopupResult>();
         this.popupClosed.addOnce(function (name: string, dialogResults?: any) {
             if (popupName !== name) {
                 console.warn("Responding to popup " + name + " instead of " + popupName);
             }
 
-            var signalData = {
+            const signalData = {
                 name: name,
                 result: dialogResults
             };
             result.resolve(signalData);
         }, this, 1);
-        var popupObject = this[this.currentPopup + "Popup"];
+        const popupObject = this[this.currentPopup + "Popup"];
         if (popupObject != null) {
             popupObject.shown(args);
         }
 
         if (typeof window !== "undefined") {
-			var popupContainer = $(".popup." + popupName + " .popup-container");
-			if (popupContainer.length > 0) {
-				popupContainer[0].scrollTop = 0;
-			}
+            const popupContainer = $(".popup." + popupName + " .popup-container");
+            if (popupContainer.length > 0) {
+                popupContainer[0].scrollTop = 0;
+            }
 
-			$(".popup." + popupName).css("display", "block");
-			$(".popup-background").css("display", "block");
-		}
+            $(".popup." + popupName).css("display", "block");
+            $(".popup-background").css("display", "block");
+        }
 
         return result;
     }
     closePopup(result?: any): void {
         if (this.currentPopup) {
             console.log("Close popup " + this.currentPopup);
-			if (typeof window !== "undefined") {
-				$(".popup." + this.currentPopup + " .popup-container")[0].scrollTop = 0;
-				$(".popup." + this.currentPopup).css("display", "none");
+            if (typeof window !== "undefined") {
+                $(".popup." + this.currentPopup + " .popup-container")[0].scrollTop = 0;
+                $(".popup." + this.currentPopup).css("display", "none");
 
-				$(".popup-background").css("display", "none");
-			}
+                $(".popup-background").css("display", "none");
+            }
 
-            var popupName = this.currentPopup;
-            var popupObject = this[this.currentPopup + "Popup"];
-			/* tslint:disable:no-string-literal */
+            const popupName = this.currentPopup;
+            const popupObject = this[this.currentPopup + "Popup"];
+            /* tslint:disable:no-string-literal */
             if (popupObject !== undefined && popupObject["visible"] !== undefined) {
                 popupObject.visible(false);
             }
 
-			/* tslint:enable:no-string-literal */
+            /* tslint:enable:no-string-literal */
             this.currentPopup = null;
             this.popupClosed.dispatch(popupName, result);
         }
@@ -1165,7 +1167,7 @@ export class App {
 
         if (commandName === "more.close") {
             this.hideMoreBlock();
-            var currentTabBarItem = UIManager.getTabBarItemForPage(uiManager.currentPageBlock);
+            const currentTabBarItem = UIManager.getTabBarItemForPage(uiManager.currentPageBlock);
             app.tabBar.select(currentTabBarItem, true);
             return;
         }
@@ -1184,9 +1186,9 @@ export class App {
         commandManager.executeCommand(commandName, parameters);
     }
     reloadApplication() {
-		/* tslint:disable:no-unused-expression no-string-literal */
+        /* tslint:disable:no-unused-expression no-string-literal */
         window["StatusBar"] && StatusBar.show();
-		/* tslint:enable:no-unused-expression no-string-literal */
+        /* tslint:enable:no-unused-expression no-string-literal */
         window.location.reload();
     }
     shouldRotateToOrientation(interfaceOrientation: any) {
@@ -1201,8 +1203,8 @@ export class App {
         app.tabBar.select("more", false);
     }
     requireAuthentication(): JQueryPromise<boolean> {
-        var self = this;
-        var result = $.Deferred();
+        const self = this;
+        const result = $.Deferred();
         if (!authManager.authenticated()) {
             // We don't authenticated, so display authentication popup.
             this.popupClosed.addOnce(function () {
@@ -1219,8 +1221,8 @@ export class App {
         return result;
     }
     requireGuestAuthentication(): JQueryPromise<boolean> {
-        var self = this;
-        var result = $.Deferred();
+        const self = this;
+        const result = $.Deferred();
         if (!authManager.authenticated()) {
             // We don't authenticated, so display authentication popup.
             authManager.loginAsGuest().then(function (status) {
@@ -1239,8 +1241,8 @@ export class App {
         }
 
         this.showPopup("okcancel");
-        var popupObject = this.okcancelPopup;
-        var deferred = popupObject.deferred;
+        const popupObject = this.okcancelPopup;
+        const deferred = popupObject.deferred;
         popupObject.title(title);
         popupObject.messages(messages);
         popupObject.buttons(buttons);
@@ -1249,8 +1251,8 @@ export class App {
     }
     promptEx(title: string, messages: string[], buttons: string[], actions: Function[]) {
         this.showPopup("custom");
-        var popupObject = this.customPopup;
-        var deferred = popupObject.deferred;
+        const popupObject = this.customPopup;
+        const deferred = popupObject.deferred;
         popupObject.title(title);
         popupObject.messages(messages);
         popupObject.buttons(buttons);
@@ -1297,22 +1299,22 @@ export class App {
     }
     private getParameterByName(name) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        const regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
             results = regex.exec(location.search);
         return results == null
             ? ""
             : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
-	private showSplash() {
-		/* tslint:disable:no-unused-expression no-string-literal */
-		navigator["splashscreen"] && navigator.splashscreen.show();
-		/* tslint:enable:no-unused-expression no-string-literal */
-	}
-	private hideSplash() {
-		/* tslint:disable:no-unused-expression no-string-literal */
-		navigator["splashscreen"] && navigator.splashscreen.hide();
-		/* tslint:enable:no-unused-expression no-string-literal */
-	}
+    private showSplash() {
+        /* tslint:disable:no-unused-expression no-string-literal */
+        navigator["splashscreen"] && navigator.splashscreen.show();
+        /* tslint:enable:no-unused-expression no-string-literal */
+    }
+    private hideSplash() {
+        /* tslint:disable:no-unused-expression no-string-literal */
+        navigator["splashscreen"] && navigator.splashscreen.hide();
+        /* tslint:enable:no-unused-expression no-string-literal */
+    }
 }
 
 declare var app: App;

@@ -4,13 +4,20 @@ import * as ko from "knockout";
 import { App } from "../app";
 import * as metadataManager from "../metadatamanager";
 import * as tableManager from "../table/tablemanager";
-import { connectionService, reloadManager, deviceEvents, soundManager } from "../services";
+import {
+    connectionService,
+    reloadManager,
+    deviceEvents,
+    soundManager,
+    orientationService
+} from "../services";
 import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
 import { uiManager } from "../services/uimanager";
 import { PageBase } from "../ui/pagebase";
 import { debugSettings } from "../debugsettings";
 import { settings } from "../settings";
+import * as commandManager from "../commandManager";
 
 declare var app: App;
 
@@ -34,7 +41,7 @@ export class TablesPage extends PageBase {
     public tablesShown = ko.observable(true);
     constructor() {
         super();
-        var self = this;
+        const self = this;
         this.slideWidth = ko.observable(0);
         this.isConnectionSlow = ko.observable(false);
         this.calculateLandscapeWidth();
@@ -57,24 +64,24 @@ export class TablesPage extends PageBase {
             owner: this
         });
         this.currentTable = ko.computed(function () {
-            var tables = tableManager.tables();
+            const tables = tableManager.tables();
             if (tables.length === 0) {
                 return new TableView(0, null);
             }
 
-			var index = this.currentIndex();
-			if (!tables.hasOwnProperty(index)) {
-				return new TableView(0, null);
+            const index = this.currentIndex();
+            if (!tables.hasOwnProperty(index)) {
+                return new TableView(0, null);
             }
 
             return tables[index];
         }, this);
         this.selectedTables = ko.computed(function () {
-            var tables = tableManager.tables();
+            const tables = tableManager.tables();
             return tables;
         }, this);
         this.loading = ko.computed(function () {
-            var ct = self.currentTable();
+            const ct = self.currentTable();
             if (ct == null) {
                 return false;
             }
@@ -82,7 +89,7 @@ export class TablesPage extends PageBase {
             return ct.connecting();
         }, this);
         this.frozen = ko.computed(function () {
-            var ct = self.currentTable();
+            const ct = self.currentTable();
             if (ct === null) {
                 return false;
             }
@@ -90,7 +97,7 @@ export class TablesPage extends PageBase {
             return ct.frozen();
         }, this);
         this.opened = ko.computed(function () {
-            var ct = self.currentTable();
+            const ct = self.currentTable();
             if (ct === null) {
                 return false;
             }
@@ -111,14 +118,14 @@ export class TablesPage extends PageBase {
         });
     }
     calculateLandscapeWidth() {
-		// When running not within browser, skip calculations.
+        // When running not within browser, skip calculations.
         if (typeof window === "undefined") {
-			return;
-		}
+            return;
+        }
 
-        var viewportLandscapeWidth = 640;
-        var currentWidth = $("body").width();
-        if (currentWidth >= 1024 || (currentWidth == 768 && $("body").height() == 0)) {
+        let viewportLandscapeWidth = 640;
+        const currentWidth = $("body").width();
+        if (currentWidth >= 1024 || (currentWidth === 768 && $("body").height() === 0)) {
             viewportLandscapeWidth = 1024;
             if (currentWidth >= 1920) {
                 viewportLandscapeWidth = 1920;
@@ -170,15 +177,15 @@ export class TablesPage extends PageBase {
         app.tabBar.visible(true);
         app.tabBar.select("tables", false);
         app.processing(true);
-        var oldColor = $(".progress-background").css("background-color");
+        const oldColor = $(".progress-background").css("background-color");
         $(".progress-background").css("background-color", "black");
         timeService.setTimeout(() => {
             app.processing(false);
             $(".progress-background").css("background-color", oldColor);
         }, 500);
-		/* tslint:disable:no-string-literal no-unused-expression */
+        /* tslint:disable:no-string-literal no-unused-expression */
         window["StatusBar"] && StatusBar.show();
-		/* tslint:enable:no-string-literal no-unused-expression */
+        /* tslint:enable:no-string-literal no-unused-expression */
         soundManager.tableSoundsEnabled(false);
         if (!PageBlock.useDoubleView) {
             orientationService.setOrientation("portrait");
@@ -197,16 +204,16 @@ export class TablesPage extends PageBase {
         timeService.setTimeout(function () {
             orientationService.lock();
         }, 200);
-        var currentTable = this.currentTable();
+        const currentTable = this.currentTable();
         if (currentTable != null) {
             timeService.setTimeout(() => {
                 currentTable.actionBlock.updateBounds();
             }, 300);
         }
 
-		/* tslint:disable:no-string-literal no-unused-expression */
+        /* tslint:disable:no-string-literal no-unused-expression */
         window["StatusBar"] && StatusBar.hide();
-		/* tslint:enable:no-string-literal no-unused-expression */
+        /* tslint:enable:no-string-literal no-unused-expression */
         soundManager.enabled(settings.soundEnabled());
         soundManager.tableSoundsEnabled(true);
         reloadManager.setReloadCallback(() => {
@@ -235,7 +242,7 @@ export class TablesPage extends PageBase {
         this.deactivate();
     }
     toLobby() {
-        var tableView = this.currentTable();
+        const tableView = this.currentTable();
         if (tableView.myPlayer() != null) {
             app.lobbyPageBlock.showLobby();
             this.deactivate();
@@ -244,17 +251,17 @@ export class TablesPage extends PageBase {
         }
     }
     leave() {
-        var self = this;
+        const self = this;
         // Unsubscribe from table notifications.
-        var tableView = this.currentTable();
-        var removeCurrentTable = function () {
+        const tableView = this.currentTable();
+        const removeCurrentTable = function () {
             // Navigate back to the lobby.
             if (tableManager.tables().length === 0) {
                 app.lobbyPageBlock.showLobby();
                 self.deactivate();
             }
         };
-        var leaved = <JQueryDeferred<() => void>>commandManager.executeCommand("app.leaveTable", [tableView.tableId]);
+        const leaved = <JQueryDeferred<() => void>>commandManager.executeCommand("app.leaveTable", [tableView.tableId]);
         leaved.done(removeCurrentTable);
     }
     showMenu() {
@@ -264,8 +271,8 @@ export class TablesPage extends PageBase {
     * Removes tournament tables which are finished.
     */
     private removeFinishedTournamentTable() {
-        var finishedTournamentTables = tableManager.tables().filter((_) => {
-            var tournament = _.tournament();
+        const finishedTournamentTables = tableManager.tables().filter((_) => {
+            const tournament = _.tournament();
             if (tournament == null) {
                 return false;
             }
@@ -275,7 +282,7 @@ export class TablesPage extends PageBase {
         finishedTournamentTables.forEach(_ => tableManager.remove(_));
     }
     private onConnectionSlow() {
-        var self = this;
+        const self = this;
         this.isConnectionSlow(true);
 
         // Clear message after some time passed by.

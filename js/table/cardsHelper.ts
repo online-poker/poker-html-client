@@ -14,9 +14,9 @@ function cardValue(card: number) {
         return "cards none";
     }
 
-    var suitId = Math.floor(card / 13);
-    var valueId = card % 13;
-    var value;
+    const suitId = Math.floor(card / 13);
+    const valueId = card % 13;
+    let value: string;
 
     switch (valueId) {
         case 0:
@@ -62,8 +62,8 @@ function cardValue(card: number) {
             break;
     }
 
-    var suit;
-    var color;
+    let suit: string;
+    let color: string;
     switch (suitId) {
         case 0:
             color = "blue";
@@ -92,7 +92,7 @@ function cardValue(card: number) {
     }
 
     return "cards " + suit + " c" + value;
-    //return "<span class="cards " + value + suit + ""></span>";
+    // return "<span class="cards " + value + suit + ""></span>";
 }
 
 /**
@@ -121,15 +121,15 @@ function decodeCardsArray(cardsData: string): number[] {
         return [255, 255];
     }
 
-    var cardsString = window.atob(cardsData);
-    var cards: number[] = [];
-    for (var i = 0; i < cardsString.length; i++) {
+    const cardsString = window.atob(cardsData);
+    const cards: number[] = [];
+    for (let i = 0; i < cardsString.length; i++) {
         cards.push(cardsString.charCodeAt(i));
     }
 
     return cards;
 }
-function convertToCards(data: number[]): string[]{
+function convertToCards(data: number[]): string[] {
     if (data == null) {
         return null;
     }
@@ -161,9 +161,9 @@ function cardsArray(cardsData: string): string[] {
         return ["cards none", "cards none"];
     }
 
-    var cardsString = window.atob(cardsData);
-    var cards = new Array();
-    for (var i = 0; i < cardsString.length; i++) {
+    const cardsString = window.atob(cardsData);
+    const cards = new Array();
+    for (let i = 0; i < cardsString.length; i++) {
         cards.push(cardValue(cardsString.charCodeAt(i)));
     }
 

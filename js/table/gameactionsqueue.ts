@@ -121,15 +121,15 @@ export class GameActionsQueue {
             return;
         }
 
-        var self = this;
-        var worker = this.tasks.shift();
+        const self = this;
+        const worker = this.tasks.shift();
         if (worker === null) {
             this.error("Worker is null");
         }
 
         this.counter++;
         this.isExecuting = true;
-        var task = worker();
+        const task = worker();
         if (task === null) {
             this.error("Task is null");
         }

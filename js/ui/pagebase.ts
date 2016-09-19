@@ -19,7 +19,7 @@ export class PageBase implements Page {
     * pageName String Name of the page which is activated.
     */
     activate(pageName?: string) {
-        var theConstructor: any = this["constructor"];
+        const theConstructor: any = this["constructor"];
         this.trace("Activate " + theConstructor.name);
         this.visible(true);
     }
@@ -29,7 +29,7 @@ export class PageBase implements Page {
     * pageName String Name of the page which is deactivated.
     */
     deactivate(pageName?: string) {
-        var theConstructor: any = this["constructor"];
+        const theConstructor: any = this["constructor"];
         this.trace("Deactivate " + theConstructor.name);
         this.visible(false);
     }

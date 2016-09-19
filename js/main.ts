@@ -1,2 +1,2 @@
 require(["appInit"], function (appInit) {
-})
+});

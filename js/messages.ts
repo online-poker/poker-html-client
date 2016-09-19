@@ -113,7 +113,7 @@ var messages: any = {
         headerCaption: 'Столы (#count)',
         players: 'Игроки',
         bets: 'Ставки',
-		noTablesSelected: 'Откройте хотя бы один стол',
+        noTablesSelected: 'Откройте хотя бы один стол',
     },
     tournamentsList: {
         headerCaption: '#count Турнир(ов)',
@@ -253,7 +253,7 @@ var messages: any = {
         passwordRecovery: 'Восстановление пароля',
         passwordRecoveredSuccess: 'Пароль успешно изменен',
         passwordChangedSuccess: 'Вы успешно изменили пароль',
-		youAreLoggedIn: 'Вы вошли как',
+        youAreLoggedIn: 'Вы вошли как',
     },
     cashier: {
         pageCaption: 'Счет',

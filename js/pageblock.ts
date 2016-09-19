@@ -27,8 +27,8 @@ class PageBlock {
     }
     showBlock() {
         if (typeof window !== "undefined") {
-			$(this.getSelector()).show();
-		}
+            $(this.getSelector()).show();
+        }
 
         this.showPrimary();
         if (PageBlock.useDoubleView) {
@@ -36,9 +36,9 @@ class PageBlock {
         }
     }
     hideBlock() {
-		if (typeof window !== "undefined") {
-			$(this.getSelector()).hide();
-		}
+        if (typeof window !== "undefined") {
+            $(this.getSelector()).hide();
+        }
     }
     showPrimary() {
         this.showSubPage(this.primaryName);
@@ -63,13 +63,13 @@ class PageBlock {
     */
     getSubPage(subPageName: string) {
         if (!this.hasOwnProperty(subPageName + "Page")) {
-			return null;
-		}
+            return null;
+        }
 
         return <Page>this[subPageName + "Page"];
     }
     private showSubPage(pageName: string) {
-        var nextPageObject = this.getSubPage(pageName);
+        const nextPageObject = this.getSubPage(pageName);
         if (nextPageObject !== null) {
             if (nextPageObject.canActivate !== undefined) {
                 if (!nextPageObject.canActivate()) {
@@ -78,7 +78,7 @@ class PageBlock {
             }
         }
 
-        var needHidePrevView = this.currentPage != null;
+        let needHidePrevView = this.currentPage != null;
         if (PageBlock.useDoubleView) {
             // Add additional logic when previous view should be hidden.
 
@@ -87,14 +87,14 @@ class PageBlock {
         }
 
         if (needHidePrevView) {
-            var pageObject = this.getSubPage(this.currentPage);
+            let pageObject = this.getSubPage(this.currentPage);
             if (pageObject !== null) {
                 pageObject.deactivate(this.currentPage);
             }
 
-			if (typeof window !== "undefined") {
-				$(this.getPageSelector(this.currentPage)).css("display", "none");
-			}
+            if (typeof window !== "undefined") {
+                $(this.getPageSelector(this.currentPage)).css("display", "none");
+            }
         }
 
         this.currentPage = pageName;
@@ -102,9 +102,9 @@ class PageBlock {
             nextPageObject.activate(this.currentPage);
         }
 
-		if (typeof window !== "undefined") {
-			$(this.getPageSelector(pageName)).css("display", "block");
-		}
+        if (typeof window !== "undefined") {
+            $(this.getPageSelector(pageName)).css("display", "block");
+        }
     }
     private getSelector(): string {
         return ".page-block." + this.name;
@@ -113,13 +113,12 @@ class PageBlock {
         return this.getSelector() + " .sub-page." + pageName;
     }
     private bindSubPage(pageName: string, viewModel: any): void {
-        var self = this;
         this[pageName + "Page"] = viewModel;
-		if (typeof window === "undefined") {
-			return;
-		}
+        if (typeof window === "undefined") {
+            return;
+        }
 
-        var pagejElement = $(this.getPageSelector(pageName));
+        const pagejElement = $(this.getPageSelector(pageName));
         if (pagejElement.length === 0) {
             console.error("Could not bind sub page " + pageName + " since DOM element not found.");
             return;
@@ -130,10 +129,10 @@ class PageBlock {
             return;
         }
 
-        var pageElement = pagejElement[0];
+        const pageElement = pagejElement[0];
         if (!pageElement.hasChildNodes()) {
-            var templateSource: string = <any>pagejElement.data("template");
-            var pageLoadPromise = $.get(templateSource, "text/html").then(function (data: string) {
+            const templateSource: string = <any>pagejElement.data("template");
+            const pageLoadPromise = $.get(templateSource, "text/html").then(function (data: string) {
                 pagejElement.html(data);
                 try {
                     ko.applyBindings(viewModel, pageElement);

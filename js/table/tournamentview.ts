@@ -83,21 +83,21 @@ export class TournamentView {
     totalPrize: KnockoutComputed<number>;
 
     constructor(public tournamentId: number, data: TournamentDefinition) {
-        var self = this;
+        const self = this;
         this.tournamentData(data);
         this.status(data.Status);
         this.rebuyAllowed(data.IsRebuyAllowed);
         this.addonAllowed(data.IsAddonAllowed);
-        var currentPlayerCandidates = data.TournamentPlayers.filter(_ => _.PlayerId === authManager.loginId());
+        const currentPlayerCandidates = data.TournamentPlayers.filter(_ => _.PlayerId === authManager.loginId());
         if (currentPlayerCandidates.length > 0) {
-            var currentPlayer = currentPlayerCandidates[0];
+            const currentPlayer = currentPlayerCandidates[0];
             if (currentPlayer.Status === TournamentPlayerStatus.Playing) {
                 this.currentTableId = currentPlayer.TableId;
             }
         }
 
         this.totalPrize = ko.computed(function () {
-            var tdata = self.tournamentData();
+            const tdata = self.tournamentData();
             if (tdata === null) {
                 return null;
             }
@@ -108,16 +108,15 @@ export class TournamentView {
 
     refreshTournament(): JQueryPromise<any> {
         if (this.tournamentId === 0) {
-            var x: JQueryXHR;
             return $.Deferred().resolve({ Status: "Ok", Data: null });
         }
 
-        var self = this;
-        var tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        const self = this;
+        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
         this.loading(true);
         return tournamentApi.GetTournament(this.tournamentId, function (data) {
             if (data.Status === "Ok") {
-                var tournamentData: TournamentDefinition = data.Data;
+                const tournamentData: TournamentDefinition = data.Data;
                 self.log("Informaton about tournament " + self.tournamentId + " received: ", data.Data);
                 self.log(tournamentData.TournamentName);
                 self.tournamentData(tournamentData);
@@ -127,13 +126,13 @@ export class TournamentView {
         });
     }
     clearInformation() {
-		// Do nothing.
+        // Do nothing.
     }
     updateTournamentInformation() {
         /// <signature>
         ///     <summary>Updates the information about the table from the server</summary>
         /// </signature>
-        var self = this;
+        const self = this;
         if (this.connectingRequest !== null && this.connectingRequest.state() === "pending") {
             // Re-schedule updating information.
             this.connectingRequest.fail(function () {
@@ -146,13 +145,13 @@ export class TournamentView {
         }
 
         // this.connecting(true);
-        var currentLoadingRequest = $.Deferred();
-        var wrapper = connectionService.currentConnection;
-        var hubId = wrapper.connection.id;
-        var connectionInfo = "HID:" + hubId;
+        const currentLoadingRequest = $.Deferred();
+        const wrapper = connectionService.currentConnection;
+        let hubId = wrapper.connection.id;
+        const connectionInfo = "HID:" + hubId;
         this.log("Connecting to tournament " + this.tournamentId + " on connection " + connectionInfo);
-        var startConnection = app.buildStartConnection();
-        var api = new OnlinePoker.Commanding.API.Game(apiHost);
+        const startConnection = app.buildStartConnection();
+        const api = new OnlinePoker.Commanding.API.Game(apiHost);
         startConnection().then(function () {
             if (wrapper.terminated) {
                 return;
@@ -161,8 +160,8 @@ export class TournamentView {
             hubId = wrapper.connection.id;
             self.log("Attempting to connect to table and chat over connection " + hubId);
 
-            var joinTournamentRequest = self.joinTournament(wrapper);
-            var joinRequest = $.when(joinTournamentRequest);
+            const joinTournamentRequest = self.joinTournament(wrapper);
+            const joinRequest = $.when(joinTournamentRequest);
             currentLoadingRequest.progress(function (command: string) {
                 self.log("Receiving request to cancel all joining operations");
                 joinTournamentRequest.notify(command);
@@ -180,7 +179,7 @@ export class TournamentView {
                         return;
                     }
 
-                    var message = "Rejecting request due to join tournament failure in the connection."
+                    const message = "Rejecting request due to join tournament failure in the connection."
                         + "Failed request: " + result1[0];
 
                     self.log(message);
@@ -199,20 +198,20 @@ export class TournamentView {
         }
     }
     joinTournament(wrapper: ConnectionWrapper, maxAttempts = 3) {
-        var self = this;
-        var result = $.Deferred();
+        const self = this;
+        const result = $.Deferred();
         if (maxAttempts === 0 || wrapper.terminated) {
             this.log("Stop connecting to tournament");
             result.reject("Stop connecting to tournament", false);
             return result;
         }
 
-        var hubId = connectionService.currentConnection.connection.id;
-        var connectionInfo = "HID:" + hubId;
+        const hubId = connectionService.currentConnection.connection.id;
+        const connectionInfo = "HID:" + hubId;
         this.log("Joining tournament on connection " + connectionInfo);
-        var cancelled = false;
-        var subsequentDeferred: JQueryDeferred<any> = null;
-        var cancelOperation = function () {
+        const cancelled = false;
+        let subsequentDeferred: JQueryDeferred<any> = null;
+        const cancelOperation = function () {
             self.log("Cancelling join tournament request");
             result.reject("Cancelled", true);
         };
@@ -224,7 +223,7 @@ export class TournamentView {
             }
 
             self.log("Executing Game.subscribeTournament on connection " + wrapper.connection.id + " in state " + wrapper.connection.state);
-            var operation = wrapper.connection.Game.server.subscribeTournament(self.tournamentId)
+            const operation = wrapper.connection.Game.server.subscribeTournament(self.tournamentId)
                 .then(function () {
                     if (wrapper.terminated) {
                         cancelOperation();
@@ -238,7 +237,7 @@ export class TournamentView {
                         return;
                     }
 
-                    var message = "" + <string>error;
+                    const message = "" + <string>error;
                     self.log("Failed to join tournament " + self.tournamentId + ", " + connectionInfo + ". Reason: " + message);
                     if (message.indexOf("Connection was disconnected before invocation result was received.") >= 0) {
                         self.log("Stopped connecting to table since underlying connection is broken");
@@ -269,12 +268,12 @@ export class TournamentView {
         return result;
     }
     onTournamentStatusChanged(status: TournamentStatus) {
-        var self = this;
-        var data = this.tournamentData();
-        var oldStatus = this.status();
+        const self = this;
+        const data = this.tournamentData();
+        const oldStatus = this.status();
         this.status(status);
-		var rebuyTime: number;
-		var addonTime: number;
+        let rebuyTime: number;
+        let addonTime: number;
         if (status === TournamentStatus.LateRegistration) {
             rebuyTime = data.RebuyPeriodTime || 0;
             addonTime = data.AddonPeriodTime || 0;
@@ -323,14 +322,14 @@ export class TournamentView {
         }
     }
     private openTournamentTableUI() {
-        var self = this;
-        var data = this.tournamentData();
-        var openTournamentPromise: JQueryPromise<void> = null;
+        const self = this;
+        const data = this.tournamentData();
+        let openTournamentPromise: JQueryPromise<void> = null;
         if (appConfig.tournament.openTableAutomatically) {
             openTournamentPromise = this.openTournamentTable(this.currentTableId);
         }
 
-        var messageKey = appConfig.tournament.openTableAutomatically
+        const messageKey = appConfig.tournament.openTableAutomatically
             ? "tournament.tournamentStarted"
             : "tournament.tournamentStartedNoOpen";
         SimplePopup.display(_("tournament.caption", { tournament: data.TournamentName }),
@@ -346,9 +345,9 @@ export class TournamentView {
             });
     }
     private displayTournamentFinished() {
-        var self = this;
-        var data = this.tournamentData();
-        var currentDate = new Date().valueOf();
+        const self = this;
+        const data = this.tournamentData();
+        const currentDate = new Date().valueOf();
         if (this.finishedPlaying() && (currentDate - this.finishTime()) > 2000) {
             return;
         }
@@ -372,7 +371,7 @@ export class TournamentView {
         }
     }
     onTournamentTableChanged(tableId: number) {
-        var self = this;
+        const self = this;
         if (this.finishedPlaying()) {
             return;
         }
@@ -387,7 +386,7 @@ export class TournamentView {
             return;
         }
 
-        var data = this.tournamentData();
+        const data = this.tournamentData();
         if (this.currentTableId !== null) {
             this.log("Removing player from the tournament table " + this.currentTableId + " in tournament " + this.tournamentId);
             this.removeCurrentTable();
@@ -402,21 +401,22 @@ export class TournamentView {
         }
     }
     onTournamentPlayerGameCompleted(placeTaken: number) {
-        var self = this;
+        const self = this;
         this.finishedPlaying(true);
         this.finishTime(new Date().valueOf());
         this.finishedPlace = placeTaken;
 
-        var data = this.tournamentData();
-        var structure = this.getPrizeStructure(data.WellKnownPrizeStructure);
-        var ascendingSort = (a, b) => {
+        const data = this.tournamentData();
+        const structure = this.getPrizeStructure(data.WellKnownPrizeStructure);
+        const ascendingSort = (a, b) => {
             return a.MaxPlayer - b.MaxPlayer;
         };
-        var prizes = structure.filter((_) => {
+        const prizes = structure.filter((_) => {
             return _.MaxPlayer > data.JoinedPlayers;
         }).sort(ascendingSort);
+        let prize: TournamentPrizeStructure;
         if (prizes.length > 0) {
-            var prize = prizes[0];
+            prize = prizes[0];
         } else {
             prize = structure.sort(ascendingSort)[0];
         }
@@ -426,13 +426,13 @@ export class TournamentView {
         });
     }
     onTournamentBetLevelChanged(level: number) {
-        var data = this.tournamentData();
-        var structure = this.getBetLevelStructure(data.WellKnownBetStructure).sort((a, b) => a.Level - b.Level);
-        var betLevelCandidate = structure.filter(_ => _.Level === level);
-        var betLevel = betLevelCandidate.length === 0
+        const data = this.tournamentData();
+        const structure = this.getBetLevelStructure(data.WellKnownBetStructure).sort((a, b) => a.Level - b.Level);
+        const betLevelCandidate = structure.filter(_ => _.Level === level);
+        const betLevel = betLevelCandidate.length === 0
             ? structure[structure.length - 1]
             : betLevelCandidate[0];
-        var currentTable = this.getTableForNotification();
+        const currentTable = this.getTableForNotification();
         if (currentTable === null) {
             this.log("Table " + this.currentTableId + " is no longer valid for the tournament " + this.tournamentId);
             return;
@@ -447,23 +447,22 @@ export class TournamentView {
         }
 
         if (level > 1) {
-			var notificationParameters: any;
             if (betLevel.Ante == null) {
-				notificationParameters = {
-					tournament: data.TournamentName,
-					sb: betLevel.SmallBlind,
-					bb: betLevel.BigBlind
-				};
+                let notificationParameters = {
+                    tournament: data.TournamentName,
+                    sb: betLevel.SmallBlind,
+                    bb: betLevel.BigBlind
+                };
                 currentTable.showNotificationWithDelay(
                     _("tournament.betLevelChanged1", notificationParameters),
                     debugSettings.tableView.betLevelChangeDelay);
             } else {
-				notificationParameters = {
-					tournament: data.TournamentName,
-					sb: betLevel.SmallBlind,
-					bb: betLevel.BigBlind,
-					ante: betLevel.Ante
-				};
+                let notificationParameters = {
+                    tournament: data.TournamentName,
+                    sb: betLevel.SmallBlind,
+                    bb: betLevel.BigBlind,
+                    ante: betLevel.Ante
+                };
                 currentTable.showNotificationWithDelay(
                     _("tournament.betLevelChanged2", notificationParameters),
                     debugSettings.tableView.betLevelChangeDelay);
@@ -471,7 +470,7 @@ export class TournamentView {
         }
     }
     onTournamentRoundChanged(round: number) {
-		// Do nothing.
+        // Do nothing.
     }
     onTournamentRebuyStatusChanged(rebuyAllowed: boolean, addonAllowed: boolean) {
         if (this.finishedPlaying()) {
@@ -481,7 +480,7 @@ export class TournamentView {
         this.rebuyAllowed(rebuyAllowed);
         this.addonAllowed(addonAllowed);
         if (addonAllowed) {
-            var currentTable = this.getTableForNotification();
+            const currentTable = this.getTableForNotification();
             if (currentTable != null) {
                 if (this.isInTournament()) {
                     currentTable.showNotificationWithDelay(
@@ -513,7 +512,7 @@ export class TournamentView {
         this.frozen(false);
     }
     onTournamentRegistrationCancelled() {
-		// Do nothing.
+        // Do nothing.
     }
     public getBetLevelStructure(level: number) {
         return metadataManager.bets[level];
@@ -536,13 +535,13 @@ export class TournamentView {
     }
 
     private getTableForNotification() {
-        var self = this;
-        var table = tableManager.getTableById(this.currentTableId);
+        const self = this;
+        const table = tableManager.getTableById(this.currentTableId);
         if (table !== null) {
             return table;
         }
 
-        var tournamentTables = tableManager.tables().filter(_ => _.tournament() !== null
+        const tournamentTables = tableManager.tables().filter(_ => _.tournament() !== null
             && _.tournament().tournamentId === self.tournamentId);
         if (tournamentTables.length !== 0) {
             return tournamentTables[0];
@@ -552,14 +551,14 @@ export class TournamentView {
     }
 
     private displayGameFinishedNotification(prize: TournamentPrizeStructure, placeTaken: number) {
-        var self = this;
-        var data = this.tournamentData();
+        const self = this;
+        const data = this.tournamentData();
         if (prize.PrizeLevel.length < placeTaken) {
             SimplePopup.displayWithTimeout(_("tournament.caption", { tournament: data.TournamentName }),
                 _("tournament.playerGameCompleted", { tournament: data.TournamentName, place: placeTaken }),
                 10 * 1000);
         } else {
-            var winAmount = (self.totalPrize() * prize.PrizeLevel[placeTaken - 1] / 100).toFixed();
+            const winAmount = (self.totalPrize() * prize.PrizeLevel[placeTaken - 1] / 100).toFixed();
             SimplePopup.displayWithTimeout(_("tournament.caption", { tournament: data.TournamentName }),
                 _("tournament.playerGameCompletedAndWin", { tournament: data.TournamentName, place: placeTaken, win: winAmount }),
                 10 * 1000)
@@ -567,7 +566,7 @@ export class TournamentView {
                     if (placeTaken === 1 || placeTaken === 2) {
                         self.finalizeTournament();
                     } else {
-                        var currentTable = tableManager.getTableById(this.currentTableId);
+                        const currentTable = tableManager.getTableById(this.currentTableId);
                         if (!currentTable.opened()) {
                             self.finalizeTournament();
                         }
@@ -577,7 +576,7 @@ export class TournamentView {
     }
 
     private executeOnCurrentTable(callback: () => void) {
-        var currentTable = tableManager.getTableById(this.currentTableId);
+        const currentTable = tableManager.getTableById(this.currentTableId);
         if (app.tablesPage.visible() && currentTable != null) {
             currentTable.pushCallback(() => {
                 callback();
@@ -588,11 +587,11 @@ export class TournamentView {
     }
 
     private openTournamentTable(tableId: number) {
-        var self = this;
-        var api = new OnlinePoker.Commanding.API.Game(apiHost);
+        const self = this;
+        const api = new OnlinePoker.Commanding.API.Game(apiHost);
         return api.GetTable(tableId).then(function (data) {
             tableManager.selectTable(data.Data, true);
-            var currentTable = tableManager.getTableById(tableId);
+            const currentTable = tableManager.getTableById(tableId);
             currentTable.tournament(self);
         });
     }

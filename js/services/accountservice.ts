@@ -10,14 +10,13 @@ import * as authManager from "../authmanager";
 
 export class AccountService {
     getAccount() {
-        var result = $.Deferred();
-        var realMoneySupported = true;
-        var gameMoneySupported = false;
-        var api = new OnlinePoker.Commanding.API.Account(apiHost);
+        const result = $.Deferred();
+        const realMoneySupported = true;
+        const gameMoneySupported = false;
+        const api = new OnlinePoker.Commanding.API.Account(apiHost);
         api.GetPersonalAccount(null).done(function(apiResult: ApiResult<PersonalAccountData>) {
-            var data = apiResult.Data;
-
-            var accountsData = <AccountInformation[]>[];
+            const data = apiResult.Data;
+            const accountsData = <AccountInformation[]>[];
             if (realMoneySupported) {
                 accountsData.push({
                     currencyName: "currency.realmoney",
@@ -36,7 +35,7 @@ export class AccountService {
                 });
             }
 
-            var transactionInfo: AccountTransactionInformation = {
+            const transactionInfo: AccountTransactionInformation = {
                     date: data.LastIncomeDate,
                     amount: data.LastIncomeAmount,
                     id: data.LastRequestNumber

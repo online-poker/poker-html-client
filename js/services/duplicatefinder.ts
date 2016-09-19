@@ -21,18 +21,18 @@
     }
 
     validateDuplicateEvents() {
-        var target = this.dataEvents.slice(0);
-        var duplicatesCount = 0;
-        for (var i = 0; i < target.length; i++) {
-            var current = target[i];
-            for (var j = i + 1; j < target.length; j++) {
-                var test = target[j];
+        let target = this.dataEvents.slice(0);
+        let duplicatesCount = 0;
+        for (let i = 0; i < target.length; i++) {
+            const current = target[i];
+            for (let j = i + 1; j < target.length; j++) {
+                const test = target[j];
                 if (test.length !== current.length) {
                     continue;
                 }
 
-                var notFound = false;
-                for (var k = 0; k < current.length; k++) {
+                let notFound = false;
+                for (let k = 0; k < current.length; k++) {
                     if (current[k] !== test[k]) {
                         notFound = true;
                         break;

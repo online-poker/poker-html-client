@@ -9,8 +9,8 @@ export function registerExtenders() {
         target.options = option.items;
         target.caption = option.caption;
         target.currentValue = ko.computed(function () {
-            var value = target();
-            var selectedItem = option.items.filter(function (item: SelectorItem) {
+            const value = target();
+            const selectedItem = option.items.filter(function (item: SelectorItem) {
                 return item.value === value;
             });
             if (selectedItem.length === 0) {

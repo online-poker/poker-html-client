@@ -11,76 +11,75 @@ import { debugSettings } from "../debugsettings";
 export class ConnectionWrapper {
     terminated = false;
     constructor(public connection: SignalR.Hub.Connection) {
-        var self = this;
         connection.connectionSlow(() => {
-            if (self.terminated) {
+            if (this.terminated) {
                 return;
             }
 
-            self.logEvent("Connection slow");
+            this.logEvent("Connection slow");
             connectionService.connectionSlow.dispatch();
         });
         connection.reconnecting(() => {
-            if (self.terminated) {
+            if (this.terminated) {
                 return;
             }
 
            connectionService.reconnecting.dispatch();
         });
         connection.reconnected(() => {
-            if (self.terminated) {
+            if (this.terminated) {
                 return;
             }
 
             connectionService.reconnected.dispatch();
         });
         connection.received(() => {
-            if (self.terminated) {
+            if (this.terminated) {
                 return;
             }
 
             connectionService.received.dispatch();
         });
         connection.disconnected(() => {
-            if (self.terminated) {
+            if (this.terminated) {
                 return;
             }
 
             connectionService.disconnected.dispatch();
         });
         connection.stateChanged((state) => {
-            if (self.terminated) {
+            if (this.terminated) {
                 return;
             }
 
-            self.onConnectionStateChanged(state);
+            this.onConnectionStateChanged(state);
         });
         connection.error(function (error: any) {
-            if (self.terminated) {
+            if (this.terminated) {
                 return;
             }
 
-            var source = <CloseEvent>error.source;
-            self.logEvent("SignalR Error hapens", error);
+            const source = <CloseEvent>error.source;
+            this.logEvent("SignalR Error hapens", error);
 
             if (source === null) {
                 // We don't know that this is means, so just fail
                 // so issue will be easiely identifiable.
-                self.logEvent("Unrecoverable SignalR error happens, please discover that this is means.");
+                this.logEvent("Unrecoverable SignalR error happens, please discover that this is means.");
                 return;
             }
 
-			/* tslint:disable:no-string-literal */
+            /* tslint:disable:no-string-literal */
             if (source["code"] === null || source["code"] === undefined) {
-                self.logEvent("Unrecoverable SignalR error without code happens, please discover that this is means.", source);
+                this.logEvent("Unrecoverable SignalR error without code happens, please discover that this is means.", source);
                 return;
             }
-			/* tslint:enable:no-string-literal */
 
-            self.logEvent("Error code is: ", source.code);
+            /* tslint:enable:no-string-literal */
+            this.logEvent("Error code is: ", source.code);
             if (source.code === 1006) {
                 // Attempt to reestablish connection.
-                self.logEvent("Attempt to reestablish connection due to recoverable error.");
+                this.logEvent("Attempt to reestablish connection due to recoverable error.");
                 connectionService.recoverableError.dispatch();
                 return;
             }
@@ -89,59 +88,57 @@ export class ConnectionWrapper {
         });
     }
     terminateConnection(forceDisconnect = false) {
-        var hubId = this.connection.id;
-        var connectionInfo = "HID:" + hubId;
+        const hubId = this.connection.id;
+        const connectionInfo = "HID:" + hubId;
         this.logEvent("Terminating connection " + connectionInfo);
         slowInternetService.manualDisconnect = true;
         this.connection.stop(false, false);
         this.terminated = true;
     }
     establishConnection(maxAttempts = 3) {
-        var self = this;
-        var attempts = connectionService.attempts++;
+        const attempts = connectionService.attempts++;
         connectionService.lastAttempt = attempts;
-        var result = self.establishConnectionCore(maxAttempts);
+        const result = this.establishConnectionCore(maxAttempts);
         return result;
     }
     buildStartConnection() {
-        var self = this;
-        var supportedTransports = null;
-        var androidVersion = this.getAndroidVersion();
+        let supportedTransports = null;
+        const androidVersion = this.getAndroidVersion();
         if (androidVersion === false || (<string>androidVersion).indexOf("4.4") === 0) {
             supportedTransports = ["webSockets"];
         }
 
-        var startConnection = function () {
-            var buildMainPromise = () => {
-                var promise: JQueryPromise<any>;
+        const startConnection = () => {
+            const buildMainPromise = () => {
+                let promise: JQueryPromise<any>;
                 if (supportedTransports === null) {
-                    promise = self.connection.start();
+                    promise = this.connection.start();
                 } else {
-                    promise = self.connection.start({ transport: supportedTransports });
+                    promise = this.connection.start({ transport: supportedTransports });
                 }
 
                 return promise;
             };
 
-            var fixup = $.Deferred();
-            var x = (attempts) => {
+            const fixup = $.Deferred();
+            const x = (attempts) => {
                 if (attempts === 0) {
                     fixup.reject();
                 }
 
-                var promise = buildMainPromise();
+                const promise = buildMainPromise();
                 promise.pipe(() => {
-                    if (self.terminated) {
+                    if (this.terminated) {
                         fixup.reject();
                         return;
                     }
 
-                    if (self.connection.state === 1) {
+                    if (this.connection.state === 1) {
                         fixup.resolve();
                         return;
                     }
 
-                    if (self.connection.state === 4) {
+                    if (this.connection.state === 4) {
                         fixup.reject();
                         return;
                     }
@@ -150,12 +147,11 @@ export class ConnectionWrapper {
                         x(attempts - 1);
                     }, 100);
                 }, () => {
-                        fixup.reject();
-                    });
+                    fixup.reject();
+                });
             };
 
             x(30);
-
             return fixup;
         };
 
@@ -178,7 +174,7 @@ export class ConnectionWrapper {
         }
     }
     private establishConnectionCore(maxAttempts) {
-        var result = $.Deferred<ConnectionWrapper>();
+        const result = $.Deferred<ConnectionWrapper>();
         if (maxAttempts <= 0) {
             this.logEvent("Stop connection attempts");
             slowInternetService.onDisconnected();
@@ -186,34 +182,33 @@ export class ConnectionWrapper {
             return result;
         }
 
-        var self = this;
-        var startConnection = this.buildStartConnection();
-        self.logEvent("Establishing connection. Attempts left: " + (maxAttempts - 1));
+        const startConnection = this.buildStartConnection();
+        this.logEvent("Establishing connection. Attempts left: " + (maxAttempts - 1));
         connectionService.isStopped = false;
-        startConnection().done(function () {
-            if (self.terminated) {
+        startConnection().done(() => {
+            if (this.terminated) {
                 result.reject();
             }
 
-            var hubId = self.connection.id;
-            var connectionInfo = "HID:" + hubId;
-            self.logEvent("Connected to server! Connection " + connectionInfo);
-            result.resolve(self);
-        }).fail(function (message) {
-            self.logEvent("Could not Connect!" + message);
-            timeService.setTimeout(function () {
-                self.establishConnection(maxAttempts - 1).then(() => {
-                    result.resolve(self);
+            const hubId = this.connection.id;
+            const connectionInfo = "HID:" + hubId;
+            this.logEvent("Connected to server! Connection " + connectionInfo);
+            result.resolve(this);
+        }).fail((message) => {
+            this.logEvent("Could not Connect!" + message);
+            timeService.setTimeout(() => {
+                this.establishConnection(maxAttempts - 1).then(() => {
+                    result.resolve(this);
                 }, () => {
-                        result.reject();
-                    });
+                    result.reject();
+                });
             }, 100);
         });
         return result;
     }
     private getAndroidVersion(userAgent = null) {
-        var ua = userAgent || navigator.userAgent;
-        var match = ua.match(/Android\s([0-9\.]*)/);
+        const ua = userAgent || navigator.userAgent;
+        const match = ua.match(/Android\s([0-9\.]*)/);
         return match ? match[1] : false;
     }
     private logEvent(message: string, ...params: any[]) {

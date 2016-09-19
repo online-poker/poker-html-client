@@ -77,10 +77,10 @@ export class SoundManager {
         this.quickPlay("snd/flip_b.mp3");
     }
     private quickPlay(fileName) {
-		/* tslint:disable:no-string-literal */
+        /* tslint:disable:no-string-literal */
         if (window["Media"] != null) {
-            var platformPrefix = platformInfo.mediaRoot;
-            var media = new Media(platformPrefix + fileName, () => {
+            const platformPrefix = platformInfo.mediaRoot;
+            const media = new Media(platformPrefix + fileName, () => {
                 console.log("Playing audio completed");
                 media.release();
             }, (err) => {
@@ -91,9 +91,9 @@ export class SoundManager {
         }
 
         if (window["Audio"] != null) {
-            var audio = new Audio(fileName);
+            const audio = new Audio(fileName);
             audio.play();
         }
-		/* tslint:enable:no-string-literal */
+        /* tslint:enable:no-string-literal */
     }
 }

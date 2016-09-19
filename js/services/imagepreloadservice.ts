@@ -4,16 +4,15 @@ import { debugSettings } from "../debugsettings";
 
 export class ImagePreloadService {
     preload(url: string, useAbsolute = true) {
-        var self = this;
-        var absoluteUrl = useAbsolute ? this.getAbsoluteUrl(url) : url;
-        var result = $.Deferred();
-        var image = new Image();
-        image.onload = function () {
-            self.log("URL " + url + " preloaded");
+        const absoluteUrl = useAbsolute ? this.getAbsoluteUrl(url) : url;
+        const result = $.Deferred();
+        const image = new Image();
+        image.onload = () => {
+            this.log("URL " + url + " preloaded");
             result.resolve(url);
         };
-        image.onerror = function () {
-            self.log("URL " + url + " failed to load");
+        image.onerror = () => {
+            this.log("URL " + url + " failed to load");
             result.reject(url);
         };
         image.src = absoluteUrl;
@@ -25,7 +24,7 @@ export class ImagePreloadService {
     * @param resourcePackName String Resource name to load.
     */
     preloadResource(resourcePackName: string) {
-        var dpr = window.devicePixelRatio;
+        const dpr = window.devicePixelRatio;
         if (dpr === 2) {
             return this.preload(resourcePackName + "@2x.png", false);
         }
@@ -42,7 +41,7 @@ export class ImagePreloadService {
     * @param resourcePackName String Resource name to load.
     */
     preloadDeviceSpecificResource(resourcePackName: string) {
-        var dpr = window.devicePixelRatio;
+        const dpr = window.devicePixelRatio;
         if (screen.width === 1024 || screen.height === 1024) {
             return this.preloadResource(resourcePackName + "-1024");
         }
@@ -64,7 +63,7 @@ export class ImagePreloadService {
             return url;
         }
 
-        var absoluteUrl = window.location.href.replace("index.html", url);
+        const absoluteUrl = window.location.href.replace("index.html", url);
         this.log("Convert url " + url + " => " + absoluteUrl);
         return absoluteUrl;
     }

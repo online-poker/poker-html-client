@@ -46,89 +46,88 @@ export class TablePlaces {
         this.place10 = ko.observable<TablePlaceModel>(null);
         this.virtualOffset = ko.observable(0);
 
-        var self = this;
-        this.offsetPlace1 = ko.computed(function () {
-            var seat = self.getVirtualOffset(1);
-            return self.getPlaceBySeat(seat);
+        this.offsetPlace1 = ko.computed(() => {
+            const seat = this.getVirtualOffset(1);
+            return this.getPlaceBySeat(seat);
         });
-        this.offsetPlace2 = ko.computed(function () {
-            var seat = self.getVirtualOffset(2);
-            return self.getPlaceBySeat(seat);
+        this.offsetPlace2 = ko.computed(() => {
+            const seat = this.getVirtualOffset(2);
+            return this.getPlaceBySeat(seat);
         });
-        this.offsetPlace3 = ko.computed(function () {
-            var seat = self.getVirtualOffset(3);
-            return self.getPlaceBySeat(seat);
+        this.offsetPlace3 = ko.computed(() => {
+            const seat = this.getVirtualOffset(3);
+            return this.getPlaceBySeat(seat);
         });
-        this.offsetPlace4 = ko.computed(function () {
-            var seat = self.getVirtualOffset(4);
-            return self.getPlaceBySeat(seat);
+        this.offsetPlace4 = ko.computed(() => {
+            const seat = this.getVirtualOffset(4);
+            return this.getPlaceBySeat(seat);
         });
-        this.offsetPlace5 = ko.computed(function () {
-            var seat = self.getVirtualOffset(5);
-            return self.getPlaceBySeat(seat);
+        this.offsetPlace5 = ko.computed(() => {
+            const seat = this.getVirtualOffset(5);
+            return this.getPlaceBySeat(seat);
         });
-        this.offsetPlace6 = ko.computed(function () {
-            var seat = self.getVirtualOffset(6);
-            return self.getPlaceBySeat(seat);
+        this.offsetPlace6 = ko.computed(() => {
+            const seat = this.getVirtualOffset(6);
+            return this.getPlaceBySeat(seat);
         });
-        this.offsetPlace7 = ko.computed(function () {
-            var seat = self.getVirtualOffset(7);
-            return self.getPlaceBySeat(seat);
+        this.offsetPlace7 = ko.computed(() => {
+            const seat = this.getVirtualOffset(7);
+            return this.getPlaceBySeat(seat);
         });
-        this.offsetPlace8 = ko.computed(function () {
-            var seat = self.getVirtualOffset(8);
-            return self.getPlaceBySeat(seat);
+        this.offsetPlace8 = ko.computed(() => {
+            const seat = this.getVirtualOffset(8);
+            return this.getPlaceBySeat(seat);
         });
-        this.offsetPlace9 = ko.computed(function () {
-            var seat = self.getVirtualOffset(9);
-            return self.getPlaceBySeat(seat);
+        this.offsetPlace9 = ko.computed(() => {
+            const seat = this.getVirtualOffset(9);
+            return this.getPlaceBySeat(seat);
         });
-        this.offsetPlace10 = ko.computed(function () {
-            var seat = self.getVirtualOffset(10);
-            return self.getPlaceBySeat(seat);
+        this.offsetPlace10 = ko.computed(() => {
+            const seat = this.getVirtualOffset(10);
+            return this.getPlaceBySeat(seat);
         });
 
-        this.places = ko.computed(function () {
-            self.placesRefreshTrigger();
-            var result = [];
-            if (self.place1() !== null) {
-                result[this.getRealOffset(1)] = self.place1();
+        this.places = ko.computed(() => {
+            this.placesRefreshTrigger();
+            const result = [];
+            if (this.place1() !== null) {
+                result[this.getRealOffset(1)] = this.place1();
             }
 
-            if (self.place2() !== null) {
-                result[this.getRealOffset(2)] = self.place2();
+            if (this.place2() !== null) {
+                result[this.getRealOffset(2)] = this.place2();
             }
 
-            if (self.place3() !== null) {
-                result[this.getRealOffset(3)] = self.place3();
+            if (this.place3() !== null) {
+                result[this.getRealOffset(3)] = this.place3();
             }
 
-            if (self.place4() !== null) {
-                result[this.getRealOffset(4)] = self.place4();
+            if (this.place4() !== null) {
+                result[this.getRealOffset(4)] = this.place4();
             }
 
-            if (self.place5() !== null) {
-                result[this.getRealOffset(5)] = self.place5();
+            if (this.place5() !== null) {
+                result[this.getRealOffset(5)] = this.place5();
             }
 
-            if (self.place6() !== null) {
-                result[this.getRealOffset(6)] = self.place6();
+            if (this.place6() !== null) {
+                result[this.getRealOffset(6)] = this.place6();
             }
 
-            if (self.place7() !== null) {
-                result[this.getRealOffset(7)] = self.place7();
+            if (this.place7() !== null) {
+                result[this.getRealOffset(7)] = this.place7();
             }
 
-            if (self.place8() !== null) {
-                result[this.getRealOffset(8)] = self.place8();
+            if (this.place8() !== null) {
+                result[this.getRealOffset(8)] = this.place8();
             }
 
-            if (self.place9() !== null) {
-                result[this.getRealOffset(9)] = self.place9();
+            if (this.place9() !== null) {
+                result[this.getRealOffset(9)] = this.place9();
             }
 
-            if (self.place10() !== null) {
-                result[this.getRealOffset(10)] = self.place10();
+            if (this.place10() !== null) {
+                result[this.getRealOffset(10)] = this.place10();
             }
 
             return result;
@@ -149,7 +148,7 @@ export class TablePlaces {
         return ((seat - 1 + this.maxPlayers - this.virtualOffset()) % this.maxPlayers) + 1;
     }
     rotate(offset: number) {
-        var newOffset = (this.maxPlayers + offset + this.virtualOffset()) % this.maxPlayers;
+        const newOffset = (this.maxPlayers + offset + this.virtualOffset()) % this.maxPlayers;
         this.virtualOffset(newOffset);
     }
     sit(seat: number, player: TablePlaceModel) {
@@ -157,7 +156,7 @@ export class TablePlaces {
             throw new Error("Invalid seat number: " + seat);
         }
 
-        var seatVar = <KnockoutObservable<TablePlaceModel>>this["place" + seat];
+        const seatVar = <KnockoutObservable<TablePlaceModel>>this["place" + seat];
         seatVar(player);
     }
     standup(seat: number) {
@@ -165,15 +164,15 @@ export class TablePlaces {
             throw new Error("Invalid seat number: " + seat);
         }
 
-        var seatVar = <KnockoutObservable<TablePlaceModel>>this["place" + seat];
+        const seatVar = <KnockoutObservable<TablePlaceModel>>this["place" + seat];
         seatVar(null);
     }
     getPlaceBySeat(seat: number) {
-        var seatVar = <KnockoutObservable<TablePlaceModel>>this["place" + seat];
+        const seatVar = <KnockoutObservable<TablePlaceModel>>this["place" + seat];
         return seatVar();
     }
     getPlaceByPlayerId(playerId: number) {
-        var playerList = this.places().filter(_ => _.PlayerId() === playerId);
+        const playerList = this.places().filter(_ => _.PlayerId() === playerId);
         if (playerList.length === 0) {
             return null;
         }
@@ -186,11 +185,11 @@ export class TablePlaces {
         ///     <param name="players" type="Array">Array of players</param>
         /// </signature>
         this.clear();
-        var places = this.places();
-        for (var i = 1; i <= this.maxPlayers; i++) {
-            var playersOnSeat = players.filter((player) => player.Seat === i);
+        const places = this.places();
+        for (let i = 1; i <= this.maxPlayers; i++) {
+            const playersOnSeat = players.filter((player) => player.Seat === i);
             if (playersOnSeat.length !== 0) {
-                var model = new TablePlaceModel(playersOnSeat[0]);
+                const model = new TablePlaceModel(playersOnSeat[0]);
                 model.IsBetAnimationLocked(true);
                 this.sit(i, model);
             }

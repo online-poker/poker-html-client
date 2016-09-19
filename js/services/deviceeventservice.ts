@@ -22,15 +22,14 @@ export class DeviceEventService {
     * Initializes the device event handler
     */
     initialize() {
-        var self = this;
-        document.addEventListener("deviceready", () => self.onDeviceReady(), false);
+        document.addEventListener("deviceready", () => this.onDeviceReady(), false);
         if (debugSettings.ios.hasMultitasking) {
-            document.addEventListener("resign", () => self.onResign(), false);
-            document.addEventListener("active", () => self.onActive(), false);
+            document.addEventListener("resign", () => this.onResign(), false);
+            document.addEventListener("active", () => this.onActive(), false);
         }
 
-        document.addEventListener("pause", () => self.onPause(), false);
-        document.addEventListener("resume", () => self.onResume(), false);
+        document.addEventListener("pause", () => this.onPause(), false);
+        document.addEventListener("resume", () => this.onResume(), false);
     }
     private onDeviceReady() {
         this.ready.dispatch();

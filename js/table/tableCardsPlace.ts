@@ -31,11 +31,10 @@ class TableCardsPlace {
         this.Card4Hightlighted = ko.observable(false);
         this.Card5Hightlighted = ko.observable(false);
 
-        var self = this;
-        this.isAnimating = ko.computed(function () {
-            return self.isFlop() || self.isFlop5()
-                || self.isTurn() || self.isTurn5()
-                || self.isRiver();
+        this.isAnimating = ko.computed(() => {
+            return this.isFlop() || this.isFlop5()
+                || this.isTurn() || this.isTurn5()
+                || this.isRiver();
         }, this);
     }
 
@@ -69,14 +68,14 @@ class TableCardsPlace {
     * @cardsData Array of table cards to display
     */
     setCards(cardsData: number[]) {
-        var cards: string[] = convertToCards(cardsData);
+        const cards: string[] = convertToCards(cardsData);
         this.tableCards(cards);
         this.tableCardsData(cardsData);
     }
 
     openCards(cardsData: number[]) {
-        var cards: string[] = convertToCards(cardsData);
-        var currentCards = this.tableCards();
+        const cards: string[] = convertToCards(cardsData);
+        let currentCards = this.tableCards();
         if (runtimeSettings.tableCardsAnimating) {
             if (currentCards == null || currentCards.length === 0) {
                 if (cards.length === 3) {

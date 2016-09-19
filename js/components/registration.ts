@@ -2,12 +2,12 @@
 
 import ko = require("knockout");
 
-var trivialViewModelFactory = function (params, componentInfo) {
+const trivialViewModelFactory = function (params, componentInfo) {
     return params.data;
 };
 
-var tableIconViewModelFactory = function (params, componentInfo) {
-    var tableData = <LobbyTableItem>params.data;
+const tableIconViewModelFactory = function (params, componentInfo) {
+    const tableData = <LobbyTableItem>params.data;
     return {
         displayTakenSeats: true,
         hasLoadingIndicator: false,
@@ -18,12 +18,12 @@ var tableIconViewModelFactory = function (params, componentInfo) {
 };
 
 function getTemplateDefinition(name: string) {
-    const useRequire = window['PokerComponents'] === undefined;
+    const useRequire = window["PokerComponents"] === undefined;
     if (useRequire) {
         return { require: "text!app/components/" + name };
     }
 
-    return window['PokerComponents'][name];
+    return window["PokerComponents"][name];
 }
 
 export function registerComponents() {

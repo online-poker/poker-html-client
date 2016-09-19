@@ -24,7 +24,7 @@ export class PlayerMessage {
 
         this.sender = sender;
         this.message = ko.observable(message);
-        var d = new Date();
+        const d = new Date();
         this.date = d.getHours() + ":" + d.getMinutes();
         this.fullMessage = ko.computed(() => {
             return "[" + this.date + "]" + this.sender + " - " + this.message();

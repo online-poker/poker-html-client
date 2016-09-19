@@ -8,7 +8,7 @@ import ko = require("knockout");
 import { settings } from "./settings";
 import { App } from "./app";
 
-declare var app: App;
+declare const app: App;
 
 class AuthManager {
     authenticated: KnockoutObservable<boolean>;
@@ -21,9 +21,9 @@ class AuthManager {
         this.loginId = ko.observable<number>();
     }
     authenticate(login: string, password: string, rememberMe: boolean = false): JQueryPromise<string> {
-        var self = this;
-        var accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
-        var result = $.Deferred();
+        const self = this;
+        const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
+        const result = $.Deferred();
         if (rememberMe) {
             settings.login(login);
             settings.password(password);
@@ -35,8 +35,8 @@ class AuthManager {
                 self.authenticated(true);
                 self.login(data.Login);
                 self.loginId(data.Id);
-				settings.isGuest(data.IsGuest);
-				settings.saveSettings();
+                settings.isGuest(data.IsGuest);
+                settings.saveSettings();
             } else {
                 // Report authentication or authorization errors
                 self.authenticated(false);
@@ -60,10 +60,9 @@ class AuthManager {
         this.login(null);
     }
     loginAsGuest(): JQueryPromise<string> {
-        var self = this;
-        var result = $.Deferred();
-        var accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
-        accountApi.RegisterGuest().then(function (value) {
+        const result = $.Deferred();
+        const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
+        accountApi.RegisterGuest().then((value) => {
             if (!value) {
                 result.resolve(false);
             } else {
@@ -72,7 +71,7 @@ class AuthManager {
                 settings.saveSettings();
                 app.processing(false);
                 if (value.Status === "Ok") {
-                    self.authenticate(value.Login, value.Password, true).then(function (value) {
+                    this.authenticate(value.Login, value.Password, true).then(function (value) {
                         result.resolve(value);
                     });
                 } else {
@@ -86,5 +85,5 @@ class AuthManager {
     }
 }
 
-var authManager: AuthManager = new AuthManager();
+const authManager: AuthManager = new AuthManager();
 export = authManager;

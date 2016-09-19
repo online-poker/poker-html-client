@@ -169,7 +169,7 @@ export class ActionBlock {
     public testMode = ko.observable(false);
 
     constructor() {
-        var self = this;
+        const self = this;
         this.tableSlider = new TableSlider();
         this.dealsAllowed = ko.observable(false);
         this.buttonsEnabled = ko.observable(false);
@@ -223,23 +223,23 @@ export class ActionBlock {
         this.suppressSetSitoutStatus = false;
         this.suppressActions = false;
 
-        this.couldRaise = ko.computed(function () {
-            var amountLess = self.checkOrCallAmount() < self.playerMoney();
+        this.couldRaise = ko.computed(() => {
+            const amountLess = this.checkOrCallAmount() < this.playerMoney();
             if (!amountLess) {
                 return false;
             }
 
-            var maxAmountOfMoneyForOtherActivePlayers = self.maxAmountOfMoneyForOtherActivePlayers();
-            var otherPlayersHasMoneyToSupport = self.maxAmountOfMoneyForOtherActivePlayers() > self.callAmount();
+            const maxAmountOfMoneyForOtherActivePlayers = this.maxAmountOfMoneyForOtherActivePlayers();
+            const otherPlayersHasMoneyToSupport = this.maxAmountOfMoneyForOtherActivePlayers() > this.callAmount();
             return otherPlayersHasMoneyToSupport;
         });
-        this.checkCallButtonCaption = ko.computed(function () {
-            var currentAmount = self.checkOrCallAmount();
+        this.checkCallButtonCaption = ko.computed(() => {
+            let currentAmount = self.checkOrCallAmount();
             currentAmount = currentAmount == null ? 0 : currentAmount;
-            var playerMoney = self.playerMoney();
+            let playerMoney = self.playerMoney();
             playerMoney = playerMoney == null ? 0 : playerMoney;
             if (playerMoney <= currentAmount) {
-                var myself = self.myPlayer();
+                const myself = self.myPlayer();
                 if (myself != null) {
                     return _("table.allin").replace("#amount", (myself.Bet() + playerMoney).toString());
                 }
@@ -254,17 +254,17 @@ export class ActionBlock {
             }
         });
         this.raiseBetButtonCaption = ko.computed(function () {
-            var currentAmount = self.tableSlider.current();
+            let currentAmount = self.tableSlider.current();
             currentAmount = currentAmount == null ? 0 : currentAmount;
-            var player = self.myPlayer();
-            var playerMoney = self.playerMoney();
+            const player = self.myPlayer();
+            let playerMoney = self.playerMoney();
             if (player != null) {
                 playerMoney += player.Bet();
             }
 
             playerMoney = playerMoney == null ? 0 : playerMoney;
             if (playerMoney <= currentAmount) {
-                var myself = self.myPlayer();
+                const myself = self.myPlayer();
                 if (myself != null) {
                     return _("table.allin").replace("#amount", (playerMoney).toString());
                 }
@@ -359,8 +359,8 @@ export class ActionBlock {
             this.sitoutBlockVisible.subscribe(function (visbile) {
                 self.log("Sit out block " + (visbile ? "visible" : "hidden"));
             });
-            this.autoButtonsBlockVisible.subscribe(function (visbile) {
-                self.log("Auto Buttons block " + (visbile ? "visible" : "hidden"));
+            this.autoButtonsBlockVisible.subscribe((visbile) => {
+                this.log("Auto Buttons block " + (visbile ? "visible" : "hidden"));
             });
         }
     }
@@ -369,7 +369,6 @@ export class ActionBlock {
             throw new Error("Table view already attached to the action block");
         }
 
-        var self = this;
         this.tableView = tableView;
         if (tableView.model != null) {
             this.tableSlider.setStep(tableView.model.BigBlind);
@@ -378,102 +377,102 @@ export class ActionBlock {
             });
         }
 
-        this.tableView.turnEnabled.subscribe(function (value) {
-            self.turnEnabled(value);
+        this.tableView.turnEnabled.subscribe((value) => {
+            this.turnEnabled(value);
         });
 
-        this.tableView.isSitOut.subscribe(function (value) {
-            if (value !== self.isSitOut()) {
-                self.suppressSetSitoutStatus = true;
-                self.isSitOut(value);
-                self.skipDeals(value);
-                self.suppressSetSitoutStatus = false;
+        this.tableView.isSitOut.subscribe((value) => {
+            if (value !== this.isSitOut()) {
+                this.suppressSetSitoutStatus = true;
+                this.isSitOut(value);
+                this.skipDeals(value);
+                this.suppressSetSitoutStatus = false;
             }
         });
 
-        this.tableView.myPlayer.subscribe(function (value) {
-            self.myPlayer(value);
+        this.tableView.myPlayer.subscribe((value) => {
+            this.myPlayer(value);
             if (value == null) {
-                self.inGame(false);
+                this.inGame(false);
             } else {
-                self.inGame(true);
+                this.inGame(true);
             }
         });
-        this.tableView.minimumRaiseAmount.subscribe(function (value) {
-            self.tableSlider.minimum(value);
-            var myself = self.tableView.myPlayer();
+        this.tableView.minimumRaiseAmount.subscribe((value) => {
+            this.tableSlider.minimum(value);
+            const myself = this.tableView.myPlayer();
             if (myself != null) {
-                self.playerMoney(myself.Money());
+                this.playerMoney(myself.Money());
             }
         });
-        this.tableView.messages.subscribe(function (value) {
-            self.messages(value);
+        this.tableView.messages.subscribe((value) => {
+            this.messages(value);
         });
-        this.tableView.myPlayerInGame.subscribe(function (value) {
-            self.myPlayerInGame(value);
+        this.tableView.myPlayerInGame.subscribe((value) => {
+            this.myPlayerInGame(value);
         });
-        this.tableView.myPlayerWasInGame.subscribe(function (value) {
-            self.myPlayerWasInGame(value);
+        this.tableView.myPlayerWasInGame.subscribe((value) => {
+            this.myPlayerWasInGame(value);
         });
-        this.tableView.gameFinished.subscribe(function (value) {
-            self.gameFinished(value);
+        this.tableView.gameFinished.subscribe((value) => {
+            this.gameFinished(value);
         });
-        this.tableView.prizesDistributed.subscribe(function (value) {
-            self.prizesDistributed(value);
+        this.tableView.prizesDistributed.subscribe((value) => {
+            this.prizesDistributed(value);
         });
-        this.tableView.notMyTurn.subscribe(function (value) {
-            self.notMyTurn(value);
+        this.tableView.notMyTurn.subscribe((value) => {
+            this.notMyTurn(value);
         });
-        this.tableView.isInGame.subscribe(function (value) {
-            self.isInGame(value);
+        this.tableView.isInGame.subscribe((value) => {
+            this.isInGame(value);
         });
-        this.tableView.maximumRaiseAmount.subscribe(function (value) {
-            var myself = self.tableView.myPlayer();
+        this.tableView.maximumRaiseAmount.subscribe((value) => {
+            const myself = this.tableView.myPlayer();
             if (myself != null) {
-                self.tableSlider.maximum(value + myself.Bet());
+                this.tableSlider.maximum(value + myself.Bet());
             }
         });
-        this.tableView.checkOrCallAmount.subscribe(function (value) {
-            self.isCheck(value === 0);
-            self.checkOrCallAmount(value);
+        this.tableView.checkOrCallAmount.subscribe((value) => {
+            this.isCheck(value === 0);
+            this.checkOrCallAmount(value);
         });
-        this.tableView.maximumBet.subscribe(function (value) {
-            self.callAmount(value);
+        this.tableView.maximumBet.subscribe((value) => {
+            this.callAmount(value);
         });
-        this.tableView.maxAmountOfMoneyForOtherActivePlayers.subscribe(function (value) {
-            self.maxAmountOfMoneyForOtherActivePlayers(value);
+        this.tableView.maxAmountOfMoneyForOtherActivePlayers.subscribe((value) => {
+            this.maxAmountOfMoneyForOtherActivePlayers(value);
         });
 
-        this.waitbb.subscribe(function (value) {
-            if (self.suppressWaitBBNotifications) {
+        this.waitbb.subscribe((value) => {
+            if (this.suppressWaitBBNotifications) {
                 return;
             }
 
-            var gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+            const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
             if (value) {
-                gameApi.WaitBigBlind(self.tableView.tableId);
+                gameApi.WaitBigBlind(this.tableView.tableId);
             } else {
-                gameApi.ForceJoinGame(self.tableView.tableId);
+                gameApi.ForceJoinGame(this.tableView.tableId);
             }
         });
 
-        this.autoFoldOrCheck.subscribe(function (value) {
-            self.expanded(false);
+        this.autoFoldOrCheck.subscribe((value) => {
+            this.expanded(false);
         });
 
-        this.skipDeals.subscribe(function (value) {
-            if (self.suppressSetSitoutStatus) {
+        this.skipDeals.subscribe((value) => {
+            if (this.suppressSetSitoutStatus) {
                 return;
             }
 
-            var gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+            const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
             if (value) {
-                gameApi.SitOut(self.tableView.tableId);
+                gameApi.SitOut(this.tableView.tableId);
             } else {
-                gameApi.ComeBack(self.tableView.tableId);
+                gameApi.ComeBack(this.tableView.tableId);
             }
 
-            self.expanded(false);
+            this.expanded(false);
         });
     }
     resetWaitBB() {
@@ -507,7 +506,6 @@ export class ActionBlock {
         app.showPopup("tableChat");
     }
     comeBack() {
-        var self = this;
         if (this.tableView.myPlayer().Money() === 0) {
             if (this.tableView.tournament() != null) {
                 this.tableView.proposeRebuyOrAddon();
@@ -515,9 +513,9 @@ export class ActionBlock {
             }
 
             app.addMoneyPopup.tableView(this.tableView);
-            app.showPopup("addMoney").done(function (results: PopupResult) {
+            app.showPopup("addMoney").done((results: PopupResult) => {
                 if (results.result === "ok") {
-                    self.comeBackCore();
+                    this.comeBackCore();
                 }
             });
         } else {
@@ -525,23 +523,22 @@ export class ActionBlock {
         }
     }
     comeBackCore() {
-        var self = this;
         if (this.processing()) {
             return;
         }
 
         this.processing(true);
-        this.tableView.comeBack().fail(function () {
-            self.processing(false);
+        this.tableView.comeBack().fail(() => {
+            this.processing(false);
         });
     }
     updateBounds() {
         if ($(".slider-line").length > 0) {
-            var lineWidth = $(".slider-line").width();
-            var handleWidth = $(".slider-handle").width();
-            var adj = -5;
-            var translator = (pageX) => {
-                var startOffset = $(".slider-line").offset().left;
+            const lineWidth = $(".slider-line").width();
+            const handleWidth = $(".slider-handle").width();
+            const adj = -5;
+            const translator = (pageX) => {
+                const startOffset = $(".slider-line").offset().left;
                 return pageX - startOffset + adj;
             };
             // -5 is base adjustment from one size; width - 5(base adj.) - 10(?)
@@ -621,7 +618,7 @@ export class ActionBlock {
     */
     checkOrFold() {
         if (this.foldOnRaise()) {
-            var requiredBet = this.tableView.maximumBet() - this.tableView.myBet();
+            const requiredBet = this.tableView.maximumBet() - this.tableView.myBet();
             if (requiredBet === 0) {
                 this.checkOrCall();
             } else {
@@ -640,7 +637,7 @@ export class ActionBlock {
             if (playerMoney <= requiredBet) {
                 this.supportDirectAmountCaption("Олл-ин #amount".replace("#amount", playerMoney.toFixed()));
             } else {
-				var callAmount = (this.tableView.maximumBet() - this.tableView.myBet()).toFixed();
+                const callAmount = (this.tableView.maximumBet() - this.tableView.myBet()).toFixed();
                 this.supportDirectAmountCaption("Колл #amount".replace("#amount", callAmount));
             }
         }
@@ -665,17 +662,17 @@ export class ActionBlock {
         }
     }
     updateSupportDirectAmountStatus(requiredBet: number) {
-        var isDirectAmountSupported = (requiredBet === this.amountSupported());
+        const isDirectAmountSupported = (requiredBet === this.amountSupported());
         this.supportDirectAmount(isDirectAmountSupported);
         if (!isDirectAmountSupported) {
             this.amountSupported(-1);
         }
     }
     updateAdditionalButtons() {
-        var threebbAmountOriginal = this.callAmount() + (3 * this.tableView.model.BigBlind);
-        var threebbAmount = this.tableSlider.withinRange(threebbAmountOriginal);
+        const threebbAmountOriginal = this.callAmount() + (3 * this.tableView.model.BigBlind);
+        const threebbAmount = this.tableSlider.withinRange(threebbAmountOriginal);
 
-        var potAmountOriginal = this.tableView.pots().reduce(function (pv, v) {
+        let potAmountOriginal = this.tableView.pots().reduce(function (pv, v) {
             return pv + v;
         }, 0) + this.checkOrCallAmount();
         potAmountOriginal += this.tableView.places().reduce(function (pv: number, v: TablePlaceModel) {
@@ -686,9 +683,9 @@ export class ActionBlock {
             return pv + v.Bet();
         }, 0);
         potAmountOriginal = 2 * potAmountOriginal;
-        var potAmount = this.tableSlider.withinRange(potAmountOriginal);
+        const potAmount = this.tableSlider.withinRange(potAmountOriginal);
 
-        var maxMoneyAmount = this.tableSlider.maximum();
+        const maxMoneyAmount = this.tableSlider.maximum();
 
         this.button1Amount(threebbAmount);
         this.button2Amount(potAmount);
@@ -696,8 +693,8 @@ export class ActionBlock {
 
         this.button1Caption(_("table.halfpot").replace("#amount", this.button1Amount().toFixed()));
         this.button2Caption(_("table.pot").replace("#amount", this.button2Amount().toFixed()));
-        var player = this.myPlayer();
-        var playerMoney = this.playerMoney();
+        const player = this.myPlayer();
+        let playerMoney = this.playerMoney();
         if (player != null) {
             playerMoney += player.Bet();
         }
@@ -716,7 +713,7 @@ export class ActionBlock {
     * Updates block visibility.
     */
     updateBlocks() {
-        var waitBBBlockVisible = this.getWaitBBBlockVisible();
+        const waitBBBlockVisible = this.getWaitBBBlockVisible();
         this.waitBigBlindBlockVisible(waitBBBlockVisible);
     }
     /**
@@ -767,14 +764,14 @@ export class ActionBlock {
         this.expanded(false);
     }
     updateNeedBB() {
-        var currentPlayer = this.tableView.myPlayer();
-        var hasPlayer = currentPlayer != null;
+        const currentPlayer = this.tableView.myPlayer();
+        const hasPlayer = currentPlayer != null;
         if (!hasPlayer) {
             this.needBB(false);
             return;
         }
 
-        var tableIsBig = this.tableView.places().filter(item => item != null).length > 3;
+        const tableIsBig = this.tableView.places().filter(item => item != null).length > 3;
         this.needBB(tableIsBig && !currentPlayer.IsParticipatingStatus());
     }
     private getWaitBBBlockVisible() {
@@ -790,7 +787,7 @@ export class ActionBlock {
             return false;
         }
 
-        var waitBBHidden = this.isInGame() || this.myPlayerWasInGame();
+        const waitBBHidden = this.isInGame() || this.myPlayerWasInGame();
         return !waitBBHidden;
     }
     private log(message: string, ...params: any[]) {

@@ -40,10 +40,10 @@ export class HandHistory extends TableMonitor {
         this.id = gameId;
         this.detailedOperations.push(_("handhistory.gamesstarted", { gameId: gameId }));
         this.players = [];
-        for (var i = 0; i < players.length; i++) {
-            var playerId = players[i].PlayerId;
-            var tablePlayerInfo = this.tableView.places().filter(_ => _.PlayerId() === playerId);
-            var playerName;
+        for (let i = 0; i < players.length; i++) {
+            const playerId = players[i].PlayerId;
+            const tablePlayerInfo = this.tableView.places().filter(_ => _.PlayerId() === playerId);
+            let playerName;
             if (tablePlayerInfo.length === 0) {
                 playerName = playerId.toString();
             } else {
@@ -54,15 +54,15 @@ export class HandHistory extends TableMonitor {
         }
     }
     onGameFinished(gameId: number, winners: GameWinnerModel[], rake: number) {
-        for (var potNumber = 1; potNumber <= winners.length; potNumber++) {
-            var potWinners = winners.filter(_ => _.Pot === potNumber);
+        for (let potNumber = 1; potNumber <= winners.length; potNumber++) {
+            const potWinners = winners.filter(_ => _.Pot === potNumber);
             if (potWinners.length === 0) {
                 break;
             }
 
             this.detailedOperations.push(_("handhistory.potInfo", { pot: potNumber }));
-            for (var i = 0; i < potWinners.length; i++) {
-                var pw = potWinners[i];
+            for (let i = 0; i < potWinners.length; i++) {
+                const pw = potWinners[i];
                 this.detailedOperations.push(_("handhistory.playerWin", { player: this.getPlayer(pw.PlayerId), amount: pw.Amount }));
             }
         }
@@ -73,26 +73,26 @@ export class HandHistory extends TableMonitor {
 
         this.detailedOperations.push(_("handhistory.gameFinished", { gameId: gameId }));
 
-        var winnersList = <PlayerWinInformation[]>[];
-        for (var pid in this.players) {
-			if (!this.players.hasOwnProperty(pid)) {
-				continue;
-			}
+        let winnersList = <PlayerWinInformation[]>[];
+        for (let pid in this.players) {
+            if (!this.players.hasOwnProperty(pid)) {
+                continue;
+            }
 
-            var playerId = parseInt(pid, 10)
-            var playerName = this.players[pid];
-            var winAmount = winners.reduce<number>(function (prev, item) {
+            const playerId = parseInt(pid, 10)
+            const playerName = this.players[pid];
+            const winAmount = winners.reduce<number>(function (prev, item) {
                 if (item.PlayerId !== playerId) {
                     return prev;
                 }
 
                 return prev + item.Amount;
             }, 0);
-            var combination = _("handhistory.cardsWasFolded");
-            var currentPlayer = this.tableView.places().filter((item) => {
+            let combination = _("handhistory.cardsWasFolded");
+            const currentPlayer = this.tableView.places().filter((item) => {
                 return item.PlayerId() === playerId;
             });
-			var cards: string[];
+            let cards: string[];
             if (currentPlayer.length === 0) {
                 cards = ["cards back", "cards back"];
             } else {
@@ -103,9 +103,9 @@ export class HandHistory extends TableMonitor {
                         cards = ["cards back", "cards back"];
                     }
                 } else {
-                    var rawCards = currentPlayer[0].RawCards();
+                    const rawCards = currentPlayer[0].RawCards();
                     if (rawCards !== null && rawCards !== undefined && rawCards[0] < 100) {
-                        var combinationText = currentPlayer[0].getCombination(this.rawCards);
+                        const combinationText = currentPlayer[0].getCombination(this.rawCards);
                         if (combinationText != null) {
                             combination = _("handhistory.hasFollowingCombination", { combination: combinationText });
                         } else {
@@ -117,7 +117,7 @@ export class HandHistory extends TableMonitor {
                 }
             }
 
-			var description: string;
+            let description: string;
             if (winAmount > 0) {
                 description = "Игрок " + playerName + " выиграл " + winAmount + " " + combination;
             } else {
@@ -149,7 +149,7 @@ export class HandHistory extends TableMonitor {
         this.playersData(winnersList);
     }
     onBet(playerId: number, type: number, amount: number, nextPlayerId: number) {
-		var operation: string;
+        let operation: string;
         if (type === 0) {
             operation = _("handhistory.blind", { player: this.getPlayer(playerId), amount: amount });
             this.detailedOperations.push(operation);
@@ -169,16 +169,16 @@ export class HandHistory extends TableMonitor {
         }
     }
     onPlayerCards(playerId: number, cards: number[]) {
-        var c1 = this.getCard(cards[0]);
-        var c2 = this.getCard(cards[1]);
-        var operation = _("handhistory.playerCardsOpened", { player: this.getPlayer(playerId), card1: c1, card2: c2 });
+        const c1 = this.getCard(cards[0]);
+        const c2 = this.getCard(cards[1]);
+        const operation = _("handhistory.playerCardsOpened", { player: this.getPlayer(playerId), card1: c1, card2: c2 });
         this.detailedOperations.push(operation);
         this.shortOperations.push(operation);
     }
     onPlayerHoleCards(playerId: number, cards: number[]) {
-        var c1 = this.getCard(cards[0]);
-        var c2 = this.getCard(cards[1]);
-        var operation = _("handhistory.playerHoleOpened", { player: this.getPlayer(playerId), card1: c1, card2: c2 });
+        const c1 = this.getCard(cards[0]);
+        const c2 = this.getCard(cards[1]);
+        const operation = _("handhistory.playerHoleOpened", { player: this.getPlayer(playerId), card1: c1, card2: c2 });
         this.detailedOperations.push(operation);
         this.shortOperations.push(operation);
     }
@@ -187,10 +187,10 @@ export class HandHistory extends TableMonitor {
         this.cards(cards.map(item => cardValue(item)));
     }
     onFlop(card1: number, card2: number, card3: number) {
-        var c1 = this.getCard(card1);
-        var c2 = this.getCard(card2);
-        var c3 = this.getCard(card3);
-        var operation = _("handhistory.flop");
+        const c1 = this.getCard(card1);
+        const c2 = this.getCard(card2);
+        const c3 = this.getCard(card3);
+        let operation = _("handhistory.flop");
         this.detailedOperations.push(operation);
         this.shortOperations.push(operation);
         operation = _("handhistory.flopOpenCards", { card1: c1, card2: c2, card3: c3 });
@@ -198,8 +198,8 @@ export class HandHistory extends TableMonitor {
         this.shortOperations.push(operation);
     }
     onTurn(card4: number) {
-        var c4 = this.getCard(card4);
-        var operation = _("handhistory.turn");
+        const c4 = this.getCard(card4);
+        let operation = _("handhistory.turn");
         this.detailedOperations.push(operation);
         this.shortOperations.push(operation);
         operation = _("handhistory.turnOpenCards", { card4: c4 });
@@ -207,8 +207,8 @@ export class HandHistory extends TableMonitor {
         this.shortOperations.push(operation);
     }
     onRiver(card5: number) {
-        var c5 = this.getCard(card5);
-        var operation = _("handhistory.river");
+        const c5 = this.getCard(card5);
+        let operation = _("handhistory.river");
         this.detailedOperations.push(operation);
         this.shortOperations.push(operation);
         operation = _("handhistory.riverOpenCards", { card5: c5 });
@@ -219,40 +219,40 @@ export class HandHistory extends TableMonitor {
         this.detailedOperations.push(_("handhistory.potscollection"));
     }
     onPlayerStatus(playerId: number, status: number) {
-		// Do nothing.
+        // Do nothing.
     }
     onReturnMoney(playerId: number, amount: number) {
-        var operation = _("handhistory.returnMoney", { player: this.getPlayer(playerId), amount: amount });
+        const operation = _("handhistory.returnMoney", { player: this.getPlayer(playerId), amount: amount });
         this.detailedOperations.push(operation);
         this.shortOperations.push(operation);
     }
     onFold(playerId: number) {
-        var operation = _("handhistory.fold", { player: this.getPlayer(playerId) });
+        const operation = _("handhistory.fold", { player: this.getPlayer(playerId) });
         this.detailedOperations.push(operation);
         this.shortOperations.push(operation);
     }
     onAllIn(playerId: number, amount: number) {
-        var operation = _("handhistory.allin", { player: this.getPlayer(playerId), amount: amount });
+        const operation = _("handhistory.allin", { player: this.getPlayer(playerId), amount: amount });
         this.detailedOperations.push(operation);
         this.shortOperations.push(operation);
     }
     onCheck(playerId: number, amount: number) {
-        var operation = _("handhistory.check", { player: this.getPlayer(playerId), amount: amount });
+        const operation = _("handhistory.check", { player: this.getPlayer(playerId), amount: amount });
         this.detailedOperations.push(operation);
         this.shortOperations.push(operation);
     }
     onCall(playerId: number, amount: number) {
-        var operation = _("handhistory.call", { player: this.getPlayer(playerId), amount: amount });
+        const operation = _("handhistory.call", { player: this.getPlayer(playerId), amount: amount });
         this.detailedOperations.push(operation);
         this.shortOperations.push(operation);
     }
     onBet2(playerId: number, amount: number) {
-        var operation = _("handhistory.bet", { player: this.getPlayer(playerId), amount: amount });
+        const operation = _("handhistory.bet", { player: this.getPlayer(playerId), amount: amount });
         this.detailedOperations.push(operation);
         this.shortOperations.push(operation);
     }
     onRaise(playerId: number, amount: number) {
-        var operation = _("handhistory.raise", { player: this.getPlayer(playerId), amount: amount });
+        const operation = _("handhistory.raise", { player: this.getPlayer(playerId), amount: amount });
         this.detailedOperations.push(operation);
         this.shortOperations.push(operation);
     }
@@ -266,10 +266,10 @@ export class HandHistory extends TableMonitor {
         return this.players[playerId];
     }
     private getCard(card: number) {
-        var cardValueCode = (card % 13) + 2;
-        var cardSuiteCode = Math.floor(card / 13);
-        var cardValue = "";
-        var cardSuite = "";
+        const cardValueCode = (card % 13) + 2;
+        const cardSuiteCode = Math.floor(card / 13);
+        let cardValue = "";
+        let cardSuite = "";
         switch (cardSuiteCode) {
             case 0:
                 cardSuite = _("handhistory.suitClubs");

@@ -22,29 +22,28 @@ export class SlowInternetService {
         this.suppressReconnected = false;
     }
     initialize() {
-        var self = this;
-        connectionService.reconnecting.add(() => self.onConnectionSlow());
-        connectionService.reconnected.add(() => self.onReconnected());
-        connectionService.received.add(() => self.onReceived());
-        connectionService.disconnected.add(() => self.onDisconnected());
-        document.addEventListener("online", () => self.onOnline(), false);
-        document.addEventListener("offline", () => self.onOffline(), false);
+        connectionService.reconnecting.add(() => this.onConnectionSlow());
+        connectionService.reconnected.add(() => this.onReconnected());
+        connectionService.received.add(() => this.onReceived());
+        connectionService.disconnected.add(() => this.onDisconnected());
+        document.addEventListener("online", () => this.onOnline(), false);
+        document.addEventListener("offline", () => this.onOffline(), false);
         app.slowConnectionPopup.onretry = () => {
-            self.log("Retry connection");
-            self.suppressReconnected = false;
-            self.executeRetryHandler();
+            this.log("Retry connection");
+            this.suppressReconnected = false;
+            this.executeRetryHandler();
 
-            var connectionBuilder = connectionService.buildStartConnection();
+            const connectionBuilder = connectionService.buildStartConnection();
             if (connectionBuilder === null) {
                 setTimeout(() => {
-                    self.onDisconnected();
+                    this.onDisconnected();
                 }, 3000);
             } else {
-                connectionBuilder().pipe(function () {
-                    self.onReconnected();
-                }, function () {
-                        self.onDisconnected();
-                    });
+                connectionBuilder().pipe(() => {
+                    this.onReconnected();
+                }, () => {
+                    this.onDisconnected();
+                });
             }
         };
 
