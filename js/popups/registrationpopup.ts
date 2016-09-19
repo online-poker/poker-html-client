@@ -101,8 +101,8 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
 
         navigator.camera.getPicture(captureSuccess, captureError, {
             quality: 75,
-            sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
-            destinationType: navigator.camera.DestinationType.DATA_URL
+            sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+            destinationType: Camera.DestinationType.DATA_URL
         });
     }
     confirm() {

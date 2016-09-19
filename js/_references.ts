@@ -1,7 +1,6 @@
 ﻿/// <reference path="../Scripts/typings/requirejs/require.d.ts" />
 /// <reference types="knockout" />
 /// <reference path="../Scripts/typings/knockout.validation/knockout.validation.d.ts" />
-/// <reference path="../Scripts/typings/phonegap/phonegap.d.ts" />
 /// <reference types="jquery" />
 /// <reference types="moment" />
 /// <reference path="../Scripts/typings/signalr/signalr.d.ts" />

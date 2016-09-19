@@ -136,11 +136,11 @@ export class SeatPage extends PageBase {
         this.slideWidth(viewportLandscapeWidth);
     }
     recordConnection() {
-        this.lastConnecton = Connection.type;
+        this.lastConnecton = navigator.connection.type;
     }
     setConnecting() {
-        if (this.lastConnecton !== Connection.type) {
-            this.lastConnecton = Connection.type;
+        if (this.lastConnecton !== navigator.connection.type) {
+            this.lastConnecton = navigator.connection.type;
             tableManager.tables().forEach((table) => table.connecting(true));
         }
     }

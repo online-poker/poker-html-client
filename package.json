@@ -23,10 +23,18 @@
   },
   "homepage": "https://github.com/online-poker/poker-html-client#readme",
   "devDependencies": {
+    "@types/cordova": "0.0.33",
+    "@types/cordova-plugin-camera": "0.0.2",
+    "@types/cordova-plugin-device": "0.0.2",
+    "@types/cordova-plugin-keyboard": "^0.1.2",
+    "@types/cordova-plugin-media": "0.0.2",
+    "@types/cordova-plugin-network-information": "0.0.2",
+    "@types/cordova-plugin-splashscreen": "0.0.2",
+    "@types/cordova-plugin-statusbar": "0.0.2",
     "@types/jquery": "^1.10.31",
     "@types/knockout": "^3.4.33",
     "@types/moment": "^2.13.0",
     "poker-server-api": "0.0.2",
-    "typescript": "^2.0.0"
+    "typescript": "^2.0.2"
   }
 }

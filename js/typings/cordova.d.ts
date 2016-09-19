@@ -1,4 +1,6 @@
-﻿/// <reference path="../../Scripts/typings/phonegap/phonegap.d.ts" />
+﻿interface Device {
+    available: boolean;
+}
 
 interface Window {
     device: Device;
