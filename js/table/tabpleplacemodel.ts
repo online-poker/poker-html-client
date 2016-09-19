@@ -1,12 +1,8 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="tableplayer.ts" />
-/// <reference path="cardsHelper.ts" />
-/// <reference path="hand.ts" />
-/// <reference path="../timeService.ts" />
-/* tslint:disable:no-bitwise */
+﻿/* tslint:disable:no-bitwise */
 
 import * as ko from "knockout";
 import * as timeService from "../timeService";
+import { _ } from "../languagemanager";
 
 export class TablePlaceModel {
     /**

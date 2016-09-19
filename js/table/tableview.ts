@@ -1,14 +1,3 @@
-/// <reference path="../_references.ts" />
-/// <reference path="../app.ts" />
-/// <reference path="../authmanager.ts" />
-/// <reference path="../commandmanager.ts" />
-/// <reference path="runtimesettings.ts" />
-/// <reference path="gameactionsqueue.ts" />
-/// <reference path="chipitem.ts" />
-/// <reference path="tableCardsPlace.ts" />
-/// <reference path="animationsettings.ts" />
-/// <reference path="cardsHelper.ts" />
-/// <reference path="hand.ts" />
 /* tslint:disable:no-bitwise */
 
 import * as ko from "knockout";
@@ -29,6 +18,9 @@ import { ActionBlock } from "./actionblock";
 import { GameActionsQueue } from "./gameactionsqueue";
 import { debugSettings } from "../debugsettings";
 import { settings } from "../settings";
+import * as runtimeSettings from "./runtimesettings";
+import { TableCardsPlace } from "./tableCardsPlace";
+import { _ } from "../languagemanager";
 
 declare var apiHost: string;
 declare var app: App;

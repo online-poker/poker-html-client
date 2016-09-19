@@ -1,6 +1,6 @@
 ﻿/// <reference path="_references.ts" />
 /* tslint:disable:quotemark */
-var authToken = null;
+declare var authToken: string;
 const beforeSendHandler = function (xhr) {
     xhr.withCredentials = true;
     if (authToken != null) {

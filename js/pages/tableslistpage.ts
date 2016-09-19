@@ -8,6 +8,7 @@ import { PageBase } from "../ui/pagebase";
 import * as tableManager from "../table/tablemanager";
 import { debugSettings } from "../debugsettings";
 import { reloadManager } from "../services";
+import { _ } from "../languagemanager";
 
 declare var apiHost: string;
 declare var app: App;

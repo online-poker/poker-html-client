@@ -1,9 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../commandmanager.ts" />
-/// <reference path="../popups/_allpopups.ts" />
-/// <reference path="runtimesettings.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import * as timeService from "../timeService";
 import * as tableManager from "./tablemanager";
 import * as authManager from "../authmanager";
@@ -14,6 +9,7 @@ import { SimplePopup } from "../popups/simplepopup";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
 import { App } from "../app";
+import { _ } from "../languagemanager";
 
 declare var apiHost: string;
 declare var app: App;

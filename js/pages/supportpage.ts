@@ -3,6 +3,7 @@ import { App } from "../app";
 import { SimplePopup } from "../popups/simplepopup";
 import { PageBase } from "../ui/pagebase";
 import { keyboardActivationService } from "../services";
+import { _ } from "../languagemanager";
 
 declare var apiHost: string;
 declare var app: App;

@@ -12,6 +12,7 @@ import { TournamentOptions } from "./lobbypage";
 import { PageBase } from "../ui/pagebase";
 import { debugSettings } from "../debugsettings";
 import { reloadManager } from "../services";
+import { _ } from "../languagemanager";
 
 declare var app: App;
 

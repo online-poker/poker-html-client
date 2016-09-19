@@ -7,6 +7,8 @@ declare var apiHost: string;
 import * as ko from "knockout";
 import * as timeService from "../timeService";
 import { PopupBase } from "../ui/popupbase";
+import * as runtimeSettings from "../table/runtimesettings";
+import { _ } from "../languagemanager";
 
 export class SlowConnectionPopup extends PopupBase implements KnockoutValidationGroup {
     allowRetry: KnockoutObservable<boolean>;

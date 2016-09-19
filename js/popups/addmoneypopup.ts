@@ -9,6 +9,7 @@ import * as ko from "knockout";
 import { SimplePopup } from "../popups/simplepopup";
 import { PopupBase } from "../ui/popupbase";
 import { TableView } from "../table/tableview";
+import { _ } from "../languagemanager";
 import { App } from "../app";
 
 declare var app: App;

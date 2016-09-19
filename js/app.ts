@@ -1,29 +1,3 @@
-/// <reference types="jquery" />
-/// <reference path="debugsettings.ts" />
-/// <reference path="appconfig.ts" />
-/// <reference path="pages/homepage.ts" />
-/// <reference path="pages/settingspage.ts" />
-/// <reference path="pages/lobbypageblock.ts" />
-/// <reference path="pages/cashierpageblock.ts" />
-/// <reference path="pages/tablespage.ts" />
-/// <reference path="pages/infopageblock.ts" />
-/// <reference path="pages/otherpageblock.ts" />
-/// <reference path="tabbar.ts" />
-/// <reference path="metadatamanager.ts" />
-/// <reference path="languagemanager.ts" />
-/// <reference path="table/tablemanager.ts" />
-/// <reference path="selector.ts" />
-/// <reference path="popups/_allpopups.ts" />
-
-/// <reference path="services/_allservices.ts" />
-
-/// <reference path="popups/morepopup.ts" />
-/// <reference path="commandmanager.ts" />
-/// <reference path="platform.d.ts" />
-/// <reference path="typings/cordova.d.ts" />
-/// <reference path="typings/spin.d.ts" />
-/// <reference path="typings/signalr.d.ts" />
-
 import * as timeService from "./timeService";
 import * as metadataManager from "./metadatamanager";
 import { SimplePopup } from "./popups/simplepopup";
@@ -31,6 +5,7 @@ import * as authManager from "./authManager";
 import { settings } from "./settings";
 import * as broadcastService from "./services/broadcastservice";
 import * as commandManager from "./commandManager";
+import { _ } from "./languagemanager";
 import {
     slowInternetService,
     keyboardActivationService,
@@ -40,7 +15,8 @@ import {
     reloadManager,
     soundManager,
     orientationService,
-    pushService
+    pushService,
+    websiteService
 } from "./services";
 import * as tableManager from "./table/tablemanager";
 import {
@@ -74,6 +50,7 @@ import {
 import { uiManager, UIManager } from "./services/uimanager";
 import { TabBar } from "./tabbar";
 import { debugSettings } from "./debugsettings";
+import * as runtimeSettings from "./table/runtimesettings";
 
 export class App {
     currentPopup: string = null;
@@ -558,7 +535,7 @@ export class App {
                     /* tslint:disable:no-string-literal */
                     ko.bindingHandlers["image"].options.enabled = false;
                     /* tslint:enable:no-string-literal */
-                    runtimeSettings.showNewsAfterLogin = false;
+                    runtimeSettings.setShowNewsAfterLogin(false);
                 }
             }
         }

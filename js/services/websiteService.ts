@@ -1,11 +1,12 @@
 ﻿/// <reference path="../languageManager.ts" />
 
 declare var authToken: any;
+import { l } from "../languagemanager";
 
 /** 
 * Provides integration with the website.
 */
-class WebsiteService {
+export class WebsiteService {
     websiteRoot = "http://www.yourpoker.com/";
 
     /**
@@ -83,5 +84,3 @@ class WebsiteService {
         return this.websiteRoot + "redirect?auth=" + authToken + "&path=/" + l.currentLang + "/";
     }
 }
-
-var websiteService = new WebsiteService();

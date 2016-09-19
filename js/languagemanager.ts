@@ -1,6 +1,6 @@
 declare var messages: any;
 
-class LanguageManager {
+export class LanguageManager {
     currentLang: string;
     constructor() {
         this.currentLang = "ru_RU";
@@ -62,7 +62,7 @@ class LanguageManager {
     }
 }
 
-var l = new LanguageManager();
-function _(message: string, parameters = null) {
+export const l = new LanguageManager();
+export function _(message: string, parameters = null) {
     return l.getMessage(message, parameters);
 }

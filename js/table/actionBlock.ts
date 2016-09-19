@@ -9,6 +9,7 @@ import { TableView } from "./tableView";
 import * as authManager from "../authManager";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
+import { _ } from "../languagemanager";
 
 declare var apiHost: string;
 declare var app: App;

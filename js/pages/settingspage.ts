@@ -2,6 +2,7 @@
 
 import { App } from "../app";
 import * as metadataManager from "../metadatamanager";
+import { _ } from "../languagemanager";
 
 declare var app: App;
 

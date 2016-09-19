@@ -1,6 +1,7 @@
 ﻿/// <reference path="../popups/simplepopup.ts" />
 
 import { SimplePopup } from "../popups/simplepopup";
+import { _ } from "../languagemanager";
 
 /**
 * Manages broadcast services

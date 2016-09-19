@@ -7,6 +7,7 @@ import * as moment from "moment";
 import { App } from "./app";
 import * as timeService from "./timeService";
 import { debugSettings } from "./debugsettings";
+import { _ } from "./languagemanager";
 
 declare var app: App;
 

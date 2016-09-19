@@ -8,6 +8,7 @@ import { PageBase } from "../ui/pagebase";
 import { keyboardActivationService } from "../services";
 import { debugSettings } from "../debugsettings";
 import { settings } from "../settings";
+import { _ } from "../languagemanager";
 
 declare var app: App;
 

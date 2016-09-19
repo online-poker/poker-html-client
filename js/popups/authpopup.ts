@@ -10,6 +10,7 @@ import { PopupBase } from "../ui/popupbase";
 import * as authManager from "../authmanager";
 import { keyboardActivationService } from "../services";
 import { settings } from "../settings";
+import { _ } from "../languagemanager";
 import { App } from "../app";
 
 declare var apiHost: string;

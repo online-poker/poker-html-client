@@ -3,6 +3,7 @@ import { PlayerMessage } from "../table/playerMessage";
 import * as timeService from "../timeService";
 import { connectionService, keyboardActivationService } from "../services";
 import { SimplePopup } from "../popups/simplepopup";
+import { _ } from "../languagemanager";
 import { App } from "../app";
 
 declare var apiHost: string;

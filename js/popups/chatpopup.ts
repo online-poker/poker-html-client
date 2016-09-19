@@ -7,6 +7,7 @@ import { ChatControl } from "../ui/chatcontrol";
 import { PlayerMessage } from "../table/playermessage";
 import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
+import { _ } from "../languagemanager";
 import { App } from "../app";
 
 declare var apiHost: string;

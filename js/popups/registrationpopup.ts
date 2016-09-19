@@ -8,6 +8,7 @@ import { PopupBase } from "../ui/popupbase";
 import * as metadataManager from "../metadatamanager";
 import * as authManager from "../authmanager";
 import { SimplePopup } from "./simplepopup";
+import { _ } from "../languagemanager";
 import { App } from "../app";
 
 declare var apiHost: string;

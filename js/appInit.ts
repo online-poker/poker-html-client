@@ -4,6 +4,7 @@ import { registerBindings } from "./bindings";
 import { registerExtenders } from "./extenders";
 import { updateDefaultMessages } from "./validationConfiguration";
 import { registerComponents } from "./components/registration";
+import { LanguageManager, _ } from "./languagemanager";
 
 declare const host: string;
 
@@ -40,10 +41,13 @@ function bootstrap() {
         return app.shouldRotateToOrientation(interfaceOrientation);
     }
 
+    exposeCardsConstants();
     window["shouldRotateToOrientation"] = shouldRotateToOrientation;
     window["app"] = app;
+    window["authToken"] = null;
     window["apiHost"] = apiHost;
     window["baseUrl"] = baseUrl;
+    window["_"] = _;
     window.onerror = function (message, url, lineNumber, colno, error) {
         console.log("Error: " + message + " in " + url + " at line " + lineNumber);
         if (error != null) {

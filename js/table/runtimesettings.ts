@@ -22,6 +22,11 @@
         */
         dealCardsEnabled: false
     };
+
+    setShowNewsAfterLogin(value: boolean) {
+        this.showNewsAfterLogin = value;
+    }
 }
 
-var runtimeSettings = new RuntimeSettings();
+const runtimeSettings = new RuntimeSettings();
+export = runtimeSettings;

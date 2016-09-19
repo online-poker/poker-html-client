@@ -1,11 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../authmanager.ts" />
-/// <reference path="../app.ts" />
-/// <reference path="../commandmanager.ts" />
-/// <reference path="../services/connectionservice.ts" />
-/// <reference path="../services/broadcastservice.ts" />
-/// <reference path="../services/duplicatefinder.ts" />
-/* tslint:disable:no-bitwise no-use-before-declare */
+﻿/* tslint:disable:no-bitwise no-use-before-declare */
 
 import * as ko from "knockout";
 import * as timeService from "../timeService";
@@ -19,6 +12,7 @@ import * as authManager from "../authManager";
 import { debugSettings } from "../debugsettings";
 import { settings } from "../settings";
 import * as commandManager from "../commandManager";
+import { _ } from "../languagemanager";
 
 declare var apiHost: string;
 

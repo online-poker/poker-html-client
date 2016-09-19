@@ -1,6 +1,7 @@
 ﻿import * as ko from "knockout";
 import * as moment from "moment";
 import { debugSettings } from "./debugsettings";
+import * as runtimeSettings from "./table/runtimesettings";
 
 declare var apiHost: string;
 

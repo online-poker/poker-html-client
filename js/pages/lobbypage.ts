@@ -1,11 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../app.ts" />
-/// <reference path="../ui/pagebase.ts" />
-/// <reference path="../slider.ts" />
-/// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../timeservice.ts" />
-/// <reference path="../metadatamanager.ts" />
-/* tslint:disable:no-bitwise */
+﻿/* tslint:disable:no-bitwise */
 
 declare var apiHost: string;
 
@@ -19,6 +12,7 @@ import { PageBase } from "../ui/pagebase";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
 import { reloadManager } from "../services";
+import { _ } from "../languagemanager";
 
 declare var app: App;
 

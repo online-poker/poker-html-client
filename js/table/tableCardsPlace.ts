@@ -1,6 +1,7 @@
-﻿/// <reference path="../_references.ts" />
+﻿import * as ko from "knockout";
+import * as runtimeSettings from "./runtimesettings";
 
-class TableCardsPlace {
+export class TableCardsPlace {
     public tableCards: KnockoutObservableArray<string>;
     public tableCardsData: KnockoutObservableArray<number>;
     public isFlop: KnockoutObservable<boolean>;

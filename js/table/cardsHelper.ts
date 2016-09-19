@@ -1,5 +1,16 @@
-﻿var allBacks = "/v4=";
-var allNone = "//8=";
+﻿const allBacks = "/v4=";
+const allNone = "//8=";
+
+const allBacksClasses = ["cards back", "cards back"];
+const allNoneClasses = ["cards back", "cards back"];
+
+function exposeCardsConstants() {
+    window["allBacks"] = allBacks;
+    window["allNone"] = allNone;
+    window["allBacksClasses"] = allBacksClasses;
+    window["allNoneClasses"] = allNoneClasses;
+}
+
 function cardValue(card: number) {
     /// <signature>
     ///   <summary>Get card string</summary>
@@ -169,6 +180,3 @@ function cardsArray(cardsData: string): string[] {
 
     return cards;
 }
-
-var allBacksClasses = ["cards back", "cards back"];
-var allNoneClasses = ["cards back", "cards back"];

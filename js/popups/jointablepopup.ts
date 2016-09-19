@@ -7,6 +7,7 @@ declare var apiHost: string;
 import * as ko from "knockout";
 import { TableView } from "../table/tableview";
 import { SimplePopup } from "./simplepopup";
+import { _ } from "../languagemanager";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 

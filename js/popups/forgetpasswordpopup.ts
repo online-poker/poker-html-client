@@ -6,6 +6,7 @@ declare var apiHost: string;
 import * as ko from "knockout";
 import { SimplePopup } from "../popups/simplepopup";
 import { PopupBase } from "../ui/popupbase";
+import { _ } from "../languagemanager";
 
 export class ForgetPasswordPopup extends PopupBase implements KnockoutValidationGroup {
     login: KnockoutObservable<string>;

@@ -1,8 +1,6 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="tablemonitor.ts" />
-
-import { TableView } from "./tableview";
+﻿import { TableView } from "./tableview";
 import { TableMonitor } from "./tablemonitor";
+import { _ } from "../languagemanager";
 
 export interface PlayerWinInformation {
     id: number;

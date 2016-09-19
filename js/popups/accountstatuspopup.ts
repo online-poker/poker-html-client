@@ -8,6 +8,7 @@ import * as ko from "knockout";
 import { PopupBase } from "../ui/popupbase";
 import * as authManager from "../authmanager";
 import { accountService } from "../services";
+import { _ } from "../languagemanager";
 import { App } from "../app";
 
 declare var apiHost: string;
