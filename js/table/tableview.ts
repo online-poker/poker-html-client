@@ -9,6 +9,7 @@ import { TournamentView } from "./tournamentView";
 import { TablePlaces } from "./tableplaces";
 import { HandHistory } from "./handhistory";
 import { PlayerMessage } from "./playerMessage";
+import { SystemMessage } from "./SystemMessage";
 import { slowInternetService, connectionService, soundManager } from "../services";
 import { SlowInternetService } from "../services/slowinternetservice";
 import { ConnectionWrapper } from "../services/connectionwrapper";
@@ -24,15 +25,6 @@ import { _ } from "../languagemanager";
 
 declare var apiHost: string;
 declare var app: App;
-
-class SystemMessage {
-    messageId: number;
-    message: KnockoutObservable<string>;
-    constructor(messageId: number, message: string) {
-        this.messageId = messageId;
-        this.message = ko.observable(message);
-    }
-}
 
 export class TableView {
     public tableName: KnockoutObservable<string>;
@@ -1934,7 +1926,7 @@ export class TableView {
     }
 
     addSystemMessage(messageId: number, message: string) {
-        if (this.lastMessageId >= messageId) {
+        if (this.lastMessageId >= messageId && messageId !== 0) {
             return;
         }
 

@@ -2,6 +2,7 @@
 
 import { ChatControl } from "../ui/chatcontrol";
 import { PlayerMessage } from "../table/playermessage";
+import { SystemMessage } from "../table/SystemMessage";
 import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
 import { _ } from "../languagemanager";
@@ -16,6 +17,7 @@ export class ChatPopup {
     currentMessage: KnockoutObservable<string>;
     loading: KnockoutObservable<boolean>;
     messages: KnockoutObservableArray<PlayerMessage>;
+    systemMessages: KnockoutObservableArray<SystemMessage>;
     private tableView: TableView;
     private subscription: KnockoutSubscription = null;
 
@@ -26,6 +28,7 @@ export class ChatPopup {
         this.caption = ko.observable(_("chat.tableCaption"));
         this.control.initialize();
         this.messages = ko.observableArray<PlayerMessage>([]);
+        this.systemMessages = ko.observableArray<PlayerMessage>([]);
     }
     attach(view: TableView) {
         if (this.subscription !== null) {
@@ -37,6 +40,10 @@ export class ChatPopup {
         this.messages(this.tableView.messages());
         this.subscription = this.tableView.messages.subscribe((value) => {
             this.messages(value);
+        });
+        this.systemMessages(this.tableView.systemMessages());
+        this.subscription = this.tableView.systemMessages.subscribe((value) => {
+            this.systemMessages(value);
         });
     }
     send() {

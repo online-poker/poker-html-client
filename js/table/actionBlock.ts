@@ -34,6 +34,11 @@ export class ActionBlock {
     public messages: KnockoutObservableArray<PlayerMessage>;
 
     /**
+    * Messages from system in the chat
+    */
+    public systemMessages: KnockoutObservableArray<SystemMessage>;
+
+    /**
     * Indicating thether player will support same amount which 
     * he should suport currently to stay in the game.
     */
@@ -198,6 +203,7 @@ export class ActionBlock {
         this.myPlayerInGame = ko.observable(false);
         this.myPlayerWasInGame = ko.observable(false);
         this.messages = ko.observableArray<PlayerMessage>();
+        this.systemMessages = ko.observableArray<SystemMessage>();
         this.needBB = ko.observable<boolean>(false);
         this.gameFinished = ko.observable(true);
         this.prizesDistributed = ko.observable(true);
@@ -410,6 +416,9 @@ export class ActionBlock {
         });
         this.tableView.messages.subscribe((value) => {
             this.messages(value);
+        });
+        this.tableView.systemMessages.subscribe((value) => {
+            this.systemMessages(value);
         });
         this.tableView.myPlayerInGame.subscribe((value) => {
             this.myPlayerInGame(value);
