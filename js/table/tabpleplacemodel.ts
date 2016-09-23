@@ -2,6 +2,7 @@
 
 import * as ko from "knockout";
 import * as timeService from "../timeService";
+import { TableView } from "./tableView";
 import { _ } from "../languagemanager";
 
 export class TablePlaceModel {
@@ -296,6 +297,53 @@ export class TablePlaceModel {
     public finishFoldAnimation() {
         this.Cards(null);
         this.IsFoldCards(false);
+    }
+
+    /**
+     * Help message which indicate which action player should take.
+     * @param tableView Table for which get help message.
+     */
+    public getHelpMessage(tableView: TableView): string {
+        if (tableView.actionBlock.needBB()) {
+            if (this.Money() === 0) {
+                return "Пожалуйста, пополните ваш счёт";
+            }
+
+            return "Подождите пожалуйста, вы начнете игру когда будете сидеть на большом блаинде";
+        }
+
+        if (tableView.actionBlock.mainButtonsBlockVisible()) {
+            return "Пожалуйста сделайте Вашу ставку";
+        }
+
+        if (tableView.actionBlock.autoButtonsBlockVisible()) {
+            return "Желаем удачи";
+        }
+
+        if (tableView.actionBlock.sitoutBlockVisible()) {
+            if (this.Money() === 0) {
+                return "Пожалуйста, пополните ваш счёт";
+            }
+
+            return "Нажмите кнопку Вернуться чтобы продолжить игру";
+        }
+
+        if (this.WinAmount() > 0) {
+            return "Поздравляем, Ваш выигрыш: " + this.WinAmount();
+        }
+
+        if (this.Money() === 0) {
+            return "Пожалуйста, пополните ваш счёт";
+        }
+
+        // When player fold cards.
+        if (this.IsCardsFolded()) {
+            return "Желаем удачи";
+        }
+
+        // This is fallback case for situations in the 
+        // beginning of the game start, pause between move confirmation.
+        return "Желаем удачи";
     }
 
     getCombination(tableCards: number[]) {
