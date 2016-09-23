@@ -74,8 +74,8 @@ export class TableView {
     public lastRaise: KnockoutObservable<number>;
     public timePass: KnockoutObservable<number>;
     /**
-    * Count of actual actions which was performed by the players during the current game
-    */
+     * Count of actual actions which was performed by the players during the current game
+     */
     public actionsCount: KnockoutObservable<number>;
     /**
     * Indicating whether authenticated player is playing in the game
@@ -2017,6 +2017,11 @@ export class TableView {
         this.queue.pushCallback(() => {
             self.actionsCount(0);
             const currentCardsOpened = self.tableCards.tableCards().length;
+            const myPlayer = this.myPlayer();
+            if (myPlayer) {
+                myPlayer.cardsOverlayVisible(true);
+            }
+
             self.tableCards.openCards(cards);
             self.handHistory.onOpenCards(cards);
             if (currentCardsOpened === 0 && cards.length === 3) {
