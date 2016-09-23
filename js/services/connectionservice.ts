@@ -1,7 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../table/tableManager.ts" />
-
-declare var baseUrl: string;
+﻿declare var baseUrl: string;
 
 import { ConnectionWrapper } from "./connectionwrapper";
 import { slowInternetService } from "./index";

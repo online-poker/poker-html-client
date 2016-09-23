@@ -9,8 +9,10 @@
             true,
             "spaces"
         ],
+        "eofline": true,
         "no-duplicate-variable": true,
         "no-eval": true,
+        "no-empty": true,
         "no-internal-module": true,
         "no-trailing-whitespace": true,
         "no-unsafe-finally": true,

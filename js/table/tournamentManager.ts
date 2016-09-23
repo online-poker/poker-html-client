@@ -1,10 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../authmanager.ts" />
-/// <reference path="../app.ts" />
-/// <reference path="../commandmanager.ts" />
-/// <reference path="tableview.ts" />
-
-import { TournamentView } from "./tournamentView";
+﻿import { TournamentView } from "./tournamentView";
 
 class TournamentManager {
     /**

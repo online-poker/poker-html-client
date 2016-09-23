@@ -1,8 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../app.ts" />
-/// <reference path="../ui/pagebase.ts" />
-/// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../authmanager.ts" />
+﻿/// <reference path="../poker.commanding.api.ts" />
 
 import * as ko from "knockout";
 import * as moment from "moment";

@@ -1,5 +1,4 @@
-﻿/// <reference path="_references.ts" />
-/* tslint:disable:quotemark */
+﻿/* tslint:disable:quotemark */
 declare var authToken: string;
 const beforeSendHandler = function (xhr) {
     xhr.withCredentials = true;

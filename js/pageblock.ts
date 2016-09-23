@@ -1,7 +1,4 @@
-﻿/// <reference path="_references.ts" />
-/// <reference path="ui/page.ts" />
-
-class PageBlock {
+﻿class PageBlock {
     static useDoubleView: boolean = false;
     shown: Signal;
     loadPromises: JQueryPromise<void>[];

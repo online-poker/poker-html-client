@@ -1,7 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="connectionservice.ts" />
-
-declare var baseUrl: string;
+﻿declare var baseUrl: string;
 
 import * as timeService from "../timeService";
 import { ConnectionService } from "./connectionservice";
@@ -10,6 +7,7 @@ import { debugSettings } from "../debugsettings";
 
 export class ConnectionWrapper {
     terminated = false;
+    refreshHandle: number = null;
     constructor(public connection: SignalR.Hub.Connection) {
         connection.connectionSlow(() => {
             if (this.terminated) {
@@ -54,7 +52,7 @@ export class ConnectionWrapper {
 
             this.onConnectionStateChanged(state);
         });
-        connection.error(function (error: any) {
+        connection.error((error: any) => {
             if (this.terminated) {
                 return;
             }
@@ -93,6 +91,7 @@ export class ConnectionWrapper {
         this.logEvent("Terminating connection " + connectionInfo);
         slowInternetService.manualDisconnect = true;
         this.connection.stop(false, false);
+        this.cancelRefereshConnection();
         this.terminated = true;
     }
     establishConnection(maxAttempts = 3) {
@@ -193,6 +192,10 @@ export class ConnectionWrapper {
             const hubId = this.connection.id;
             const connectionInfo = "HID:" + hubId;
             this.logEvent("Connected to server! Connection " + connectionInfo);
+            this.refreshHandle = setTimeout(() => {
+                this.terminateConnection();
+                connectionService.recoverableError.dispatch();
+            }, 1000 * 60 * 60);
             result.resolve(this);
         }).fail((message) => {
             this.logEvent("Could not Connect!" + message);
@@ -205,6 +208,13 @@ export class ConnectionWrapper {
             }, 100);
         });
         return result;
+    }
+    private cancelRefereshConnection() {
+        if (this.refreshHandle) {
+            clearTimeout(this.refreshHandle);
+        }
+
+        this.refreshHandle = null;
     }
     private getAndroidVersion(userAgent = null) {
         const ua = userAgent || navigator.userAgent;

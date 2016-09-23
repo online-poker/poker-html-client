@@ -1,9 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../app.ts" />
-/// <reference path="../authmanager.ts" />
-/// <reference path="../settings.ts" />
-/// <reference path="../ui/popupbase.ts" />
+﻿/// <reference path="../poker.commanding.api.ts" />
 
 import * as ko from "knockout";
 import { PopupBase } from "../ui/popupbase";

@@ -29,5 +29,6 @@ export class SettingsPage implements Page {
         this.update();
     }
     update() {
+        // Do nothing.
     }
 }

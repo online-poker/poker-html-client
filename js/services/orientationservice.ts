@@ -1,5 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../typings/cordova.d.ts" />
+﻿/// <reference path="../typings/cordova.d.ts" />
 
 export class OrientationService {
     lastOrientation: string = null;

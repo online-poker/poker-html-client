@@ -1,6 +1,3 @@
-/// <reference path="../_references.ts" />
-/// <reference path="../app.ts" />
-/// <reference path="../ui/pagebase.ts" />
 /// <reference path="../poker.commanding.api.ts" />
 
 import { App } from "../app";

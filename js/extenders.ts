@@ -1,5 +1,3 @@
-/// <reference path="./_references.ts" />
-/// <reference path="./selector.ts" />
 /* tslint:disable:no-string-literal */
 
 import * as ko from "knockout";

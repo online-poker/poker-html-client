@@ -1,5 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="services.d.ts" />
+﻿/// <reference path="services.d.ts" />
 
 export class PushService {
     private hub: WindowsAzure.Messaging.NotificationHubInterface;

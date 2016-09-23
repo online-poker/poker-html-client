@@ -1,6 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-
-import { wait } from "../services/timedeferred";
+﻿import { wait } from "../services/timedeferred";
 
 interface QueueWorker {
     /**

@@ -1,5 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../poker.commanding.api.ts" />
+﻿/// <reference path="../poker.commanding.api.ts" />
 
 declare var apiHost: string;
 

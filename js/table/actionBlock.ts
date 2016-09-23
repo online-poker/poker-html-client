@@ -169,6 +169,8 @@ export class ActionBlock {
     */
     public testMode = ko.observable(false);
 
+    public cardsOverlayVisible = ko.observable(true);
+
     constructor() {
         const self = this;
         this.tableSlider = new TableSlider();

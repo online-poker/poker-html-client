@@ -112,6 +112,8 @@ export class TablePlaceModel {
     */
     LastChatMessageTrimed: KnockoutComputed<string>;
 
+    public cardsOverlayVisible = ko.observable(true);
+
     constructor(data: TablePlayer) {
         this.PlayerId = ko.observable(data.PlayerId);
         this.PlayerName = ko.observable(data.PlayerName);
@@ -233,6 +235,7 @@ export class TablePlaceModel {
         this.IsInGameStatus(true);
         this.Money(money);
         this.WasInGame(true);
+        this.cardsOverlayVisible(true);
     }
     startDealCards() {
         this.Cards(allBacksClasses);

@@ -1,7 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../ui/chatcontrol.ts" />
-/// <reference path="../table/tableview.ts" />
+﻿/// <reference path="../poker.commanding.api.ts" />
 
 import { ChatControl } from "../ui/chatcontrol";
 import { PlayerMessage } from "../table/playermessage";

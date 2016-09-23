@@ -1,6 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-
-import ko = require("knockout");
+﻿import ko = require("knockout");
 
 const trivialViewModelFactory = function (params, componentInfo) {
     return params.data;

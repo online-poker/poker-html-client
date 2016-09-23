@@ -1,2 +1,1 @@
-require(["appInit"], function (appInit) {
-});
+require(["appInit"]);

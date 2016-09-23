@@ -1,6 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-
-interface ChipStack {
+﻿interface ChipStack {
     type: number;
     amount: number;
 }

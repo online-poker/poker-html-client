@@ -1,7 +1,3 @@
-/// <reference path="../_references.ts" />
-/// <reference path="../app.ts" />
-/// <reference path="connectionservice.ts" />
-
 import { connectionService } from "./index";
 import { debugSettings } from "../debugsettings";
 import { App } from "../app";

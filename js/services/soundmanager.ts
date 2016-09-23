@@ -1,5 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../platform.d.ts" />
+﻿/// <reference path="../platform.d.ts" />
 
 import * as ko from "knockout";
 import * as runtimeSettings from "../table/runtimesettings";

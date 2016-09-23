@@ -1,6 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import * as timeService from "../timeService";
 import { TablePlaceModel } from "./tabpleplacemodel";
 

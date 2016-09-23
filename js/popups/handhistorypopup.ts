@@ -1,6 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { TableView } from "../table/tableview";
 import { PlayerWinInformation } from "../table/handhistory";
 import { GameActionsQueue } from "../table/gameactionsqueue";

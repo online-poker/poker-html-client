@@ -1,6 +1,4 @@
-/// <reference path="../_references.ts" />
 /// <reference path="../poker.commanding.api.ts" />
-/// <reference path="../app.ts" />
 /* tslint:disable:no-bitwise */
 
 import { TournamentView } from "../table/tournamentview";

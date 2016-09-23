@@ -1,7 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="tabpleplacemodel.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { TablePlaceModel } from "./tabpleplacemodel";
 
 export class TablePlaces {

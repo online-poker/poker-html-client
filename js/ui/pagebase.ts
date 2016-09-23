@@ -1,6 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="page.ts" />
-/* tslint:disable:no-string-literal */
+﻿/* tslint:disable:no-string-literal */
 
 import { debugSettings } from "../debugsettings";
 

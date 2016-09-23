@@ -1,5 +1,4 @@
-﻿/// <reference path="../_references.ts" />
-/// <reference path="../poker.commanding.api.ts" />
+﻿/// <reference path="../poker.commanding.api.ts" />
 
 import * as ko from "knockout";
 import { App } from "../app";
