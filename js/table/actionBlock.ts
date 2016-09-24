@@ -4,6 +4,7 @@ import * as ko from "knockout";
 import { App } from "../app";
 import { TableSlider } from "./tableSlider";
 import { PlayerMessage } from "./playerMessage";
+import { SystemMessage } from "./SystemMessage";
 import { TablePlaceModel } from "./tabpleplacemodel";
 import { TableView } from "./tableView";
 import * as authManager from "../authManager";

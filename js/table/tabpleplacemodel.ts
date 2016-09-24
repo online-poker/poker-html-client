@@ -304,6 +304,14 @@ export class TablePlaceModel {
      * @param tableView Table for which get help message.
      */
     public getHelpMessage(tableView: TableView): string {
+        if (tableView.actionBlock.sitoutBlockVisible()) {
+            if (this.Money() === 0) {
+                return "Пожалуйста, пополните ваш счёт";
+            }
+
+            return "Нажмите кнопку Вернуться чтобы продолжить игру";
+        }
+
         if (tableView.actionBlock.needBB()) {
             if (this.Money() === 0) {
                 return "Пожалуйста, пополните ваш счёт";
@@ -318,14 +326,6 @@ export class TablePlaceModel {
 
         if (tableView.actionBlock.autoButtonsBlockVisible()) {
             return "Желаем удачи";
-        }
-
-        if (tableView.actionBlock.sitoutBlockVisible()) {
-            if (this.Money() === 0) {
-                return "Пожалуйста, пополните ваш счёт";
-            }
-
-            return "Нажмите кнопку Вернуться чтобы продолжить игру";
         }
 
         if (this.WinAmount() > 0) {
