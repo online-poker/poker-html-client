@@ -36,7 +36,7 @@ export class HandHistory extends TableMonitor {
         this.detailedOperations([]);
         this.playersData([]);
         this.id = gameId;
-        this.detailedOperations.push(_("handhistory.gamesstarted", { gameId: gameId }));
+        this.addDetailedOperation(_("handhistory.gamesstarted", { gameId: gameId }));
         this.players = [];
         for (let i = 0; i < players.length; i++) {
             const playerId = players[i].PlayerId;
@@ -58,18 +58,18 @@ export class HandHistory extends TableMonitor {
                 break;
             }
 
-            this.detailedOperations.push(_("handhistory.potInfo", { pot: potNumber }));
+            this.addDetailedOperation(_("handhistory.potInfo", { pot: potNumber }));
             for (let i = 0; i < potWinners.length; i++) {
                 const pw = potWinners[i];
-                this.detailedOperations.push(_("handhistory.playerWin", { player: this.getPlayer(pw.PlayerId), amount: pw.Amount }));
+                this.addDetailedOperation(_("handhistory.playerWin", { player: this.getPlayer(pw.PlayerId), amount: pw.Amount }));
             }
         }
 
         if (rake > 0) {
-            this.detailedOperations.push(_("handhistory.rake", { amount: rake }));
+            this.addDetailedOperation(_("handhistory.rake", { amount: rake }));
         }
 
-        this.detailedOperations.push(_("handhistory.gameFinished", { gameId: gameId }));
+        this.addDetailedOperation(_("handhistory.gameFinished", { gameId: gameId }));
 
         let winnersList = <PlayerWinInformation[]>[];
         for (let pid in this.players) {
@@ -150,35 +150,30 @@ export class HandHistory extends TableMonitor {
         let operation: string;
         if (type === 0) {
             operation = _("handhistory.blind", { player: this.getPlayer(playerId), amount: amount });
-            this.detailedOperations.push(operation);
-            this.shortOperations.push(operation);
+            this.addShortOperation(operation);
         }
 
         if (type === 1) {
             operation = _("handhistory.ante", { player: this.getPlayer(playerId), amount: amount });
-            this.detailedOperations.push(operation);
-            this.shortOperations.push(operation);
+            this.addShortOperation(operation);
         }
 
         if (type === 5) {
             operation = _("handhistory.deadblind", { player: this.getPlayer(playerId), amount: amount });
-            this.detailedOperations.push(operation);
-            this.shortOperations.push(operation);
+            this.addShortOperation(operation);
         }
     }
     onPlayerCards(playerId: number, cards: number[]) {
         const c1 = this.getCard(cards[0]);
         const c2 = this.getCard(cards[1]);
         const operation = _("handhistory.playerCardsOpened", { player: this.getPlayer(playerId), card1: c1, card2: c2 });
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
     }
     onPlayerHoleCards(playerId: number, cards: number[]) {
         const c1 = this.getCard(cards[0]);
         const c2 = this.getCard(cards[1]);
         const operation = _("handhistory.playerHoleOpened", { player: this.getPlayer(playerId), card1: c1, card2: c2 });
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
     }
     onOpenCards(cards: number[]) {
         this.rawCards = cards || null;
@@ -189,76 +184,63 @@ export class HandHistory extends TableMonitor {
         const c2 = this.getCard(card2);
         const c3 = this.getCard(card3);
         let operation = _("handhistory.flop");
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
         operation = _("handhistory.flopOpenCards", { card1: c1, card2: c2, card3: c3 });
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
     }
     onTurn(card4: number) {
         const c4 = this.getCard(card4);
         let operation = _("handhistory.turn");
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
         operation = _("handhistory.turnOpenCards", { card4: c4 });
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
     }
     onRiver(card5: number) {
         const c5 = this.getCard(card5);
         let operation = _("handhistory.river");
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
         operation = _("handhistory.riverOpenCards", { card5: c5 });
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
     }
     onMoveMoneyToPot(amount: number[]) {
-        this.detailedOperations.push(_("handhistory.potscollection"));
+        this.addDetailedOperation(_("handhistory.potscollection"));
     }
     onPlayerStatus(playerId: number, status: number) {
         // Do nothing.
     }
     onReturnMoney(playerId: number, amount: number) {
         const operation = _("handhistory.returnMoney", { player: this.getPlayer(playerId), amount: amount });
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
     }
     onFold(playerId: number) {
         const operation = _("handhistory.fold", { player: this.getPlayer(playerId) });
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
     }
     onAllIn(playerId: number, amount: number) {
         const operation = _("handhistory.allin", { player: this.getPlayer(playerId), amount: amount });
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
     }
     onCheck(playerId: number, amount: number) {
         const operation = _("handhistory.check", { player: this.getPlayer(playerId), amount: amount });
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
     }
     onCall(playerId: number, amount: number) {
         const operation = _("handhistory.call", { player: this.getPlayer(playerId), amount: amount });
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
     }
     onBet2(playerId: number, amount: number) {
         const operation = _("handhistory.bet", { player: this.getPlayer(playerId), amount: amount });
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
     }
     onRaise(playerId: number, amount: number) {
         const operation = _("handhistory.raise", { player: this.getPlayer(playerId), amount: amount });
-        this.detailedOperations.push(operation);
-        this.shortOperations.push(operation);
+        this.addShortOperation(operation);
     }
     onPotCreated(potNumber: number, amount: number) {
-        this.detailedOperations.push(_("handhistory.potcreated", { pot: potNumber, amount: amount }));
+        this.addDetailedOperation(_("handhistory.potcreated", { pot: potNumber, amount: amount }));
     }
     onPotUpdated(potNumber: number, amount: number) {
-        this.detailedOperations.push(_("handhistory.potupdated", { pot: potNumber, amount: amount }));
+        this.addDetailedOperation(_("handhistory.potupdated", { pot: potNumber, amount: amount }));
     }
     private getPlayer(playerId: number) {
         return this.players[playerId];
@@ -296,5 +278,16 @@ export class HandHistory extends TableMonitor {
         }
 
         return cardValue + " " + cardSuite;
+    }
+
+    private addShortOperation(operation: string) {
+        this.detailedOperations.push(operation);
+        this.shortOperations.push(operation);
+        this.tableView.addSystemMessage(0, operation);
+    }
+
+    private addDetailedOperation(operation: string) {
+        this.detailedOperations.push(operation);
+        this.tableView.addSystemMessage(0, operation);
     }
 }
