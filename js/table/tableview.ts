@@ -582,6 +582,10 @@ export class TableView {
                         if (self.soundEnabled) {
                             soundManager.playTurnReminder();
                         }
+                    } else {
+                        if (self.soundEnabled) {
+                            soundManager.playTurnReminderForAll();
+                        }
                     }
                 }
             }
@@ -2019,23 +2023,28 @@ export class TableView {
             if (currentCardsOpened === 0 && cards.length === 3) {
                 self.handHistory.onFlop(cards[0], cards[1], cards[2]);
                 self.actionBlock.dealsAllowed(true);
+                soundManager.playFlopCards();
             }
             if (currentCardsOpened === 3 && cards.length === 4) {
                 self.handHistory.onTurn(cards[3]);
                 self.actionBlock.dealsAllowed(true);
+                soundManager.playTurn();
             }
             if (currentCardsOpened === 4 && cards.length === 5) {
                 self.handHistory.onRiver(cards[4]);
                 self.actionBlock.dealsAllowed(true);
+                soundManager.playRiver();
             }
             if (currentCardsOpened === 3 && cards.length === 5) {
                 self.handHistory.onTurn(cards[3]);
                 self.handHistory.onRiver(cards[4]);
+                // soundManager.playAllIn();
             }
             if (currentCardsOpened === 0 && cards.length === 5) {
                 self.handHistory.onFlop(cards[0], cards[1], cards[2]);
                 self.handHistory.onTurn(cards[3]);
                 self.handHistory.onRiver(cards[4]);
+                // soundManager.playAllIn();
             }
             self.actionBlock.resetAutomaticAction();
             self.actionBlock.updateAdditionalButtons();

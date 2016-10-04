@@ -48,6 +48,13 @@ export class SoundManager {
 
         this.quickPlay("snd/raise.mp3");
     }
+    playAllInCondition() {
+        if (!this.enabled() || !this.tableSoundsEnabled()) {
+            return;
+        }
+
+        this.quickPlay("snd/allin.mp3");
+    }
     playWinChips() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
@@ -56,6 +63,13 @@ export class SoundManager {
         this.quickPlay("snd/winchips.mp3");
     }
     playTurnReminder() {
+        if (!this.enabled() || !this.tableSoundsEnabled()) {
+            return;
+        }
+
+        this.quickPlay("snd/turnreminder.mp3");
+    }
+    playTurnReminderForAll() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
@@ -75,6 +89,27 @@ export class SoundManager {
         }
 
         this.quickPlay("snd/flip_b.mp3");
+    }
+    playFlopCards() {
+        if (!this.enabled() || !this.tableSoundsEnabled()) {
+            return;
+        }
+
+        this.quickPlay("snd/flop.mp3");
+    }
+    playTurn() {
+        if (!this.enabled() || !this.tableSoundsEnabled()) {
+            return;
+        }
+
+        this.quickPlay("snd/turn.mp3");
+    }
+    playRiver() {
+        if (!this.enabled() || !this.tableSoundsEnabled()) {
+            return;
+        }
+
+        this.quickPlay("snd/river.mp3");
     }
     private quickPlay(fileName) {
         /* tslint:disable:no-string-literal */

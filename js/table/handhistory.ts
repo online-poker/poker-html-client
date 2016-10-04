@@ -173,7 +173,7 @@ export class HandHistory extends TableMonitor {
         const c1 = this.getCard(cards[0]);
         const c2 = this.getCard(cards[1]);
         const operation = _("handhistory.playerHoleOpened", { player: this.getPlayer(playerId), card1: c1, card2: c2 });
-        this.addShortOperation(operation);
+        this.addShortOperationNoLog(operation);
     }
     onOpenCards(cards: number[]) {
         this.rawCards = cards || null;
@@ -284,6 +284,11 @@ export class HandHistory extends TableMonitor {
         this.detailedOperations.push(operation);
         this.shortOperations.push(operation);
         this.tableView.addSystemMessage(0, operation);
+    }
+
+    private addShortOperationNoLog(operation: string) {
+        this.detailedOperations.push(operation);
+        this.shortOperations.push(operation);
     }
 
     private addDetailedOperation(operation: string) {
