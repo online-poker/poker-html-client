@@ -17,6 +17,7 @@ import { uiManager } from "../services/uimanager";
 import { PageBase } from "../ui/pagebase";
 import { debugSettings } from "../debugsettings";
 import { settings } from "../settings";
+import { appConfig } from "../appConfig";
 import * as commandManager from "../commandManager";
 
 declare var app: App;
@@ -214,7 +215,12 @@ export class SeatPage extends PageBase {
         /* tslint:disable:no-string-literal no-unused-expression */
         window["StatusBar"] && StatusBar.hide();
         /* tslint:enable:no-string-literal no-unused-expression */
-        soundManager.enabled(settings.soundEnabled());
+        if (appConfig.game.seatMode) {
+            soundManager.enabled(false);
+        } else {
+            soundManager.enabled(settings.soundEnabled());
+        }
+
         soundManager.tableSoundsEnabled(true);
         reloadManager.setReloadCallback(() => {
             if (debugSettings.application.reloadTablesDataOnResume) {
