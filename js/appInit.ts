@@ -5,6 +5,8 @@ import { registerExtenders } from "./extenders";
 import { updateDefaultMessages } from "./validationConfiguration";
 import { registerComponents } from "./components/registration";
 import { LanguageManager, _ } from "./languagemanager";
+import { TableView } from "./table/tableView";
+// import { ChipItem } from "./table/chipItem";
 
 declare const host: string;
 
@@ -67,6 +69,7 @@ function bootstrap() {
 }
 
 window["ko"] = ko;
+window["TableView"] = TableView;
 registerBindings();
 registerExtenders();
 registerComponents();

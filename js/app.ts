@@ -158,7 +158,9 @@ export class App {
         this.mainSelector = new Selector();
         if (typeof window !== "undefined") {
             const mainSelectorElement = $(".page.main .sub-page.selector")[0];
-            ko.applyBindings(this.mainSelector, mainSelectorElement);
+            if (mainSelectorElement) {
+                ko.applyBindings(this.mainSelector, mainSelectorElement);
+            }
         }
 
         this.initializeTabbar();
@@ -254,7 +256,9 @@ export class App {
 
         if (typeof window !== "undefined") {
             const tabBarElement = $(".toolbar-container")[0];
-            ko.applyBindings(this.tabBar, tabBarElement);
+            if (tabBarElement) {
+                ko.applyBindings(this.tabBar, tabBarElement);
+            }
         }
 
         uiManager.subPageHiding.add(function (blockHiding: string) {
@@ -777,20 +781,24 @@ export class App {
     }
     setInitializationState() {
         const parentElement = document.getElementById("deviceready");
-        const listeningElement = parentElement.querySelector(".listening");
-        const receivedElement = parentElement.querySelector(".received");
+        if (parentElement) {
+            const listeningElement = parentElement.querySelector(".listening");
+            const receivedElement = parentElement.querySelector(".received");
 
-        listeningElement.setAttribute("style", "display:none;");
-        receivedElement.setAttribute("style", "display:block;");
+            listeningElement.setAttribute("style", "display:none;");
+            receivedElement.setAttribute("style", "display:block;");
+        }
     }
     setFailedState() {
         const parentElement = document.getElementById("deviceready");
-        const listeningElement = parentElement.querySelector(".listening");
-        const receivedElement = parentElement.querySelector(".received");
+        if (parentElement) {
+            const listeningElement = parentElement.querySelector(".listening");
+            const receivedElement = parentElement.querySelector(".received");
 
-        receivedElement.setAttribute("style", "display:none;");
-        const failedElement = parentElement.querySelector(".failed");
-        failedElement.setAttribute("style", "display:block;");
+            receivedElement.setAttribute("style", "display:none;");
+            const failedElement = parentElement.querySelector(".failed");
+            failedElement.setAttribute("style", "display:block;");
+        }
     }
     metadataUpdateFailed() {
         this.setFailedState();

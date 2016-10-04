@@ -234,7 +234,7 @@ export class TableView {
             if (window.innerWidth >= 1024 || window.innerHeight >= 1024) {
                 this.chipWidth = 60;
                 if (window.innerWidth >= 1920 || window.innerHeight >= 1920) {
-                    this.chipWidth = 2 * 63;
+                    this.chipWidth = 2 * 83;
                 }
             }
         }
