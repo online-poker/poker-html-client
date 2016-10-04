@@ -1,7 +1,7 @@
 ﻿class AnimationSettings {
     dealCardsTime: number = 300;
     finishGamePrePause: number = 100;
-    cleanupTableTimeout: number = 2000;
+    cleanupTableTimeout: number = 4000;
     foldAnimationTimeout: number = 150;
     betAnimationTimeout: number = 100;
     movingMoneyToPotPrePause: number = 100;
