@@ -418,10 +418,12 @@ export function registerBindings() {
             swipeHandler.log("swipeForeach update ", valueAccessor()(), viewModel, bindingContext.$swiper);
             ko.bindingHandlers.foreach.update(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
             swipeHandler.log("Preious slider position ", bindingContext.$swiperIndex);
-            bindingContext.$swiper.kill();
-            bindingContext.$swiper.setup();
-            bindingContext.$swiper.attachEvents();
-            bindingContext.$swiper.slide(bindingContext.$swiperIndex - 1, 0);
+            if (bindingContext.$swiper) {
+                bindingContext.$swiper.kill();
+                bindingContext.$swiper.setup();
+                bindingContext.$swiper.attachEvents();
+                bindingContext.$swiper.slide(bindingContext.$swiperIndex - 1, 0);
+            }
         }
     };
     ko.virtualElements.allowedBindings["swipeForeach"] = true;
