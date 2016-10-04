@@ -2,6 +2,7 @@
 
 import * as ko from "knockout";
 import { App } from "../app";
+import { appConfig } from "../appConfig";
 import * as metadataManager from "../metadatamanager";
 import * as tableManager from "../table/tablemanager";
 import {
@@ -214,7 +215,12 @@ export class TablesPage extends PageBase {
         /* tslint:disable:no-string-literal no-unused-expression */
         window["StatusBar"] && StatusBar.hide();
         /* tslint:enable:no-string-literal no-unused-expression */
-        soundManager.enabled(settings.soundEnabled());
+        if (appConfig.game.seatMode) {
+            soundManager.enabled(false);
+        } else {
+            soundManager.enabled(settings.soundEnabled());
+        }
+
         soundManager.tableSoundsEnabled(true);
         reloadManager.setReloadCallback(() => {
             if (debugSettings.application.reloadTablesDataOnResume) {
