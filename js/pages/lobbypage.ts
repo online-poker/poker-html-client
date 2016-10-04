@@ -341,7 +341,12 @@ export class LobbyPage extends PageBase {
         app.requireGuestAuthentication().done(function (newValue, wasAuthenticated) {
             if (newValue) {
                 app.executeCommand("app.selectTable", [table, wasAuthenticated]);
-                app.executeCommand("page.tables");
+                if (appConfig.game.seatMode) {
+                    app.executeCommand("page.seats");
+                } else {
+                    app.executeCommand("page.tables");
+                }
+
                 app.processing(false);
             } else {
                 app.processing(false);
