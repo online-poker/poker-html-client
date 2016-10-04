@@ -193,8 +193,8 @@ export class ConnectionWrapper {
             const connectionInfo = "HID:" + hubId;
             this.logEvent("Connected to server! Connection " + connectionInfo);
             this.refreshHandle = setTimeout(() => {
-                this.terminateConnection();
-                connectionService.recoverableError.dispatch();
+                // this.terminateConnection();
+                // connectionService.recoverableError.dispatch();
             }, 1000 * 60 * 60);
             result.resolve(this);
         }).fail((message) => {
