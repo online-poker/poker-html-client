@@ -8,6 +8,7 @@ import { SystemMessage } from "./SystemMessage";
 import { TablePlaceModel } from "./tabpleplacemodel";
 import { TableView } from "./tableView";
 import * as authManager from "../authManager";
+import { SimplePopup } from "../popups";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
@@ -525,12 +526,16 @@ export class ActionBlock {
                 return;
             }
 
-            app.addMoneyPopup.tableView(this.tableView);
-            app.showPopup("addMoney").done((results: PopupResult) => {
-                if (results.result === "ok") {
-                    this.comeBackCore();
-                }
-            });
+            if (appConfig.game.seatMode) {
+                SimplePopup.display(_("table.comeback"), _("table.askAdministratorToAddMoney"));
+            } else {
+                app.addMoneyPopup.tableView(this.tableView);
+                app.showPopup("addMoney").done((results: PopupResult) => {
+                    if (results.result === "ok") {
+                        this.comeBackCore();
+                    }
+                });
+            }
         } else {
             this.comeBackCore();
         }

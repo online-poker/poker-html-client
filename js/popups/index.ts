@@ -15,3 +15,4 @@ export { ChangePasswordPopup } from "./changepasswordpopup";
 export { ContinueForgetPasswordPopup } from "./continueforgetpasswordpopup";
 export { ChatPopup } from "./chatpopup";
 export { AuthPopup } from "./authpopup";
+export { SimplePopup } from "./simplepopup";

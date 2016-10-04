@@ -333,6 +333,7 @@ var messages: any = {
         turn: 'Ход',
         connectionError: 'Сбой подключения за столом \'#tableName#\'',
         observing: 'Режим наблюдения',
+        askAdministratorToAddMoney: 'Вам необходимо пополнить ваш счет. Обратитесь к администратору',
         actiontext: {
             fold: 'Фолд',
             raise: 'Рейз',
