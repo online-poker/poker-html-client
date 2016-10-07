@@ -1205,6 +1205,8 @@ export class TableView {
                 if (currentPlayer.PlayerId() === currentWinner.PlayerId) {
                     let winnerCards = <number[]>[];
                     const tableCards = this.tableCards.tableCardsData();
+                    const winnerCombination = currentPlayer.getCombination(tableCards);
+                    currentPlayer.WinnerCombination(winnerCombination);
                     if (tableCards != null) {
                         winnerCards = winnerCards.concat(tableCards);
                     }

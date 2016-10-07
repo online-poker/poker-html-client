@@ -114,6 +114,11 @@ export class TablePlaceModel {
     */
     LastChatMessageTrimed: KnockoutComputed<string>;
 
+    /**
+     * Combination of cards for the winner.
+     */
+    WinnerCombination = ko.observable<string>();
+
     public cardsOverlayVisible = ko.observable(true);
 
     constructor(data: TablePlayer) {
@@ -233,6 +238,7 @@ export class TablePlaceModel {
         this.Card2Hightlighted(false);
         this.CardsHightlighted(false);
         this.markCardsHidden();
+        this.WinnerCombination(null);
     }
     initializeForNewGame(money: number) {
         this.IsInGameStatus(true);
