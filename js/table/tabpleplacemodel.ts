@@ -75,6 +75,7 @@ export class TablePlaceModel {
     Card1Hightlighted: KnockoutObservable<boolean>;
     Card2Hightlighted: KnockoutObservable<boolean>;
     CardsHightlighted: KnockoutObservable<boolean>;
+    IsCardsOpened = ko.observable(false);
 
     /**
     * Indicates current action which player performs now
@@ -231,6 +232,7 @@ export class TablePlaceModel {
         this.Card1Hightlighted(false);
         this.Card2Hightlighted(false);
         this.CardsHightlighted(false);
+        this.markCardsHidden();
     }
     initializeForNewGame(money: number) {
         this.IsInGameStatus(true);
@@ -251,6 +253,12 @@ export class TablePlaceModel {
         this.RawCards(cards || null);
         this.Cards(cardsClasses);
         this.HandCards(cardsClasses);
+    }
+    markCardsOpened() {
+        this.IsCardsOpened(true);
+    }
+    markCardsHidden() {
+        this.IsCardsOpened(false);
     }
     collectBet() {
         this.TotalBet((this.TotalBet() === null ? 0 : this.TotalBet()) + this.Bet());

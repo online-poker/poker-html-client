@@ -1144,7 +1144,6 @@ export class TableView {
             const places = self.places();
             self.finishAnimation(places);
 
-            const c: string[] = [];
             let needHightlightCards = true;
             const activePlayersCount = this.activePlayersCount();
             this.logGameEvent("Active players count", activePlayersCount);
@@ -1153,85 +1152,7 @@ export class TableView {
                 self.tableCards.CardsHightlighted(true);
             }
 
-            for (let w in winners) {
-                if (!winners.hasOwnProperty(w)) {
-                    continue;
-                }
-
-                const currentWinner = winners[w];
-                if (c.indexOf(currentWinner.CardsDescription) === -1) {
-                    c.push(currentWinner.CardsDescription);
-                }
-
-                for (let p in places) {
-                    if (!places.hasOwnProperty(p)) {
-                        continue;
-                    }
-
-                    const currentPlayer = places[p];
-                    if (needHightlightCards) {
-                        currentPlayer.CardsHightlighted(true);
-                    }
-
-                    if (currentPlayer.PlayerId() === currentWinner.PlayerId) {
-                        let winnerCards = <number[]>[];
-                        const tableCards = self.tableCards.tableCardsData();
-                        if (tableCards != null) {
-                            winnerCards = winnerCards.concat(tableCards);
-                        }
-
-                        winnerCards = winnerCards.concat(currentPlayer.RawCards());
-                        const handRepresentation = {
-                            Cards: [],
-                            Suits: []
-                        };
-                        winnerCards.forEach(function (card) {
-                            handRepresentation.Cards.push((card % 13) + 2);
-                            handRepresentation.Suits.push(1 << (card / 13));
-                        });
-                        if (winnerCards.length === 7 && needHightlightCards) {
-                            const rank = HoldemHand.getCardRank(handRepresentation);
-                            rank.WinnerCardsSet.forEach(function (cardIndex) {
-                                if (cardIndex === 5) {
-                                    currentPlayer.Card1Hightlighted(true);
-                                }
-
-                                if (cardIndex === 6) {
-                                    currentPlayer.Card2Hightlighted(true);
-                                }
-
-                                if (cardIndex === 0) {
-                                    self.tableCards.Card1Hightlighted(true);
-                                }
-
-                                if (cardIndex === 1) {
-                                    self.tableCards.Card2Hightlighted(true);
-                                }
-
-                                if (cardIndex === 2) {
-                                    self.tableCards.Card3Hightlighted(true);
-                                }
-
-                                if (cardIndex === 3) {
-                                    self.tableCards.Card4Hightlighted(true);
-                                }
-
-                                if (cardIndex === 4) {
-                                    self.tableCards.Card5Hightlighted(true);
-                                }
-                            });
-                        }
-
-                        currentPlayer.Money(currentPlayer.Money() + currentWinner.Amount);
-                        if (currentPlayer.WinAmount() === null) {
-                            currentPlayer.WinAmount(currentWinner.Amount);
-                        } else {
-                            currentPlayer.WinAmount(currentPlayer.WinAmount() + currentWinner.Amount);
-                        }
-                    }
-                }
-            }
-
+            const c = this.calculateWinnerAmount(places, winners, needHightlightCards);
             if (self.soundEnabled) {
                 soundManager.playWinChips();
             }
@@ -1258,6 +1179,89 @@ export class TableView {
             self.proposeRebuyOrAddon();
             self.displayRebuyOrAddonTime();
         });
+    }
+    calculateWinnerAmount(places: TablePlaceModel[], winners: GameWinnerModel[], needHightlightCards: boolean) {
+        const c: string[] = [];
+        for (let w in winners) {
+            if (!winners.hasOwnProperty(w)) {
+                continue;
+            }
+
+            const currentWinner = winners[w];
+            if (c.indexOf(currentWinner.CardsDescription) === -1) {
+                c.push(currentWinner.CardsDescription);
+            }
+
+            for (let p in places) {
+                if (!places.hasOwnProperty(p)) {
+                    continue;
+                }
+
+                const currentPlayer = places[p];
+                if (needHightlightCards) {
+                    currentPlayer.CardsHightlighted(true);
+                }
+
+                if (currentPlayer.PlayerId() === currentWinner.PlayerId) {
+                    let winnerCards = <number[]>[];
+                    const tableCards = this.tableCards.tableCardsData();
+                    if (tableCards != null) {
+                        winnerCards = winnerCards.concat(tableCards);
+                    }
+
+                    winnerCards = winnerCards.concat(currentPlayer.RawCards());
+                    const handRepresentation = {
+                        Cards: [],
+                        Suits: []
+                    };
+                    winnerCards.forEach(function (card) {
+                        handRepresentation.Cards.push((card % 13) + 2);
+                        handRepresentation.Suits.push(1 << (card / 13));
+                    });
+                    if (winnerCards.length === 7 && needHightlightCards) {
+                        const rank = HoldemHand.getCardRank(handRepresentation);
+                        rank.WinnerCardsSet.forEach((cardIndex) => {
+                            if (cardIndex === 5) {
+                                currentPlayer.Card1Hightlighted(true);
+                            }
+
+                            if (cardIndex === 6) {
+                                currentPlayer.Card2Hightlighted(true);
+                            }
+
+                            if (cardIndex === 0) {
+                                this.tableCards.Card1Hightlighted(true);
+                            }
+
+                            if (cardIndex === 1) {
+                                this.tableCards.Card2Hightlighted(true);
+                            }
+
+                            if (cardIndex === 2) {
+                                this.tableCards.Card3Hightlighted(true);
+                            }
+
+                            if (cardIndex === 3) {
+                                this.tableCards.Card4Hightlighted(true);
+                            }
+
+                            if (cardIndex === 4) {
+                                this.tableCards.Card5Hightlighted(true);
+                            }
+                        });
+                    }
+
+                    currentPlayer.Money(currentPlayer.Money() + currentWinner.Amount);
+                    if (currentPlayer.WinAmount() === null) {
+                        currentPlayer.WinAmount(currentWinner.Amount);
+                    } else {
+                        currentPlayer.WinAmount(currentPlayer.WinAmount() + currentWinner.Amount);
+                    }
+                }
+            }
+        }
+
+        return c;
     }
     cleanTableAfterGameFinish() {
         if (this.gameFinished()) {
@@ -1333,6 +1337,9 @@ export class TableView {
                 couldDisplayOtherCards = true;
                 if (couldDisplayOtherCards) {
                     p.setCards(cards);
+                    if (!isHoleCards) {
+                        p.markCardsOpened();
+                    }
                 }
             }
         });
@@ -2008,6 +2015,10 @@ export class TableView {
         });
     }
 
+    /**
+     * Cards opening on the table.
+     * @param cards Cards which was opened on the table.
+     */
     onOpenCards(cards: number[]) {
         const self = this;
         this.queue.pushCallback(() => {
