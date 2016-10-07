@@ -32,7 +32,7 @@ export class SoundManager {
             return;
         }
 
-        this.quickPlay("snd/raise.mp3");
+        this.quickPlay("snd/bet.mp3");
     }
     playRaise() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -46,7 +46,7 @@ export class SoundManager {
             return;
         }
 
-        this.quickPlay("snd/raise.mp3");
+        this.quickPlay("snd/allin.mp3");
     }
     playAllInCondition() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
