@@ -12,6 +12,7 @@ export class SoundManager {
         }
 
         this.quickPlay("snd/fold.mp3");
+        this.quickPlay("snd/fold_human.mp3");
     }
     playCheck() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -19,6 +20,7 @@ export class SoundManager {
         }
 
         this.quickPlay("snd/check.mp3");
+        this.quickPlay("snd/check_human.mp3");
     }
     playCall() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -26,6 +28,7 @@ export class SoundManager {
         }
 
         this.quickPlay("snd/call.mp3");
+        this.quickPlay("snd/call_human.mp3");
     }
     playBet() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -33,6 +36,7 @@ export class SoundManager {
         }
 
         this.quickPlay("snd/bet.mp3");
+        this.quickPlay("snd/bet_human.mp3");
     }
     playRaise() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -40,6 +44,7 @@ export class SoundManager {
         }
 
         this.quickPlay("snd/raise.mp3");
+        this.quickPlay("snd/raise_human.mp3");
     }
     playAllIn() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -47,6 +52,7 @@ export class SoundManager {
         }
 
         this.quickPlay("snd/allin.mp3");
+        this.quickPlay("snd/allin_human.mp3");
     }
     playAllInCondition() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
