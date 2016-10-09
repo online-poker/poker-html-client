@@ -117,10 +117,12 @@ export class HandHistory extends TableMonitor {
 
             let description: string;
             if (winAmount > 0) {
-                description = "Игрок " + playerName + " выиграл " + winAmount + " " + combination;
+                description = "" + playerName + " выиграл " + winAmount + " " + combination;
             } else {
-                description = "Игрок " + playerName + " проиграл " + " " + combination;
+                description = "" + playerName + " проиграл " + " " + combination;
             }
+
+            this.addShortOperation(description);
 
             winnersList.push({
                 id: playerId,
