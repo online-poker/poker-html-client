@@ -1070,6 +1070,11 @@ export class TableView {
         }
 
         const combinations: string[] = [];
+
+        if (runtimeSettings.clearAutoFoldOrCheckOnNewGame) {
+            this.actionBlock.autoFoldOrCheck(false);
+        }
+
         this.cardsReceived = false;
         this.combinations(combinations);
         this.gamePlayers(players.map((item) => item.PlayerId));

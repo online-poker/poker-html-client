@@ -14,6 +14,11 @@
     showNewsAfterLogin: boolean = true;
 
     /**
+    * Enables or disables flag indicating whether auto-fold and auto-check functionality would be reset each new game.
+    */
+    clearAutoFoldOrCheckOnNewGame: boolean = true;
+
+    /**
     * Sound settings
     */
     sounds = {
