@@ -22,6 +22,7 @@ import { settings } from "../settings";
 import * as runtimeSettings from "./runtimesettings";
 import { TableCardsPlace } from "./tableCardsPlace";
 import { _ } from "../languagemanager";
+import { withCommas } from "../helpers";
 
 declare var apiHost: string;
 declare var app: App;
@@ -521,7 +522,7 @@ export class TableView {
             }
 
             return _("table.totalpot")
-                .replace("#amount", totalPot.toFixed());
+                .replace("#amount", withCommas(totalPot.toFixed(), ","));
         }, this);
 
         this.tableBetsCaption = ko.computed(function () {
@@ -1499,7 +1500,7 @@ export class TableView {
         const activePlayersCount = this.activePlayersCount() - 1;
         const displayFoldedCards = myself !== null
             && currentPlayer.PlayerId() === myself.PlayerId()
-            && activePlayersCount > 1
+            // && activePlayersCount > 1
             && !forceAnimation;
         if (displayFoldedCards) {
             currentPlayer.FoldedCards(currentCards);

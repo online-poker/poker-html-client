@@ -3,6 +3,7 @@
 import ko = require("knockout");
 import * as moment from "moment";
 import { App } from "./app";
+import { withCommas } from "./helpers";
 import * as timeService from "./timeService";
 import { debugSettings } from "./debugsettings";
 import { _ } from "./languagemanager";
@@ -249,7 +250,7 @@ export function registerBindings() {
                 const numberValue = parseFloat(value);
                 if (!isNaN(numberValue)) {
                     const formattedValue = numberValue.toFixed(positions);
-                    finalFormatted = <string>numericTextHandler.withCommas(formattedValue);
+                    finalFormatted = numericTextHandler.withCommas(formattedValue, numericTextHandler.separator);
                 } else {
                     finalFormatted = "-";
                 }
@@ -262,19 +263,7 @@ export function registerBindings() {
         defaultPositions: 2,
         separator: ",",
 
-        withCommas: function (original: string) {
-            original += "";
-            const x = original.split(".");
-            let x1 = x[0];
-            const x2 = x.length > 1 ? "." + x[1] : "";
-            const rgx = /(\d+)(\d{3})/;
-            while (rgx.test(x1)) {
-                x1 = x1.replace(rgx, "$1" + numericTextHandler.separator + "$2");
-            }
-
-            return x1 + x2;
-
-        }
+        withCommas: withCommas
     };
     ko.bindingHandlers["numericText"] = numericTextHandler;
     const currencySymbolBindingHandler = {
@@ -539,7 +528,7 @@ export function registerBindings() {
                 element.appendChild(container);
                 const label = document.createElement("div");
                 label.setAttribute("class", "label");
-                label.innerText = value.toString();
+                label.innerText = withCommas(value.toFixed(0), ",");
                 element.appendChild(label);
             }
         }

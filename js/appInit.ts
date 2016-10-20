@@ -35,7 +35,7 @@ function bootstrap() {
     // GameActionsQueue.waitDisabled = true;
     const numericTextHandler: any = ko.bindingHandlers["numericText"];
     numericTextHandler.defaultPositions = 0;
-    numericTextHandler.separator = " ";
+    numericTextHandler.separator = ",";
     window["moment"].locale("ru");
 
     // This function prevents the rotation from 

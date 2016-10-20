@@ -12,6 +12,7 @@ import { SimplePopup } from "../popups";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
+import { withCommas } from "../helpers";
 
 declare var apiHost: string;
 declare var app: App;
@@ -252,7 +253,7 @@ export class ActionBlock {
             if (playerMoney <= currentAmount) {
                 const myself = self.myPlayer();
                 if (myself != null) {
-                    return _("table.allin").replace("#amount", (myself.Bet() + playerMoney).toString());
+                    return _("table.allin").replace("#amount", withCommas((myself.Bet() + playerMoney).toString(), ","));
                 }
 
                 return "";
@@ -260,7 +261,7 @@ export class ActionBlock {
                 if (self.isCheck()) {
                     return _("table.check");
                 } else {
-                    return _("table.call").replace("#amount", currentAmount.toString());
+                    return _("table.call").replace("#amount", withCommas(currentAmount.toString(), ","));
                 }
             }
         });
@@ -277,15 +278,15 @@ export class ActionBlock {
             if (playerMoney <= currentAmount) {
                 const myself = self.myPlayer();
                 if (myself != null) {
-                    return _("table.allin").replace("#amount", (playerMoney).toString());
+                    return _("table.allin").replace("#amount", withCommas(playerMoney, ",").toString());
                 }
 
                 return "";
             } else {
                 if (self.isRaise()) {
-                    return _("table.raise").replace("#amount", currentAmount.toString());
+                    return _("table.raise").replace("#amount", withCommas(currentAmount, ",").toString());
                 } else {
-                    return _("table.bet").replace("#amount", currentAmount.toString());
+                    return _("table.bet").replace("#amount", withCommas(currentAmount, ",").toString());
                 }
             }
         });
@@ -653,10 +654,10 @@ export class ActionBlock {
             this.supportDirectAmountCaption("Чек");
         } else {
             if (playerMoney <= requiredBet) {
-                this.supportDirectAmountCaption("Олл-ин #amount".replace("#amount", playerMoney.toFixed()));
+                this.supportDirectAmountCaption("Олл-ин #amount".replace("#amount", withCommas(playerMoney.toFixed(), ",")));
             } else {
                 const callAmount = (this.tableView.maximumBet() - this.tableView.myBet()).toFixed();
-                this.supportDirectAmountCaption("Колл #amount".replace("#amount", callAmount));
+                this.supportDirectAmountCaption("Колл #amount".replace("#amount", withCommas(callAmount, ",")));
             }
         }
 
@@ -709,8 +710,8 @@ export class ActionBlock {
         this.button2Amount(potAmount);
         this.button3Amount(maxMoneyAmount);
 
-        this.button1Caption(_("table.halfpot").replace("#amount", this.button1Amount().toFixed()));
-        this.button2Caption(_("table.pot").replace("#amount", this.button2Amount().toFixed()));
+        this.button1Caption(_("table.halfpot").replace("#amount", withCommas(this.button1Amount().toFixed(), ",")));
+        this.button2Caption(_("table.pot").replace("#amount", withCommas(this.button2Amount().toFixed(), ",")));
         const player = this.myPlayer();
         let playerMoney = this.playerMoney();
         if (player != null) {
@@ -718,9 +719,9 @@ export class ActionBlock {
         }
 
         if (playerMoney <= this.maxAmountOfMoneyForOtherActivePlayers()) {
-            this.button3Caption(_("table.allin").replace("#amount", playerMoney.toFixed()));
+            this.button3Caption(_("table.allin").replace("#amount", withCommas(playerMoney.toFixed(), ",")));
         } else {
-            this.button3Caption(_("table.raise").replace("#amount", this.button3Amount().toFixed()));
+            this.button3Caption(_("table.raise").replace("#amount", withCommas(this.button3Amount().toFixed(), ",")));
         }
 
         this.button1Visible(this.tableSlider.isWithinRange(threebbAmountOriginal));

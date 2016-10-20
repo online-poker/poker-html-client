@@ -4,6 +4,7 @@ import * as ko from "knockout";
 import * as timeService from "../timeService";
 import { TableView } from "./tableView";
 import { _ } from "../languagemanager";
+import { withCommas } from "../helpers";
 
 export class TablePlaceModel {
     /**
@@ -343,7 +344,7 @@ export class TablePlaceModel {
         }
 
         if (this.WinAmount() > 0) {
-            return "Поздравляем, Ваш выигрыш: " + this.WinAmount();
+            return "Поздравляем, Ваш выигрыш: " + withCommas(this.WinAmount(), ",");
         }
 
         if (this.Money() === 0) {
