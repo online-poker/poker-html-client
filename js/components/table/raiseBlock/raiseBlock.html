@@ -1,0 +1,17 @@
+<div class="slider-container" data-bind="with: tableSlider">
+    <span class="min-bet-amount" data-bind="text: minimum"></span>
+    <input class="bet-amount input-small" type="number" min="0" inputmode="numeric" pattern="[0-9]*"
+            data-bind="value: currentValue, event: { blur: fixupValue }" />
+    <span class="max-bet-amount" data-bind="text: maximum"></span>
+    <div class="slider">
+        <div class="slider-controls">
+            <span class="actionable slider-move-left" data-bind="command: decrease"></span>
+            <span class="actionable slider-move-right" data-bind="command: increase"></span>
+        </div>
+        <div class="slider-line-wrapper" data-bind="handle: position, command: selectManually">
+            <div class="slider-line">
+                <div class="slider-handle" data-bind="style: { left: position() + 'px' }"></div>
+            </div>
+        </div>
+    </div>
+</div>

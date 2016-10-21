@@ -1,5 +1,7 @@
 ﻿import ko = require("knockout");
 
+import * as table from "./table";
+
 const trivialViewModelFactory = function (params, componentInfo) {
     return params.data;
 };
@@ -115,17 +117,20 @@ export function registerComponents() {
         viewModel: { require: "app/components/game-type-selector/gametypeselector" }
     });
 
-
     /**
     * Game table action block
     */
     ko.components.register("table-action-block", {
         template: getTemplateDefinition("table/actionBlock/actionBlock.html"),
-        viewModel: { require: "app/components/table/actionBlock/actionBlock" }
+        viewModel: table.ActionBlockComponent
+    });
+    ko.components.register("table-raise-block", {
+        template: getTemplateDefinition("table/raiseBlock/raiseBlock.html"),
+        viewModel: table.RaiseBlockComponent
     });
 
     ko.components.register("table-menu", {
         template: getTemplateDefinition("table/menu/menu.html"),
-        viewModel: { require: "app/components/table/menu/menu" }
+        viewModel: table.TableMenuComponent
     });
 }
