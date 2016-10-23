@@ -1,84 +1,77 @@
-﻿<div class="table-actions panel1" data-bind="with: actionBlock">
-  <div class="block1" data-bind="visible: mainButtonsBlockVisible">
-    <button class="button btn-table-action" data-bind="visible: buttonsEnabled, command: fold, ltext: 'table.fold'">Fold</button>
-    <button class="button btn-table-action" data-bind="visible: buttonsEnabled, command: checkOrCall, text: checkCallButtonCaption">Call/Check</button>
-    <button class="button btn-table-action" data-bind="visible: buttonsEnabled() && couldRaise(), command: betOrRaise, text: raiseBetButtonCaption">Bet/Raise</button>
-  </div>
-  <div class="block1" data-bind="visible: startBlockVisible">
-    <!-- ko if: waitBigBlindBlockVisible -->
-    <div class="check-row">
-      <input id="waitbb" type="checkbox" class="checkbox yellow" data-bind="checked: waitbb" />
-      <label for="waitbb">
-        <div class="checkbox-icon-container">
-          <span class="cb"></span>
-        </div>
-        <div class="lb" data-bind="ltext: 'table.waitbb'">Wait for BB</div>
-      </label>
+﻿<div data-bind="with: actionBlock">
+    <div class="block1" data-bind="visible: mainButtonsBlockVisible">
+        <button class="button btn-table-action left" data-bind="visible: buttonsEnabled, command: fold, ltext: 'table.fold'">Fold</button>
+        <button class="button btn-table-action left" data-bind="visible: buttonsEnabled, command: checkOrCall, text: checkCallButtonCaption">Call/Check</button>
+        <button class="button btn-table-action left" data-bind="visible: buttonsEnabled() && couldRaise(), command: betOrRaise, text: raiseBetButtonCaption">Bet/Raise</button>
     </div>
-    <!-- /ko -->
-    <!-- ko ifnot: waitBigBlindBlockVisible -->
-    &nbsp;
-    <!-- /ko -->
-  </div>
-  <div class="block1" data-bind="visible: observerModeBlockVisible">
-    <span class="observing-mode-label" data-bind="ltext: 'table.observing'">Observing table</span>
-  </div>
-  <div class="block1" data-bind="visible: autoButtonsBlockVisible">
-    <div class="auto-action-container left">
-      <input id="autoCheck" type="checkbox" class="checkbox yellow" data-bind="checked: supportDirectAmount" />
-      <label for="autoCheck">
-        <div class="checkbox-icon-container">
-          <span class="cb"></span>
+    <div class="block1" data-bind="visible: startBlockVisible">
+        <!-- ko if: waitBigBlindBlockVisible -->
+        <div class="auto-action-container single-row action-wait-bb">
+            <input id="waitbb" type="checkbox" class="checkbox yellow" data-bind="checked: waitbb" />
+            <label for="waitbb">
+                <div class="checkbox-icon-container">
+                    <span class="cb"></span>
+                </div>
+                <div class="lb" data-bind="ltext: 'table.waitbb'">Wait for BB</div>
+            </label>
         </div>
-        <div class="lb" data-bind="text: supportDirectAmountCaption"></div>
-      </label>
+        <!-- /ko -->
+        <!-- ko ifnot: waitBigBlindBlockVisible -->
+        &nbsp;
+        <!-- /ko -->
     </div>
-    <div class="auto-action-container left">
-      <input id="autoCall" type="checkbox" class="checkbox yellow" data-bind="checked: supportAny" />
-      <label for="autoCall">
-        <div class="checkbox-icon-container">
-          <span class="cb"></span>
+    <div class="block1" data-bind="visible: observerModeBlockVisible">
+        <span class="observing-mode-label" data-bind="ltext: 'table.observing'">Observing table</span>
+    </div>
+    <div class="block1" data-bind="visible: autoButtonsBlockVisible">
+        <div>
+            <div class="auto-action-container left action-check">
+                <input id="autoCheck" type="checkbox" class="checkbox yellow small" data-bind="checked: supportDirectAmount" />
+                <label for="autoCheck">
+                    <div class="checkbox-icon-container left">
+                        <span class="cb"></span>
+                    </div>
+                    <div class="lb left" data-bind="text: supportDirectAmountCaption"></div>
+                </label>
+            </div>
+            <div class="auto-action-container left action-fold">
+                <input id="autoFold" type="checkbox" class="checkbox yellow small" data-bind="checked: foldOnRaise" />
+                <label for="autoFold">
+                    <div class="checkbox-icon-container left">
+                        <span class="cb"></span>
+                    </div>
+                    <div class="lb left" data-bind="text: foldOnRaiseCaption"></div>
+                </label>
+            </div>
         </div>
-        <div class="lb" data-bind="text: supportAnyCaption"></div>
-      </label>
-    </div>
-    <div class="auto-action-container left">
-      <input id="autoFold" type="checkbox" class="checkbox yellow" data-bind="checked: foldOnRaise" />
-      <label for="autoFold">
-        <div class="checkbox-icon-container">
-          <span class="cb"></span>
+        <div style="clear: both;">
+            <div class="auto-action-container left action-call">
+                <input id="autoCall" type="checkbox" class="checkbox yellow small" data-bind="checked: supportAny" />
+                <label for="autoCall">
+                    <div class="checkbox-icon-container left">
+                        <span class="cb"></span>
+                    </div>
+                    <div class="lb left" data-bind="text: supportAnyCaption"></div>
+                </label>
+            </div>
         </div>
-        <div class="lb" data-bind="text: foldOnRaiseCaption"></div>
-      </label>
     </div>
-  </div>
-  <div class="block1" data-bind="visible: sitoutBlockVisible">
-    <button class="button btn-table-action" data-bind="command: comeBack, visible: !processing(), ltext: 'table.comeback'">Comeback</button>
-  </div>
-  <div class="block2" data-bind="visible: chatVisible, command: showChatPopup">
-    <div class="table-chat-container" data-bind="foreach: messages">
-      <div class="table-chat-line" data-bind="css: { 'admin-message': isAdmin, 'my-message': isMy }">
-        [<span data-bind="text: date"></span>]<span data-bind="text: sender"></span> <span data-bind="text: message"></span>
-      </div>
+    <div class="block1" data-bind="visible: sitoutBlockVisible">
+        <button class="button btn-table-action" data-bind="command: comeBack, visible: !processing(), ltext: 'table.comeback'">Comeback</button>
     </div>
-  </div>
-  <div class="block2" data-bind="visible: raiseBlockVisible">
-    <div class="slider-container" data-bind="with: tableSlider">
-      <span class="min-bet-amount" data-bind="text: minimum"></span>
-      <input class="bet-amount input-small" type="text"
-             data-bind="value: currentValue, event: { blur: fixupValue }" />
-      <span class="max-bet-amount" data-bind="text: maximum"></span>
-      <div class="slider">
-        <div class="slider-controls">
-          <span class="slider-move-left" data-bind="command: decrease"></span>
-          <span class="slider-move-right" data-bind="command: increase"></span>
+    <div class="block2" data-bind="visible: chatVisible, command: showChatPopup">
+        <div class="table-chat-container" data-bind="foreach: messages">
+            <div class="table-chat-line" data-bind="css: { 'admin-message': isAdmin, 'my-message': isMy }">
+                [<span data-bind="text: date"></span>]<span data-bind="text: sender"></span> <span data-bind="text: message"></span>
+            </div>
         </div>
-        <div class="slider-line-wrapper" data-bind="handle: position, command: selectManually">
-          <div class="slider-line">
-            <div class="slider-handle" data-bind="style: { left: position() + 'px' }"></div>
-          </div>
+        <div class="table-chat-container system-messages" data-bind="foreach: systemMessages">
+            <div class="table-chat-line">
+                <span data-bind="text: message"></span>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+    <div class="block2" data-bind="visible: raiseBlockVisible">
+        <table-raise-block params="data: tableSlider"></table-raise-block>
+    </div>
 </div>

@@ -124,6 +124,10 @@ export function registerComponents() {
         template: getTemplateDefinition("table/actionBlock/actionBlock.html"),
         viewModel: table.ActionBlockComponent
     });
+    ko.components.register("table-secondary-action-block", {
+        template: getTemplateDefinition("table/actionBlock/secondaryActionBlock.html"),
+        viewModel: table.ActionBlockComponent
+    });
     ko.components.register("table-raise-block", {
         template: getTemplateDefinition("table/raiseBlock/raiseBlock.html"),
         viewModel: table.RaiseBlockComponent
@@ -132,5 +136,9 @@ export function registerComponents() {
     ko.components.register("table-menu", {
         template: getTemplateDefinition("table/menu/menu.html"),
         viewModel: table.TableMenuComponent
+    });
+    ko.components.register("tournament-status-indicator", {
+        template: getTemplateDefinition("table/tournament-status-indicator/tournament-status-indicator.html"),
+        viewModel: trivialViewModelFactory
     });
 }

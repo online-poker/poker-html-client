@@ -1,0 +1,31 @@
+<div data-bind="css: { expanded: expanded }">
+    <!-- ko if: inGame -->
+    <div class="block1">
+        <div>
+            <div class="auto-action-container left single-row">
+                <input id="autoFoldOrCheck" type="checkbox" class="checkbox yellow small" data-bind="checked: autoFoldOrCheck" />
+                <label for="autoFoldOrCheck">
+                    <div class="checkbox-icon-container left">
+                        <span class="cb"></span>
+                    </div>
+                    <div class="lb left" data-bind="ltext: 'table.autofold'">Auto fold</div>
+                </label>
+            </div>
+            <div class="auto-action-container left single-row">
+                <input id="skipDeals" type="checkbox" class="checkbox yellow small" data-bind="checked: skipDeals" />
+                <label for="skipDeals">
+                    <div class="checkbox-icon-container left">
+                        <span class="cb"></span>
+                    </div>
+                    <div class="lb left" data-bind="ltext: 'table.skipDeals'">Skip deals</div>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="block2" data-bind="visible: mainButtonsBlockVisible">
+        <button class="button btn-table-action right" data-bind="html: button3Caption, visible: button3Visible, command: allin">All-in</button>
+        <button class="button btn-table-action right" data-bind="html: button2Caption, visible: button2Visible, command: pot">Pot</button>
+        <button class="button btn-table-action right" data-bind="html: button1Caption, visible: button1Visible, command: halfPot">1/2 pot</button>
+    </div>
+    <!-- /ko -->
+</div>

@@ -5,7 +5,9 @@ import { registerExtenders } from "./extenders";
 import { updateDefaultMessages } from "./validationConfiguration";
 import { registerComponents } from "./components/registration";
 import { LanguageManager, _ } from "./languagemanager";
+import { debugSettings } from "./debugSettings";
 import { TableView } from "./table/tableView";
+import { ActionBlock } from "./table/actionBlock";
 // import { ChipItem } from "./table/chipItem";
 
 declare const host: string;
@@ -49,6 +51,7 @@ function bootstrap() {
     window["authToken"] = null;
     window["apiHost"] = apiHost;
     window["baseUrl"] = baseUrl;
+    window["debugSettings"] = debugSettings;
     window["_"] = _;
     window.onerror = function (message, url, lineNumber, colno, error) {
         console.log("Error: " + message + " in " + url + " at line " + lineNumber);
@@ -70,6 +73,7 @@ function bootstrap() {
 
 window["ko"] = ko;
 window["TableView"] = TableView;
+window["ActionBlock"] = ActionBlock;
 registerBindings();
 registerExtenders();
 registerComponents();
