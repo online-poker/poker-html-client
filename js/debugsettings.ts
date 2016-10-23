@@ -59,12 +59,17 @@ interface UIDebugSettings {
     tracePages: boolean;
 }
 
+interface GameDebugSettings {
+    singleSidePots: boolean;
+}
+
 class DebugSettings {
     initialization: InitializationDebugSettings;
     ios: IOSDebugSettings;
     actionBlock: ActionBlockDebugSettings;
     tableView: TableViewDebugSettings;
     lobby: LobbyDebugSettings;
+    game: GameDebugSettings;
     home: HomeDebugSettings;
     device: DeviceDebugSettings;
     connection: ConnectionDebugSettings;
@@ -83,6 +88,9 @@ class DebugSettings {
         };
         this.actionBlock = {
             traceBlocksVisbility: false
+        };
+        this.game = {
+            singleSidePots: true
         };
         this.tableView = {
             trace: true,

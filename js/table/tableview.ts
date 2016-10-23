@@ -1142,44 +1142,128 @@ export class TableView {
         /// </signature>
         const self = this;
         this.queue.wait(this.animationSettings.finishGamePrePause);
-        this.queue.pushCallback(() => {
-            this.logGameEvent("Game finished");
-            self.gameFinished(true);
-            self.gameStarted(false);
-            self.gamePlayers([]);
-            const places = self.places();
-            self.finishAnimation(places);
+        const activePlayersCount = this.activePlayersCount();
+        if (this.pots().length === 0 && winners.length > 0) {
+            this.onMoveMoneyToPot(winners.map(_ => _.Amount));
+        }
 
-            let needHightlightCards = true;
-            const activePlayersCount = this.activePlayersCount();
-            this.logGameEvent("Active players count", activePlayersCount);
-            needHightlightCards = activePlayersCount > 1;
-            if (needHightlightCards) {
-                self.tableCards.CardsHightlighted(true);
-            }
+        if (debugSettings.game.singleSidePots)
+        {
+            this.queue.pushCallback(() => {
+                this.logGameEvent("Game finished");
+                self.gameFinished(true);
+                self.gameStarted(false);
+                self.gamePlayers([]);
+                const places = self.places();
+                self.finishAnimation(places);
 
-            const c = this.calculateWinnerAmount(places, winners, needHightlightCards);
-            if (self.soundEnabled) {
-                soundManager.playWinChips();
-            }
+                let needHightlightCards = true;
+                const activePlayersCount = this.activePlayersCount();
+                this.logGameEvent("Active players count", activePlayersCount);
+                needHightlightCards = activePlayersCount > 1;
+                if (needHightlightCards) {
+                    self.tableCards.CardsHightlighted(true);
+                }
 
-            self.combinations(c);
+                const c = this.calculateWinnerAmount(places, winners, needHightlightCards);
+                if (self.soundEnabled) {
+                    soundManager.playWinChips();
+                }
 
-            self.setDealer(0);
-            self.cardsReceived = false;
-            self.actionBlock.buttonsEnabled(false);
-            self.actionBlock.dealsAllowed(false);
-            self.setCurrent(0);
-            self.pots([]);
-            self.refreshPlaces();
-            self.clearTimer();
+                self.combinations(c);
 
-            self.gameId(null);
+                self.setDealer(0);
+                self.cardsReceived = false;
+                self.actionBlock.buttonsEnabled(false);
+                self.actionBlock.dealsAllowed(false);
+                self.setCurrent(0);
+                self.pots([]);
+                self.refreshPlaces();
+                self.clearTimer();
 
-            self.handHistory.onGameFinished(gameId, winners, rake);
-            self.saveHandHistory();
-        });
-        this.queue.wait(this.animationSettings.cleanupTableTimeout);
+                self.gameId(null);
+
+                self.handHistory.onGameFinished(gameId, winners, rake);
+                self.saveHandHistory();
+            });
+            this.queue.wait(this.animationSettings.cleanupTableTimeout);
+        }
+        else
+        {
+            this.queue.pushCallback(() => {
+                this.logGameEvent("Game finished");
+                self.gameFinished(true);
+                self.gameStarted(false);
+                self.gamePlayers([]);
+                const places = self.places();
+                self.finishAnimation(places);
+
+                const activePlayersCount = this.activePlayersCount();
+                this.logGameEvent("Active players count", activePlayersCount);
+                let needHightlightCards = activePlayersCount > 1;
+                if (needHightlightCards) {
+                    self.tableCards.CardsHightlighted(true);
+                }
+
+                self.setDealer(0);
+                self.actionBlock.buttonsEnabled(false);
+                self.actionBlock.dealsAllowed(false);
+                self.setCurrent(0);
+                self.clearTimer();
+                self.gameId(null);
+            });
+            this.queue.pushCallback(() => {
+                const places = self.places();
+                const activePlayersCount = this.activePlayersCount();
+                let needHightlightCards = activePlayersCount > 1;
+                this.logGameEvent("Distribute pots: ", this.pots().slice());
+                let potsCount = winners.reduce((prev, current) => Math.max(prev, current.Pot), 0);
+                for (let potNumber = 1; potNumber <= potsCount; potNumber++) {
+                    // Inject wait first, since next callback will override that.
+                    this.queue.injectWait(8000);
+                    this.queue.injectCallback(() => {
+                        this.logGameEvent("Distribute pot " + potNumber);
+
+                        // Clear previous win amount for all players so all animation will play correctly. 
+                        for (let place of this.places())
+                        {
+                            if (place)
+                            {
+                                place.WinAmount(null);
+                                place.CardsHightlighted(false);
+                            }
+                        }
+
+                        const potWinners = winners.filter(_ => _.Pot === potNumber);
+                        const c = this.calculateWinnerAmount(places, potWinners, needHightlightCards);
+                        if (this.soundEnabled) {
+                            soundManager.playWinChips();
+                        }
+
+                        this.combinations(c);
+                        this.handHistory.onPotDistributed(this.gameId(), potNumber, winners);
+                        this.refreshPlaces();
+
+                        // Remove processed pot.
+                        const pots = this.pots();
+                        pots.shift();
+                        this.pots(pots);
+                        this.pots.notifySubscribers();
+                        this.logGameEvent("Removing pot", this.pots().slice());
+                    });
+                }
+            });
+            this.queue.pushCallback(() => {
+                console.log("Finishing the game");
+                self.cardsReceived = false;
+                self.pots([]);
+
+                self.handHistory.onGameFinished(gameId, winners, rake);
+                self.saveHandHistory();
+            });
+            this.queue.wait(this.animationSettings.cleanupTableTimeout - 8000);
+        }
+
         this.queue.pushCallback(() => {
             self.cleanTableAfterGameFinish();
             self.proposeRebuyOrAddon();

@@ -332,7 +332,11 @@ export class TablePlaceModel {
                 return "Пожалуйста, пополните ваш счёт";
             }
 
-            return "Подождите пожалуйста, вы начнете игру когда будете сидеть на большом блаинде";
+            if (tableView.actionBlock.waitbb()) {
+                return "Подождите пожалуйста, вы начнете игру когда будете сидеть на большом блаинде";
+            } else {
+                return "Помните, на позиции \"дилера\" или \"маленького блайнда\", вы не сможете войти в игру.";
+            }
         }
 
         if (tableView.actionBlock.mainButtonsBlockVisible()) {

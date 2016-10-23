@@ -51,20 +51,19 @@ export class HandHistory extends TableMonitor {
             this.players[playerId] = playerName;
         }
     }
-    onGameFinished(gameId: number, winners: GameWinnerModel[], rake: number) {
-        for (let potNumber = 1; potNumber <= winners.length; potNumber++) {
-            const potWinners = winners.filter(_ => _.Pot === potNumber);
-            if (potWinners.length === 0) {
-                break;
-            }
-
-            this.addDetailedOperation(_("handhistory.potInfo", { pot: potNumber }));
-            for (let i = 0; i < potWinners.length; i++) {
-                const pw = potWinners[i];
-                this.addDetailedOperation(_("handhistory.playerWin", { player: this.getPlayer(pw.PlayerId), amount: pw.Amount }));
-            }
+    onPotDistributed(gameId: number, potNumber: number, winners: GameWinnerModel[]) {
+        const potWinners = winners.filter(_ => _.Pot === potNumber);
+        if (potWinners.length === 0) {
+            return;
         }
 
+        this.addDetailedOperation(_("handhistory.potInfo", { pot: potNumber }));
+        for (let i = 0; i < potWinners.length; i++) {
+            const pw = potWinners[i];
+            this.addDetailedOperation(_("handhistory.playerWin", { player: this.getPlayer(pw.PlayerId), amount: pw.Amount }));
+        }
+    }
+    onGameFinished(gameId: number, winners: GameWinnerModel[], rake: number) {
         if (rake > 0) {
             this.addDetailedOperation(_("handhistory.rake", { amount: rake }));
         }
