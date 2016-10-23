@@ -604,7 +604,11 @@ export function registerBindings() {
                 const touch = event.gesture.touches[0];
                 let offset = 50;
                 if (PageBlock.useDoubleView) {
-                    offset = $(element).width() / 4;
+                    if ($(element).width() === 800) {
+                        offset = $(element).width() / 8;
+                    } else {
+                        offset = $(element).width() / 4;
+                    }
                 }
 
                 const relativePosition = touch.pageX - $(parent).offset().left - offset;
