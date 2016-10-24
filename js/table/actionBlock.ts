@@ -500,6 +500,7 @@ export class ActionBlock {
             this.tableView.fold();
         }
 
+        this.expanded(false);
         this.foldExecuted.dispatch();
     }
     checkOrCall() {
@@ -507,6 +508,7 @@ export class ActionBlock {
             this.tableView.checkOrCall();
         }
 
+        this.expanded(false);
         this.checkOrCallExecuted.dispatch();
     }
     betOrRaise() {
@@ -514,6 +516,7 @@ export class ActionBlock {
             this.tableView.betOrRaise();
         }
 
+        this.expanded(false);
         this.betOrRaiseExecuted.dispatch();
     }
     showChatPopup() {
@@ -754,6 +757,10 @@ export class ActionBlock {
             return;
         }
 
+        if (!this.mainButtonsBlockVisible()) {
+            return;
+        }
+
         this.expanded(true);
     }
 
@@ -762,6 +769,10 @@ export class ActionBlock {
     */
     collapse() {
         if (!appConfig.game.actionBlock.hasSecondaryPanel) {
+            return;
+        }
+
+        if (!this.mainButtonsBlockVisible()) {
             return;
         }
 

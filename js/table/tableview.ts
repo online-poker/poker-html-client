@@ -1059,6 +1059,7 @@ export class TableView {
         this.gameId(gameId);
         this.hasPendingMoney(false);
         this.actionBlock.isRaise(true);
+        this.actionBlock.expanded(false);
         this.actionBlock.updateBounds();
         this.actionsCount(0);
         this.setDealer(dealerSeat);
@@ -1147,11 +1148,11 @@ export class TableView {
             this.onMoveMoneyToPot(winners.map(_ => _.Amount));
         }
 
-        if (debugSettings.game.singleSidePots)
-        {
+        if (debugSettings.game.singleSidePots) {
             this.queue.pushCallback(() => {
                 this.logGameEvent("Game finished");
                 self.gameFinished(true);
+                this.actionBlock.expanded(false);
                 self.gameStarted(false);
                 self.gamePlayers([]);
                 const places = self.places();
@@ -1193,6 +1194,7 @@ export class TableView {
             this.queue.pushCallback(() => {
                 this.logGameEvent("Game finished");
                 self.gameFinished(true);
+                this.actionBlock.expanded(false);
                 self.gameStarted(false);
                 self.gamePlayers([]);
                 const places = self.places();
