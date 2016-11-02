@@ -21,7 +21,8 @@ class AppConfig {
     game = {
         handHistory: new GameHandHistory(),
         actionBlock: new GameActionBlock(),
-        seatMode: document.body.classList.contains("poker-feature-single-seat")
+        seatMode: document.body.classList.contains("poker-feature-single-seat"),
+        tablePreviewMode: document.body.classList.contains("poker-feature-table-preview")
     };
     tournament = {
         enabled: false,

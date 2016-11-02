@@ -15,6 +15,7 @@ import { SlowInternetService } from "../services/slowinternetservice";
 import { ConnectionWrapper } from "../services/connectionwrapper";
 import { SimplePopup } from "../popups/simplepopup";
 import { App } from "../app";
+import { appConfig } from "../appconfig";
 import { ActionBlock } from "./actionblock";
 import { GameActionsQueue } from "./gameactionsqueue";
 import { debugSettings } from "../debugsettings";
@@ -1451,6 +1452,7 @@ export class TableView {
         if (this.enableInjectPlayerCards) {
             this.queue.injectCallback(() => {
                 this.onPlayerCardsCore(playerId, cards);
+                this.ensureCardsOpened(playerId);
             });
         } else {
             this.queue.pushCallback(() => {
@@ -1474,6 +1476,16 @@ export class TableView {
             const currentPlayer = this.tablePlaces.getPlaceByPlayerId(playerId);
             this.foldCardsForPlayer(currentPlayer, true, this.animationSettings.foldAnimationTimeout / 2);
         });
+    }
+    private ensureCardsOpened(playerId: number) {
+        const places = this.places();
+        places.forEach((p) => {
+            if (p.PlayerId() === playerId) {
+                p.markCardsOpened();
+                p.cardsOverlayVisible(false);
+            }
+        });
+        this.refreshPlaces();
     }
     updateBetsAndMoney(currentPlayer: TablePlaceModel, type: number, amount: number) {
         const playerId = currentPlayer.PlayerId();
@@ -1603,8 +1615,13 @@ export class TableView {
             && currentPlayer.PlayerId() === myself.PlayerId()
             // && activePlayersCount > 1
             && !forceAnimation;
-        if (displayFoldedCards) {
+        const modeSupportShowingFoldedCards = appConfig.game.seatMode || appConfig.game.tablePreviewMode;
+        if (displayFoldedCards || modeSupportShowingFoldedCards) {
             currentPlayer.FoldedCards(currentCards);
+            currentPlayer.IsCardsFolded(true);
+        }
+
+        if (appConfig.game.tablePreviewMode) {
             currentPlayer.IsCardsFolded(true);
         }
 

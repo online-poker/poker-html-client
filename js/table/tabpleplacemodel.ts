@@ -66,6 +66,10 @@ export class TablePlaceModel {
     IsBetAnimationLocked: KnockoutObservable<boolean>;
     IsMovingBetToPot: KnockoutObservable<boolean>;
     IsDealCards: KnockoutObservable<boolean>;
+
+    /**
+     * Indicates that animation show for cards fold.
+     */
     IsFoldCards: KnockoutObservable<boolean>;
     IsCardsAnimating: KnockoutComputed<boolean>;
     Status: KnockoutObservable<number>;
@@ -257,9 +261,13 @@ export class TablePlaceModel {
         }
 
         const cardsClasses = convertToCards(cards);
-        this.RawCards(cards || null);
-        this.Cards(cardsClasses);
-        this.HandCards(cardsClasses);
+        if (this.IsCardsFolded()) {
+            this.FoldedCards(cardsClasses);
+        } else {
+            this.RawCards(cards || null);
+            this.Cards(cardsClasses);
+            this.HandCards(cardsClasses);
+        }
     }
     markCardsOpened() {
         this.IsCardsOpened(true);
