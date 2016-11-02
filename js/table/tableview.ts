@@ -1615,7 +1615,7 @@ export class TableView {
             && currentPlayer.PlayerId() === myself.PlayerId()
             // && activePlayersCount > 1
             && !forceAnimation;
-        const modeSupportShowingFoldedCards = appConfig.game.seatMode || appConfig.game.tablePreviewMode;
+        const modeSupportShowingFoldedCards = appConfig.game.seatMode;
         if (displayFoldedCards || modeSupportShowingFoldedCards) {
             currentPlayer.FoldedCards(currentCards);
             currentPlayer.IsCardsFolded(true);
