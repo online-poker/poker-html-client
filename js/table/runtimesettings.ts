@@ -14,9 +14,19 @@
     showNewsAfterLogin: boolean = true;
 
     /**
-    * Enables or disables flag indicating whether auto-fold and auto-check functionality would be reset each new game.
-    */
-    clearAutoFoldOrCheckOnNewGame: boolean = true;
+     * Game settings
+     */
+    game = {
+        /**
+         * Time to perform the move in seconds.
+         */
+        moveTime: 60,
+
+        /**
+         * Enables or disables flag indicating whether auto-fold and auto-check functionality would be reset each new game.
+         */
+        clearAutoFoldOrCheckOnNewGame: true,
+    };
 
     /**
     * Sound settings

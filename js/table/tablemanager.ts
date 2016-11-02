@@ -404,7 +404,7 @@ class TableManager {
 
             tableView.onPlayerCards(playerId, decodeCardsArray(cards));
             const cardsString = cardsArray(cards);
-            self.logDataEvent("TableId - ", tableId, " PlayerId - ", playerId, " Cards - ", cardsString.join(" "));
+            self.logDataEvent("Player cards: TableId - ", tableId, " PlayerId - ", playerId, " Cards - ", cardsString.join(" "));
         };
         gameHub.client.PlayerCardsMucked = function (tableId, playerId) {
             if (wrapper.terminated) {

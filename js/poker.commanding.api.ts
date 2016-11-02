@@ -237,6 +237,14 @@ namespace OnlinePoker {
                     const data = { TableId: tableId };
                     return super.Call('ComeBack', data, callback);
                 }
+                Muck(tableId: number, callback?) {
+                    const data = { TableId: tableId };
+                    return super.Call('Muck', data, callback);
+                }
+                ShowCards(tableId: number, callback?) {
+                    const data = { TableId: tableId };
+                    return super.Call('ShowCards', data, callback);
+                }
                 SetOpenCardsParameters(tableId: number, openCardsAutomatically: boolean, callback) {
                     const data = { TableId: tableId, OpenCardsAutomatically: openCardsAutomatically };
                     return super.Call('SetOpenCardsParameters', data, callback);

@@ -66,6 +66,22 @@ export class GameActionsQueue {
     * Push waiting task in the queue
     * @param timeout Number The function which generated deferred.
     */
+    waitWithInterruption(timeout: number) {
+        if (!GameActionsQueue.waitDisabled && timeout > 0) {
+            // Split wait interval by 100ms tasks which allow
+            // inject other tasks and don't wait until everything is finished. 
+            for (let i = 0; i < timeout / 200; i++) {
+                this.push(() => {
+                    return wait(200);
+                });
+            }
+        }
+    }
+
+    /**
+    * Push waiting task in the queue
+    * @param timeout Number The function which generated deferred.
+    */
     injectWait(timeout: number) {
         if (!GameActionsQueue.waitDisabled && timeout > 0) {
             this.inject(() => {

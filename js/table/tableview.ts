@@ -190,6 +190,8 @@ export class TableView {
     /* If of the last message Id starting from which messages could be displayed */
     public lastMessageId = 0;
 
+    private enableInjectPlayerCards = false;
+
     constructor(public tableId: number, public model: GameTableModel) {
         /// <signature>
         ///     <summary>Updates the information about the table from the server</summary>
@@ -278,7 +280,7 @@ export class TableView {
 
             let pass = self.timePass();
             pass = pass === null ? 0 : pass;
-            return 30 - pass;
+            return runtimeSettings.game.moveTime - pass;
         });
         this.currentRaise = ko.computed<number>({
             read: function () {
@@ -1072,7 +1074,7 @@ export class TableView {
 
         const combinations: string[] = [];
 
-        if (runtimeSettings.clearAutoFoldOrCheckOnNewGame) {
+        if (runtimeSettings.game.clearAutoFoldOrCheckOnNewGame) {
             this.actionBlock.autoFoldOrCheck(false);
         }
 
@@ -1123,6 +1125,7 @@ export class TableView {
         });
     }
     onGameStarted(gameId: number, players: GamePlayerStartInformation[], actions: GameActionStartInformation[], dealerSeat: number) {
+        this.enableInjectPlayerCards = false;
         this.queue.pushCallback(() => {
             this.onGameStartedCore(gameId, players, actions, dealerSeat);
             this.handHistory.onGameStarted(gameId, players, actions, dealerSeat);
@@ -1186,11 +1189,10 @@ export class TableView {
 
                 self.handHistory.onGameFinished(gameId, winners, rake);
                 self.saveHandHistory();
+                this.enableInjectPlayerCards = true;
             });
-            this.queue.wait(this.animationSettings.cleanupTableTimeout);
-        }
-        else
-        {
+            this.queue.waitWithInterruption(this.animationSettings.cleanupTableTimeout);
+        } else {
             this.queue.pushCallback(() => {
                 this.logGameEvent("Game finished");
                 self.gameFinished(true);
@@ -1262,11 +1264,13 @@ export class TableView {
 
                 self.handHistory.onGameFinished(gameId, winners, rake);
                 self.saveHandHistory();
+                this.enableInjectPlayerCards = true;
             });
             this.queue.wait(this.animationSettings.cleanupTableTimeout - 8000);
         }
 
         this.queue.pushCallback(() => {
+            this.enableInjectPlayerCards = false;
             self.cleanTableAfterGameFinish();
             self.proposeRebuyOrAddon();
             self.displayRebuyOrAddonTime();
@@ -1444,20 +1448,26 @@ export class TableView {
     }
     onPlayerCards(playerId: number, cards: number[]) {
         const self = this;
-        this.queue.pushCallback(() => {
-            if (!self.cardsReceived) {
-                if (playerId === authManager.loginId()) {
-                    self.startDealCards();
-                    this.queue.pushCallback(() => {
+        if (this.enableInjectPlayerCards) {
+            this.queue.injectCallback(() => {
+                this.onPlayerCardsCore(playerId, cards);
+            });
+        } else {
+            this.queue.pushCallback(() => {
+                if (!self.cardsReceived) {
+                    if (playerId === authManager.loginId()) {
+                        self.startDealCards();
+                        this.queue.pushCallback(() => {
+                            self.onPlayerCardsCore(playerId, cards);
+                        });
+                    } else {
                         self.onPlayerCardsCore(playerId, cards);
-                    });
+                    }
                 } else {
                     self.onPlayerCardsCore(playerId, cards);
                 }
-            } else {
-                self.onPlayerCardsCore(playerId, cards);
-            }
-        });
+            });
+        }
     }
     onPlayerCardsMucked(playerId: number) {
         this.queue.pushCallback(() => {
@@ -2107,6 +2117,40 @@ export class TableView {
         }).fail(function (jqXHR, textStatus, errorThrown) {
             self.turnRecovery();
         });
+    }
+
+    /**
+     * Show cards for the current player.
+     */
+    showCards() {
+        const self = this;
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        gameApi.ShowCards(this.tableId, function (data, status, jqXHR) {
+            if (data.Status !== "Ok") {
+                self.reportApiError(data.Status);
+            }
+        });
+    }
+
+    /**
+     * Muck cards for the current player.
+     */
+    muckCards() {
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        gameApi.Muck(this.tableId, (data, status, jqXHR) => {
+            if (data.Status !== "Ok") {
+                this.reportApiError(data.Status);
+            }
+        });
+    }
+
+    toggleCards() {
+        const my = this.myPlayer();
+        if (my.IsCardsOpened()) {
+            this.muckCards();
+        } else {
+            this.showCards();
+        }
     }
 
     /**
