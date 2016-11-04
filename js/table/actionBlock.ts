@@ -21,6 +21,7 @@ export class ActionBlock {
     public tableSlider: TableSlider;
     public dealsAllowed: KnockoutObservable<boolean>;
     public buttonsEnabled: KnockoutObservable<boolean>;
+    public showCardsEnabled: KnockoutObservable<boolean> = ko.observable(false);
     public processing: KnockoutObservable<boolean>;
     public turnEnabled: KnockoutObservable<boolean>;
     public isSitOut: KnockoutObservable<boolean>;

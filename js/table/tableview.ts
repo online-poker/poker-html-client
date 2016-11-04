@@ -1005,6 +1005,7 @@ export class TableView {
             this.setDealer(dealerSeat);
 
             this.actionBlock.buttonsEnabled(true);
+            this.actionBlock.showCardsEnabled(true);
             this.actionBlock.dealsAllowed(true);
             timeService.setTimeout(() => {
                 this.actionBlock.updateBounds();
@@ -1063,6 +1064,7 @@ export class TableView {
         this.hasPendingMoney(false);
         this.actionBlock.isRaise(true);
         this.actionBlock.expanded(false);
+        this.actionBlock.showCardsEnabled(true);
         this.actionBlock.updateBounds();
         this.actionsCount(0);
         this.setDealer(dealerSeat);
@@ -2140,12 +2142,14 @@ export class TableView {
      * Show cards for the current player.
      */
     showCards() {
-        const self = this;
+        this.actionBlock.showCardsEnabled(false);
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        gameApi.ShowCards(this.tableId, function (data, status, jqXHR) {
+        gameApi.ShowCards(this.tableId, (data, status, jqXHR) => {
             if (data.Status !== "Ok") {
-                self.reportApiError(data.Status);
+                this.reportApiError(data.Status);
             }
+        }).fail((jqXHR, textStatus, errorThrown) => {
+            this.actionBlock.showCardsEnabled(true);
         });
     }
 
@@ -2153,11 +2157,14 @@ export class TableView {
      * Muck cards for the current player.
      */
     muckCards() {
+        this.actionBlock.showCardsEnabled(false);
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
         gameApi.Muck(this.tableId, (data, status, jqXHR) => {
             if (data.Status !== "Ok") {
                 this.reportApiError(data.Status);
             }
+        }).fail((jqXHR, textStatus, errorThrown) => {
+            this.actionBlock.showCardsEnabled(true);
         });
     }
 
@@ -2465,16 +2472,21 @@ export class TableView {
 
         if (this.pauseDate() != null) {
             const updateDescription = () => {
-                const pauseEnds = moment(this.pauseDate()).add(this.tournament().tournamentData().PauseTimeout, "minutes");
-                const currentMoment = moment().add(timeService.timeDiff, "ms");
-                const diff = pauseEnds.diff(currentMoment);
-                if (diff < 0) {
-                    this.clearPauseMessage();
-                    return;
-                }
+                const tournament = this.tournament();
+                if (tournament) {
+                    const pauseEnds = moment(this.pauseDate()).add(tournament.tournamentData().PauseTimeout, "minutes");
+                    const currentMoment = moment().add(timeService.timeDiff, "ms");
+                    const diff = pauseEnds.diff(currentMoment);
+                    if (diff < 0) {
+                        this.clearPauseMessage();
+                        return;
+                    }
 
-                const duration = moment.duration(diff);
-                this.pauseDescription(_("table.gameContinue", { startTime: duration.humanize(true) }));
+                    const duration = moment.duration(diff);
+                    this.pauseDescription(_("table.gameContinue", { startTime: duration.humanize(true) }));
+                } else {
+                    this.pauseDescription(_("table.waitingForSeat"));
+                }
             };
             this.pauseDescriptionHandle = timeService.setInterval(updateDescription, 500);
         }
