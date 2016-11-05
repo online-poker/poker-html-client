@@ -1227,15 +1227,13 @@ export class TableView {
                 let potsCount = winners.reduce((prev, current) => Math.max(prev, current.Pot), 0);
                 for (let potNumber = 1; potNumber <= potsCount; potNumber++) {
                     // Inject wait first, since next callback will override that.
-                    this.queue.injectWait(8000);
+                    this.queue.injectWaitWithInterruption(2000);
                     this.queue.injectCallback(() => {
                         this.logGameEvent("Distribute pot " + potNumber);
 
                         // Clear previous win amount for all players so all animation will play correctly. 
-                        for (let place of this.places())
-                        {
-                            if (place)
-                            {
+                        for (let place of this.places()) {
+                            if (place) {
                                 place.WinAmount(null);
                                 place.CardsHightlighted(false);
                             }
@@ -1253,10 +1251,11 @@ export class TableView {
 
                         // Remove processed pot.
                         const pots = this.pots();
-                        pots.shift();
+                        pots.pop();
                         this.pots(pots);
                         this.pots.notifySubscribers();
                         this.logGameEvent("Removing pot", this.pots().slice());
+                        this.refreshPlaces();
                     });
                 }
             });
@@ -1269,7 +1268,7 @@ export class TableView {
                 self.saveHandHistory();
                 this.enableInjectPlayerCards = true;
             });
-            this.queue.wait(this.animationSettings.cleanupTableTimeout - 8000);
+            // this.queue.wait(this.animationSettings.cleanupTableTimeout - 8000);
         }
 
         this.queue.pushCallback(() => {
