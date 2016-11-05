@@ -805,6 +805,15 @@ export class ActionBlock {
         const tableIsBig = this.tableView.places().filter(item => item != null).length > 3;
         this.needBB(tableIsBig && !currentPlayer.IsParticipatingStatus());
     }
+    toggleAutoFoldOrCheck() {
+        this.autoFoldOrCheck(!this.autoFoldOrCheck());
+    }
+    toggleSkipDeals() {
+        this.skipDeals(!this.skipDeals());
+    }
+    toggleWaitBB() {
+        this.waitbb(!this.waitbb());
+    }
     private getWaitBBBlockVisible() {
         if (this.sitoutBlockVisible()) {
             return false;
