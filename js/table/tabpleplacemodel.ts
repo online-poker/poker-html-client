@@ -1,8 +1,8 @@
 ﻿/* tslint:disable:no-bitwise */
 
 import * as ko from "knockout";
-import * as timeService from "../timeService";
-import { TableView } from "./tableView";
+import * as timeService from "../timeservice";
+import { TableView } from "./tableview";
 import { _ } from "../languagemanager";
 import { withCommas } from "../helpers";
 

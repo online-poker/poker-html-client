@@ -1,7 +1,7 @@
 ﻿/// <reference types="knockout" />
 
 import ko = require("knockout");
-import { TablesPage } from "../../../pages/TablesPage";
+import { TablesPage } from "../../../pages/tablespage";
 
 export class TableMenuComponent {
     private page: TablesPage;

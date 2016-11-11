@@ -1,5 +1,5 @@
 ﻿import { App } from "../app";
-import * as authManager from "../authManager";
+import * as authManager from "../authmanager";
 import { keyboardActivationService } from "../services";
 import { PageBase } from "../ui/pagebase";
 

@@ -2,7 +2,7 @@
 
 import * as ko from "knockout";
 import * as moment from "moment";
-import * as timeService from "../timeService";
+import * as timeService from "../timeservice";
 import { connectionService } from "../services";
 
 export class ChatControl {

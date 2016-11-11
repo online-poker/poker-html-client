@@ -3,7 +3,7 @@
 import * as ko from "knockout";
 import { App } from "../app";
 import { PopupBase } from "../ui/popupbase";
-import * as timeService from "../timeService";
+import * as timeService from "../timeservice";
 
 declare var app: App;
 

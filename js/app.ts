@@ -1,10 +1,10 @@
-import * as timeService from "./timeService";
+import * as timeService from "./timeservice";
 import * as metadataManager from "./metadatamanager";
 import { SimplePopup } from "./popups/simplepopup";
-import * as authManager from "./authManager";
+import * as authManager from "./authmanager";
 import { settings } from "./settings";
 import * as broadcastService from "./services/broadcastservice";
-import * as commandManager from "./commandManager";
+import * as commandManager from "./commandmanager";
 import { _ } from "./languagemanager";
 import {
     slowInternetService,

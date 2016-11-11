@@ -1,9 +1,9 @@
 declare var apiHost: string;
 
 import { App } from "../app";
-import * as timeService from "../timeService";
+import * as timeService from "../timeservice";
 import * as metadataManager from "../metadatamanager";
-import * as authManager from "../authManager";
+import * as authManager from "../authmanager";
 import { PageBase } from "../ui/pagebase";
 import { keyboardActivationService } from "../services";
 import { debugSettings } from "../debugsettings";

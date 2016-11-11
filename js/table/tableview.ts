@@ -2,10 +2,10 @@
 
 import * as ko from "knockout";
 import * as moment from "moment";
-import * as timeService from "../timeService";
+import * as timeService from "../timeservice";
 import * as authManager from "../authmanager";
 import { TablePlaceModel } from "./tabpleplacemodel";
-import { TournamentView } from "./tournamentView";
+import { TournamentView } from "./tournamentview";
 import { TablePlaces } from "./tableplaces";
 import { HandHistory } from "./handhistory";
 import { PlayerMessage } from "./playerMessage";
@@ -16,7 +16,7 @@ import { ConnectionWrapper } from "../services/connectionwrapper";
 import { SimplePopup } from "../popups/simplepopup";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
-import { ActionBlock } from "./actionblock";
+import { ActionBlock } from "./actionBlock";
 import { GameActionsQueue } from "./gameactionsqueue";
 import { debugSettings } from "../debugsettings";
 import { settings } from "../settings";

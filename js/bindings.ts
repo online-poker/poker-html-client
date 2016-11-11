@@ -4,7 +4,7 @@ import ko = require("knockout");
 import * as moment from "moment";
 import { App } from "./app";
 import { withCommas } from "./helpers";
-import * as timeService from "./timeService";
+import * as timeService from "./timeservice";
 import { debugSettings } from "./debugsettings";
 import { _ } from "./languagemanager";
 

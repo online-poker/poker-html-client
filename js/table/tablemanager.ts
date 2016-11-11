@@ -1,17 +1,17 @@
 ﻿/* tslint:disable:no-bitwise no-use-before-declare */
 
 import * as ko from "knockout";
-import * as timeService from "../timeService";
+import * as timeService from "../timeservice";
 import { TableView } from "./tableview";
 import { TournamentView } from "./tournamentview";
 import { slowInternetService, connectionService } from "../services";
 import { ConnectionWrapper } from "../services/connectionwrapper";
 import * as broadcastService from "../services/broadcastservice";
 import { SimplePopup } from "../popups/simplepopup";
-import * as authManager from "../authManager";
+import * as authManager from "../authmanager";
 import { debugSettings } from "../debugsettings";
 import { settings } from "../settings";
-import * as commandManager from "../commandManager";
+import * as commandManager from "../commandmanager";
 import { _ } from "../languagemanager";
 
 declare var apiHost: string;

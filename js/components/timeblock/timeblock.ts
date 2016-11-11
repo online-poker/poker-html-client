@@ -1,7 +1,7 @@
 ﻿/// <reference types="knockout" />
 
 import ko = require("knockout");
-import * as timeService from "../../timeService";
+import * as timeService from "../../timeservice";
 
 class TimeBlockComponent {
     private currentTime: KnockoutComputed<string>;

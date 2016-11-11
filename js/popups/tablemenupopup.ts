@@ -3,7 +3,7 @@
 
 import { TournamentView } from "../table/tournamentview";
 import { App } from "../app";
-import * as authManager from "../authManager";
+import * as authManager from "../authmanager";
 import { settings } from "../settings";
 
 declare var apiHost: string;

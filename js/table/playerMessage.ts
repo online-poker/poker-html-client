@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import * as authManager from "../authManager";
+import * as authManager from "../authmanager";
 
 export class PlayerMessage {
     messageId: number;

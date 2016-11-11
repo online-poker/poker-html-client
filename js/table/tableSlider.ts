@@ -1,5 +1,5 @@
 ﻿import * as ko from "knockout";
-import * as timeService from "../timeService";
+import * as timeService from "../timeservice";
 import { TablePlaceModel } from "./tabpleplacemodel";
 
 export class TableSlider {

@@ -8,7 +8,7 @@ import { DeviceEventService } from "./deviceeventservice";
 import { SoundManager } from "./soundmanager";
 import { OrientationService } from "./orientationservice";
 import { PushService } from "./pushservice";
-import { WebsiteService } from "./websiteservice";
+import { WebsiteService } from "./websiteService";
 
 export var keyboardActivationService = new KeyboardActivationService();
 export var slowInternetService = new SlowInternetService();

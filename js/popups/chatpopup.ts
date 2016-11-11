@@ -1,7 +1,7 @@
 ﻿/// <reference path="../poker.commanding.api.ts" />
 
 import { ChatControl } from "../ui/chatcontrol";
-import { PlayerMessage } from "../table/playermessage";
+import { PlayerMessage } from "../table/playerMessage";
 import { SystemMessage } from "../table/SystemMessage";
 import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";

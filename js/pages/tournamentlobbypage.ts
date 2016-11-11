@@ -7,7 +7,7 @@ import * as metadataManager from "../metadatamanager";
 import { SimplePopup } from "../popups/simplepopup";
 import * as tableManager from "../table/tablemanager";
 import * as timeService from "../timeservice";
-import * as authManager from "../authManager";
+import * as authManager from "../authmanager";
 import { PageBase } from "../ui/pagebase";
 import { debugSettings } from "../debugsettings";
 import { reloadManager } from "../services";

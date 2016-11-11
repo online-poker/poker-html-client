@@ -3,7 +3,7 @@
 /// <reference path="../app.ts" />
 /* tslint:disable:no-string-literal */
 
-import * as timeService from "../timeService";
+import * as timeService from "../timeservice";
 import { uiManager } from "./uimanager";
 import { App } from "../app";
 

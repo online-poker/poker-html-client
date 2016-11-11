@@ -17,8 +17,8 @@ import { uiManager } from "../services/uimanager";
 import { PageBase } from "../ui/pagebase";
 import { debugSettings } from "../debugsettings";
 import { settings } from "../settings";
-import { appConfig } from "../appConfig";
-import * as commandManager from "../commandManager";
+import { appConfig } from "../appconfig";
+import * as commandManager from "../commandmanager";
 
 declare var app: App;
 

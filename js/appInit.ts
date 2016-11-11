@@ -5,8 +5,8 @@ import { registerExtenders } from "./extenders";
 import { updateDefaultMessages } from "./validationConfiguration";
 import { registerComponents } from "./components/registration";
 import { LanguageManager, _ } from "./languagemanager";
-import { debugSettings } from "./debugSettings";
-import { TableView } from "./table/tableView";
+import { debugSettings } from "./debugsettings";
+import { TableView } from "./table/tableview";
 import { ActionBlock } from "./table/actionBlock";
 // import { ChipItem } from "./table/chipItem";
 

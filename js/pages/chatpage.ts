@@ -1,6 +1,6 @@
 ﻿import * as ko from "knockout";
 import { PlayerMessage } from "../table/playerMessage";
-import * as timeService from "../timeService";
+import * as timeService from "../timeservice";
 import { connectionService, keyboardActivationService } from "../services";
 import { SimplePopup } from "../popups/simplepopup";
 import { _ } from "../languagemanager";

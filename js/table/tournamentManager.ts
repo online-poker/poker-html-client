@@ -1,4 +1,4 @@
-﻿import { TournamentView } from "./tournamentView";
+﻿import { TournamentView } from "./tournamentview";
 
 class TournamentManager {
     /**

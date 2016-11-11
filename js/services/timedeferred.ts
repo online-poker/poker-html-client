@@ -1,6 +1,6 @@
 ﻿/// <reference types="jquery" />
 /// <reference path="../typings/jquery.d.ts" />
-import * as timeService from "../timeService";
+import * as timeService from "../timeservice";
 
 export function wait(time) {
     return $.Deferred(function (dfd) {

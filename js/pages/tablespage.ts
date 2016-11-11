@@ -2,7 +2,7 @@
 
 import * as ko from "knockout";
 import { App } from "../app";
-import { appConfig } from "../appConfig";
+import { appConfig } from "../appconfig";
 import * as metadataManager from "../metadatamanager";
 import * as tableManager from "../table/tablemanager";
 import {
@@ -18,7 +18,7 @@ import { uiManager } from "../services/uimanager";
 import { PageBase } from "../ui/pagebase";
 import { debugSettings } from "../debugsettings";
 import { settings } from "../settings";
-import * as commandManager from "../commandManager";
+import * as commandManager from "../commandmanager";
 
 declare var app: App;
 

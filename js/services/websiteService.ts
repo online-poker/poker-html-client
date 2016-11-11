@@ -1,6 +1,4 @@
-﻿/// <reference path="../languageManager.ts" />
-
-declare var authToken: any;
+﻿declare var authToken: any;
 import { l } from "../languagemanager";
 
 /** 

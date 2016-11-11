@@ -1,6 +1,6 @@
 ﻿declare var baseUrl: string;
 
-import * as timeService from "../timeService";
+import * as timeService from "../timeservice";
 import { ConnectionService } from "./connectionservice";
 import { slowInternetService, connectionService } from "./index";
 import { debugSettings } from "../debugsettings";

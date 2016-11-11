@@ -6,7 +6,7 @@ import * as ko from "knockout";
 import * as moment from "moment";
 import { App } from "../app";
 import * as metadataManager from "../metadatamanager";
-import * as timeService from "../timeService";
+import * as timeService from "../timeservice";
 import * as tableManager from "../table/tablemanager";
 import { PageBase } from "../ui/pagebase";
 import { appConfig } from "../appconfig";
