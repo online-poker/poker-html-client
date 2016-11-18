@@ -26,6 +26,11 @@ export class SlowInternetService {
         document.addEventListener("offline", () => this.onOffline(), false);
         app.slowConnectionPopup.onretry = () => {
             this.log("Retry connection");
+            if (debugSettings.connection.windowReloadForRetry) {
+                window.location.reload();
+                return;
+            }
+
             this.suppressReconnected = false;
             this.executeRetryHandler();
 

@@ -42,6 +42,7 @@ interface ConnectionDebugSettings {
     slowInternet: boolean;
     signalR: boolean;
     dataEvents: boolean;
+    windowReloadForRetry: boolean;
 }
 
 interface ApplicationDebugSettings {
@@ -116,7 +117,8 @@ class DebugSettings {
         this.connection = {
             signalR: true,
             slowInternet: false,
-            dataEvents: false
+            dataEvents: false,
+            windowReloadForRetry: true,
         };
         this.application = {
             reloadManager: true,
