@@ -57,8 +57,14 @@ export class ConnectionWrapper {
                 return;
             }
 
-            const source = <CloseEvent>error.source;
             this.logEvent("SignalR Error hapens", error);
+            if (error.source === "TimeoutException") {
+                this.logEvent("Timeout for connection.");
+                connectionService.recoverableError.dispatch();
+                return;
+            }
+
+            const source = <CloseEvent>error.source;
 
             if (source === null) {
                 // We don't know that this is means, so just fail
@@ -193,8 +199,8 @@ export class ConnectionWrapper {
             const connectionInfo = "HID:" + hubId;
             this.logEvent("Connected to server! Connection " + connectionInfo);
             this.refreshHandle = setTimeout(() => {
-                // this.terminateConnection();
-                // connectionService.recoverableError.dispatch();
+                this.terminateConnection();
+                connectionService.recoverableError.dispatch();
             }, 1000 * 60 * 60);
             result.resolve(this);
         }).fail((message) => {

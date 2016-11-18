@@ -1247,7 +1247,9 @@ export class App {
 
     private setupClosePopupOnClick() {
         $(".popup-background").on("tap", () => {
-            app.closePopup();
+            if (app.currentPopup !== "slowConnection") {
+                app.closePopup();
+            }
         });
     }
     private preloadTableImages() {
