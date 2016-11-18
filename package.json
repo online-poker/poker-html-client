@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/online-poker/poker-html-client#readme",
   "devDependencies": {
-    "@types/cordova": "0.0.33",
+    "@types/cordova": "^0.0.34",
     "@types/cordova-plugin-camera": "0.0.2",
     "@types/cordova-plugin-device": "0.0.2",
     "@types/cordova-plugin-keyboard": "^0.1.2",
@@ -42,6 +42,6 @@
     "@types/signalr": "^2.2.31",
     "poker-server-api": "0.0.2",
     "tslint": "^3.15.1",
-    "typescript": "^2.0.3"
+    "typescript": "^2.0.10"
   }
 }
