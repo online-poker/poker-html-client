@@ -1128,7 +1128,6 @@ export class TableView {
         });
     }
     onGameStarted(gameId: number, players: GamePlayerStartInformation[], actions: GameActionStartInformation[], dealerSeat: number) {
-        this.enableInjectPlayerCards = false;
         this.queue.pushCallback(() => {
             this.onGameStartedCore(gameId, players, actions, dealerSeat);
             this.handHistory.onGameStarted(gameId, players, actions, dealerSeat);
@@ -1728,6 +1727,7 @@ export class TableView {
         ///     <param name="amount" type="Number">Amount of money which player put in the bet</param>
         ///     <param name="nextPlayerId" type="Number">Id of the player which join the table</param>
         /// </signature>
+        this.enableInjectPlayerCards = false;
         this.queue.pushCallback(() => {
             this.onBetCore(playerId, type, amount, nextPlayerId);
             this.handHistory.onBet(playerId, type, amount, nextPlayerId);
