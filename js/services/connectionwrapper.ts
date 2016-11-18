@@ -74,6 +74,12 @@ export class ConnectionWrapper {
             }
 
             /* tslint:disable:no-string-literal */
+            if (error["message"] !== null && error["message"] !== undefined && error.message === "Error during negotiation request.") {
+                this.logEvent("Error during negotiation. Schedule reconnecting.");
+                connectionService.recoverableError.dispatch();
+                return;
+            }
+
             if (source["code"] === null || source["code"] === undefined) {
                 this.logEvent("Unrecoverable SignalR error without code happens, please discover that this is means.", source);
                 return;
@@ -203,7 +209,7 @@ export class ConnectionWrapper {
                 connectionService.recoverableError.dispatch();
             }, 1000 * 60 * 60);
             result.resolve(this);
-        }).fail((message) => {
+        }).fail((message: string = "") => {
             this.logEvent("Could not Connect!" + message);
             timeService.setTimeout(() => {
                 this.establishConnection(maxAttempts - 1).then(() => {
