@@ -169,7 +169,7 @@ namespace OnlinePoker {
                     super(host, 'Game');
                 }
 
-                GetTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType,
+                GetTables(fullTables: number | null, privateTables: number | null, maxPlayers: number | null, betLevels: number, moneyType: number, limitType: number,
                     callback?: (data: ApiResult<LobbyTableItem[]>, textStatus: string, jqXHR: JQueryXHR) => any) {
                     const data = {
                         FullTables: fullTables,

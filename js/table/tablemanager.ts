@@ -107,7 +107,7 @@ class TableManager {
         const self = this;
         const api = new OnlinePoker.Commanding.API.Game(apiHost);
         const result = $.Deferred();
-        api.GetTables(null, false, 0, 0, 1, 0, null).done(function (data) {
+        api.GetTables(null, 0, 0, 0, 1, 0, null).done(function (data) {
             const tablesData = <GameTableModel[]>data.Data;
             api.GetSitingTables().done(function (data) {
                 const status = data.Status;

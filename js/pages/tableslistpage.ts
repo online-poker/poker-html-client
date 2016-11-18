@@ -45,7 +45,7 @@ export class TablesListPage extends PageBase {
         this.loading(true);
         const self = this;
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        const privateTables = false;
+        const privateTables = 0;
         const fullTables = null;
 
         const lobbyPage = app.lobbyPageBlock.lobbyPage;

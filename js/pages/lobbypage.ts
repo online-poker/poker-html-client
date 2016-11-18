@@ -277,7 +277,7 @@ export class LobbyPage extends PageBase {
     refreshTables() {
         const self = this;
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        const privateTables = false;
+        const privateTables = 0;
         const fullTables = null;
 
         const options = this.cashOptions;
