@@ -1,4 +1,6 @@
-﻿declare var baseUrl: string;
+﻿/// <reference types="applicationinsights" />
+declare var baseUrl: string;
+declare var appInsights: Client;
 
 import * as timeService from "../timeservice";
 import { ConnectionService } from "./connectionservice";
@@ -237,5 +239,7 @@ export class ConnectionWrapper {
         if (debugSettings.connection.signalR) {
             console.log(message, params);
         }
+
+        appInsights.trackTrace(message);
     }
 }
