@@ -3,6 +3,7 @@
 import { ConnectionWrapper } from "./connectionwrapper";
 import { slowInternetService } from "./index";
 import { debugSettings } from "../debugsettings";
+import { CancelToken } from "./cancelToken";
 
 export class ConnectionService {
     static stateConversion = {
@@ -25,6 +26,7 @@ export class ConnectionService {
     attempts = 0;
     lastAttempt = 0;
     lastConnection: JQueryDeferred<any> = null;
+    cancelCurrentConnection: (reason: string) => void | null = null;
     currentConnection: ConnectionWrapper = null;
 
     constructor() {
@@ -84,10 +86,23 @@ export class ConnectionService {
         this.lastConnection = result;
         return result;
     }
+    async establishConnectionAsync(maxAttempts = 3) {
+        const attempts = this.attempts++;
+        this.lastAttempt = attempts;
+        this.cancelConnection();
+        let cancelToken = CancelToken.source();
+        this.cancelCurrentConnection = cancelToken.cancel;
+        const result = await this.currentConnection.establishConnectionAsync(maxAttempts, cancelToken.token);
+        return result;
+    }
     cancelConnection() {
         if (this.lastConnection !== null && this.lastConnection.state() === "pending") {
             this.lastConnection.notify("cancel");
             this.lastConnection = null;
+        }
+
+        if (this.cancelCurrentConnection !== null) {
+            this.cancelCurrentConnection("Requested connection cancel")
         }
     }
     buildStartConnection() {
@@ -97,6 +112,14 @@ export class ConnectionService {
         }
 
         return this.currentConnection.buildStartConnection();
+    }
+    async buildStartConnectionAsync() {
+        if (this.currentConnection === null) {
+            this.logEvent("No active connection to terminate");
+            return null;
+        }
+
+        return await this.currentConnection.buildStartConnectionAsync();
     }
     private logEvent(message: string, ...params: any[]) {
         if (debugSettings.connection.signalR) {

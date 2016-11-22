@@ -107,6 +107,11 @@ namespace OnlinePoker {
                         dataType: 'json'
                     });
                 }
+                async CallAsync<T>(methodName: string, parameters: any) {
+                    return new Promise<T>(function (resolve, reject) {
+                        this.Call(methodName, parameters, null).then(resolve, reject);
+                    });
+                }
                 SimpleCall<T>(methodName: string, successCallback: JQueryTypedCallback<T>): JQueryPromise<T> {
                     const data = {};
                     return <JQueryPromise<T>>this.Call(methodName, data, successCallback);
@@ -180,6 +185,17 @@ namespace OnlinePoker {
                         LimitType: limitType
                     };
                     return <JQueryPromise<ApiResult<LobbyTableItem[]>>>super.Call('GetTables', data, callback);
+                }
+                async GetTablesAsync(fullTables: number | null, privateTables: number | null, maxPlayers: number | null, betLevels: number, moneyType: number, limitType: number) {
+                    const data = {
+                        FullTables: fullTables,
+                        Private: privateTables,
+                        MaxPlayers: maxPlayers,
+                        BetLevels: betLevels,
+                        MoneyType: moneyType,
+                        LimitType: limitType
+                    };
+                    return super.CallAsync<ApiResult<LobbyTableItem[]>>('GetTables', data);
                 }
                 GetTable(tableId: number, callback?) {
                     const data = { TableId: tableId };

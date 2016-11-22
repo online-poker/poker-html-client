@@ -6,6 +6,7 @@ import * as timeService from "../timeservice";
 import { ConnectionService } from "./connectionservice";
 import { slowInternetService, connectionService } from "./index";
 import { debugSettings } from "../debugsettings";
+import { CancelToken } from "./cancelToken";
 
 export class ConnectionWrapper {
     terminated = false;
@@ -114,6 +115,11 @@ export class ConnectionWrapper {
         const result = this.establishConnectionCore(maxAttempts);
         return result;
     }
+    async establishConnectionAsync(maxAttempts = 3, cancellationToken?: CancelToken) {
+        const attempts = connectionService.attempts++;
+        connectionService.lastAttempt = attempts;
+        return await this.establishConnectionCoreAsync(maxAttempts, cancellationToken);
+    }
     buildStartConnection() {
         let supportedTransports = null;
         const androidVersion = this.getAndroidVersion();
@@ -170,6 +176,49 @@ export class ConnectionWrapper {
 
         return startConnection;
     }
+    async buildStartConnectionAsync() {
+        let supportedTransports = null;
+        const androidVersion = this.getAndroidVersion();
+        if (androidVersion === false || (<string>androidVersion).indexOf("4.4") === 0) {
+            supportedTransports = ["webSockets"];
+        }
+
+        const buildMainPromise = async () => {
+            if (supportedTransports === null) {
+                return this.connection.start();
+            } else {
+                return this.connection.start({ transport: supportedTransports });
+            }
+        };
+
+        const tryConnection = async (attemptsLeft) => {
+            await buildMainPromise();
+            if (this.terminated) {
+                throw new Error("SignalR connection was terminated.");
+            }
+
+            if (this.connection.state === 1) {
+                return;
+            }
+
+            if (this.connection.state === 4) {
+                throw new Error("SignalR connection has invalid state.");
+            }
+
+            return new Promise<any>(function (resolve, reject) {
+                timeService.setTimeout(async function () {
+                    if (attemptsLeft <= 0) {
+                        reject(new Error("Last retry did not work. Stop attempts."));
+                    } else {
+                        await tryConnection(attemptsLeft - 1);
+                        resolve();
+                    }
+                }, 100);
+            });
+        };
+
+        return await tryConnection(30);
+    }
     private onConnectionStateChanged(state: SignalR.StateChanged) {
         this.logEvent("SignalR state changed from: " + ConnectionService.stateConversion[state.oldState]
             + " to: " + ConnectionService.stateConversion[state.newState]);
@@ -207,8 +256,8 @@ export class ConnectionWrapper {
             const connectionInfo = "HID:" + hubId;
             this.logEvent("Connected to server! Connection " + connectionInfo);
             this.refreshHandle = setTimeout(() => {
-                this.terminateConnection();
-                connectionService.recoverableError.dispatch();
+                // this.terminateConnection();
+                // connectionService.recoverableError.dispatch();
             }, 1000 * 60 * 60);
             result.resolve(this);
         }).fail((message: string = "") => {
@@ -222,6 +271,43 @@ export class ConnectionWrapper {
             }, 100);
         });
         return result;
+    }
+    private async establishConnectionCoreAsync(maxAttempts: number, cancellationToken?: CancelToken) {
+        if (maxAttempts <= 0) {
+            this.logEvent("Stop connection attempts");
+            slowInternetService.onDisconnected();
+            throw new Error("maxAttemptsReached");
+        }
+
+        if (cancellationToken) {
+            cancellationToken.throwIfRequested();
+        }
+
+        this.logEvent("Establishing connection. Attempts left: " + (maxAttempts - 1));
+        connectionService.isStopped = false;
+        try {
+            await this.buildStartConnectionAsync();
+            if (this.terminated) {
+                throw new Error("SignalR connection was terminated");
+            }
+
+            const hubId = this.connection.id;
+            const connectionInfo = "HID:" + hubId;
+            this.logEvent("Connected to server! Connection " + connectionInfo);
+            return this;
+        } catch (e) {
+            this.logEvent("Could not Connect!" + e.message);
+            return new Promise<ConnectionWrapper>((resolve, reject) => {
+                timeService.setTimeout(async () => {
+                    try {
+                        await this.establishConnectionAsync(maxAttempts - 1);
+                        resolve(this);
+                    } catch (err) {
+                        reject();
+                    }
+                }, 100);
+            });
+        }
     }
     private cancelRefereshConnection() {
         if (this.refreshHandle) {
@@ -241,5 +327,6 @@ export class ConnectionWrapper {
         }
 
         appInsights.trackTrace(message);
+        appInsights.trackEvent(message);
     }
 }
