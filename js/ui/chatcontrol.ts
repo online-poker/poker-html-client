@@ -47,7 +47,7 @@ export class ChatControl {
     attachToHub() {
         this.loading(true);
         const wrapper = connectionService.currentConnection;
-        wrapper.buildStartConnection()().done(() => {
+        wrapper.buildStartConnection()().then(() => {
             if (wrapper.terminated) {
                 return;
             }
@@ -61,7 +61,7 @@ export class ChatControl {
     }
     detachFromHub() {
         const wrapper = connectionService.currentConnection;
-        wrapper.buildStartConnection()().done(() => {
+        wrapper.buildStartConnection()().then(() => {
             if (wrapper.terminated) {
                 return;
             }

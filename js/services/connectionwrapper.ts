@@ -247,7 +247,7 @@ export class ConnectionWrapper {
         const startConnection = this.buildStartConnection();
         this.logEvent("Establishing connection. Attempts left: " + (maxAttempts - 1));
         connectionService.isStopped = false;
-        startConnection().done(() => {
+        startConnection().then(() => {
             if (this.terminated) {
                 result.reject();
             }

@@ -61,7 +61,7 @@ export class AccountStatusPopup extends PopupBase {
         const currentTable = app.tablesPage.currentTable();
         app.addMoneyPopup.tableView(currentTable);
         super.close();
-        app.showPopup("addMoney").done(function (results: { name: string; result: any }) {
+        app.showPopup("addMoney").then(function (results: { name: string; result: any }) {
             if (results.result === "cancel") {
                 app.showPopup("accountStatus");
             }
@@ -71,7 +71,7 @@ export class AccountStatusPopup extends PopupBase {
     private requestData() {
         this.loading(true);
 
-        accountService.getAccount().done((result: AccountServiceInformation) => {
+        accountService.getAccount().then((result: AccountServiceInformation) => {
             this.loading(false);
             this.information(result);
         }).fail(function() {

@@ -268,7 +268,7 @@ export class TablesPage extends PageBase {
             }
         };
         const leaved = <JQueryDeferred<() => void>>commandManager.executeCommand("app.leaveTable", [tableView.tableId]);
-        leaved.done(removeCurrentTable);
+        leaved.then(removeCurrentTable);
     }
     showMenu() {
         app.executeCommand("popup.tableMenu");

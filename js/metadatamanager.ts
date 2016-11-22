@@ -112,22 +112,17 @@ class MetadataManager {
         }).fail(failHandler);
         return result;
     }
-    versionCheck() {
-        const self = this;
-        const result = $.Deferred();
+    async versionCheck() {
         const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
-        metadataApi.VersionCheck().then(function (serverInformation) {
-            if (serverInformation.ServerApiVersion > OnlinePoker.Commanding.API.version) {
-                if (serverInformation.MinimumClientApiVersion <= OnlinePoker.Commanding.API.version) {
-                    result.reject(true);
-                } else {
-                    result.reject(false);
-                }
+        const serverInformation = await metadataApi.VersionCheck();
+        if (serverInformation.ServerApiVersion > OnlinePoker.Commanding.API.version) {
+            if (serverInformation.MinimumClientApiVersion <= OnlinePoker.Commanding.API.version) {
+                // Could work.
+                return;
+            } else {
+                throw new Error("Upgrade required.")
             }
-
-            result.resolve();
-        });
-        return result;
+        }
     }
     updateOnline() {
         const self = this;

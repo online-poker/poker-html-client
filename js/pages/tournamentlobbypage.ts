@@ -543,7 +543,7 @@ export class TournamentLobbyPage extends PageBase {
         app.prompt(
             _("tournamentLobby.tournamentRegistrationCancelPromptCaption"),
             [_("tournamentLobby.tournamentRegistrationCancelPrompt").replace("#name", name)])
-            .done(function () {
+            .then(function () {
                 self.loading(true);
                 const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
                 tournamentApi.CancelRegistration(self.tournamentId, function (data) {
@@ -703,7 +703,7 @@ export class TournamentLobbyPage extends PageBase {
                 _("tournamentLobby.tournamentRegistrationAmount").replace("#amount", joinAmountString),
                 _("tournamentLobby.tournamentRegistrationPromptBalance").replace("#amount", balanceString),
             ])
-            .done(function () {
+            .then(function () {
                 self.loading(true);
                 const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
                 tournamentApi.Register(self.tournamentId, function (data) {

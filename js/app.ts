@@ -447,9 +447,9 @@ export class App {
         };
         const successPath = () => {
             self.preloadTableImages();
-            metadataManager.update().done(function () {
+            metadataManager.update().then(function () {
                 tableManager.initialize();
-                tableManager.getCurrentTablesAndTournaments().done(function () {
+                tableManager.getCurrentTablesAndTournaments().then(function () {
                     self.spinner.stop();
                     self.establishConnection().then(function (wrapper) {
                         if (wrapper.terminated) {
@@ -504,7 +504,7 @@ export class App {
         };
         const successPath = () => {
             self.preloadTableImages();
-            metadataManager.update().done(function () {
+            metadataManager.update().then(function () {
                 self.spinner.stop();
                 tableManager.initialize();
                 tableManager.getCurrentTablesAndTournaments().done(function () {
@@ -516,15 +516,16 @@ export class App {
         };
         this.versionCheck(successPath);
     }
-    versionCheck(successPath: () => void) {
-        metadataManager.versionCheck().done(() => {
+    async versionCheck(successPath: () => void) {
+        try {
+            await metadataManager.versionCheck();
             successPath();
-        }).fail((couldWork: boolean) => {
+        } catch (e) {
             // Display dialog which prompts for the update.
             app.promptEx(_("updater.title"), [_("updater.line1")], [_("updater.button")], [() => {
                 websiteService.navigateUpdateApk();
             }]);
-        });
+        }
     }
     // deviceready Event Handler
     //
@@ -1048,7 +1049,7 @@ export class App {
 
         ko.applyBindings(viewModel, domElement);
     }
-    showPopup(popupName: string, ...args: any[]): JQueryDeferred<PopupResult> {
+    async showPopup(popupName: string, ...args: any[]) {
         if (!popupName) {
             console.error("The empty popup passed");
             throw new Error("The empty popup passed");
@@ -1061,33 +1062,33 @@ export class App {
 
         this.currentPopup = popupName;
         console.log("Show popup " + popupName);
-        const result = $.Deferred<PopupResult>();
-        this.popupClosed.addOnce(function (name: string, dialogResults?: any) {
-            if (popupName !== name) {
-                console.warn("Responding to popup " + name + " instead of " + popupName);
+        const result = new Promise<PopupResult>(function (resolve) {
+            this.popupClosed.addOnce(function (name: string, dialogResults?: any) {
+                if (popupName !== name) {
+                    console.warn("Responding to popup " + name + " instead of " + popupName);
+                }
+
+                const signalData = {
+                    name: name,
+                    result: dialogResults
+                };
+                resolve(signalData);
+            }, this, 1);
+            const popupObject = this[this.currentPopup + "Popup"];
+            if (popupObject != null) {
+                popupObject.shown(args);
             }
 
-            const signalData = {
-                name: name,
-                result: dialogResults
-            };
-            result.resolve(signalData);
-        }, this, 1);
-        const popupObject = this[this.currentPopup + "Popup"];
-        if (popupObject != null) {
-            popupObject.shown(args);
-        }
+            if (typeof window !== "undefined") {
+                const popupContainer = $(".popup." + popupName + " .popup-container");
+                if (popupContainer.length > 0) {
+                    popupContainer[0].scrollTop = 0;
+                }
 
-        if (typeof window !== "undefined") {
-            const popupContainer = $(".popup." + popupName + " .popup-container");
-            if (popupContainer.length > 0) {
-                popupContainer[0].scrollTop = 0;
+                $(".popup." + popupName).css("display", "block");
+                $(".popup-background").css("display", "block");
             }
-
-            $(".popup." + popupName).css("display", "block");
-            $(".popup-background").css("display", "block");
-        }
-
+        });
         return result;
     }
     closePopup(result?: any): void {

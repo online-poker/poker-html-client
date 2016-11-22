@@ -268,7 +268,7 @@ export class SeatPage extends PageBase {
             }
         };
         let leaved = <JQueryDeferred<() => void>>commandManager.executeCommand("app.leaveTable", [tableView.tableId]);
-        leaved.done(removeCurrentTable);
+        leaved.then(removeCurrentTable);
     }
     showMenu() {
         app.executeCommand("popup.tableMenu");

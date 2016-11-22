@@ -524,7 +524,7 @@ export class ActionBlock {
         app.tableChatPopup.attach(this.tableView);
         app.showPopup("tableChat");
     }
-    comeBack() {
+    async comeBack() {
         if (this.tableView.myPlayer().Money() === 0) {
             if (this.tableView.tournament() != null) {
                 this.tableView.proposeRebuyOrAddon();
@@ -535,25 +535,26 @@ export class ActionBlock {
                 SimplePopup.display(_("table.comeback"), _("table.askAdministratorToAddMoney"));
             } else {
                 app.addMoneyPopup.tableView(this.tableView);
-                app.showPopup("addMoney").done((results: PopupResult) => {
-                    if (results.result === "ok") {
-                        this.comeBackCore();
-                    }
-                });
+                const results = await app.showPopup("addMoney");
+                if (results.result === "ok") {
+                    await this.comeBackCore();
+                }
             }
         } else {
-            this.comeBackCore();
+            await this.comeBackCore();
         }
     }
-    comeBackCore() {
+    private async comeBackCore() {
         if (this.processing()) {
             return;
         }
 
         this.processing(true);
-        this.tableView.comeBack().fail(() => {
+        try {
+            await this.tableView.comeBack();
+        } catch (e) {
             this.processing(false);
-        });
+        }
     }
     updateBounds() {
         if ($(".slider-line").length > 0) {

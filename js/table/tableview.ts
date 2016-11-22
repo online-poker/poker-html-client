@@ -2283,7 +2283,7 @@ export class TableView {
 
         const self = this;
         app.prompt(_("table.changeplace"),
-            [_("table.doyouwantchangeplace")]).done(function () {
+            [_("table.doyouwantchangeplace")]).then(function () {
                 self.tablePlaces.rotate(offset - currentOffset);
             });
     }

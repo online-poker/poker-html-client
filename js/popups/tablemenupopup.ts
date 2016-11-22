@@ -158,7 +158,7 @@ export class TableMenuPopup {
         const currentTable = app.tablesPage.currentTable();
         app.addMoneyPopup.tableView(currentTable);
         app.closePopup();
-        app.showPopup("addMoney").done(function (results: { name: string; result: any }) {
+        app.showPopup("addMoney").then(function (results: { name: string; result: any }) {
             if (results.result === "cancel") {
                 app.executeCommand("popup.tableMenu");
             }

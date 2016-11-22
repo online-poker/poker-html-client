@@ -54,7 +54,7 @@ class CashierPage extends PageBase {
         const gameMoneySupported = false;
         const api = new OnlinePoker.Commanding.API.Account(apiHost);
         self.loading(true);
-        accountService.getAccount().done(function(result: AccountServiceInformation) {
+        accountService.getAccount().then(function(result: AccountServiceInformation) {
             self.loading(false);
             self.player(result);
         }).fail(function() {

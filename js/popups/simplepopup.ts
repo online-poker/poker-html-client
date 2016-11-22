@@ -19,9 +19,9 @@ export class SimplePopup extends PopupBase {
     confirm() {
         super.close();
     }
-    static display(title: string, message: string): JQueryPromise<PopupResult>;
-    static display(title: string, message: string[]): JQueryPromise<PopupResult>;
-    static display(title: string, message: any): JQueryPromise<PopupResult> {
+    static display(title: string, message: string): Promise<PopupResult>;
+    static display(title: string, message: string[]): Promise<PopupResult>;
+    static display(title: string, message: any): Promise<PopupResult> {
         app.simplePopup.title(title);
         if (typeof message === "string") {
             app.simplePopup.messages([message]);
@@ -30,7 +30,7 @@ export class SimplePopup extends PopupBase {
             app.simplePopup.messages(message);
         }
 
-        return app.showPopup("simple").promise();
+        return app.showPopup("simple");
     }
     static displayWithTimeout(title: string, message: string, timeout: number): JQueryPromise<PopupResult>;
     static displayWithTimeout(title: string, message: string[], timeout: number): JQueryPromise<PopupResult>;

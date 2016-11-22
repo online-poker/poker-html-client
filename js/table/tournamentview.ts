@@ -263,7 +263,7 @@ export class TournamentView {
             });
         return result;
     }
-    onTournamentStatusChanged(status: TournamentStatus) {
+    async onTournamentStatusChanged(status: TournamentStatus) {
         const self = this;
         const data = this.tournamentData();
         const oldStatus = this.status();
@@ -279,8 +279,9 @@ export class TournamentView {
                 return;
             }
 
-            self.openTournamentTableUI();
+            await self.openTournamentTableUI();
         }
+
         if (status === TournamentStatus.Started) {
             if (oldStatus === TournamentStatus.LateRegistration) {
                 return;
@@ -294,7 +295,7 @@ export class TournamentView {
                 return;
             }
 
-            self.openTournamentTableUI();
+            await self.openTournamentTableUI();
         }
 
         if (status === TournamentStatus.Cancelled) {
@@ -302,13 +303,15 @@ export class TournamentView {
                 return;
             }
 
-            SimplePopup.display(_("tournament.caption", { tournament: data.TournamentName }),
-                _("tournament.tournamentCancelled", { tournament: data.TournamentName }))
-                .always(() => {
-                    self.log("Tournament " + self.tournamentId + " cancelled");
-                    app.lobbyPageBlock.showLobby();
-                    app.tablesPage.deactivate();
-                });
+            try {
+                await SimplePopup.display(
+                    _("tournament.caption", { tournament: data.TournamentName }),
+                    _("tournament.tournamentCancelled", { tournament: data.TournamentName }));
+            } finally {
+                self.log("Tournament " + self.tournamentId + " cancelled");
+                app.lobbyPageBlock.showLobby();
+                app.tablesPage.deactivate();
+            }
         }
 
         if (status === TournamentStatus.Completed) {
@@ -317,7 +320,7 @@ export class TournamentView {
             });
         }
     }
-    private openTournamentTableUI() {
+    private async openTournamentTableUI() {
         const self = this;
         const data = this.tournamentData();
         let openTournamentPromise: JQueryPromise<void> = null;
@@ -328,17 +331,19 @@ export class TournamentView {
         const messageKey = appConfig.tournament.openTableAutomatically
             ? "tournament.tournamentStarted"
             : "tournament.tournamentStartedNoOpen";
-        SimplePopup.display(_("tournament.caption", { tournament: data.TournamentName }),
-            _(messageKey, { tournament: data.TournamentName }))
-            .always(() => {
-                self.log("Tournament " + self.tournamentId + " started");
-                if (appConfig.tournament.openTableAutomatically) {
-                    openTournamentPromise.then((value) => {
-                        self.log("Opeinin table for tournament " + self.tournamentId + "");
-                        app.showSubPage("tables");
-                    });
-                }
-            });
+        try {
+            await SimplePopup.display(
+                _("tournament.caption", { tournament: data.TournamentName }),
+                _(messageKey, { tournament: data.TournamentName }));
+        } finally {
+            self.log("Tournament " + self.tournamentId + " started");
+            if (appConfig.tournament.openTableAutomatically) {
+                openTournamentPromise.then((value) => {
+                    self.log("Opeinin table for tournament " + self.tournamentId + "");
+                    app.showSubPage("tables");
+                });
+            }
+        }
     }
     private displayTournamentFinished() {
         const self = this;
@@ -350,13 +355,14 @@ export class TournamentView {
 
         if (this.finishedPlace !== 1 && this.finishedPlace !== 2) {
             self.log("Tournament " + self.tournamentId + " completed");
-            timeService.setTimeout(() => {
+            timeService.setTimeout(async () => {
                 if (app.tablesPage.tablesShown()/* && app.tablesPage.currentTable().tournament() == self*/) {
-                    SimplePopup.display(_("tournament.caption", { tournament: data.TournamentName }),
+                    try {
+                        await SimplePopup.display(_("tournament.caption", { tournament: data.TournamentName }),
                         _("tournament.tournamentCompleted", { tournament: data.TournamentName }))
-                        .always(() => {
-                            self.finalizeTournament();
-                        });
+                    } finally {
+                        self.finalizeTournament();
+                    }
                 } else {
                     self.finalizeTournament();
                 }
