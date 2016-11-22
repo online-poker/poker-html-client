@@ -166,11 +166,11 @@ namespace OnlinePoker {
                 }
             }
             export class Game extends WebApiProxy {
+                /**
+                 * Wrapper for the Game Commanding API
+                 * @param host Host with Metadata Commanding API installed
+                 */
                 constructor(host) {
-                    /// <signature>
-                    ///   <summary>Wrapper for the Game Commanding API</summary>
-                    ///   <param name="host">Host with Metadata Commanding API installed</param>
-                    /// </signature>
                     super(host, 'Game');
                 }
 
@@ -267,11 +267,11 @@ namespace OnlinePoker {
                 }
             }
             export class Tournament extends WebApiProxy {
+                /**
+                 * Wrapper for the Tournament Commanding API
+                 * @param host Host with Tournament Commanding API installed
+                 */
                 constructor(host) {
-                    /// <signature>
-                    ///   <summary>Wrapper for the Tournament Commanding API</summary>
-                    ///   <param name="host">Host with Metadata Commanding API installed</param>
-                    /// </signature>
                     super(host, 'Tournament');
                 }
 
@@ -320,11 +320,11 @@ namespace OnlinePoker {
                 }
             }
             export class Account extends WebApiProxy {
+                /**
+                 * Wrapper for the Account Commanding API
+                 * @param host Host with Account Commanding API installed
+                 */
                 constructor(host) {
-                    /// <signature>
-                    ///   <summary>Wrapper for the Metadata Commanding API</summary>
-                    ///   <param name="host">Host with Metadata Commanding API installed</param>
-                    /// </signature>
                     super(host, 'Account');
                 }
                 ActivateAccount(login, token, callback) {
@@ -435,11 +435,11 @@ namespace OnlinePoker {
                 }
             }
             export class Metadata extends WebApiProxy {
+                /**
+                 * Wrapper for the Metadata Commanding API
+                 * @param host Host with Metadata Commanding API installed
+                 */
                 constructor(host) {
-                    /// <signature>
-                    ///   <summary>Wrapper for the Metadata Commanding API</summary>
-                    ///   <param name="host">Host with Metadata Commanding API installed</param>
-                    /// </signature>
                     super(host, 'Metadata');
                     this.timeout = 10000;
                 }
