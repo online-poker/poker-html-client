@@ -10,6 +10,7 @@
   "preserveConstEnums": true,
   "suppressImplicitAnyIndexErrors": true,
   "sourceMap": true,
+  "lib": ["es5", "es2015.promise", "dom", "scripthost"],
   "out": "js/application.js",
   "sourceRoot": "."
  },
