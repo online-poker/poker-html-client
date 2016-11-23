@@ -1,4 +1,4 @@
-import * as ko from "knockout";
+import ko = require("knockout");
 import { App } from "./app";
 import { registerBindings } from "./bindings";
 import { registerExtenders } from "./extenders";
@@ -11,6 +11,7 @@ import { ActionBlock } from "./table/actionBlock";
 // import { ChipItem } from "./table/chipItem";
 
 declare const host: string;
+declare const appInsights: Client;
 
 function isStandaloneSupported() {
     return ("standalone" in window.navigator);
@@ -61,6 +62,13 @@ function bootstrap() {
 
         window["appInsights"].trackException(error, "window.onerror");
     };
+    window.addEventListener("unhandledrejection", function (event: any) {
+        window["appInsights"].trackException(event.reason, "Promise");
+    });
+
+    ko.onError = function (error) {
+        window["appInsights"].trackException(error, "Knockout");
+    }
     app.bindEvents();
     if (window["cordova"] === undefined) {
         app.onDeviceReady();
