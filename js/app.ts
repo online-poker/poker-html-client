@@ -1062,7 +1062,7 @@ export class App {
 
         this.currentPopup = popupName;
         console.log("Show popup " + popupName);
-        const result = new Promise<PopupResult>(function (resolve) {
+        const result = new Promise<PopupResult>((resolve) => {
             this.popupClosed.addOnce(function (name: string, dialogResults?: any) {
                 if (popupName !== name) {
                     console.warn("Responding to popup " + name + " instead of " + popupName);
