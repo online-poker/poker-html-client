@@ -343,10 +343,6 @@ export class ActionBlock {
             return (!authManager.authenticated() && !self.testMode()) || self.myPlayer() == null;
         });
         this.startBlockVisible = ko.computed(function () {
-            if (appConfig.game.seatMode) {
-                return false;
-            }
-
             if (self.sitoutBlockVisible()) {
                 return false;
             }
