@@ -155,12 +155,15 @@ export class TableSlider {
     }
     fixupValue() {
         const self = this;
-        this.currentValue(this.current().toFixed());
-        timeService.setTimeout(function () {
-            const c = self.current();
-            self.current(0);
-            self.current(c);
-        }, 10);
+        if (this.current() !== null && this.current() !== undefined) {
+            this.currentValue(this.current().toFixed());
+
+            timeService.setTimeout(function () {
+                const c = self.current();
+                self.current(0);
+                self.current(c);
+            }, 10);
+        }
     }
     selectManually(event: MouseEvent) {
         const relativePosition = this.translator(event.pageX);
