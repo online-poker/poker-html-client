@@ -392,6 +392,19 @@ class TableManager {
 
             tableView.onMoneyAdded(playerId, amount);
         };
+        gameHub.client.MoneyRemoved = function (tableId, playerId, amount) {
+            if (wrapper.terminated) {
+                return;
+            }
+
+            self.logDataEvent("Money removed: TableId - ", tableId, " PlayerId - ", playerId, " Amount - ", amount);
+            const tableView = tableManager.getTableById(tableId);
+            if (tableView == null) {
+                return;
+            }
+
+            tableView.onMoneyRemoved(playerId, amount);
+        };
         gameHub.client.PlayerCards = function (tableId, playerId, cards: string) {
             if (wrapper.terminated) {
                 return;

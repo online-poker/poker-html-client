@@ -1782,6 +1782,20 @@ export class TableView {
         });
         this.refreshPlaces();
     }
+    onMoneyRemoved(playerId: number, amount: number) {
+        const self = this;
+        const places = this.places();
+        places.forEach(function (value) {
+            if (value.PlayerId() === playerId) {
+                // Add money only if player not currently eligible to be in game.
+                // And when no game on the table.
+                if (!value.IsInGameStatus() || self.gameId() === null) {
+                    value.Money(value.Money() - amount);
+                }
+            }
+        });
+        this.refreshPlaces();
+    }
     setPots(amount: number[]) {
         // Add first number to the last pot.
         const currentPots = this.pots();

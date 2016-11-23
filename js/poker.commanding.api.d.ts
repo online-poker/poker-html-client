@@ -289,6 +289,13 @@ interface GameHubClient {
     * @param amount Amount of money added
     */
     MoneyAdded: (tableId: number, playerId: number, amount: number) => void;
+    /**
+    * Informs that player removes money on the table.
+    * @param tableId Id of the table for which notification passed.
+    * @param playerId Id of the player.
+    * @param amount Amount of money removed
+    */
+    MoneyRemoved: (tableId: number, playerId: number, amount: number) => void;
     PlayerCards: (tableId: number, playerId, cards) => void;
     PlayerCardsMucked: (tableId: number, playerId, cards) => void;
     MoveMoneyToPot: (tableId, amount) => void;
