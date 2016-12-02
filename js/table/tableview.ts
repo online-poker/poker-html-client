@@ -866,6 +866,7 @@ export class TableView {
         this.logGameEvent("Player " + playerId + " sit on the seat " + seat);
         const places = this.places();
 
+        const initialStatus = !this.paused() ? 0 : (8 /* IsParticipatingStatus */ + 16 /* IsInGame */);
         const playerModel = new TablePlaceModel({
             PlayerId: playerId,
             PlayerName: playerName,
@@ -874,7 +875,7 @@ export class TableView {
             Money: amount,
             Cards: null,
             Bet: null,
-            Status: 0,
+            Status: initialStatus,
             Points: points,
             Stars: stars
         });

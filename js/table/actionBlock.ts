@@ -804,7 +804,8 @@ export class ActionBlock {
         }
 
         const tableIsBig = this.tableView.places().filter(item => item != null).length > 3;
-        this.needBB(tableIsBig && !currentPlayer.IsParticipatingStatus());
+        const paused = this.tableView.paused();
+        this.needBB(!paused && tableIsBig && !currentPlayer.IsParticipatingStatus());
     }
     toggleAutoFoldOrCheck() {
         this.autoFoldOrCheck(!this.autoFoldOrCheck());
