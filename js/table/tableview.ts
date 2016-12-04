@@ -2163,6 +2163,10 @@ export class TableView {
                 this.reportApiError(data.Status);
             }
         }).fail((jqXHR, textStatus, errorThrown) => {
+            if (app.currentPopup !== SlowInternetService.popupName) {
+                SimplePopup.display(_("table.turn"), _("table.connectionError", { tableName: this.tableName() }));
+            }
+
             this.actionBlock.showCardsEnabled(true);
         });
     }
