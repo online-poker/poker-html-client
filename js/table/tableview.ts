@@ -447,15 +447,35 @@ export class TableView {
                 return null;
             }
 
-            const cb = self.currentBet();
-            let mb = 2 * (self.lastRaise() - cb) - self.checkOrCallAmount();
-            mb = Math.max(mb, self.bigBlind());
-            mb = Math.min(mb, currentPlayer.Money());
-            const addon = cb + self.checkOrCallAmount();
-            let raiseAmount = mb + addon;
-            const maxAmountOfMoneyForOtherActivePlayers = self.maxAmountOfMoneyForOtherActivePlayers();
-            raiseAmount = Math.min(raiseAmount, maxAmountOfMoneyForOtherActivePlayers);
-            return raiseAmount;
+            let oldVersion = false;
+            if (oldVersion) {
+                const currentBet = self.currentBet();
+                let mb = 2 * (self.lastRaise() - currentBet) - self.checkOrCallAmount();
+
+                // No less then big blind.
+                mb = Math.max(mb, self.bigBlind());
+
+                // No more then current money
+                mb = Math.min(mb, currentPlayer.Money());
+                const addon = currentBet + self.checkOrCallAmount();
+                let raiseAmount = mb + addon;
+                const maxAmountOfMoneyForOtherActivePlayers = self.maxAmountOfMoneyForOtherActivePlayers();
+                raiseAmount = Math.min(raiseAmount, maxAmountOfMoneyForOtherActivePlayers);
+                return raiseAmount;
+            } else {
+                let basicRaise = self.maximumBet() + self.lastRaise();
+
+                // No less then big blind.
+                basicRaise = Math.max(basicRaise, self.bigBlind());
+
+                // No more then current money
+                basicRaise = Math.min(basicRaise, currentPlayer.Money() + currentPlayer.Bet());
+
+                // No more then money which other players has.
+                const maxAmountOfMoneyForOtherActivePlayers = self.maxAmountOfMoneyForOtherActivePlayers();
+                const raiseAmount = Math.min(basicRaise, maxAmountOfMoneyForOtherActivePlayers);
+                return raiseAmount;
+            }
         }, this);
 
         this.isSitOut = ko.computed(function () {
