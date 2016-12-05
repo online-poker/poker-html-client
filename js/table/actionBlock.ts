@@ -698,7 +698,7 @@ export class ActionBlock {
 
         let potAmountOriginal = this.tableView.pots().reduce(function (pv, v) {
             return pv + v;
-        }, 0) + this.checkOrCallAmount();
+        }, 0); // + this.checkOrCallAmount();
         potAmountOriginal += this.tableView.places().reduce(function (pv: number, v: TablePlaceModel) {
             if (v.Bet() == null) {
                 return pv;
@@ -706,7 +706,11 @@ export class ActionBlock {
 
             return pv + v.Bet();
         }, 0);
-        potAmountOriginal = 2 * potAmountOriginal;
+        potAmountOriginal += this.checkOrCallAmount();
+
+        // Since we calculate pot amount in the last calculations
+        // we have to add current max bet.
+        potAmountOriginal += this.tableView.maximumBet();
         const potAmount = this.tableSlider.withinRange(potAmountOriginal);
 
         const maxMoneyAmount = this.tableSlider.maximum();
