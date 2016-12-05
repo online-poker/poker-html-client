@@ -971,6 +971,9 @@ export class TableView {
     onResumed() {
         this.clearPauseMessage();
     }
+    onFinalTableCardsOpened(cards: number[]) {
+        this.handHistory.onFinalTableCardsOpened(cards);
+    }
     /**
     * Informs about current state on the table.
     * @param players Array of PlayerStatusInfo objects which describe current status of the players
@@ -2561,8 +2564,8 @@ export class TableView {
     }
 
     /**
-    * Saves last hand history
-    */
+     * Saves last hand history
+     */
     private saveHandHistory() {
         this.lastHandHistory(null);
         if (this.handHistory != null && this.handHistory.valid) {

@@ -18,9 +18,10 @@ export class HandHistory extends TableMonitor {
     detailedOperations: KnockoutObservableArray<string>;
     shortOperations: KnockoutObservableArray<string>;
     players: string[];
-    rawCards: number[];
+    rawCards: number[] = [];
     id: number;
     cards: KnockoutObservableArray<string>;
+    potentialCards: number[] = [];
     playersData: KnockoutObservableArray<PlayerWinInformation>;
     public valid = true;
 
@@ -242,6 +243,12 @@ export class HandHistory extends TableMonitor {
     }
     onPotUpdated(potNumber: number, amount: number) {
         this.addDetailedOperation(_("handhistory.potupdated", { pot: potNumber, amount: amount }));
+    }
+    onFinalTableCardsOpened(cards: number[]) {
+        this.potentialCards = cards;
+        const restCardsRaw = cards.slice(this.rawCards.length);
+        const restCards = restCardsRaw.map(item => cardValue(item) + " hidden-card");
+        this.cards(this.cards().concat(restCards));
     }
     private getPlayer(playerId: number) {
         return this.players[playerId];

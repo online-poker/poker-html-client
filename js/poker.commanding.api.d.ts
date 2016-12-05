@@ -348,6 +348,13 @@ interface GameHubClient {
     TablePaused: (tableId: number) => void;
 
     /**
+     * Inform about cards which could be opened.
+     * @param tableId Id of the table where cards hinted.
+     * @param cards String which represent cards.
+     */
+    FinalTableCardsOpened: (tableId: number, cards: string) => void;
+
+    /**
     * Notifies that tournament status is changed
     * tournamentId Number Id of the tournament which status was changed.
     * status TournamentStatus New status of the tournament
