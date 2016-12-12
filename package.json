@@ -43,6 +43,6 @@
     "@types/signalr": "^2.2.31",
     "poker-server-api": "0.0.2",
     "tslint": "^3.15.1",
-    "typescript": "^2.1.1"
+    "typescript": "^2.1.4"
   }
 }
