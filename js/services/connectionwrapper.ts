@@ -125,6 +125,9 @@ export class ConnectionWrapper {
         const androidVersion = this.getAndroidVersion();
         if (androidVersion === false || (<string>androidVersion).indexOf("4.4") === 0) {
             supportedTransports = ["webSockets"];
+            this.logEvent("Select WebSockets as single protocol");
+        } else {
+            this.logEvent("Select default connection protocols.");
         }
 
         const startConnection = () => {
@@ -181,6 +184,9 @@ export class ConnectionWrapper {
         const androidVersion = this.getAndroidVersion();
         if (androidVersion === false || (<string>androidVersion).indexOf("4.4") === 0) {
             supportedTransports = ["webSockets"];
+            this.logEvent("Select WebSockets as single protocol");
+        } else {
+            this.logEvent("Select default connection protocols.");
         }
 
         const buildMainPromise = async () => {

@@ -25,6 +25,9 @@ interface GameHubServer {
     unsubscribeTournamentLobby();
     subscribeTournament(tournamentId: number);
     unsubscribeTournament(tournamentId: number);
+    betOrRaise(tableId: number, amount: number);
+    checkOrCall(tableId: number);
+    fold(tableId: number);
 }
 
 interface StatusResponse {

@@ -23,7 +23,8 @@ class AppConfig {
         actionBlock: new GameActionBlock(),
         seatMode: document.body.classList.contains("poker-feature-single-seat"),
         tablePreviewMode: document.body.classList.contains("poker-feature-table-preview"),
-        autoFoldAsFoldOnRaise: true
+        autoFoldAsFoldOnRaise: true,
+        useSignalR: true,
     };
     tournament = {
         enabled: false,

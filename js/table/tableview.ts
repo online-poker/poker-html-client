@@ -2127,34 +2127,44 @@ export class TableView {
         const self = this;
         this.actionBlock.buttonsEnabled(false);
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        gameApi.Fold(this.tableId, function (data, status, jqXHR) {
-            if (data.Status === "OperationNotValidAtThisTime") {
-                return;
-            }
+        if (appConfig.game.useSignalR) {
+            // TODO: We should provide notification, which will return any error from the server.
+            connectionService.currentConnection.connection.Game.server.fold(this.tableId);
+        } else {
+            gameApi.Fold(this.tableId, function (data, status, jqXHR) {
+                if (data.Status === "OperationNotValidAtThisTime") {
+                    return;
+                }
 
-            if (data.Status !== "Ok") {
-                self.reportApiError(data.Status);
-            }
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            self.turnRecovery();
-        });
+                if (data.Status !== "Ok") {
+                    self.reportApiError(data.Status);
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                self.turnRecovery();
+            });
+        }
     }
 
     checkOrCall() {
         const self = this;
         this.actionBlock.buttonsEnabled(false);
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        gameApi.CheckOrCall(this.tableId, function (data, status, jqXHR) {
-            if (data.Status === "OperationNotValidAtThisTime") {
-                return;
-            }
+        if (appConfig.game.useSignalR) {
+            // TODO: We should provide notification, which will return any error from the server.
+            connectionService.currentConnection.connection.Game.server.checkOrCall(this.tableId);
+        } else {
+            gameApi.CheckOrCall(this.tableId, function (data, status, jqXHR) {
+                if (data.Status === "OperationNotValidAtThisTime") {
+                    return;
+                }
 
-            if (data.Status !== "Ok") {
-                self.reportApiError(data.Status);
-            }
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            self.turnRecovery();
-        });
+                if (data.Status !== "Ok") {
+                    self.reportApiError(data.Status);
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                self.turnRecovery();
+            });
+        }
     }
 
     betOrRaise() {
@@ -2162,17 +2172,22 @@ export class TableView {
         this.actionBlock.buttonsEnabled(false);
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
         const amount: number = this.currentRaise() - this.currentBet();
-        gameApi.BetOrRaise(this.tableId, amount, function (data, status, jqXHR) {
-            if (data.Status === "OperationNotValidAtThisTime") {
-                return;
-            }
+        if (appConfig.game.useSignalR) {
+            // TODO: We should provide notification, which will return any error from the server.
+            connectionService.currentConnection.connection.Game.server.betOrRaise(this.tableId, amount);
+        } else {
+            gameApi.BetOrRaise(this.tableId, amount, function (data, status, jqXHR) {
+                if (data.Status === "OperationNotValidAtThisTime") {
+                    return;
+                }
 
-            if (data.Status !== "Ok") {
-                self.reportApiError(data.Status);
-            }
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            self.turnRecovery();
-        });
+                if (data.Status !== "Ok") {
+                    self.reportApiError(data.Status);
+                }
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                self.turnRecovery();
+            });
+        }
     }
 
     /**
