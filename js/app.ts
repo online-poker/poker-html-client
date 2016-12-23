@@ -1246,6 +1246,12 @@ export class App {
         return deferred;
     }
 
+    public promptAsync(title: string, messages: string[], buttons: string[]= null) {
+        return new Promise<boolean>((resolve, reject) => {
+            this.prompt(title, messages, buttons).then(() => resolve(true), () => resolve(false));
+        });
+    }
+
     private setupClosePopupOnClick() {
         $(".popup-background").on("tap", () => {
             if (app.currentPopup !== "slowConnection") {

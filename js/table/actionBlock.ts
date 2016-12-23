@@ -31,7 +31,18 @@ export class ActionBlock {
     */
     public myPlayerInGame: KnockoutObservable<boolean>;
     public isCheck: KnockoutObservable<boolean>;
+
+    /**
+     * Indicating whether current check/call amount will lead to all-in condition.
+     */
+    public isAllInDuringCheckOrCall: KnockoutComputed<boolean>;
     public isRaise: KnockoutObservable<boolean>;
+
+    /**
+     * Indicating whether current raise amount will lead to all-in condition.
+     */
+    public isAllInDuringBetOrRaise: KnockoutComputed<boolean>;
+
     /**
     * Messages in the chat
     */
@@ -246,6 +257,17 @@ export class ActionBlock {
             const otherPlayersHasMoneyToSupport = this.maxAmountOfMoneyForOtherActivePlayers() > this.callAmount();
             return otherPlayersHasMoneyToSupport;
         });
+        this.isAllInDuringCheckOrCall = ko.computed(() => {
+            let currentAmount = self.checkOrCallAmount();
+            currentAmount = currentAmount == null ? 0 : currentAmount;
+            let playerMoney = self.playerMoney();
+            playerMoney = playerMoney == null ? 0 : playerMoney;
+            if (playerMoney <= currentAmount) {
+                return true;
+            }
+
+            return false;
+        });
         this.checkCallButtonCaption = ko.computed(() => {
             let currentAmount = self.checkOrCallAmount();
             currentAmount = currentAmount == null ? 0 : currentAmount;
@@ -266,7 +288,7 @@ export class ActionBlock {
                 }
             }
         });
-        this.raiseBetButtonCaption = ko.computed(function () {
+        this.isAllInDuringBetOrRaise = ko.computed(() => {
             let currentAmount = self.tableSlider.current();
             currentAmount = currentAmount == null ? 0 : currentAmount;
             const player = self.myPlayer();
@@ -277,6 +299,22 @@ export class ActionBlock {
 
             playerMoney = playerMoney == null ? 0 : playerMoney;
             if (playerMoney <= currentAmount) {
+                return true;
+            }
+
+            return false;
+        });
+        this.raiseBetButtonCaption = ko.computed(function () {
+            let currentAmount = self.tableSlider.current();
+            currentAmount = currentAmount == null ? 0 : currentAmount;
+            const player = self.myPlayer();
+            let playerMoney = self.playerMoney();
+            if (player != null) {
+                playerMoney += player.Bet();
+            }
+
+            playerMoney = playerMoney == null ? 0 : playerMoney;
+            if (this.isAllInDuringRaise()) {
                 const myself = self.myPlayer();
                 if (myself != null) {
                     return _("table.allin").replace("#amount", withCommas(playerMoney, ",").toString());
@@ -504,16 +542,30 @@ export class ActionBlock {
         this.expanded(false);
         this.foldExecuted.dispatch();
     }
-    checkOrCall() {
+    async checkOrCall() {
         if (!this.suppressActions) {
+            if (this.isAllInDuringCheckOrCall()) {
+                const result = await app.promptAsync(_("table.allInConfirmCaption"), [_("table.allInConfirm")]);
+                if (!result) {
+                    return;
+                }
+            }
+
             this.tableView.checkOrCall();
         }
 
         this.expanded(false);
         this.checkOrCallExecuted.dispatch();
     }
-    betOrRaise() {
+    async betOrRaise() {
         if (!this.suppressActions) {
+            if (this.isAllInDuringBetOrRaise()) {
+                const result = await app.promptAsync(_("table.allInConfirmCaption"), [_("table.allInConfirm")]);
+                if (!result) {
+                    return;
+                }
+            }
+
             this.tableView.betOrRaise();
         }
 
