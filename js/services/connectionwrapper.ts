@@ -333,6 +333,5 @@ export class ConnectionWrapper {
         }
 
         appInsights.trackTrace(message);
-        appInsights.trackEvent(message);
     }
 }
