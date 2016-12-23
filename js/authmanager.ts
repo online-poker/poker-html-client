@@ -1,10 +1,12 @@
 ﻿/// <reference path="poker.commanding.api.ts" />
 
 declare var apiHost: string;
+declare var appInsights: Client;
 
 import ko = require("knockout");
 import { settings } from "./settings";
 import { App } from "./app";
+import { appConfig } from "./appConfig";
 
 declare const app: App;
 
@@ -35,6 +37,9 @@ class AuthManager {
                 self.loginId(data.Id);
                 settings.isGuest(data.IsGuest);
                 settings.saveSettings();
+                if (appConfig.game.seatMode) {
+                    appInsights.context["device"].model = "Individual Console: " + login;
+                }
             } else {
                 // Report authentication or authorization errors
                 self.authenticated(false);
