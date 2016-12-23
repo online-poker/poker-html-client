@@ -24,7 +24,7 @@ class AppConfig {
         seatMode: document.body.classList.contains("poker-feature-single-seat"),
         tablePreviewMode: document.body.classList.contains("poker-feature-table-preview"),
         autoFoldAsFoldOnRaise: true,
-        useSignalR: true,
+        useSignalR: false,
     };
     tournament = {
         enabled: false,
