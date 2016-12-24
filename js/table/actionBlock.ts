@@ -314,7 +314,7 @@ export class ActionBlock {
             }
 
             playerMoney = playerMoney == null ? 0 : playerMoney;
-            if (this.isAllInDuringRaise()) {
+            if (self.isAllInDuringBetOrRaise()) {
                 const myself = self.myPlayer();
                 if (myself != null) {
                     return _("table.allin").replace("#amount", withCommas(playerMoney, ",").toString());
