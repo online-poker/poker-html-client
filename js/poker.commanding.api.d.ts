@@ -625,3 +625,34 @@ interface OperationData {
     BookingOffice: string;
     Status: string;
 }
+
+interface TableReloadInformation {
+    reloadRequired: boolean;
+
+    /**
+     * Gets or sets a value indicating whether table was reloaded.
+     */
+    tableReloaded: boolean;
+
+    seat1Reloaded: boolean;
+
+    seat2Reloaded: boolean;
+
+    seat3Reloaded: boolean;
+
+    seat4Reloaded: boolean;
+
+    seat5Reloaded: boolean;
+
+    seat6Reloaded: boolean;
+
+    seat7Reloaded: boolean;
+
+    seat8Reloaded: boolean;
+
+    seat9Reloaded: boolean;
+
+    seat10Reloaded: boolean;
+
+    emergencyReload: boolean;
+}

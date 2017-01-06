@@ -107,6 +107,61 @@ namespace OnlinePoker {
                         dataType: 'json'
                     });
                 }
+                async getAsync<T>(methodName: string, parameters: any): Promise<T> {
+                    const self = this;
+                    let parametersString = "null";
+                    if (parameters != null) {
+                        parametersString = JSON.stringify(parameters);
+                    }
+
+                    this.Log(this.baseName, "Method " + methodName + " called. Parameters: " + parametersString);
+                    const url = this.baseUrl + methodName;
+                    return await $.ajax({
+                        type: 'GET',
+                        url: url,
+                        data: parameters,
+                        success: (data, textStatus, jqXHR) => {
+                            const dataString = data != null ? JSON.stringify(data) : "NULL";
+                            textStatus = textStatus != null ? textStatus : "NULL";
+
+                            const logMessage = "Method " + methodName + " finished. Status: " + textStatus + ". Results: " + dataString;
+                            this.Log(self.baseName, logMessage);
+                        },
+                        timeout: this.timeout,
+                        crossDomain: true,
+                        async: true,
+                        contentType: 'application/json',
+                        beforeSend: beforeSendHandler,
+                        dataType: 'json'
+                    });
+                }
+                async deleteAsync<T>(methodName: string, parameters: any): Promise<T> {
+                    const self = this;
+                    let parametersString = "null";
+                    if (parameters != null) {
+                        parametersString = JSON.stringify(parameters);
+                    }
+
+                    this.Log(this.baseName, "Method " + methodName + " called. Parameters: " + parametersString);
+                    const url = this.baseUrl + methodName;
+                    return await $.ajax({
+                        type: 'DELETE',
+                        url: url,
+                        data: parameters,
+                        success: (data, textStatus, jqXHR) => {
+                            const dataString = data != null ? JSON.stringify(data) : "NULL";
+                            textStatus = textStatus != null ? textStatus : "NULL";
+
+                            const logMessage = "Method " + methodName + " finished. Status: " + textStatus + ". Results: " + dataString;
+                            this.Log(self.baseName, logMessage);
+                        },
+                        timeout: this.timeout,
+                        crossDomain: true,
+                        async: true,
+                        contentType: 'application/json',
+                        beforeSend: beforeSendHandler
+                    });
+                }
                 async CallAsync<T>(methodName: string, parameters: any) {
                     return new Promise<T>(function (resolve, reject) {
                         this.Call(methodName, parameters, null).then(resolve, reject);
@@ -502,6 +557,19 @@ namespace OnlinePoker {
                         Body: message
                     };
                     return <JQueryPromise<StatusResponse>>super.Call('ContactUs', data, callback);
+                }
+            }
+            export class TableReload extends WebApiProxy {
+                constructor(host) {
+                    super(host, 'new/api');
+                }
+
+                async getTableReload(tableId: number) {
+                    return await super.getAsync<TableReloadInformation>(`reload/${tableId}`, {});
+                }
+
+                async confirmEmergencyReload(tableId: number) {
+                    return await super.deleteAsync<void>(`reload/${tableId}/table/emergency`, {});
                 }
             }
         }

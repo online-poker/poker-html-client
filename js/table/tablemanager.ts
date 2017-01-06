@@ -4,7 +4,7 @@ import * as ko from "knockout";
 import * as timeService from "../timeservice";
 import { TableView } from "./tableview";
 import { TournamentView } from "./tournamentview";
-import { slowInternetService, connectionService } from "../services";
+import { slowInternetService, connectionService, appReloadService } from "../services";
 import { ConnectionWrapper } from "../services/connectionwrapper";
 import * as broadcastService from "../services/broadcastservice";
 import { SimplePopup } from "../popups/simplepopup";
@@ -54,6 +54,7 @@ class TableManager {
             const table = <GameTableModel>parameters[0];
             const update = parameters.length <= 1 ? true : <boolean>parameters[1];
             self.selectTable(table, update);
+            appReloadService.startMonitoring(table.TableId);
         });
         commandManager.registerCommand("app.leaveTable", function (parameters?: any[]): JQueryDeferred<void> {
             const result = $.Deferred<void>();
@@ -70,6 +71,8 @@ class TableManager {
                 tableView.showStandupPrompt().pipe(function () {
                     tableView.disconnect();
                     tableView = self.remove(tableView);
+
+                    // appReloadService.clearMonitoring(table.TableId);
 
                     // Adjust currently selected table.
                     self.adjustTablePosition();
