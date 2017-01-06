@@ -15,7 +15,8 @@ export class AppReloadService {
         const reloadData = await this.getReload(tableId);
         if (reloadData.emergencyReload) {
             const api = new OnlinePoker.Commanding.API.TableReload(baseUrl);
-            await api.confirmEmergencyReload(tableId);
+            
+            // await api.confirmEmergencyReload(tableId);
             window.location.replace("http://google.com/");
         }
     }
