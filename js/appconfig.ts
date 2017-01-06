@@ -18,6 +18,10 @@ class GameActionBlock {
 }
 
 class AppConfig {
+    auth = {
+        automaticLogin: true,
+        automaticTableSelection: true,
+    };
     game = {
         handHistory: new GameHandHistory(),
         actionBlock: new GameActionBlock(),

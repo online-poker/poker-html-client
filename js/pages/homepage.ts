@@ -1,6 +1,7 @@
 declare var apiHost: string;
 
 import { App } from "../app";
+import { appConfig } from "../appConfig";
 import * as timeService from "../timeservice";
 import * as metadataManager from "../metadatamanager";
 import * as authManager from "../authmanager";
@@ -70,6 +71,9 @@ export class HomePage extends PageBase {
         this.password(settings.password());
         if (this.username() != null) {
             this.rememberMe(true);
+            if (appConfig.auth.automaticLogin) {
+                this.login();
+            }
         }
 
         this.startNews();
