@@ -14,7 +14,7 @@
   "out": "js/application.js",
   "sourceRoot": "."
  },
- "compileOnSave": true,
+ "compileOnSave": false,
  "exclude": [
      "js/messages.ts",
      "node_modules"
