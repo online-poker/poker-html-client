@@ -131,6 +131,10 @@ export class TablesPage extends PageBase {
             if (currentWidth >= 1920) {
                 viewportLandscapeWidth = 1920;
             }
+
+            if (currentWidth >= 3840) {
+                viewportLandscapeWidth = 3840;
+            }
         }
 
         if (currentWidth < 360) {
