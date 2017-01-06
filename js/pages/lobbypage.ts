@@ -247,7 +247,7 @@ export class LobbyPage extends PageBase {
     update(force: boolean) {
         if (this.loading() && !force) {
             return;
-    }
+        }
 
         const self = this;
         metadataManager.updateOnline();
@@ -285,7 +285,7 @@ export class LobbyPage extends PageBase {
         const betLevels = options.bets();
         const moneyType = options.currency();
         const limitType = options.limits();
-        return gameApi.GetTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType, function (data) {
+        return gameApi.GetTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType, (data) => {
             if (!self.visible()) {
                 return;
             }
@@ -297,6 +297,9 @@ export class LobbyPage extends PageBase {
                     item.IsOpened = tableManager.isOpened(item.TableId);
                 });
                 self.tables(tables);
+                if (appConfig.auth.automaticTableSelection && tables.length == 1) {
+                    this.selectTable(tables[0]);
+                }
             }
         });
     }
