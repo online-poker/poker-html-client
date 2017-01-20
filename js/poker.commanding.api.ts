@@ -343,6 +343,10 @@ namespace OnlinePoker {
                     const data = { TableId: tableId };
                     return super.Call('ShowCards', data, callback);
                 }
+                ShowHoleCards(tableId: number, cardPosition: number) {
+                    const data = { TableId: tableId, CardPosition: cardPosition };
+                    return super.Call('ShowHoleCards', data, null);
+                }
                 SetOpenCardsParameters(tableId: number, openCardsAutomatically: boolean, callback) {
                     const data = { TableId: tableId, OpenCardsAutomatically: openCardsAutomatically };
                     return super.Call('SetOpenCardsParameters', data, callback);
