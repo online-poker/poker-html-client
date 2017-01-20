@@ -300,6 +300,15 @@ interface GameHubClient {
     */
     MoneyRemoved: (tableId: number, playerId: number, amount: number) => void;
     PlayerCards: (tableId: number, playerId, cards) => void;
+
+    /**
+     * Inform about player open card.
+     * @param tableId Id of the table where card opened.
+     * @param playerId Id of the player for which card opened.
+     * @param cardPosition Number of card in the hand.
+     * @param card Value of the card.
+     */
+    PlayerCardOpened: (tableId: number, playerId: number, cardPosition: number, card: number) => void;
     PlayerCardsMucked: (tableId: number, playerId, cards) => void;
     MoveMoneyToPot: (tableId, amount) => void;
     GameFinished: (tableId, gameId, winners, rake) => void;
