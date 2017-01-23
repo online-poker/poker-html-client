@@ -422,6 +422,19 @@ class TableManager {
             const cardsString = cardsArray(cards);
             self.logDataEvent("Player cards: TableId - ", tableId, " PlayerId - ", playerId, " Cards - ", cardsString.join(" "));
         };
+        gameHub.client.PlayerCardOpened = (tableId, playerId, cardPosition, cardValue) => {
+            if (wrapper.terminated) {
+                return;
+            }
+
+            const tableView = tableManager.getTableById(tableId);
+            if (tableView == null) {
+                return;
+            }
+
+            tableView.onPlayerCardOpened(playerId, cardPosition, cardValue);
+            this.logDataEvent("Player cards: TableId - ", tableId, " PlayerId - ", playerId, " Card on position - ", cardPosition, " with value - ", cardValue);
+        };
         gameHub.client.PlayerCardsMucked = function (tableId, playerId) {
             if (wrapper.terminated) {
                 return;

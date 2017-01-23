@@ -1034,6 +1034,8 @@ export class TableView {
 
             this.actionBlock.buttonsEnabled(true);
             this.actionBlock.showCardsEnabled(true);
+            this.actionBlock.showHoleCard1Enabled(true);
+            this.actionBlock.showHoleCard2Enabled(true);
             this.actionBlock.dealsAllowed(true);
             timeService.setTimeout(() => {
                 this.actionBlock.updateBounds();
@@ -1498,6 +1500,29 @@ export class TableView {
                 }
             });
         }
+    }
+    onPlayerCardOpened(playerId: number, cardPosition: number, cardValue: number) {
+        const self = this;
+        if (this.enableInjectPlayerCards) {
+            this.queue.injectCallback(() => {
+                this.onPlayerCardOpenedCore(playerId, cardPosition, cardValue);
+                this.ensureCardsOpened(playerId);
+            });
+        } else {
+            this.queue.pushCallback(() => {
+                self.onPlayerCardOpenedCore(playerId, cardPosition, cardValue);
+            });
+        }
+    }
+    private onPlayerCardOpenedCore(playerId: number, cardPosition: number, cardValue: number) {
+        this.logGameEvent("onPlayerCardOpenedCore", playerId, cardPosition, cardValue);
+        const places = this.places();
+        places.forEach((p) => {
+            if (p.PlayerId() === playerId) {
+                p.openCard(cardPosition, cardValue);
+            }
+        });
+        this.refreshPlaces();
     }
     onPlayerCardsMucked(playerId: number) {
         this.queue.pushCallback(() => {
@@ -2234,6 +2259,35 @@ export class TableView {
             this.muckCards();
         } else {
             this.showCards();
+        }
+    }
+
+    showFirstCard() {
+        return this.showCard(0);
+    }
+
+    showSecondCard() {
+        return this.showCard(1);
+    }
+
+    /**
+     * Show cards for the current player.
+     */
+    async showCard(cardPosition: number) {
+        const showCardVariable = cardPosition == 0 ? this.actionBlock.showHoleCard1Enabled : this.actionBlock.showHoleCard2Enabled;
+        showCardVariable(false);
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        try {
+            const data = await gameApi.ShowHoleCards(this.tableId, cardPosition);
+            if (data.Status !== "Ok") {
+                this.reportApiError(data.Status);
+            }
+        } catch (e) {
+            if (app.currentPopup !== SlowInternetService.popupName) {
+                SimplePopup.display(_("table.turn"), _("table.connectionError", { tableName: this.tableName() }));
+            }
+
+            showCardVariable(true);
         }
     }
 
