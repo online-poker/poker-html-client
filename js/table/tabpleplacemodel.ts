@@ -83,6 +83,16 @@ export class TablePlaceModel {
     IsCardsOpened = ko.observable(false);
 
     /**
+     * Indicates that first hole card is opened.
+     */
+    IsHoleCard1Opened = ko.observable(false);
+
+    /**
+     * Indicates that second hole card is opened.
+     */
+    IsHoleCard2Opened = ko.observable(false);
+
+    /**
     * Indicates current action which player performs now
     */
     CurrentAction: KnockoutObservable<string>;
@@ -265,6 +275,24 @@ export class TablePlaceModel {
             this.FoldedCards(cardsClasses);
         } else {
             this.RawCards(cards || null);
+            this.Cards(cardsClasses);
+            this.HandCards(cardsClasses);
+        }
+    }
+    openCard(cardPosition: number, cardValue: number) {
+        let cards = [].concat(this.RawCards());
+        cards[cardPosition] = cardValue;
+        const cardsClasses = convertToCards(cards);
+        if (cardPosition === 0) {
+            this.IsHoleCard1Opened(true);
+        } else {
+            this.IsHoleCard2Opened(true);
+        }
+
+        if (this.IsCardsFolded()) {
+            this.FoldedCards(cardsClasses);
+        } else {
+            this.RawCards(cards);
             this.Cards(cardsClasses);
             this.HandCards(cardsClasses);
         }

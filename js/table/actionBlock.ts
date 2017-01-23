@@ -22,6 +22,16 @@ export class ActionBlock {
     public dealsAllowed: KnockoutObservable<boolean>;
     public buttonsEnabled: KnockoutObservable<boolean>;
     public showCardsEnabled: KnockoutObservable<boolean> = ko.observable(false);
+
+    /**
+     * Indicates that user could show first hole card.
+     */
+    public showHoleCard1Enabled: KnockoutObservable<boolean> = ko.observable(false);
+
+    /**
+     * Indicates that user could show second hole card.
+     */
+    public showHoleCard2Enabled: KnockoutObservable<boolean> = ko.observable(false);
     public processing: KnockoutObservable<boolean>;
     public turnEnabled: KnockoutObservable<boolean>;
     public isSitOut: KnockoutObservable<boolean>;
