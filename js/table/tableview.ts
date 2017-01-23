@@ -1095,6 +1095,8 @@ export class TableView {
         this.actionBlock.isRaise(true);
         this.actionBlock.expanded(false);
         this.actionBlock.showCardsEnabled(true);
+        this.actionBlock.showHoleCard1Enabled(true);
+        this.actionBlock.showHoleCard2Enabled(true);
         this.actionBlock.updateBounds();
         this.actionsCount(0);
         this.setDealer(dealerSeat);
@@ -1506,7 +1508,6 @@ export class TableView {
         if (this.enableInjectPlayerCards) {
             this.queue.injectCallback(() => {
                 this.onPlayerCardOpenedCore(playerId, cardPosition, cardValue);
-                this.ensureCardsOpened(playerId);
             });
         } else {
             this.queue.pushCallback(() => {
@@ -1520,6 +1521,7 @@ export class TableView {
         places.forEach((p) => {
             if (p.PlayerId() === playerId) {
                 p.openCard(cardPosition, cardValue);
+                p.cardsOverlayVisible(false);
             }
         });
         this.refreshPlaces();

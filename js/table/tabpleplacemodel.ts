@@ -280,7 +280,7 @@ export class TablePlaceModel {
         }
     }
     openCard(cardPosition: number, cardValue: number) {
-        let cards = [].concat(this.RawCards());
+        let cards = [].concat(this.RawCards() || [254, 254]);
         cards[cardPosition] = cardValue;
         const cardsClasses = convertToCards(cards);
         if (cardPosition === 0) {
@@ -302,6 +302,8 @@ export class TablePlaceModel {
     }
     markCardsHidden() {
         this.IsCardsOpened(false);
+        this.IsHoleCard1Opened(false);
+        this.IsHoleCard2Opened(false);
     }
     collectBet() {
         this.TotalBet((this.TotalBet() === null ? 0 : this.TotalBet()) + this.Bet());
