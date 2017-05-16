@@ -18,7 +18,7 @@ export class AppReloadService {
         if (reloadData.emergencyReload) {
             console.log("Emergency reload requested.");
             const api = new OnlinePoker.Commanding.API.TableReload(baseUrl);
-            
+
             // await api.confirmEmergencyReload(tableId);
             window.location.replace("http://google.com/");
             return;

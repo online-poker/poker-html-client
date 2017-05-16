@@ -102,7 +102,7 @@ export class ConnectionService {
         }
 
         if (this.cancelCurrentConnection !== null) {
-            this.cancelCurrentConnection("Requested connection cancel")
+            this.cancelCurrentConnection("Requested connection cancel");
         }
     }
     buildStartConnection() {

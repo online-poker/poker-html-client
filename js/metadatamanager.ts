@@ -120,7 +120,7 @@ class MetadataManager {
                 // Could work.
                 return;
             } else {
-                throw new Error("Upgrade required.")
+                throw new Error("Upgrade required.");
             }
         }
     }

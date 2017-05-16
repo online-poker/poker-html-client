@@ -68,7 +68,7 @@ function bootstrap() {
 
     ko.onError = function (error) {
         window["appInsights"].trackException(error, "Knockout");
-    }
+    };
     app.bindEvents();
     if (window["cordova"] === undefined) {
         app.onDeviceReady();
