@@ -293,7 +293,6 @@ export class TablePlaceModel {
         }
 
         this.RawCards(cards);
-        console.log(ko.toJSON(this));
         if (this.IsCardsFolded()) {
             this.FoldedCards(cardsClasses);
         } else {
