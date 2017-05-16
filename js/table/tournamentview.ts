@@ -359,7 +359,7 @@ export class TournamentView {
                 if (app.tablesPage.tablesShown()/* && app.tablesPage.currentTable().tournament() == self*/) {
                     try {
                         await SimplePopup.display(_("tournament.caption", { tournament: data.TournamentName }),
-                        _("tournament.tournamentCompleted", { tournament: data.TournamentName }))
+                        _("tournament.tournamentCompleted", { tournament: data.TournamentName }));
                     } finally {
                         self.finalizeTournament();
                     }

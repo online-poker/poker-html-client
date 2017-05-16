@@ -297,7 +297,7 @@ export class LobbyPage extends PageBase {
                     item.IsOpened = tableManager.isOpened(item.TableId);
                 });
                 self.tables(tables);
-                if (appConfig.auth.automaticTableSelection && tables.length == 1) {
+                if (appConfig.auth.automaticTableSelection && tables.length === 1) {
                     this.selectTable(tables[0]);
                 }
             }
