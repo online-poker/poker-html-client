@@ -94,7 +94,7 @@ export function registerBindings() {
             let value: string;
             if (typeof parameters === "string") {
                 value = _(parameters);
-            } else if (typeof parameters === "Function") {
+            } else if (typeof parameters === "function") {
                 value = _(parameters);
             } else {
                 value = _(parameters.key, parameters.params);
