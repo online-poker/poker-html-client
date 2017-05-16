@@ -2275,7 +2275,7 @@ export class TableView {
      * Show cards for the current player.
      */
     async showCard(cardPosition: number) {
-        const showCardVariable = cardPosition == 0 ? this.actionBlock.showHoleCard1Enabled : this.actionBlock.showHoleCard2Enabled;
+        const showCardVariable = cardPosition === 0 ? this.actionBlock.showHoleCard1Enabled : this.actionBlock.showHoleCard2Enabled;
         showCardVariable(false);
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
         try {
