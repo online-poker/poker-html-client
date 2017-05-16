@@ -280,7 +280,10 @@ export class TablePlaceModel {
         }
     }
     openCard(cardPosition: number, cardValue: number) {
-        let cards = [].concat(this.RawCards() || [254, 254]);
+        let cards = (this.RawCards() === null || this.RawCards() === undefined)
+            ? [254, 254]
+            : this.RawCards();
+        cards = [].concat(cards);
         cards[cardPosition] = cardValue;
         const cardsClasses = convertToCards(cards);
         if (cardPosition === 0) {
@@ -289,10 +292,11 @@ export class TablePlaceModel {
             this.IsHoleCard2Opened(true);
         }
 
+        this.RawCards(cards);
+        console.log(ko.toJSON(this));
         if (this.IsCardsFolded()) {
             this.FoldedCards(cardsClasses);
         } else {
-            this.RawCards(cards);
             this.Cards(cardsClasses);
             this.HandCards(cardsClasses);
         }

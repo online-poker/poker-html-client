@@ -1521,7 +1521,6 @@ export class TableView {
         places.forEach((p) => {
             if (p.PlayerId() === playerId) {
                 p.openCard(cardPosition, cardValue);
-                p.cardsOverlayVisible(false);
             }
         });
         this.refreshPlaces();
