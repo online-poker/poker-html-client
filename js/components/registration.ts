@@ -141,4 +141,12 @@ export function registerComponents() {
         template: getTemplateDefinition("table/tournament-status-indicator/tournament-status-indicator.html"),
         viewModel: trivialViewModelFactory
     });
+    ko.components.register("table-place-marks", {
+        template: getTemplateDefinition("table/table/place-marks.html"),
+        viewModel: { createViewModel: trivialViewModelFactory }
+    });
+    ko.components.register("table-place-players", {
+        template: getTemplateDefinition("table/table/place-players.html"),
+        viewModel: { createViewModel: trivialViewModelFactory }
+    });
 }
