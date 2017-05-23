@@ -69,7 +69,7 @@ export class ConnectionWrapper {
 
             const source = <CloseEvent>error.source;
 
-            if (source === null) {
+            if (source === null || source === undefined) {
                 // We don't know that this is means, so just fail
                 // so issue will be easiely identifiable.
                 this.logEvent("Unrecoverable SignalR error happens, please discover that this is means.");
@@ -105,7 +105,13 @@ export class ConnectionWrapper {
         const connectionInfo = "HID:" + hubId;
         this.logEvent("Terminating connection " + connectionInfo);
         slowInternetService.manualDisconnect = true;
-        this.connection.stop(false, false);
+        try {
+            this.connection.stop(false, false);
+        } catch (e) {
+            // Skip exception here. They occurs during bad internet connection
+            // when connection not even fully starts, so no disconnection correctly happens.
+        }
+
         this.cancelRefereshConnection();
         this.terminated = true;
     }
