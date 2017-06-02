@@ -765,8 +765,8 @@ export class TableView {
                         return subsequentDeferred.then(function () {
                             result.resolve();
                         }, function (error, cancelled: boolean) {
-                                result.reject(error, cancelled);
-                            });
+                            result.reject(error, cancelled);
+                        });
                     }
                 });
 
@@ -826,8 +826,8 @@ export class TableView {
                     return subsequentDeferred.then(function () {
                         result.resolve();
                     }, function (error, cancelled: boolean) {
-                            result.reject(error, cancelled);
-                        });
+                        result.reject(error, cancelled);
+                    });
                 });
 
             result.progress(function (command: string) {
@@ -1890,6 +1890,22 @@ export class TableView {
         this.tableCards.setCards(cards);
     }
 
+    /**
+   * Gets current seat number for offline table
+   */
+    getCurrentOfflineTableSeat(): number {
+        const self = this;
+        var seatNumber = 0;
+        app.requireAuthentication().done(function (authenticated) {
+            if (authenticated) {
+                const currentPlayer = self.currentLogin();
+                seatNumber = parseInt(currentPlayer.replace("Игрок", ""));
+                console.log("seat number " + seatNumber);
+            }
+        })
+        return seatNumber;
+    }
+
     showSitPrompt(seat: number) {
         if (this.sitting) {
             return;
@@ -1926,8 +1942,8 @@ export class TableView {
                 SimplePopup.display(_("tableMenu.rebuy"), _("errors." + data.Status));
             }
         }, function () {
-                SimplePopup.display(_("tableMenu.rebuy"), _("tableMenu.rebuyError"));
-            });
+            SimplePopup.display(_("tableMenu.rebuy"), _("tableMenu.rebuyError"));
+        });
     }
     doubleRebuy() {
         const self = this;
@@ -1945,8 +1961,8 @@ export class TableView {
                 SimplePopup.display(_("tableMenu.doublerebuy"), _("errors." + data.Status));
             }
         }, function () {
-                SimplePopup.display(_("tableMenu.doublerebuy"), _("tableMenu.doublerebuyError"));
-            });
+            SimplePopup.display(_("tableMenu.doublerebuy"), _("tableMenu.doublerebuyError"));
+        });
     }
     addon() {
         const self = this;
@@ -1965,8 +1981,8 @@ export class TableView {
                 SimplePopup.display(_("tableMenu.addon"), _("errors." + data.Status));
             }
         }, function () {
-                SimplePopup.display(_("tableMenu.addon"), _("tableMenu.addonError"));
-            });
+            SimplePopup.display(_("tableMenu.addon"), _("tableMenu.addonError"));
+        });
     }
     showRebuyPrompt() {
         const self = this;
@@ -2042,8 +2058,8 @@ export class TableView {
 
                 result.resolve();
             }, function () {
-                    result.reject();
-                });
+                result.reject();
+            });
         } else {
             result.resolve();
         }
