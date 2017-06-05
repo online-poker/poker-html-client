@@ -12,6 +12,7 @@ declare var app: App;
 
 export class JoinTablePopup implements KnockoutValidationGroup {
     buyin: KnockoutObservable<number>;
+    ticketCode: KnockoutObservable<string>;
     minBuyin: KnockoutObservable<number>;
     maxBuyin: KnockoutObservable<number>;
     minBet: KnockoutObservable<number>;
@@ -27,6 +28,7 @@ export class JoinTablePopup implements KnockoutValidationGroup {
 
     constructor() {
         this.buyin = ko.observable<number>().extend({ required: true, validatable: true });
+        this.ticketCode = ko.observable<string>().extend({ required: true, validatable: true });
         this.tableView = ko.observable<TableView>();
         this.seatNumber = ko.observable<number>(0);
         this.accountTotal = ko.observable<number>(0);
@@ -103,8 +105,9 @@ export class JoinTablePopup implements KnockoutValidationGroup {
 
         const seat = this.seatNumber();
         const amount = this.buyin();
+        const ticketCode = this.ticketCode();
         this.loading(true);
-        this.tableView().sit(seat, amount).then(function () {
+        this.tableView().sit(seat, amount, ticketCode).then(function () {
             self.loading(false);
             app.closePopup();
         }, function (status: string, minimalAmount: number) {

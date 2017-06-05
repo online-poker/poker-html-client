@@ -2008,11 +2008,11 @@ export class TableView {
             self.addon();
         });
     }
-    sit(seat: number, amount: number) {
+    sit(seat: number, amount: number, ticketCode: string) {
         const self = this;
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
         const result = $.Deferred();
-        gameApi.Sit(self.tableId, seat, amount, function (data, textStatus, jqXHR) {
+        gameApi.Sit(self.tableId, seat, amount, ticketCode, function (data, textStatus, jqXHR) {
             // report on successfull seating.
             if (data.Status === "OperationNotValidAtThisTime") {
                 return;
@@ -2066,15 +2066,14 @@ export class TableView {
 
         return result;
     }
-    standup() {
+    async standup() {
         const self = this;
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        gameApi.Standup(this.tableId, function (data, textStatus, jqXHR) {
-            // report on successfull seating.
-            if (data.Status === "AuthorizationError") {
-                self.reportApiError("Ошибка авторизации");
-            }
-        });
+        const data = await gameApi.Standup(this.tableId);
+        // report on successfull seating.
+        if (data.Status === "AuthorizationError") {
+            self.reportApiError("Ошибка авторизации");
+        }
     }
 
     showAddBalancePrompt(seat: number) {

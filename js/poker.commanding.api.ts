@@ -287,17 +287,18 @@ namespace OnlinePoker {
                     const data = {};
                     return <JQueryPromise<ApiResult<number[]>>>super.Call('GetSitingTables', data, callback);
                 }
-                Sit(tableId, seat, amount, callback) {
-                    const data = { TableId: tableId, Seat: seat, Amount: amount };
+                Sit(tableId: number, seat: number, amount: number, ticketCode: string, callback) {
+                    const data = { TableId: tableId, Seat: seat, Amount: amount, TicketCode: ticketCode };
                     return super.Call('Sit', data, callback);
                 }
                 SitAnywhere(tableId, amount, callback) {
                     const data = { TableId: tableId, Amount: amount };
                     return super.Call('SitAnywhere', data, callback);
                 }
-                Standup(tableId, callback) {
+                async Standup(tableId) {
                     const data = { TableId: tableId };
-                    return super.Call('Standup', data, callback);
+                    const result = await super.CallAsync<StatusResponse>('Standup', data);
+                    return result;
                 }
                 Fold(tableId, callback) {
                     const data = { TableId: tableId };
