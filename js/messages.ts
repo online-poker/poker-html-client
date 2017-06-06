@@ -564,6 +564,7 @@ var messages: any = {
         putMoreMoney: 'Нельзя внести меньше чем минимум',
         putLessMoney: 'Нельзя внести больше чем максимум',
         joinError: 'Сбой подключения',
+        writeTicketCode: 'Введите номер чека',
     },
     addMoney: {
         caption: 'Пополнить стек',

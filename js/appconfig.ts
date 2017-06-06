@@ -34,6 +34,10 @@ class AppConfig {
         enabled: false,
         openTableAutomatically: true
     };
+    joinTable = {
+        allowUsePersonalAccount: false,
+        allowTickets: true,
+    };
 }
 
 export var appConfig = new AppConfig();

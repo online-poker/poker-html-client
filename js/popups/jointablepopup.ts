@@ -25,6 +25,8 @@ export class JoinTablePopup implements KnockoutValidationGroup {
     seatNumber: KnockoutObservable<number>;
     tableView: KnockoutObservable<TableView>;
     loading: KnockoutObservable<boolean>;
+    allowUsePersonalAccount: KnockoutObservable<boolean>;
+    allowTickets: KnockoutObservable<boolean>;
 
     constructor() {
         this.buyin = ko.observable<number>().extend({ required: true, validatable: true });
@@ -40,6 +42,8 @@ export class JoinTablePopup implements KnockoutValidationGroup {
         this.maxBet = ko.observable<number>(0);
         this.errors = ko.validation.group(this);
         this.errorMessage = ko.observable<string>();
+        this.allowUsePersonalAccount = ko.observable<boolean>(appConfig.joinTable.allowUsePersonalAccount);
+        this.allowTickets = ko.observable<boolean>(appConfig.joinTable.allowTickets);
     }
     shown(): void {
         const self = this;
