@@ -593,7 +593,7 @@ namespace OnlinePoker {
             }
             export class TableReload extends WebApiProxy {
                 constructor(host) {
-                    super(host, 'new/api');
+                    super(host, 'server/api');
                 }
 
                 async getTableReload(tableId: number) {
