@@ -643,5 +643,7 @@ var messages: any = {
         RegistrationInTournamentNotStarted: 'Регистрация в турнире еще не началась',
         InvalidAmount: "Неверно указанная сумма",
         RequiredParameterIsMissing: "Обязательный параметр не указан",
+        InvalidTicket: "Неправильный номер билета",
+        TicketAlreadyUsed: "Билет уже использован",
     }
 };
