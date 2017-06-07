@@ -190,7 +190,7 @@ namespace OnlinePoker {
                     });
                 }
                 async CallAsync<T>(methodName: string, parameters: any) {
-                    return new Promise<T>(function (resolve, reject) {
+                    return new Promise<T>((resolve, reject) => {
                         this.Call(methodName, parameters, null).then(resolve, reject);
                     });
                 }
