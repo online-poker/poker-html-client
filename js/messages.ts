@@ -223,6 +223,10 @@ var messages: any = {
     },
     settings: {
         profileTitle: 'Профиль',
+        caption: "Настройки",
+        selectCardsVariant: "Выберите способ отображения карт.",
+        radioUp: "В верхнем углу",
+        radioDown: "В нижнем углу",
     },
     auth: {
         logon: 'Вход',

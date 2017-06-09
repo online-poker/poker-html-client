@@ -83,6 +83,13 @@ class Settings {
             localStorage.setItem(name, value === null ? null : value.toString());
         }
     }
+    setCardsVariant(variant: string) {
+        localStorage.setItem("cardsVariant", variant);
+    }
+    getCardsVariant() {
+        const variant = localStorage.getItem("cardsVariant");
+        return variant;
+    }
 }
 
 export var settings = new Settings();

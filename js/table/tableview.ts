@@ -103,6 +103,19 @@ export class TableView {
     * Value indicating whether all bets are rounded.
     */
     public allBetsRounded: KnockoutObservable<boolean>;
+    /**
+ * Value indicating whether use cards variant up
+ */
+    public cardsVariantUp: KnockoutObservable<boolean>;
+    /**
+* Value indicating whether use cards variant down
+*/
+    public cardsVariantDown: KnockoutObservable<boolean>;
+        /**
+* Css rules for table-container
+*/
+    public containerCss: KnockoutObservable<any>;
+
     public timeLeft: KnockoutComputed<number>;
     public timerInterval: number;
     public chipWidth: number;
@@ -229,6 +242,8 @@ export class TableView {
         this.cardsReceived = false;
         this.onMyTurn = new signals.Signal();
         this.queue = new GameActionsQueue();
+        this.cardsVariantUp = ko.observable<boolean>(false);
+        this.cardsVariantDown = ko.observable<boolean>(true);
 
         this.places = ko.computed(function () {
             return self.tablePlaces.places();
@@ -512,6 +527,21 @@ export class TableView {
             return result;
         }).extend({ notify: "always" });
 
+        this.containerCss = ko.computed(() => {
+            let cardsVariant = settings.getCardsVariant();
+            if (cardsVariant === "up") {
+                this.cardsVariantUp = ko.observable<boolean>(true);
+                this.cardsVariantDown = ko.observable<boolean>(false);
+            } else if (cardsVariant === "down") {
+                this.cardsVariantUp = ko.observable<boolean>(false);
+                this.cardsVariantDown = ko.observable<boolean>(true);
+            }
+            return {
+                expanded: this.actionBlock.expanded(),
+                'cardsvariant-up': this.cardsVariantUp(),
+                'cardsvariant-down': this.cardsVariantDown(),
+            };
+        });
         this.maximumRaiseAmount = ko.computed(function () {
             const currentPlayer = self.myPlayer();
             if (currentPlayer === null) {
@@ -581,6 +611,7 @@ export class TableView {
 
         this.initHandHistory();
     }
+
 
     /**
     * Gets current cards combination
@@ -1925,6 +1956,15 @@ export class TableView {
         }).always(() => {
             self.sitting = false;
         });
+    }
+
+    showSettingsPrompt() {
+        const self = this;
+        app.requireAuthentication().done(function (authenticated) {
+            if (authenticated) {
+                    app.executeCommand("popup.settings");
+            }
+        })
     }
     rebuy() {
         const self = this;
