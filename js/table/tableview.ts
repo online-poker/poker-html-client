@@ -1962,7 +1962,7 @@ export class TableView {
         const self = this;
         app.requireAuthentication().done(function (authenticated) {
             if (authenticated) {
-                    app.executeCommand("popup.settings");
+                app.executeCommand("popup.settings");
             }
         })
     }
@@ -2098,8 +2098,8 @@ export class TableView {
 
                 result.resolve();
             }, function () {
-                    result.reject();
-                });
+                result.reject();
+            });
         } else {
             result.resolve();
         }
