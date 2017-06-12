@@ -2119,8 +2119,8 @@ export class TableView {
         // report on successfull seating.
         if (data.Status === "AuthorizationError") {
             self.reportApiError("Ошибка авторизации");
-        } else if (data.Status === "Ok") {
-            self.showStandupConfirm();
+        } else if (data.Status === "Ok" && appConfig.game.seatMode) {
+                self.showStandupConfirm();
         }
     }
 
