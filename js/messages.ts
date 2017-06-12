@@ -225,8 +225,9 @@ var messages: any = {
         profileTitle: 'Профиль',
         caption: "Настройки",
         selectCardsVariant: "Выберите способ отображения карт.",
-        radioUp: "В верхнем углу",
-        radioDown: "В нижнем углу",
+        cardsUpperCorner: "В верхнем углу",
+        cardsDownCorner: "В нижнем углу",
+        updateInfo: "Вы должны перезапустить приложение, чтобы изменения применились"
     },
     auth: {
         logon: 'Вход',
@@ -285,8 +286,8 @@ var messages: any = {
         sitHere: 'Сесть тут',
         sitHere1: 'Сесть',
         sitHere2: 'тут',
-        standupPromptCaption: 'Покинуть стол',
-        standupPrompt: 'Вы действительно хотете покинуть стол?',
+        standupPromptCaption: 'Забрать выигрыш',
+        standupPrompt: 'Вы действительно хотите забрать выигрыш со стола?',
         standupTournamentPrompt: 'Вы действительно хотете покинуть стол? Блайнды будут сниматься автоматически во время всей игры',
         rebuyPromptCaption: 'Ребай',
         rebuyPrompt: 'Стоимость ребая: #price#',
@@ -358,6 +359,8 @@ var messages: any = {
             c9: 'Стрит-флеш (##c1)',
             c10: 'Флеш-рояль',
         },
+        standupSuccessTitle: "Операция выполнена успешно",
+        standupSuccessMessage: "Обратитесь к администратору чтобы забрать ваш выигрыш",
     },
     tournament: {
         caption: 'Турнир',

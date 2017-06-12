@@ -104,16 +104,16 @@ export class TableView {
     */
     public allBetsRounded: KnockoutObservable<boolean>;
     /**
- * Value indicating whether use cards variant up
- */
+    * Value indicating whether use cards variant up
+    */
     public cardsVariantUp: KnockoutObservable<boolean>;
     /**
-* Value indicating whether use cards variant down
-*/
+    * Value indicating whether use cards variant down
+    */
     public cardsVariantDown: KnockoutObservable<boolean>;
-        /**
-* Css rules for table-container
-*/
+    /**
+    * Css rules for table-container
+    */
     public containerCss: KnockoutObservable<any>;
 
     public timeLeft: KnockoutComputed<number>;
@@ -2098,13 +2098,19 @@ export class TableView {
 
                 result.resolve();
             }, function () {
-                result.reject();
-            });
+                    result.reject();
+                });
         } else {
             result.resolve();
         }
 
         return result;
+    }
+    showStandupConfirm() {
+        let messages: string[];
+        messages = [_("table.standupSuccessMessage")];
+        const title = _("table.standupSuccessTitle")
+        SimplePopup.display(title, messages);
     }
     async standup() {
         const self = this;
@@ -2113,6 +2119,8 @@ export class TableView {
         // report on successfull seating.
         if (data.Status === "AuthorizationError") {
             self.reportApiError("Ошибка авторизации");
+        } else if (data.Status === "Ok") {
+            self.showStandupConfirm();
         }
     }
 
