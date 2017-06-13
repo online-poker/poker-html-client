@@ -24,14 +24,8 @@ export class TableMenuPopup {
     doublerebuyAllowed: KnockoutObservable<boolean>;
     addonAllowed: KnockoutObservable<boolean>;
     isTournamentTable: KnockoutObservable<boolean>;
-    /**
-    * Value indicating whether tournament mode is enabled
-    */
-    public tournamentEnabled: KnockoutObservable<boolean>;
-    /**
-    * Value indicating whether seat mode is enabled
-    */
-    public seatEnabled: KnockoutObservable<boolean>;
+    public allowUsePersonalAccount: KnockoutObservable<boolean>;
+    public allowTickets: KnockoutObservable<boolean>;
     /**
     * Tournament has rebuys.
     */
@@ -80,8 +74,8 @@ export class TableMenuPopup {
         this.doublerebuyAllowed = ko.observable(false);
         this.addonAllowed = ko.observable(false);
         this.isTournamentTable = ko.observable(false);
-        this.tournamentEnabled = ko.observable(appConfig.tournament.enabled);
-        this.seatEnabled = ko.observable(appConfig.game.seatMode);
+        this.allowUsePersonalAccount = ko.observable(appConfig.joinTable.allowUsePersonalAccount);
+        this.allowTickets = ko.observable(appConfig.joinTable.allowTickets);
     }
 
     shown() {
