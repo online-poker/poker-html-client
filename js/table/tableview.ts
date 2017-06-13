@@ -1957,15 +1957,6 @@ export class TableView {
             self.sitting = false;
         });
     }
-
-    showSettingsPrompt() {
-        const self = this;
-        app.requireAuthentication().done(function (authenticated) {
-            if (authenticated) {
-                app.executeCommand("popup.settings");
-            }
-        })
-    }
     rebuy() {
         const self = this;
         const tournamentView = this.tournament();
@@ -2124,7 +2115,7 @@ export class TableView {
         }
     }
 
-    showAddBalancePrompt(seat: number) {
+    showAddBalancePrompt(seat: number, ticketCode: string) {
         /// <signature>
         ///     <summary>Shows add balance prompt.</summary>
         ///     <param name="seat" type="Number">Seat where player willing to join</param>
@@ -2136,17 +2127,17 @@ export class TableView {
 
         const amount = prompt("Укажите сумму для пополнения счета?", "1000");
         if (amount) {
-            this.addBalance(Number(amount));
+            this.addBalance(Number(amount), ticketCode);
         }
     }
 
-    addBalance(amount: number) {
+    addBalance(amount: number, ticketCode: string) {
         const self = this;
         const places = this.places();
         const targetPlayer = this.myPlayer();
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
         const result = $.Deferred();
-        gameApi.AddBalance(this.tableId, amount, function (data, textStatus, jqXHR) {
+        gameApi.AddBalance(this.tableId, amount, ticketCode, function (data, textStatus, jqXHR) {
             // report on successfull seating.
             if (data.Status !== "Ok") {
                 result.reject(data.Status);

@@ -320,8 +320,8 @@ namespace OnlinePoker {
                     const data = { TableId: tableId };
                     return super.Call('WaitBigBlind', data, callback);
                 }
-                AddBalance(tableId, amount, callback) {
-                    const data = { TableId: tableId, Amount: amount };
+                AddBalance(tableId: number, amount:number, ticketCode: string, callback) {
+                    const data = { TableId: tableId, Amount: amount, TicketCode: ticketCode };
                     return super.Call('AddBalance', data, callback);
                 }
                 SitOut(tableId: number, callback?) {

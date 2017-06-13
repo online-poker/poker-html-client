@@ -119,6 +119,7 @@ export class JoinTablePopup implements KnockoutValidationGroup {
         this.tableView().sit(seat, amount, ticketCode).then(function () {
             self.loading(false);
             app.closePopup();
+            self.ticketCode(null);
         }, function (status: string, minimalAmount: number) {
             self.loading(false);
             if (status === "AmountTooLow") {
@@ -128,6 +129,7 @@ export class JoinTablePopup implements KnockoutValidationGroup {
             } else {
                 SimplePopup.display(_("joinTable.caption"), _("errors." + status));
             }
+            self.ticketCode(null);
         });
     }
     private updateEntries() {

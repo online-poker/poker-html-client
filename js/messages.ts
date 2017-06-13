@@ -574,7 +574,7 @@ var messages: any = {
         writeTicketCode: 'Введите номер чека',
     },
     addMoney: {
-        caption: 'Пополнить стек',
+        caption: 'Пополнить',
         tableName: 'Стол:',
         bets: 'Ставки:',
         accountTotal: 'Сумма на счету:',
