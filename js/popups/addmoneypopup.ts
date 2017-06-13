@@ -136,10 +136,12 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
             self.loading(false);
             app.closePopup("ok");
             SimplePopup.display(_("addMoney.caption"), _("addMoney.success"));
+            self.ticketCode(null);
         }, function (status: string) {
             self.processing(false);
             self.loading(false);
             SimplePopup.display(_("addMoney.caption"), _("errors." + status));
+            self.ticketCode(null);
             });
     }
 }
