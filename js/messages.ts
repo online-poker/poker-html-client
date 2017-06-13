@@ -360,7 +360,7 @@ var messages: any = {
             c10: 'Флеш-рояль',
         },
         standupSuccessTitle: "Операция выполнена успешно",
-        standupSuccessMessage: "Обратитесь к администратору чтобы забрать ваш выигрыш",
+        standupSuccessMessage: "За выплатой обратитесь в кассу или к администратору",
     },
     tournament: {
         caption: 'Турнир',
