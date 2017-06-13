@@ -130,13 +130,16 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
         }
         const amount = this.buyin();
         self.processing(true);
+        this.loading(true);
         this.tableView().addBalance(amount, ticketCode).then(function () {
             self.processing(false);
+            self.loading(false);
             app.closePopup("ok");
             SimplePopup.display(_("addMoney.caption"), _("addMoney.success"));
         }, function (status: string) {
             self.processing(false);
-            self.buyin.setError(_("errors." + status));
-        });
+            self.loading(false);
+            SimplePopup.display(_("addMoney.caption"), _("errors." + status));
+            });
     }
 }
