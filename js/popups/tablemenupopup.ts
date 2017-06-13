@@ -5,6 +5,7 @@ import { TournamentView } from "../table/tournamentview";
 import { App } from "../app";
 import * as authManager from "../authmanager";
 import { settings } from "../settings";
+import { appConfig } from "../appconfig";
 
 declare var apiHost: string;
 declare var app: App;
@@ -23,7 +24,14 @@ export class TableMenuPopup {
     doublerebuyAllowed: KnockoutObservable<boolean>;
     addonAllowed: KnockoutObservable<boolean>;
     isTournamentTable: KnockoutObservable<boolean>;
-
+    /**
+    * Value indicating whether tournament mode is enabled
+    */
+    public tournamentEnabled: KnockoutObservable<boolean>;
+    /**
+    * Value indicating whether seat mode is enabled
+    */
+    public seatEnabled: KnockoutObservable<boolean>;
     /**
     * Tournament has rebuys.
     */
@@ -72,6 +80,8 @@ export class TableMenuPopup {
         this.doublerebuyAllowed = ko.observable(false);
         this.addonAllowed = ko.observable(false);
         this.isTournamentTable = ko.observable(false);
+        this.tournamentEnabled = ko.observable(appConfig.tournament.enabled);
+        this.seatEnabled = ko.observable(appConfig.game.seatMode);
     }
 
     shown() {
@@ -199,6 +209,14 @@ export class TableMenuPopup {
 
         const currentTable = app.tablesPage.currentTable();
         currentTable.showAddonPrompt();
+    }
+    showSettingsPrompt() {
+        const self = this;
+        app.requireAuthentication().done(function (authenticated) {
+            if (authenticated) {
+                app.executeCommand("popup.settings");
+            }
+        })
     }
     private getCurrentMoney(tournament: TournamentView, personalAccount: PersonalAccountData) {
         return personalAccount.RealMoney;

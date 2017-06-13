@@ -8,6 +8,7 @@ import { PopupBase } from "../ui/popupbase";
 import { TableView } from "../table/tableview";
 import { _ } from "../languagemanager";
 import { App } from "../app";
+import { appConfig } from "../appconfig";
 
 declare var app: App;
 
@@ -25,9 +26,19 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
     tableView: KnockoutObservable<TableView>;
     loading: KnockoutObservable<boolean>;
     processing: KnockoutObservable<boolean>;
+    ticketCode: KnockoutObservable<string>;
+    /**
+    * Value indicating whether tournament mode is enabled
+    */
+    public tournamentEnabled: KnockoutObservable<boolean>;
+    /**
+    * Value indicating whether seat mode is enabled
+    */
+    public seatEnabled: KnockoutObservable<boolean>;
 
     constructor() {
-        this.buyin = ko.observable<number>().extend({ required: true, validatable: true });
+        this.buyin = ko.observable<number>().extend({ required: appConfig.tournament.enabled, validatable: true });
+        this.ticketCode = ko.observable<string>().extend({ required: appConfig.game.seatMode, validatable: true });
         this.tableView = ko.observable<TableView>();
         this.accountTotal = ko.observable<number>(0);
         this.loading = ko.observable<boolean>(false);
@@ -39,6 +50,8 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
         this.errors = ko.validation.group(this);
         this.errorMessage = ko.observable<string>();
         this.processing = ko.observable(false);
+        this.tournamentEnabled = ko.observable(appConfig.tournament.enabled);
+        this.seatEnabled = ko.observable(appConfig.game.seatMode);
     }
     shown(): void {
         const self = this;
@@ -82,6 +95,7 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
     confirm() {
         const self = this;
         const isValid = this.isValid();
+        const ticketCode = this.ticketCode();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;
@@ -90,35 +104,35 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
         if (self.processing()) {
             return;
         }
+        if (appConfig.tournament.enabled) {
+            if (this.buyin() < this.minBuyin()) {
+                this.buyin.setError(_("addMoney.putMoreMoney"));
+                return;
+            }
 
-        if (this.buyin() < this.minBuyin()) {
-            this.buyin.setError(_("addMoney.putMoreMoney"));
-            return;
+            if (this.buyin() > this.maxBuyin()) {
+                this.buyin.setError(_("addMoney.putLessMoney"));
+                return;
+            }
+
+            if (this.accountTotal() < this.minBuyin()) {
+                this.buyin.setError(_("errors.NotSufficiendFunds"));
+                return;
+            }
+
+            if (this.accountTotal() < this.buyin()) {
+                this.buyin.setError(_("errors.NotSufficiendFunds"));
+                return;
+            }
+
+            if (this.buyin() + this.tableView().myPlayer().Money() + this.tableView().myPlayer().TotalBet() > this.maxBuyin()) {
+                this.buyin.setError(_("addMoney.couldnotAddMoreThenMax"));
+                return;
+            }
         }
-
-        if (this.buyin() > this.maxBuyin()) {
-            this.buyin.setError(_("addMoney.putLessMoney"));
-            return;
-        }
-
-        if (this.accountTotal() < this.minBuyin()) {
-            this.buyin.setError(_("errors.NotSufficiendFunds"));
-            return;
-        }
-
-        if (this.accountTotal() < this.buyin()) {
-            this.buyin.setError(_("errors.NotSufficiendFunds"));
-            return;
-        }
-
-        if (this.buyin() + this.tableView().myPlayer().Money() + this.tableView().myPlayer().TotalBet() > this.maxBuyin()) {
-            this.buyin.setError(_("addMoney.couldnotAddMoreThenMax"));
-            return;
-        }
-
         const amount = this.buyin();
         self.processing(true);
-        this.tableView().addBalance(amount).then(function () {
+        this.tableView().addBalance(amount, ticketCode).then(function () {
             self.processing(false);
             app.closePopup("ok");
             SimplePopup.display(_("addMoney.caption"), _("addMoney.success"));
