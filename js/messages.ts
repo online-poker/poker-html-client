@@ -561,7 +561,7 @@ var messages: any = {
         }
     },
     joinTable: {
-        caption: 'Взять стек',
+        caption: 'Сесть тут',
         tableName: 'Стол:',
         bets: 'Ставки:',
         accountTotal: 'Всего на вашем счету:',
