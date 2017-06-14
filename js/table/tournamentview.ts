@@ -1,6 +1,6 @@
 ﻿import * as ko from "knockout";
 import * as timeService from "../timeservice";
-import * as tableManager from "./tablemanager";
+import { tableManager } from "./tablemanager";
 import * as authManager from "../authmanager";
 import * as metadataManager from "../metadatamanager";
 import { slowInternetService, connectionService } from "../services";

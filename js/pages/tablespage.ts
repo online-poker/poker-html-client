@@ -4,7 +4,7 @@ import * as ko from "knockout";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as metadataManager from "../metadatamanager";
-import * as tableManager from "../table/tablemanager";
+import { tableManager } from "../table/tablemanager";
 import {
     connectionService,
     reloadManager,

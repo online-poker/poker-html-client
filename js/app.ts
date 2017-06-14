@@ -18,7 +18,7 @@ import {
     pushService,
     websiteService
 } from "./services";
-import * as tableManager from "./table/tablemanager";
+import { tableManager } from "./table/tablemanager";
 import {
     HomePage,
     LobbyPageBlock,
