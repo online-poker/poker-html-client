@@ -1157,5 +1157,4 @@ class TableManager {
     }
 }
 
-const tableManager = new TableManager();
-export = tableManager;
+export const tableManager = new TableManager();

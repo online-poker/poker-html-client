@@ -5,7 +5,7 @@ import * as moment from "moment";
 import { App } from "../app";
 import * as metadataManager from "../metadatamanager";
 import { SimplePopup } from "../popups/simplepopup";
-import * as tableManager from "../table/tablemanager";
+import { tableManager } from "../table/tablemanager";
 import * as timeService from "../timeservice";
 import * as authManager from "../authmanager";
 import { PageBase } from "../ui/pagebase";

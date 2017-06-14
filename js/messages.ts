@@ -1,4 +1,3 @@
-/// <reference path="_references.ts" />
 /* tslint:disable:quotemark no-trailing-comma max-line-length */
 
 var messages: any = {

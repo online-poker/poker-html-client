@@ -3,7 +3,7 @@ declare var apiHost: string;
 import * as ko from "knockout";
 import { App } from "../app";
 import * as metadataManager from "../metadatamanager";
-import * as tableManager from "../table/tablemanager";
+import { tableManager } from "../table/tablemanager";
 import {
     connectionService,
     reloadManager,

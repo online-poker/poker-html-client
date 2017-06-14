@@ -2,7 +2,7 @@
 
 import { App } from "../app";
 import { PageBase } from "../ui/pagebase";
-import * as tableManager from "../table/tablemanager";
+import { tableManager } from "../table/tablemanager";
 import { debugSettings } from "../debugsettings";
 import { reloadManager } from "../services";
 import { _ } from "../languagemanager";
