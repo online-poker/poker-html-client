@@ -6,6 +6,8 @@ import { App } from "../app";
 import * as authManager from "../authmanager";
 import { settings } from "../settings";
 import { appConfig } from "../appconfig";
+import * as commandManager from "../commandmanager";
+import { tableManager } from "../table/tablemanager";
 
 declare var apiHost: string;
 declare var app: App;
@@ -211,6 +213,11 @@ export class TableMenuPopup {
                 app.executeCommand("popup.settings");
             }
         })
+    }
+    leave() {
+        let index = tableManager.currentIndex();
+        let tableView = tableManager.tables()[index];
+        commandManager.executeCommand("app.leaveTable", [tableView.tableId]);
     }
     private getCurrentMoney(tournament: TournamentView, personalAccount: PersonalAccountData) {
         return personalAccount.RealMoney;
