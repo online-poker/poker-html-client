@@ -28,6 +28,7 @@ export class TableMenuPopup {
     isTournamentTable: KnockoutObservable<boolean>;
     public allowUsePersonalAccount: KnockoutObservable<boolean>;
     public allowTickets: KnockoutObservable<boolean>;
+    private standupText: KnockoutComputed<string>;
     /**
     * Tournament has rebuys.
     */
@@ -78,6 +79,15 @@ export class TableMenuPopup {
         this.isTournamentTable = ko.observable(false);
         this.allowUsePersonalAccount = ko.observable(appConfig.joinTable.allowUsePersonalAccount);
         this.allowTickets = ko.observable(appConfig.joinTable.allowTickets);
+        this.standupText = ko.pureComputed(() => {
+            const currentTable = app.tablesPage.currentTable();
+            const player = currentTable.myPlayer();
+            if (player === null) {
+                return "table.takeWin";
+            }
+            const hasWin = player.Money() > 0 || currentTable.myPlayerInGame();
+            return hasWin ? 'table.takeWin' : 'table.leave';
+        });
     }
 
     shown() {
