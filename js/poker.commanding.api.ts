@@ -320,7 +320,7 @@ namespace OnlinePoker {
                     const data = { TableId: tableId };
                     return super.Call('WaitBigBlind', data, callback);
                 }
-                AddBalance(tableId: number, amount:number, ticketCode: string, callback) {
+                AddBalance(tableId: number, amount: number, ticketCode: string, callback) {
                     const data = { TableId: tableId, Amount: amount, TicketCode: ticketCode };
                     return super.Call('AddBalance', data, callback);
                 }
@@ -555,7 +555,7 @@ namespace OnlinePoker {
                     return <JQueryPromise<ApiResult<number[]>>>super.Call('GetOnlinePlayers', data, callback);
                 }
                 GetBanners(format, callback = null) {
-                    const data = { Format: format};
+                    const data = { Format: format };
                     return super.Call('GetBanners', data, callback);
                 }
                 /**
@@ -563,7 +563,7 @@ namespace OnlinePoker {
                 * @param callback A callback function that is executed if the request succeeds.
                 */
                 GetDate(callback = null) {
-                    const data = { };
+                    const data = {};
                     return <JQueryPromise<number>>super.Call('GetDate', data, callback);
                 }
                 /**
