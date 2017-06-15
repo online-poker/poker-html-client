@@ -12,6 +12,7 @@ class Settings {
     lastPage = ko.observable<string>();
     lastTime = ko.observable<number>(0);
     isGuest = ko.observable<boolean>(false);
+    cardsVariant = ko.observable<string>();
 
     constructor() {
         this.login = ko.observable<string>();
@@ -34,6 +35,7 @@ class Settings {
         this.lastTime(this.getItemNumber("reload.lastTime", 0));
         this.lastPage(this.getItemString("reload.lastPage", "main"));
         this.authToken(this.getItemString("reload.authToken", null));
+        this.cardsVariant(this.getItemString("cardsVariant", "down"));
     }
     saveSettings() {
         this.setItemString("auth.login", this.login());
@@ -47,8 +49,9 @@ class Settings {
         this.setItemString("reload.lastPage", this.lastPage(), "main");
         this.setItemString("reload.authToken", this.authToken(), null);
         this.setItemNumber("reload.lastTime", this.lastTime(), 0);
+        this.setItemString("cardsVariant", this.cardsVariant());
     }
-    getItemBoolean(name: string, defaultValue: boolean = false) {
+    private getItemBoolean(name: string, defaultValue: boolean = false) {
         const item = <string>localStorage.getItem(name);
         if (item === null) {
             return defaultValue;
@@ -56,39 +59,32 @@ class Settings {
 
         return item.toLowerCase() === "true";
     }
-    setItemBoolean(name: string, value: boolean, defaultValue: boolean = false) {
+    private setItemBoolean(name: string, value: boolean, defaultValue: boolean = false) {
         if (value === defaultValue) {
             localStorage.removeItem(name);
         } else {
             localStorage.setItem(name, value ? "true" : "false");
         }
     }
-    getItemString(name: string, defaultValue: string = null) {
+    private getItemString(name: string, defaultValue: string = null) {
         return <string>localStorage.getItem(name) || defaultValue;
     }
-    setItemString(name: string, value: string, defaultValue: string = null) {
+    private setItemString(name: string, value: string, defaultValue: string = null) {
         if (value === defaultValue) {
             localStorage.removeItem(name);
         } else {
             localStorage.setItem(name, value);
         }
     }
-    getItemNumber(name: string, defaultValue: number = null) {
+    private getItemNumber(name: string, defaultValue: number = null) {
         return Number(localStorage.getItem(name)) || defaultValue;
     }
-    setItemNumber(name: string, value: number, defaultValue: number = null) {
+    private setItemNumber(name: string, value: number, defaultValue: number = null) {
         if (value === defaultValue) {
             localStorage.removeItem(name);
         } else {
             localStorage.setItem(name, value === null ? null : value.toString());
         }
-    }
-    setCardsVariant(variant: string) {
-        localStorage.setItem("cardsVariant", variant);
-    }
-    getCardsVariant() {
-        const variant = localStorage.getItem("cardsVariant");
-        return variant;
     }
 }
 

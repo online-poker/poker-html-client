@@ -17,7 +17,8 @@ export class SettingsPopup implements KnockoutValidationGroup {
     }
 
     confirm() {
-        settings.setCardsVariant(this.checkedRadio());
+        settings.cardsVariant(this.checkedRadio());
+        settings.saveSettings();
         this.loading = ko.observable<boolean>(false);
         app.closePopup();
     }
