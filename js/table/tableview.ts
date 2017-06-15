@@ -528,7 +528,7 @@ export class TableView {
         }).extend({ notify: "always" });
 
         this.containerCss = ko.computed(() => {
-            let cardsVariant = settings.getCardsVariant();
+            let cardsVariant = settings.cardsVariant();
             if (cardsVariant === "up") {
                 this.cardsVariantUp = ko.observable<boolean>(true);
                 this.cardsVariantDown = ko.observable<boolean>(false);
