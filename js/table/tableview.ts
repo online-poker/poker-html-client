@@ -2071,18 +2071,22 @@ export class TableView {
         if (self.myPlayer() != null) {
             const tournament = this.tournament();
             let messages: string[];
+            let caption: string;
             if (tournament == null) {
-                messages = [_("table.standupPrompt")];
+                const hasWin = self.myPlayer().Money() > 0 || self.myPlayerInGame();
+                const promptMesssage = hasWin ? "table.standupPrompt" : "table.standupPromptWithoutWin";
+                caption = hasWin ? "table.standupPromptCaption" : "table.leave";
+                messages = [_(promptMesssage)];
             } else {
                 if (tournament.finishedPlaying()) {
                     result.resolve();
                     return result;
                 }
-
+                caption = "table.leave";
                 messages = [_("table.standupTournamentPrompt")];
             }
 
-            app.prompt(_("table.standupPromptCaption"), messages).then(function () {
+            app.prompt(_(caption), messages).then(function () {
                 if (self.tournament() == null) {
                     self.standup();
                 }

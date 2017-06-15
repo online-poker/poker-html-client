@@ -287,6 +287,7 @@ var messages: any = {
         sitHere2: 'тут',
         standupPromptCaption: 'Забрать выигрыш',
         standupPrompt: 'Вы действительно хотите забрать выигрыш со стола?',
+        standupPromptWithoutWin: 'Вы действительно хотите покинуть стол?',
         standupTournamentPrompt: 'Вы действительно хотете покинуть стол? Блайнды будут сниматься автоматически во время всей игры',
         rebuyPromptCaption: 'Ребай',
         rebuyPrompt: 'Стоимость ребая: #price#',
