@@ -601,6 +601,10 @@ export class TableView {
                 return false;
             }
 
+            if (appConfig.game.noTableMoneyLimit) {
+                return true;
+            }
+
             const totalBet = (me.TotalBet() == null ? 0 : me.TotalBet());
             const baseMinimalBuyIn = self.minimalBuyIn() * self.model.BigBlind;
             const tableTotal = totalBet + me.Money() + me.Bet();
