@@ -25,8 +25,8 @@ import { TableCardsPlace } from "./tableCardsPlace";
 import { _ } from "../languagemanager";
 import { withCommas } from "../helpers";
 
-declare var apiHost: string;
-declare var app: App;
+declare let apiHost: string;
+declare let app: App;
 
 export class TableView {
     public tableName: KnockoutObservable<string>;
@@ -538,8 +538,8 @@ export class TableView {
             }
             return {
                 expanded: this.actionBlock.expanded(),
-                'cardsvariant-up': this.cardsVariantUp(),
-                'cardsvariant-down': this.cardsVariantDown(),
+                "cardsvariant-up": this.cardsVariantUp(),
+                "cardsvariant-down": this.cardsVariantDown(),
             };
         });
         this.maximumRaiseAmount = ko.computed(function () {
@@ -1926,14 +1926,14 @@ export class TableView {
    */
     getCurrentOfflineTableSeat(): number {
         const self = this;
-        var seatNumber = 0;
+        let seatNumber = 0;
         app.requireAuthentication().done(function (authenticated) {
             if (authenticated) {
                 const currentPlayer = self.currentLogin();
                 seatNumber = parseInt(currentPlayer.replace("Игрок", ""));
                 console.log("seat number " + seatNumber);
             }
-        })
+        });
         return seatNumber;
     }
 
@@ -2104,7 +2104,7 @@ export class TableView {
     showStandupConfirm() {
         let messages: string[];
         messages = [_("table.standupSuccessMessage")];
-        const title = _("table.standupSuccessTitle")
+        const title = _("table.standupSuccessTitle");
         SimplePopup.display(title, messages);
     }
     async standup() {

@@ -85,7 +85,7 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
             }).fail(() => {
                 self.loading(false);
                 SimplePopup.display(_("addMoney.caption"), _("addMoney.joinError"));
-            })
+            });
         } else {
             self.loading(false);
         };

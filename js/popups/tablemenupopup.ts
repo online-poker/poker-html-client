@@ -86,7 +86,7 @@ export class TableMenuPopup {
                 return "table.takeWin";
             }
             const hasWin = player.Money() > 0 || currentTable.myPlayerInGame();
-            return hasWin ? 'table.takeWin' : 'table.leave';
+            return hasWin ? "table.takeWin" : "table.leave";
         });
     }
 
@@ -222,7 +222,7 @@ export class TableMenuPopup {
             if (authenticated) {
                 app.executeCommand("popup.settings");
             }
-        })
+        });
     }
     leave() {
         let index = tableManager.currentIndex();
