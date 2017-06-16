@@ -29,6 +29,7 @@ class AppConfig {
         tablePreviewMode: document.body.classList.contains("poker-feature-table-preview"),
         autoFoldAsFoldOnRaise: true,
         useSignalR: false,
+        noTableMoneyLimit: true,
     };
     tournament = {
         enabled: false,
