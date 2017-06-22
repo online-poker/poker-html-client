@@ -227,7 +227,7 @@ export class TableMenuPopup {
     leave() {
         let index = tableManager.currentIndex();
         let tableView = tableManager.tables()[index];
-        commandManager.executeCommand("app.leaveTable", [tableView.tableId]);
+        tableView.showStandupPrompt();
     }
     private getCurrentMoney(tournament: TournamentView, personalAccount: PersonalAccountData) {
         return personalAccount.RealMoney;
