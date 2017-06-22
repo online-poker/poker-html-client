@@ -2119,7 +2119,7 @@ export class TableView {
         if (data.Status === "AuthorizationError") {
             self.reportApiError("Ошибка авторизации");
         } else if (data.Status === "Ok" && appConfig.game.seatMode) {
-                self.showStandupConfirm();
+            self.showStandupConfirm();
         }
     }
 

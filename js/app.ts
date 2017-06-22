@@ -1013,6 +1013,7 @@ export class App {
                     ko.applyBindings(viewModel, popupElement);
                 } catch (e) {
                     console.log("Bind popup " + popup + " failed");
+                    console.log("Detailed exception: ", e);
                 }
             });
             return;

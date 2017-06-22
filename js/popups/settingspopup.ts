@@ -13,7 +13,12 @@ export class SettingsPopup implements KnockoutValidationGroup {
         this.loading = ko.observable<boolean>(false);
         this.checkedRadio = ko.observable("down");
     }
+
+    /**
+     * Executed on popup shown
+     */
     shown(): void {
+        // Do nothing
     }
 
     confirm() {
