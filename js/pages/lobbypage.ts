@@ -300,10 +300,12 @@ export class LobbyPage extends PageBase {
                 if (appConfig.auth.automaticTableSelection && tables.length === 1) {
                     this.selectTable(tables[0]);
                 }
+
                 if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
-                    var tableId = localStorage.getItem("tableId");
-                    if (tableId !== null) {
-                        gameApi.GetTable(parseInt(tableId)).then((data) => {
+                    const tableIdString = localStorage.getItem("tableId");
+                    if (tableIdString !== null) {
+                        const tableIdInt = parseInt(tableIdString);
+                        gameApi.GetTable(tableIdInt).then((data) => {
                             self.selectTable(data.Data);
                         })
                     }
@@ -311,6 +313,7 @@ export class LobbyPage extends PageBase {
             }
         });
     }
+
     refreshTournaments(tournamentType) {
         const self = this;
         const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
@@ -354,9 +357,11 @@ export class LobbyPage extends PageBase {
                 app.executeCommand("app.selectTable", [table, wasAuthenticated]);
 
                 if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
-                    console.log("Selected table id " + table.TableId)
-                    localStorage.setItem("tableId", table.TableId.toString());
+                    const tableId = table.TableId.toString();
+                    console.log("Save table id " + tableId + " for future auto select of this table.")
+                    localStorage.setItem("tableId", tableId);
                 }
+
                 if (appConfig.game.seatMode) {
                     app.executeCommand("page.seats");
                 } else {
