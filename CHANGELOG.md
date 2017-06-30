@@ -1,6 +1,10 @@
 Poker HTML client changelog
 ================================
 
+# v0.1.0
+- Save last opened table in game console mode.
+- [BUG] After standup displayed message insufficient funds
+
 ## v0.0.9
 - Allow add more balance on the table
 - [BUG] Cleanup ticket on subsequent seats
