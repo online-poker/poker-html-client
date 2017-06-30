@@ -307,7 +307,7 @@ export class LobbyPage extends PageBase {
                         const tableIdInt = parseInt(tableIdString);
                         gameApi.GetTable(tableIdInt).then((data) => {
                             self.selectTable(data.Data);
-                        })
+                        });
                     }
                 }
             }
@@ -358,7 +358,7 @@ export class LobbyPage extends PageBase {
 
                 if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
                     const tableId = table.TableId.toString();
-                    console.log("Save table id " + tableId + " for future auto select of this table.")
+                    console.log("Save table id " + tableId + " for future auto select of this table.");
                     localStorage.setItem("tableId", tableId);
                 }
 

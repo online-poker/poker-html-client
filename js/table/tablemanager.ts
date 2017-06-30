@@ -81,6 +81,7 @@ class TableManager {
                 }, function () {
                     result.reject();
                 });
+
                 return result;
             }
 

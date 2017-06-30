@@ -557,7 +557,7 @@ export class TournamentLobbyPage extends PageBase {
                 tableManager.removeTournamentById(self.tournamentId);
                 SimplePopup.display(operationTitle, _("tournamentLobby.registrationCancelledCompleteSuccess"));
                 try {
-                    await self.refreshTournament()
+                    await self.refreshTournament();
                 } catch (e) {
                     SimplePopup.display(operationTitle, _("tournamentLobby.registrationCancelError"));
                 }
@@ -718,7 +718,7 @@ export class TournamentLobbyPage extends PageBase {
                 self.log("Registration success");
                 SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("tournamentLobby.registrationCompleteSuccess"));
                 try {
-                    await self.refreshTournament()
+                    await self.refreshTournament();
                 } catch (e) {
                     SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("tournamentLobby.registrationError"));
                 }
