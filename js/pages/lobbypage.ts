@@ -300,9 +300,20 @@ export class LobbyPage extends PageBase {
                 if (appConfig.auth.automaticTableSelection && tables.length === 1) {
                     this.selectTable(tables[0]);
                 }
+
+                if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
+                    const tableIdString = localStorage.getItem("tableId");
+                    if (tableIdString !== null) {
+                        const tableIdInt = parseInt(tableIdString);
+                        gameApi.GetTable(tableIdInt).then((data) => {
+                            self.selectTable(data.Data);
+                        })
+                    }
+                }
             }
         });
     }
+
     refreshTournaments(tournamentType) {
         const self = this;
         const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
@@ -339,11 +350,18 @@ export class LobbyPage extends PageBase {
             }
         });
     }
-    selectTable(table) {
+    selectTable(table: GameTableModel) {
         app.processing(true);
         app.requireGuestAuthentication().done(function (newValue, wasAuthenticated) {
             if (newValue) {
                 app.executeCommand("app.selectTable", [table, wasAuthenticated]);
+
+                if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
+                    const tableId = table.TableId.toString();
+                    console.log("Save table id " + tableId + " for future auto select of this table.")
+                    localStorage.setItem("tableId", tableId);
+                }
+
                 if (appConfig.game.seatMode) {
                     app.executeCommand("page.seats");
                 } else {
