@@ -300,6 +300,14 @@ export class LobbyPage extends PageBase {
                 if (appConfig.auth.automaticTableSelection && tables.length === 1) {
                     this.selectTable(tables[0]);
                 }
+                if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
+                    var tableId = localStorage.getItem("tableId");
+                    if (tableId !== null) {
+                        gameApi.GetTable(parseInt(tableId)).then((data) => {
+                            self.selectTable(data.Data);
+                        })
+                    }
+                }
             }
         });
     }
@@ -339,11 +347,16 @@ export class LobbyPage extends PageBase {
             }
         });
     }
-    selectTable(table) {
+    selectTable(table: GameTableModel) {
         app.processing(true);
         app.requireGuestAuthentication().done(function (newValue, wasAuthenticated) {
             if (newValue) {
                 app.executeCommand("app.selectTable", [table, wasAuthenticated]);
+
+                if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
+                    console.log("Selected table id " + table.TableId)
+                    localStorage.setItem("tableId", table.TableId.toString());
+                }
                 if (appConfig.game.seatMode) {
                     app.executeCommand("page.seats");
                 } else {
