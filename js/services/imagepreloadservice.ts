@@ -3,17 +3,18 @@
 export class ImagePreloadService {
     preload(url: string, useAbsolute = true) {
         const absoluteUrl = useAbsolute ? this.getAbsoluteUrl(url) : url;
-        const result = $.Deferred();
-        const image = new Image();
-        image.onload = () => {
-            this.log("URL " + url + " preloaded");
-            result.resolve(url);
-        };
-        image.onerror = () => {
-            this.log("URL " + url + " failed to load");
-            result.reject(url);
-        };
-        image.src = absoluteUrl;
+        const result = new Promise<string>((resolve, reject) => {
+            const image = new Image();
+            image.onload = () => {
+                this.log("URL " + url + " preloaded");
+                resolve(url);
+            };
+            image.onerror = () => {
+                this.log("URL " + url + " failed to load");
+                reject(url);
+            };
+            image.src = absoluteUrl;
+        });
         return result;
     }
 

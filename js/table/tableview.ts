@@ -2208,11 +2208,13 @@ export class TableView {
         // TODO: Implement updating messages.
     }
 
-    sendMessage() {
+    /**
+     * Sends mesage to the table chat.
+     */
+    async sendMessage() {
         const chatApi = new OnlinePoker.Commanding.API.Chat(apiHost);
-        chatApi.Send(this.tableId, this.chatMessage(), (data, textStatus, jqXHR) => {
-            this.chatMessage("");
-        });
+        const data = await chatApi.SendAsync(this.tableId, this.chatMessage());
+        this.chatMessage("");
     }
 
     fold() {

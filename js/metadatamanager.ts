@@ -43,42 +43,17 @@ class MetadataManager {
             result.resolve();
         };
 
-        const bannersRequest = metadataApi.GetBanners(self.getBannerFormat());
-        $.when(bannersRequest).done(function (data: ApiResult<BannerData[]>, status) {
-            if (data.Status !== "Ok") {
-                return;
-            }
-
-            if (data.Data.length === 0) {
-                return;
-            }
-
-            imagePreloadService.preload(data.Data[0].Url);
-        });
-        const smallBannersRequest = metadataApi.GetBanners(self.getSmallBannerFormat());
-        $.when(smallBannersRequest).done(function (data: ApiResult<BannerData[]>, status) {
-            if (data.Status !== "Ok") {
-                return;
-            }
-
-            for (let i = 0; i < data.Data.length; i++) {
-                imagePreloadService.preload(data.Data[i].Url);
-            }
-        });
-        $.when(metadataApi.GetOnlinePlayers(),
+        const bannersRequest = this.preloadFirstBanner(this.getBannerFormat());
+        const smallBannersRequest = this.preloadBanners(this.getSmallBannerFormat());
+        Promise.all([metadataApi.GetOnlinePlayers(),
             metadataApi.GetWellKnownPrizeStructure(),
             metadataApi.GetWellKnownBetStructure(),
             metadataApi.GetDefaultAvatars(),
             bannersRequest,
-            smallBannersRequest)
-            .done(function (onlinePlayersDataResult, prizeStructureDataResult, betStructureDataResult,
-                    avatarsDataResult, bannersDataResult, smallBannersDataResult) {
-                const onlinePlayersData = onlinePlayersDataResult[0];
-                const prizeStructureData = prizeStructureDataResult[0];
-                const betStructureData = betStructureDataResult[0];
-                const avatarsData = avatarsDataResult[0];
-                const bannersData = <ApiResult<BannerData[]>>bannersDataResult[0];
-                const smallBannersData = <ApiResult<BannerData[]>>smallBannersDataResult[0];
+            smallBannersRequest])
+            .then(function (values) {
+                const [ onlinePlayersData, prizeStructureData, betStructureData,
+                    avatarsData, bannersData, smallBannersData ] = values;
                 if (onlinePlayersData.Status !== "Ok"
                     || prizeStructureData.Status !== "Ok"
                     || betStructureData.Status !== "Ok"
@@ -90,8 +65,8 @@ class MetadataManager {
                 }
 
                 self.log("Informaton about players online received: " + JSON.stringify(onlinePlayersData.Data));
-                self.registered(onlinePlayersData.Data[1]);
-                self.online(onlinePlayersData.Data[0]);
+                self.registered(onlinePlayersData.Data[1].toString());
+                self.online(onlinePlayersData.Data[0].toString());
 
                 self.log("Informaton about prize structure received: " + JSON.stringify(prizeStructureData.Data));
                 self.prizes = prizeStructureData.Data;
@@ -109,7 +84,7 @@ class MetadataManager {
                 self.smallBanners = smallBannersData.Data;
 
                 successHander();
-        }).fail(failHandler);
+        }).then(null, failHandler);
         return result;
     }
     async versionCheck() {
@@ -132,6 +107,33 @@ class MetadataManager {
             self.online(onlinePlayers.Data[0].toString());
             return onlinePlayers;
         });
+    }
+    private async preloadFirstBanner(format: number) {
+        const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
+        const data = await metadataApi.GetBanners(format);
+        if (data.Status !== "Ok") {
+            return data;
+        }
+
+        if (data.Data.length === 0) {
+            return data;
+        }
+
+        imagePreloadService.preload(data.Data[0].Url);
+        return data;
+    }
+    private async preloadBanners(format: number) {
+        const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
+        const data = await metadataApi.GetBanners(format);
+        if (data.Status !== "Ok") {
+            return data;
+        }
+
+        for (let i = 0; i < data.Data.length; i++) {
+            imagePreloadService.preload(data.Data[i].Url);
+        }
+
+        return data;
     }
     getBannerFormat() {
         if (PageBlock.useDoubleView) {

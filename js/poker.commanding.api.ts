@@ -220,9 +220,9 @@ namespace OnlinePoker {
                     super(host, 'Chat');
                 }
 
-                Send(tableId: number, message: string, callback: JQueryTypedCallback<any>) {
+                SendAsync(tableId: number, message: string): Promise<StatusResponse> {
                     const data = { tableId: tableId, message: message };
-                    return super.Call('Send', data, callback);
+                    return super.CallAsync<StatusResponse>('Send', data);
                 }
             }
             export class Message extends WebApiProxy {
@@ -282,6 +282,10 @@ namespace OnlinePoker {
                 GetTable(tableId: number, callback?) {
                     const data = { TableId: tableId };
                     return <JQueryPromise<ApiResult<GameTableModel>>>super.Call('GetTable', data, callback);
+                }
+                GetTableAsync(tableId: number) {
+                    const data = { TableId: tableId };
+                    return <Promise<ApiResult<GameTableModel>>>super.CallAsync('GetTable', data);
                 }
                 GetSitingTables(callback?: JQueryTypedCallback<ApiResult<number[]>>) {
                     const data = {};
@@ -374,19 +378,19 @@ namespace OnlinePoker {
                     return <JQueryPromise<ApiResult<LobbyTournamentItem[]>>>super.Call('GetTournaments', data, callback);
                 }
 
-                GetTournament(tournamentId, callback?: JQueryTypedCallback<ApiResult<TournamentDefinition>>) {
+                GetTournament(tournamentId): Promise<ApiResult<TournamentDefinition>> {
                     const data = { Id: tournamentId };
-                    return <JQueryPromise<ApiResult<TournamentDefinition>>>super.Call('GetTournament', data, callback);
+                    return super.CallAsync('GetTournament', data);
                 }
 
-                Register(tournamentId, callback?: (data: StatusResponse, textStatus: string, jqXHR: JQueryXHR) => void) {
+                Register(tournamentId) {
                     const data = { Id: tournamentId };
-                    return super.Call('Register', data, callback);
+                    return super.CallAsync<StatusResponse>('Register', data);
                 }
 
-                CancelRegistration(tournamentId, callback?: (data: StatusResponse, textStatus: string, jqXHR: JQueryXHR) => void) {
+                CancelRegistration(tournamentId) {
                     const data = { Id: tournamentId };
-                    return super.Call('CancelRegistration', data, callback);
+                    return super.CallAsync<StatusResponse>('CancelRegistration', data);
                 }
 
                 Rebuy(tournamentId: number, double: boolean, callback?: JQueryTypedCallback<StatusResponse>) {
@@ -550,29 +554,29 @@ namespace OnlinePoker {
                     const data = {};
                     return super.Call('GetNews', data, callback);
                 }
-                GetOnlinePlayers(callback = null) {
+                GetOnlinePlayers() {
                     const data = {};
-                    return <JQueryPromise<ApiResult<number[]>>>super.Call('GetOnlinePlayers', data, callback);
+                    return super.CallAsync<ApiResult<number[]>>('GetOnlinePlayers', data);
                 }
-                GetBanners(format, callback = null) {
+                GetBanners(format) {
                     const data = { Format: format };
-                    return super.Call('GetBanners', data, callback);
+                    return super.CallAsync<ApiResult<BannerData[]>>('GetBanners', data);
                 }
                 /**
                 * Request server date.
                 * @param callback A callback function that is executed if the request succeeds.
                 */
-                GetDate(callback = null) {
+                GetDate() {
                     const data = {};
-                    return <JQueryPromise<number>>super.Call('GetDate', data, callback);
+                    return super.CallAsync<number>('GetDate', data);
                 }
                 /**
                 * Perform version check.
                 * @param callback A callback function that is executed if the request succeeds.
                 */
-                VersionCheck(callback: JQueryTypedCallback<any> = null) {
+                VersionCheck() {
                     const data = {};
-                    return <JQueryPromise<VersionCheckResponse>>super.Call('VersionCheck', data, callback);
+                    return super.CallAsync<VersionCheckResponse>('VersionCheck', data);
                 }
             }
             export class Support extends WebApiProxy {

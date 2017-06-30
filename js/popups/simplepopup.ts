@@ -32,9 +32,9 @@ export class SimplePopup extends PopupBase {
 
         return app.showPopup("simple");
     }
-    static displayWithTimeout(title: string, message: string, timeout: number): JQueryPromise<PopupResult>;
-    static displayWithTimeout(title: string, message: string[], timeout: number): JQueryPromise<PopupResult>;
-    static displayWithTimeout(title: string, message: any, timeout: number): JQueryPromise<PopupResult> {
+    static displayWithTimeout(title: string, message: string, timeout: number): Promise<PopupResult>;
+    static displayWithTimeout(title: string, message: string[], timeout: number): Promise<PopupResult>;
+    static displayWithTimeout(title: string, message: any, timeout: number): Promise<PopupResult> {
         const result = SimplePopup.display(title, message);
         let handle = timeService.setTimeout(function () {
             if (handle !== null) {
@@ -42,14 +42,15 @@ export class SimplePopup extends PopupBase {
                 handle = null;
             }
         }, timeout);
-        const deferred = $.Deferred<PopupResult>();
-        result.then(function (value) {
-            timeService.clearTimeout(handle);
-            deferred.resolve(value);
-        }, function (reason) {
-            deferred.reject(reason);
+        const promise = new Promise<PopupResult>((resolve, reject) => {
+            result.then(function (value) {
+                timeService.clearTimeout(handle);
+                resolve(value);
+            }, function (reason) {
+                reject(reason);
+            });
         });
 
-        return deferred.promise();
+        return promise;
     }
 }

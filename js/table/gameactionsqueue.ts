@@ -4,7 +4,7 @@ interface QueueWorker {
     /**
     * Executes worker and generates deferred which executing operation
     */
-    (): JQueryPromise<any>;
+    (): Promise<any>;
 }
 
 export class GameActionsQueue {
@@ -112,9 +112,7 @@ export class GameActionsQueue {
     */
     injectCallback(callback: Function) {
         this.inject(() => {
-            return $.Deferred().done(function () {
-                callback();
-            }).resolve();
+            return Promise.resolve().then(() => callback());
         });
     }
 
@@ -124,9 +122,7 @@ export class GameActionsQueue {
     */
     pushCallback(callback: Function) {
         this.push(() => {
-            return $.Deferred().done(function () {
-                callback();
-            }).resolve();
+            return Promise.resolve().then(() => callback());
         });
     }
 

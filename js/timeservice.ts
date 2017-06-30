@@ -18,10 +18,10 @@ class TimeService {
     }
     start() {
         const api = new OnlinePoker.Commanding.API.Metadata(apiHost);
-        api.GetDate((serverTime) => {
+        api.GetDate().then((serverTime) => {
             const currentDate = new Date();
             this.timeDiff = serverTime - currentDate.valueOf();
-        }).done(() => {
+
             // Wait until new minute starts.
             const currentTime = this.getCurrentDateTime();
             const pauseBeforeStartLongInterval = TimeService.MillisecondsInMinutes - (currentTime.getSeconds() * 1000)
@@ -32,7 +32,7 @@ class TimeService {
                     this.updateCurrentTime();
                 }, TimeService.MillisecondsInMinutes);
             }, pauseBeforeStartLongInterval);
-        }).fail(() => this.start());
+        }).then(null, () => this.start());
     }
     stop() {
         this.timeDiff = 0;

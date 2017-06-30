@@ -463,17 +463,18 @@ export class TournamentLobbyPage extends PageBase {
         this.tournamentId = tournamentId || 0;
         this.parentView = parentView;
     }
-    refreshTournament(): JQueryPromise<any> {
+    async refreshTournament(): Promise<ApiResult<TournamentDefinition>> {
         if (this.tournamentId === 0) {
-            return $.Deferred().resolve({ Status: "Ok", Data: null });
+            return Promise.resolve({ Status: "Ok", Data: null });
         }
 
         const self = this;
         const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
         this.loading(true);
-        return tournamentApi.GetTournament(this.tournamentId, function (data) {
+        try {
+            const data = await tournamentApi.GetTournament(this.tournamentId);
             if (data.Status === "Ok") {
-                const tournamentData: TournamentDefinition = data.Data;
+                const tournamentData = data.Data;
                 self.log("Informaton about tournament ", self.tournamentId, " received: ", data.Data);
                 self.log(tournamentData.TournamentName);
                 self.tournamentData(tournamentData);
@@ -495,10 +496,10 @@ export class TournamentLobbyPage extends PageBase {
             }
 
             self.loading(false);
-        }).fail(function () {
+        } catch (e) {
             self.log("Failed to get information about tournament " + self.tournamentId);
             self.loading(false);
-        });
+        }
     }
     back() {
         app.lobbyPageBlock.showSecondary(this.parentView);
@@ -535,34 +536,37 @@ export class TournamentLobbyPage extends PageBase {
             SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("tournamentLobby.registrationError"));
         });
     }
-    unregister() {
+    /**
+     * Initiates cancelling registration in the tournament.
+     */
+    async unregister() {
         const self = this;
         const tournament = self.tournamentData();
         const name = tournament.TournamentName;
         const operationTitle = _("tournamentLobby.registrationCancelled");
-        app.prompt(
+        await app.prompt(
             _("tournamentLobby.tournamentRegistrationCancelPromptCaption"),
-            [_("tournamentLobby.tournamentRegistrationCancelPrompt").replace("#name", name)])
-            .then(function () {
-                self.loading(true);
-                const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-                tournamentApi.CancelRegistration(self.tournamentId, function (data) {
-                    self.loading(false);
-                    if (data.Status === "Ok") {
-                        self.log("Registration cancelled");
-                        tableManager.removeTournamentById(self.tournamentId);
-                        SimplePopup.display(operationTitle, _("tournamentLobby.registrationCancelledCompleteSuccess"));
-                        self.refreshTournament()
-                            .fail(() => {
-                                SimplePopup.display(operationTitle, _("tournamentLobby.registrationCancelError"));
-                            });
-                    } else {
-                        SimplePopup.display(operationTitle, _("errors." + data.Status));
-                    }
-            }).fail(() => {
-                SimplePopup.display(operationTitle, _("tournamentLobby.registrationCancelError"));
-            });
-        });
+            [_("tournamentLobby.tournamentRegistrationCancelPrompt").replace("#name", name)]);
+        self.loading(true);
+        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        try {
+            const data = await tournamentApi.CancelRegistration(self.tournamentId);
+            self.loading(false);
+            if (data.Status === "Ok") {
+                self.log("Registration cancelled");
+                tableManager.removeTournamentById(self.tournamentId);
+                SimplePopup.display(operationTitle, _("tournamentLobby.registrationCancelledCompleteSuccess"));
+                try {
+                    await self.refreshTournament()
+                } catch (e) {
+                    SimplePopup.display(operationTitle, _("tournamentLobby.registrationCancelError"));
+                }
+            } else {
+                SimplePopup.display(operationTitle, _("errors." + data.Status));
+            }
+        } catch (e) {
+            SimplePopup.display(operationTitle, _("tournamentLobby.registrationCancelError"));
+        }
     }
     selectView(view: number) {
         this.currentView(view);
@@ -681,7 +685,7 @@ export class TournamentLobbyPage extends PageBase {
             app.showSubPage("tables");
         }
     }
-    private promptRegister(currentBalance: number) {
+    private async promptRegister(currentBalance: number) {
         const self = this;
         const tournament = self.tournamentData();
         const name = tournament.TournamentName;
@@ -691,40 +695,40 @@ export class TournamentLobbyPage extends PageBase {
         /* tslint:enable:no-string-literal */
         const joinAmountString = numericTextBinding.withCommas(joinAmount.toFixed(0));
         if (currentBalance < joinAmount) {
-            SimplePopup.display(_("tournamentLobby.tournamentRegistrationPromptCaption"), _("tournamentLobby.insufficientFunds"));
+            await SimplePopup.display(_("tournamentLobby.tournamentRegistrationPromptCaption"), _("tournamentLobby.insufficientFunds"));
             return;
         }
 
         const balanceString = numericTextBinding.withCommas(currentBalance.toFixed(0));
-        app.prompt(
+        app.okcancelPopup.customStyle("popup-container-left");
+        await app.prompt(
             _("tournamentLobby.tournamentRegistrationPromptCaption"),
             [
                 _("tournamentLobby.tournamentRegistrationPrompt", { name: name }),
                 _("tournamentLobby.tournamentRegistrationAmount").replace("#amount", joinAmountString),
                 _("tournamentLobby.tournamentRegistrationPromptBalance").replace("#amount", balanceString),
-            ])
-            .then(function () {
-                self.loading(true);
-                const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-                tournamentApi.Register(self.tournamentId, function (data) {
-                    self.loading(false);
-                    if (data.Status === "Ok") {
-                        tableManager.openTournamentById(self.tournamentId);
-                        self.log("Registration success");
-                        SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("tournamentLobby.registrationCompleteSuccess"));
-                        self.refreshTournament()
-                            .fail(() => {
-                                SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("tournamentLobby.registrationError"));
-                            });
-                    } else {
-                        SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("errors." + data.Status));
-                    }
-                }).fail(() => {
-                        self.loading(false);
-                        SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("tournamentLobby.registrationError"));
-                    });
-            });
-        app.okcancelPopup.customStyle("popup-container-left");
+            ]);
+        self.loading(true);
+        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        try {
+            const data = await tournamentApi.Register(self.tournamentId);
+            self.loading(false);
+            if (data.Status === "Ok") {
+                tableManager.openTournamentById(self.tournamentId);
+                self.log("Registration success");
+                SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("tournamentLobby.registrationCompleteSuccess"));
+                try {
+                    await self.refreshTournament()
+                } catch (e) {
+                    SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("tournamentLobby.registrationError"));
+                }
+            } else {
+                SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("errors." + data.Status));
+            }
+        } catch (e) {
+            self.loading(false);
+            SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("tournamentLobby.registrationError"));
+        }
     }
     private log(message: string, ...params: any[]) {
         if (debugSettings.lobby.trace) {

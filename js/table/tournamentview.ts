@@ -102,24 +102,24 @@ export class TournamentView {
         }, this);
     }
 
-    refreshTournament(): JQueryPromise<any> {
+    async refreshTournament(): Promise<ApiResult<TournamentDefinition>> {
         if (this.tournamentId === 0) {
-            return $.Deferred().resolve({ Status: "Ok", Data: null });
+            return Promise.resolve({ Status: "Ok", Data: null });
         }
 
         const self = this;
         const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
         this.loading(true);
-        return tournamentApi.GetTournament(this.tournamentId, function (data) {
-            if (data.Status === "Ok") {
-                const tournamentData: TournamentDefinition = data.Data;
-                self.log("Informaton about tournament " + self.tournamentId + " received: ", data.Data);
-                self.log(tournamentData.TournamentName);
-                self.tournamentData(tournamentData);
-            }
+        const data = await tournamentApi.GetTournament(this.tournamentId);
+        if (data.Status === "Ok") {
+            const tournamentData: TournamentDefinition = data.Data;
+            self.log("Informaton about tournament " + self.tournamentId + " received: ", data.Data);
+            self.log(tournamentData.TournamentName);
+            self.tournamentData(tournamentData);
+        }
 
-            self.loading(false);
-        });
+        self.loading(false);
+        return data;
     }
     clearInformation() {
         // Do nothing.
@@ -323,11 +323,6 @@ export class TournamentView {
     private async openTournamentTableUI() {
         const self = this;
         const data = this.tournamentData();
-        let openTournamentPromise: JQueryPromise<void> = null;
-        if (appConfig.tournament.openTableAutomatically) {
-            openTournamentPromise = this.openTournamentTable(this.currentTableId);
-        }
-
         const messageKey = appConfig.tournament.openTableAutomatically
             ? "tournament.tournamentStarted"
             : "tournament.tournamentStartedNoOpen";
@@ -338,10 +333,9 @@ export class TournamentView {
         } finally {
             self.log("Tournament " + self.tournamentId + " started");
             if (appConfig.tournament.openTableAutomatically) {
-                openTournamentPromise.then((value) => {
-                    self.log("Opeinin table for tournament " + self.tournamentId + "");
-                    app.showSubPage("tables");
-                });
+                await this.openTournamentTable(this.currentTableId);
+                self.log("Opening table for tournament " + self.tournamentId + "");
+                app.showSubPage("tables");
             }
         }
     }
@@ -553,27 +547,27 @@ export class TournamentView {
     }
 
     private displayGameFinishedNotification(prize: TournamentPrizeStructure, placeTaken: number) {
-        const self = this;
         const data = this.tournamentData();
         if (prize.PrizeLevel.length < placeTaken) {
-            SimplePopup.displayWithTimeout(_("tournament.caption", { tournament: data.TournamentName }),
+            return SimplePopup.displayWithTimeout(_("tournament.caption", { tournament: data.TournamentName }),
                 _("tournament.playerGameCompleted", { tournament: data.TournamentName, place: placeTaken }),
                 10 * 1000);
         } else {
-            const winAmount = (self.totalPrize() * prize.PrizeLevel[placeTaken - 1] / 100).toFixed();
-            SimplePopup.displayWithTimeout(_("tournament.caption", { tournament: data.TournamentName }),
+            const winAmount = (this.totalPrize() * prize.PrizeLevel[placeTaken - 1] / 100).toFixed();
+            const onTournamentCompleted = () => {
+                if (placeTaken === 1 || placeTaken === 2) {
+                    this.finalizeTournament();
+                } else {
+                    const currentTable = tableManager.getTableById(this.currentTableId);
+                    if (!currentTable.opened()) {
+                        this.finalizeTournament();
+                    }
+                }
+            };
+            return SimplePopup.displayWithTimeout(_("tournament.caption", { tournament: data.TournamentName }),
                 _("tournament.playerGameCompletedAndWin", { tournament: data.TournamentName, place: placeTaken, win: winAmount }),
                 10 * 1000)
-                .always(() => {
-                    if (placeTaken === 1 || placeTaken === 2) {
-                        self.finalizeTournament();
-                    } else {
-                        const currentTable = tableManager.getTableById(this.currentTableId);
-                        if (!currentTable.opened()) {
-                            self.finalizeTournament();
-                        }
-                    }
-                });
+                .then(onTournamentCompleted, onTournamentCompleted);
         }
     }
 
@@ -588,14 +582,13 @@ export class TournamentView {
         }
     }
 
-    private openTournamentTable(tableId: number) {
+    private async openTournamentTable(tableId: number) {
         const self = this;
         const api = new OnlinePoker.Commanding.API.Game(apiHost);
-        return api.GetTable(tableId).then(function (data) {
-            tableManager.selectTable(data.Data, true);
-            const currentTable = tableManager.getTableById(tableId);
-            currentTable.tournament(self);
-        });
+        const data = await api.GetTableAsync(tableId);
+        tableManager.selectTable(data.Data, true);
+        const currentTable = tableManager.getTableById(tableId);
+        currentTable.tournament(self);
     }
     private finalizeTournament() {
         if (tableManager.tables().length <= 1) {

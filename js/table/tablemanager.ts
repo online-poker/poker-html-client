@@ -68,7 +68,7 @@ class TableManager {
             let tableView = self.getTableById(tableId);
             console.log("Leaving table " + tableView.tableId.toString());
             if (tableView != null) {
-                tableView.showStandupPrompt().pipe(function () {
+                tableView.showStandupPrompt().then(function () {
                     tableView.disconnect();
                     tableView = self.remove(tableView);
 
@@ -156,7 +156,7 @@ class TableManager {
                 if (status === "Ok") {
                     const tournaments = data.Data;
                     if (tournaments !== null && tournaments.length !== 0) {
-                        self.requestTournamentsInformation(tournaments).then(function (...args: TournamentDefinition[]) {
+                        self.requestTournamentsInformation(tournaments).then(function (args: TournamentDefinition[]) {
                             const tournaments = <TournamentDefinition[]>[];
                             for (let i = 0; i < arguments.length; i++) {
                                 tournaments.push(<TournamentDefinition>arguments[i]);
@@ -1058,8 +1058,7 @@ class TableManager {
 
     private requestTournamentsInformation(tournaments: TournamentPlayerStateDefinition[]) {
         const self = this;
-        const result = $.Deferred();
-        const deferreds = <JQueryPromise<TournamentDefinition>[]>[];
+        const deferreds = <Promise<TournamentDefinition>[]>[];
         for (let i = 0; i < tournaments.length; i++) {
             const tournamentPlayerState = tournaments[i];
             const d = this.buildTournamentInformationRequest(
@@ -1068,34 +1067,25 @@ class TableManager {
             deferreds.push(d);
         }
 
-        return <JQueryPromise<any>>$.when.apply($, deferreds);
+        return Promise.all(deferreds);
     }
 
-    private buildTournamentInformationRequest(tournamentId: number, tableId: number): JQueryPromise<TournamentDefinition> {
+    private async buildTournamentInformationRequest(tournamentId: number, tableId: number): Promise<TournamentDefinition> {
         const self = this;
         const gapi = new OnlinePoker.Commanding.API.Game(apiHost);
         const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-        const d = tapi.GetTournament(tournamentId).then(function (data: ApiResult<TournamentDefinition>) {
-            const tournamentData = data.Data;
-            self.selectTournament(tournamentData, false);
-            if (tableId != null) {
-                return gapi.GetTable(tableId).then((data) => {
-                    self.selectTable(data.Data, false);
-                    const tournamentTableView = self.getTableById(tableId);
-                    const tournamentView = self.getTournamentById(tournamentId);
-                    tournamentTableView.tournament(tournamentView);
-                    return data;
-                }).then(function (value) {
-                        return tournamentData;
-                    });
-            }
+        const data = await tapi.GetTournament(tournamentId);
+        const tournamentData = data.Data;
+        self.selectTournament(tournamentData, false);
+        if (tableId != null) {
+            const tableData = await gapi.GetTableAsync(tableId);
+            self.selectTable(tableData.Data, false);
+            const tournamentTableView = self.getTableById(tableId);
+            const tournamentView = self.getTournamentById(tournamentId);
+            tournamentTableView.tournament(tournamentView);
+        }
 
-            const temp = $.Deferred<TournamentDefinition>();
-            temp.resolve(tournamentData);
-            return temp.promise();
-        });
-
-        return d;
+        return tournamentData;
     }
 
     /**
