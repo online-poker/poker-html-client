@@ -5,7 +5,7 @@ import { settings } from "../settings";
 
 declare var app: App;
 
-export class SettingsPopup implements KnockoutValidationGroup {
+export class SettingsPopup {
     loading: KnockoutObservable<boolean>;
     checkedRadio: KnockoutObservable<string>;
 
