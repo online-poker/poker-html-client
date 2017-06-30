@@ -1195,7 +1195,7 @@ export class App {
     }
     requireAuthentication(): JQueryPromise<boolean> {
         const self = this;
-        const result = $.Deferred();
+        const result = $.Deferred<boolean>();
         if (!authManager.authenticated()) {
             // We don't authenticated, so display authentication popup.
             this.popupClosed.addOnce(function () {
@@ -1213,7 +1213,7 @@ export class App {
     }
     requireGuestAuthentication(): JQueryPromise<boolean> {
         const self = this;
-        const result = $.Deferred();
+        const result = $.Deferred<boolean>();
         if (!authManager.authenticated()) {
             // We don't authenticated, so display authentication popup.
             authManager.loginAsGuest().then(function (status) {

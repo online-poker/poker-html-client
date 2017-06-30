@@ -8,7 +8,7 @@ import { PopupBase } from "../ui/popupbase";
 import * as runtimeSettings from "../table/runtimesettings";
 import { _ } from "../languagemanager";
 
-export class SlowConnectionPopup extends PopupBase implements KnockoutValidationGroup {
+export class SlowConnectionPopup extends PopupBase {
     allowRetry: KnockoutObservable<boolean>;
     caption: KnockoutObservable<string>;
     message: KnockoutObservable<string>;

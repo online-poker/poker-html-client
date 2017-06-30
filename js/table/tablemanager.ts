@@ -1059,7 +1059,7 @@ class TableManager {
     private requestTournamentsInformation(tournaments: TournamentPlayerStateDefinition[]) {
         const self = this;
         const result = $.Deferred();
-        const deferreds = <JQueryPromise<JQueryPromise<TournamentDefinition>>[]>[];
+        const deferreds = <JQueryPromise<TournamentDefinition>[]>[];
         for (let i = 0; i < tournaments.length; i++) {
             const tournamentPlayerState = tournaments[i];
             const d = this.buildTournamentInformationRequest(
@@ -1071,7 +1071,7 @@ class TableManager {
         return <JQueryPromise<any>>$.when.apply($, deferreds);
     }
 
-    private buildTournamentInformationRequest(tournamentId: number, tableId: number) {
+    private buildTournamentInformationRequest(tournamentId: number, tableId: number): JQueryPromise<TournamentDefinition> {
         const self = this;
         const gapi = new OnlinePoker.Commanding.API.Game(apiHost);
         const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
@@ -1090,7 +1090,7 @@ class TableManager {
                     });
             }
 
-            const temp = $.Deferred();
+            const temp = $.Deferred<TournamentDefinition>();
             temp.resolve(tournamentData);
             return temp.promise();
         });

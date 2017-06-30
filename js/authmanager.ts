@@ -23,7 +23,7 @@ class AuthManager {
     authenticate(login: string, password: string, rememberMe: boolean = false): JQueryPromise<string> {
         const self = this;
         const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
-        const result = $.Deferred();
+        const result = $.Deferred<string>();
         if (rememberMe) {
             settings.login(login);
             settings.password(password);
@@ -49,7 +49,7 @@ class AuthManager {
 
             result.resolve(data.Status);
         }).fail(function () {
-            result.resolve(false);
+            result.resolve("");
         });
         return result;
     }
@@ -63,11 +63,11 @@ class AuthManager {
         this.login(null);
     }
     loginAsGuest(): JQueryPromise<string> {
-        const result = $.Deferred();
+        const result = $.Deferred<string>();
         const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
         accountApi.RegisterGuest().then((value) => {
             if (!value) {
-                result.resolve(false);
+                result.resolve("");
             } else {
                 settings.login(value.Login);
                 settings.password(value.Password);
@@ -82,7 +82,7 @@ class AuthManager {
                 }
             }
         }, function (error) {
-            result.resolve(false);
+            result.resolve("");
         });
         return result;
     }
