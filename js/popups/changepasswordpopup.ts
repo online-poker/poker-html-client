@@ -34,7 +34,7 @@ export class ChangePasswordPopup extends PopupBase implements KnockoutValidation
         this.errors.showAllMessages(false);
         super.shown(args);
     }
-    confirm() {
+    async confirm() {
         const self = this;
         const isValid = this.isValid();
         if (!isValid) {
@@ -46,19 +46,18 @@ export class ChangePasswordPopup extends PopupBase implements KnockoutValidation
             self.loading(true);
             self.errorMessage(null);
             const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
-            accountApi.ChangePassword(this.oldPassword(), this.password(), function (data) {
-                if (data.Status === "Ok") {
-                    self.loading(false);
-                    self.oldPassword(null);
-                    self.password(null);
-                    self.confirmPassword(null);
-                    app.closePopup();
-                    SimplePopup.display(_("auth.changePassword"), _("auth.passwordChangedSuccess"));
-                } else {
-                    // Report authentication or authorization errors
-                    self.errorMessage(_("errors." + data.Status));
-                }
-            });
+            const data = await accountApi.ChangePassword(this.oldPassword(), this.password());
+            if (data.Status === "Ok") {
+                self.loading(false);
+                self.oldPassword(null);
+                self.password(null);
+                self.confirmPassword(null);
+                app.closePopup();
+                SimplePopup.display(_("auth.changePassword"), _("auth.passwordChangedSuccess"));
+            } else {
+                // Report authentication or authorization errors
+                self.errorMessage(_("errors." + data.Status));
+            }
         }
     }
 }

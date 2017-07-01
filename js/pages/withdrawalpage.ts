@@ -26,15 +26,14 @@ export class WithdrawalPage extends PageBase {
             { id: 3, text: "MasterCard" },
         ]);
         this.accountNumber = ko.observable(null);
-        authManager.authenticated.subscribe(function (newValue) {
+        authManager.authenticated.subscribe(async (newValue) => {
             if (newValue) {
                 const api = new OnlinePoker.Commanding.API.Account(apiHost);
-                api.GetPersonalAccount(function (data) {
-                    const personalAccountData = data.Data;
-                    self.player({
-                        login: authManager.login(),
-                        amount: personalAccountData.RealMoney
-                    });
+                const data = await api.GetPersonalAccount();
+                const personalAccountData = data.Data;
+                self.player({
+                    login: authManager.login(),
+                    amount: personalAccountData.RealMoney
                 });
             } else {
                 self.player({

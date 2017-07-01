@@ -585,7 +585,7 @@ export class TournamentView {
     private async openTournamentTable(tableId: number) {
         const self = this;
         const api = new OnlinePoker.Commanding.API.Game(apiHost);
-        const data = await api.GetTableAsync(tableId);
+        const data = await api.GetTable(tableId);
         tableManager.selectTable(data.Data, true);
         const currentTable = tableManager.getTableById(tableId);
         currentTable.tournament(self);

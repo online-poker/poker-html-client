@@ -686,7 +686,9 @@ export class TableView {
         this.log("Connecting to table " + this.tableId + " on connection " + connectionInfo);
         const startConnection = app.buildStartConnection();
         const api = new OnlinePoker.Commanding.API.Game(apiHost);
-        api.SetOpenCardsParameters(this.tableId, !settings.autoHideCards(), null);
+
+        // Set opening card parameters in parallel to other operations.
+        api.SetOpenCardsParameters(this.tableId, !settings.autoHideCards());
         startConnection().then(function () {
             if (wrapper.terminated) {
                 return;
@@ -914,7 +916,7 @@ export class TableView {
         });
     }
 
-    onSit(playerId: number, seat: number, playerName: string, amount: number, playerUrl: string, points: number, stars: number) {
+    async onSit(playerId: number, seat: number, playerName: string, amount: number, playerUrl: string, points: number, stars: number) {
         /// <signature>
         ///     <summary>Sits players on the table.</summary>
         ///     <param name="playerId" type="Number">Id of the player which join the table</param>
@@ -944,7 +946,7 @@ export class TableView {
         this.actionBlock.updateBlocks();
         if (playerName === this.currentLogin()) {
             const api = new OnlinePoker.Commanding.API.Game(apiHost);
-            api.SetOpenCardsParameters(this.tableId, !settings.autoHideCards(), null);
+            await api.SetOpenCardsParameters(this.tableId, !settings.autoHideCards());
         }
     }
     onStandup(playerId) {
@@ -2043,25 +2045,40 @@ export class TableView {
             self.addon();
         });
     }
-    sit(seat: number, amount: number, ticketCode: string) {
+    async sit(seat: number, amount: number, ticketCode: string) {
         const self = this;
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        const result = $.Deferred();
-        gameApi.Sit(self.tableId, seat, amount, ticketCode, function (data, textStatus, jqXHR) {
+        try {
+            const data = await gameApi.Sit(self.tableId, seat, amount, ticketCode);
             // report on successfull seating.
             if (data.Status === "OperationNotValidAtThisTime") {
-                return;
+                return {
+                    success: false,
+                    status: data.Status,
+                    minimalAmount: undefined,
+                };
             }
 
             if (data.Status !== "Ok") {
-                result.reject(data.Status, data.MinimalAmount);
+                return {
+                    success: false,
+                    status: data.Status,
+                    minimalAmount: data.MinimalAmount,
+                };
             } else {
-                result.resolve();
+                return {
+                    success: true,
+                    status: data.Status,
+                    minimalAmount: data.MinimalAmount,
+                };
             }
-        }).fail(function () {
-            result.reject("NotSufficiendFunds");
-        });
-        return result;
+        } catch (e) {
+            return {
+                success: false,
+                status: "NotSufficiendFunds",
+                minimalAmount: undefined
+            };
+        }
     }
 
     showStandupPrompt(): JQueryDeferred<void> {
@@ -2139,16 +2156,17 @@ export class TableView {
         }
     }
 
-    addBalance(amount: number, ticketCode: string) {
+    async addBalance(amount: number, ticketCode: string) {
         const self = this;
         const places = this.places();
         const targetPlayer = this.myPlayer();
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
         const result = $.Deferred();
-        gameApi.AddBalance(this.tableId, amount, ticketCode, function (data, textStatus, jqXHR) {
+        try {
+            const data = await gameApi.AddBalance(this.tableId, amount, ticketCode);
             // report on successfull seating.
             if (data.Status !== "Ok") {
-                result.reject(data.Status);
+                throw new Error(data.Status);
             }
 
             if (data.Status === "Ok") {
@@ -2157,11 +2175,10 @@ export class TableView {
                 }
             }
 
-            result.resolve(amount);
-        }).fail(() => {
-            result.reject("OperationNotAllowed");
-        });
-        return result;
+            return amount;
+        } catch (e) {
+            throw new Error("OperationNotAllowed");
+        }
     }
 
     addMessage(messageId: number, sender: string, message: string) {
@@ -2217,7 +2234,7 @@ export class TableView {
         this.chatMessage("");
     }
 
-    fold() {
+    async fold() {
         const self = this;
         this.actionBlock.buttonsEnabled(false);
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
@@ -2225,7 +2242,8 @@ export class TableView {
             // TODO: We should provide notification, which will return any error from the server.
             connectionService.currentConnection.connection.Game.server.fold(this.tableId);
         } else {
-            gameApi.Fold(this.tableId, function (data, status, jqXHR) {
+            try {
+                const data = await gameApi.Fold(this.tableId);
                 if (data.Status === "OperationNotValidAtThisTime") {
                     return;
                 }
@@ -2233,13 +2251,13 @@ export class TableView {
                 if (data.Status !== "Ok") {
                     self.reportApiError(data.Status);
                 }
-            }).fail(function (jqXHR, textStatus, errorThrown) {
+            } catch (e) {
                 self.turnRecovery();
-            });
+            }
         }
     }
 
-    checkOrCall() {
+    async checkOrCall() {
         const self = this;
         this.actionBlock.buttonsEnabled(false);
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
@@ -2247,7 +2265,8 @@ export class TableView {
             // TODO: We should provide notification, which will return any error from the server.
             connectionService.currentConnection.connection.Game.server.checkOrCall(this.tableId);
         } else {
-            gameApi.CheckOrCall(this.tableId, function (data, status, jqXHR) {
+            try {
+                const data = await gameApi.CheckOrCall(this.tableId);
                 if (data.Status === "OperationNotValidAtThisTime") {
                     return;
                 }
@@ -2255,13 +2274,13 @@ export class TableView {
                 if (data.Status !== "Ok") {
                     self.reportApiError(data.Status);
                 }
-            }).fail(function (jqXHR, textStatus, errorThrown) {
+            } catch (e) {
                 self.turnRecovery();
-            });
+            }
         }
     }
 
-    betOrRaise() {
+    async betOrRaise() {
         const self = this;
         this.actionBlock.buttonsEnabled(false);
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
@@ -2270,7 +2289,8 @@ export class TableView {
             // TODO: We should provide notification, which will return any error from the server.
             connectionService.currentConnection.connection.Game.server.betOrRaise(this.tableId, amount);
         } else {
-            gameApi.BetOrRaise(this.tableId, amount, function (data, status, jqXHR) {
+            try {
+                const data = await gameApi.BetOrRaise(this.tableId, amount)
                 if (data.Status === "OperationNotValidAtThisTime") {
                     return;
                 }
@@ -2278,44 +2298,46 @@ export class TableView {
                 if (data.Status !== "Ok") {
                     self.reportApiError(data.Status);
                 }
-            }).fail(function (jqXHR, textStatus, errorThrown) {
+            } catch (e) {
                 self.turnRecovery();
-            });
+            }
         }
     }
 
     /**
      * Show cards for the current player.
      */
-    showCards() {
+    async showCards() {
         this.actionBlock.showCardsEnabled(false);
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        gameApi.ShowCards(this.tableId, (data, status, jqXHR) => {
+        try {
+            const data = await gameApi.ShowCards(this.tableId);
             if (data.Status !== "Ok") {
                 this.reportApiError(data.Status);
             }
-        }).fail((jqXHR, textStatus, errorThrown) => {
+        } catch (e) {
             if (app.currentPopup !== SlowInternetService.popupName) {
                 SimplePopup.display(_("table.turn"), _("table.connectionError", { tableName: this.tableName() }));
             }
 
             this.actionBlock.showCardsEnabled(true);
-        });
+        }
     }
 
     /**
      * Muck cards for the current player.
      */
-    muckCards() {
+    async muckCards() {
         this.actionBlock.showCardsEnabled(false);
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        gameApi.Muck(this.tableId, (data, status, jqXHR) => {
+        try {
+            const data = await gameApi.Muck(this.tableId);
             if (data.Status !== "Ok") {
                 this.reportApiError(data.Status);
             }
-        }).fail((jqXHR, textStatus, errorThrown) => {
+        } catch (e) {
             this.actionBlock.showCardsEnabled(true);
-        });
+        }
     }
 
     toggleCards() {
@@ -2412,32 +2434,30 @@ export class TableView {
         });
     }
 
-    comeBack() {
+    async comeBack() {
         const self = this;
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        return gameApi.ComeBack(this.tableId, function (data, status, jqXHR) {
-            if (data.Status === "OperationNotValidAtThisTime") {
-                return;
-            }
+        const data = await gameApi.ComeBack(this.tableId);
+        if (data.Status === "OperationNotValidAtThisTime") {
+            return;
+        }
 
-            if (data.Status !== "Ok") {
-                self.reportApiError(data.Status);
-            }
-        });
+        if (data.Status !== "Ok") {
+            self.reportApiError(data.Status);
+        }
     }
 
-    sitOut() {
+    async sitOut() {
         const self = this;
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        gameApi.SitOut(this.tableId, function (data, status, jqXHR) {
-            if (data.Status === "OperationNotValidAtThisTime") {
-                return;
-            }
+        const data = await gameApi.SitOut(this.tableId);
+        if (data.Status === "OperationNotValidAtThisTime") {
+            return;
+        }
 
-            if (data.Status !== "Ok") {
-                self.reportApiError(data.Status);
-            }
-        });
+        if (data.Status !== "Ok") {
+            self.reportApiError(data.Status);
+        }
     }
     showPlayerParameters() {
         // tablePlayerParameterSelector.showPlayerParameters(this);

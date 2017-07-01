@@ -97,7 +97,8 @@ class TableManager {
         settings.autoHideCards.subscribe(function (newValue) {
             const api = new OnlinePoker.Commanding.API.Game(apiHost);
             self.tables().forEach(function (tableView) {
-                api.SetOpenCardsParameters(tableView.tableId, !newValue, null);
+                // Set open card parameters in parallel for all tables.
+                api.SetOpenCardsParameters(tableView.tableId, !newValue);
             });
 
             settings.saveSettings();
@@ -107,82 +108,65 @@ class TableManager {
         this.connectTables();
         this.connectTournaments();
     }
-    getCurrentTables() {
+    async getCurrentTables() {
         const self = this;
         const api = new OnlinePoker.Commanding.API.Game(apiHost);
-        const result = $.Deferred();
-        api.GetTables(null, 0, 0, 0, 1, 0, null).done(function (data) {
-            const tablesData = <GameTableModel[]>data.Data;
-            api.GetSitingTables().done(function (data) {
-                const status = data.Status;
-                if (status === "Ok") {
-                    const tables = data.Data;
-                    if (tables != null) {
-                        for (let i = 0; i < tables.length; i++) {
-                            const tableId = tables[i];
-                            let model: GameTableModel;
-                            for (let j = 0; j < tablesData.length; j++) {
-                                model = tablesData[j];
-                                if (model.TableId === tableId) {
-                                    self.selectTable(model, false);
-                                }
-                            }
+        const data = await api.GetTables(null, 0, 0, 0, 1, 0);
+        const tablesData = <GameTableModel[]>data.Data;
+        const tableData = await api.GetSitingTables();
+        const status = tableData.Status;
+        if (status === "Ok") {
+            const tables = tableData.Data;
+            if (tables != null) {
+                for (let i = 0; i < tables.length; i++) {
+                    const tableId = tables[i];
+                    let model: GameTableModel;
+                    for (let j = 0; j < tablesData.length; j++) {
+                        model = tablesData[j];
+                        if (model.TableId === tableId) {
+                            self.selectTable(model, false);
                         }
                     }
-
-                    result.resolve(tables);
-                } else {
-                    if (status === "AuthorizationError") {
-                        result.resolve([]);
-                    } else {
-                        result.reject();
-                    }
                 }
-            });
-        }).fail(function () {
-            result.reject();
-        });
+            }
 
-        return result;
+            return tables;
+        } else {
+            if (status === "AuthorizationError") {
+                return [];
+            } else {
+                throw new Error("Could not get current tables");
+            }
+        }
     }
-    getCurrentTournaments() {
+    async getCurrentTournaments() {
         const self = this;
         const gapi = new OnlinePoker.Commanding.API.Game(apiHost);
         const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-        const result = $.Deferred<TournamentDefinition[]>();
-        tapi.GetTournaments(0, 0, 0, 0, 0, null).done(function (data) {
-            const tournamentsData = data.Data;
-            tapi.GetRegisteredTournamentsStatus().then(function (data) {
-                const status = data.Status;
-                if (status === "Ok") {
-                    const tournaments = data.Data;
-                    if (tournaments !== null && tournaments.length !== 0) {
-                        self.requestTournamentsInformation(tournaments).then(function (args: TournamentDefinition[]) {
-                            const tournaments = <TournamentDefinition[]>[];
-                            for (let i = 0; i < arguments.length; i++) {
-                                tournaments.push(<TournamentDefinition>arguments[i]);
-                            }
-
-                            result.resolve(tournaments);
-                        }, function () {
-                            result.reject();
-                        });
-                    } else {
-                        result.resolve([]);
-                    }
-                } else {
-                    if (status === "AuthorizationError") {
-                        result.resolve([]);
-                    } else {
-                        result.reject();
-                    }
+        const data = await tapi.GetTournaments(0, 0, 0, 0, 0);
+        const tournamentsData = data.Data;
+        const registeredTournamentsData = await tapi.GetRegisteredTournamentsStatus();
+        const status = registeredTournamentsData.Status;
+        if (status === "Ok") {
+            const rtournaments = registeredTournamentsData.Data;
+            if (rtournaments !== null && rtournaments.length !== 0) {
+                const args = await self.requestTournamentsInformation(rtournaments);
+                const tournaments = <TournamentDefinition[]>[];
+                for (let i = 0; i < args.length; i++) {
+                    tournaments.push(args[i]);
                 }
-            });
-        }).fail(function () {
-                result.reject();
-            });
 
-        return result;
+                return tournaments;
+            } else {
+                return [];
+            }
+        } else {
+            if (status === "AuthorizationError") {
+                return [];
+            } else {
+                throw new Error("Could not get status of registered tournaments");
+            }
+        }
     }
     getCurrentTablesAndTournaments() {
         if (!authManager.authenticated()) {
@@ -1079,7 +1063,7 @@ class TableManager {
         const tournamentData = data.Data;
         self.selectTournament(tournamentData, false);
         if (tableId != null) {
-            const tableData = await gapi.GetTableAsync(tableId);
+            const tableData = await gapi.GetTable(tableId);
             self.selectTable(tableData.Data, false);
             const tournamentTableView = self.getTableById(tableId);
             const tournamentView = self.getTournamentById(tournamentId);

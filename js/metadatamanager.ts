@@ -74,7 +74,7 @@ class MetadataManager {
                 self.log("Informaton about bet structure received: " + JSON.stringify(betStructureData.Data));
                 self.bets = betStructureData.Data;
 
-                self.log("Informaton about avatars received: " + JSON.stringify(avatarsData.Data));
+                self.log("Informaton about avatars received: " + JSON.stringify(avatarsData.Avatars));
                 self.avatars = avatarsData.Avatars;
 
                 self.log("Informaton about banners received: " + JSON.stringify(bannersData.Data));

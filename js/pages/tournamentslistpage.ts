@@ -48,7 +48,7 @@ export class TournamentsListPage extends PageBase {
         this.tournamentType = tournamentType;
         this.options = options;
     }
-    refreshTournaments(force: boolean) {
+    async refreshTournaments(force: boolean) {
         if (this.loading() && !force) {
             return;
         }
@@ -63,17 +63,16 @@ export class TournamentsListPage extends PageBase {
         const speed = options.speed() === 0 ? 0 : 1 << options.speed();
         const buyin = options.buyin() === 0 ? 0 : 1 << options.buyin();
         self.tournaments([]);
-        tournamentApi.GetTournaments(prizeCurrency, tournamentTypeMask, speed, buyin, null, function (data) {
-            self.loading(false);
-            if (!self.visible()) {
-                return;
-            }
+        const data = await tournamentApi.GetTournaments(prizeCurrency, tournamentTypeMask, speed, buyin, null);
+        self.loading(false);
+        if (!self.visible()) {
+            return;
+        }
 
-            if (data.Status === "Ok") {
-                self.log("Informaton about tournaments received: ", data.Data);
-                self.tournaments(data.Data);
-            }
-        });
+        if (data.Status === "Ok") {
+            self.log("Informaton about tournaments received: ", data.Data);
+            self.tournaments(data.Data);
+        }
     }
     back() {
         app.lobbyPageBlock.showLobby();

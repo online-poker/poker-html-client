@@ -37,7 +37,7 @@ export class TablesListPage extends PageBase {
 
         reloadManager.setReloadCallback(() => this.refreshTables(true));
     }
-    refreshTables(force: boolean) {
+    async refreshTables(force: boolean) {
         if (this.loading() && !force) {
             return;
         }
@@ -55,21 +55,20 @@ export class TablesListPage extends PageBase {
         /* tslint:enable:no-bitwise */
         const moneyType = lobbyPage.cashOptions.currency();
         const limitType = lobbyPage.cashOptions.limits();
-        gameApi.GetTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType, function (data) {
-            self.loading(false);
-            if (!self.visible()) {
-                return;
-            }
+        const data = await gameApi.GetTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType);
+        self.loading(false);
+        if (!self.visible()) {
+            return;
+        }
 
-            if (data.Status === "Ok") {
-                self.log("Informaton about tables received: ", data.Data);
-                const tables = <any[]>data.Data;
-                tables.forEach(function (item) {
-                    item.IsOpened = tableManager.isOpened(item.TableId);
-                });
-                self.tables(tables);
-            }
-        });
+        if (data.Status === "Ok") {
+            self.log("Informaton about tables received: ", data.Data);
+            const tables = <any[]>data.Data;
+            tables.forEach(function (item) {
+                item.IsOpened = tableManager.isOpened(item.TableId);
+            });
+            self.tables(tables);
+        }
     }
     updateOpenedTables() {
         const tables = this.tables();

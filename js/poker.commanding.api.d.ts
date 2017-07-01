@@ -39,6 +39,18 @@ interface ApiResult<T> {
     Data: T;
 }
 
+interface AvatarsResponse extends StatusResponse {
+    Avatars: string[];
+}
+
+interface InboxMessagesData {
+    Messages: string[];
+}
+
+interface SitResponse extends StatusResponse {
+    MinimalAmount: number;
+}
+
 /**
 * Response for the RegisterGuest API call.
 */

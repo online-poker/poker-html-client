@@ -274,7 +274,7 @@ export class LobbyPage extends PageBase {
             }
         }
     }
-    refreshTables() {
+    async refreshTables() {
         const self = this;
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
         const privateTables = 0;
@@ -285,36 +285,34 @@ export class LobbyPage extends PageBase {
         const betLevels = options.bets();
         const moneyType = options.currency();
         const limitType = options.limits();
-        return gameApi.GetTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType, (data) => {
-            if (!self.visible()) {
-                return;
+        const data = await gameApi.GetTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType);
+        if (!self.visible()) {
+            return;
+        }
+
+        if (data.Status === "Ok") {
+            self.log("Informaton about tables received: ", data.Data);
+            const tables = <any[]>data.Data;
+            tables.forEach(function (item) {
+                item.IsOpened = tableManager.isOpened(item.TableId);
+            });
+            self.tables(tables);
+            if (appConfig.auth.automaticTableSelection && tables.length === 1) {
+                this.selectTable(tables[0]);
             }
 
-            if (data.Status === "Ok") {
-                self.log("Informaton about tables received: ", data.Data);
-                const tables = <any[]>data.Data;
-                tables.forEach(function (item) {
-                    item.IsOpened = tableManager.isOpened(item.TableId);
-                });
-                self.tables(tables);
-                if (appConfig.auth.automaticTableSelection && tables.length === 1) {
-                    this.selectTable(tables[0]);
-                }
-
-                if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
-                    const tableIdString = localStorage.getItem("tableId");
-                    if (tableIdString !== null) {
-                        const tableIdInt = parseInt(tableIdString);
-                        gameApi.GetTable(tableIdInt).then((data) => {
-                            self.selectTable(data.Data);
-                        });
-                    }
+            if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
+                const tableIdString = localStorage.getItem("tableId");
+                if (tableIdString !== null) {
+                    const tableIdInt = parseInt(tableIdString);
+                    const tableData = await gameApi.GetTable(tableIdInt);
+                    self.selectTable(tableData.Data);
                 }
             }
-        });
+        }
     }
 
-    refreshTournaments(tournamentType) {
+    async refreshTournaments(tournamentType) {
         const self = this;
         const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
 
@@ -324,31 +322,30 @@ export class LobbyPage extends PageBase {
         const speed = options.speed() === 0 ? 0 : 1 << options.speed();
         const buyin = options.buyin();
         const maxPlayers = options.maxPlayers() === 0 ? 0 : 1 << (options.maxPlayers() - 1);
-        return tournamentApi.GetTournaments(prizeCurrency, tournamentTypeMask, speed, buyin, maxPlayers, function (data) {
-            if (!self.visible()) {
-                return;
-            }
+        const data = await tournamentApi.GetTournaments(prizeCurrency, tournamentTypeMask, speed, buyin, maxPlayers);
+        if (!self.visible()) {
+            return;
+        }
 
-            if (data.Status === "Ok") {
-                self.log("Informaton about tournaments received: ", data.Data);
-                const enchance = (item: LobbyTournamentItem) => {
-                    const result = <LobbyTournamentItemEx>item;
-                    const startDate = moment(item.StartDate);
-                    const currentMoment = moment().add(timeService.timeDiff, "ms");
-                    const duration = moment.duration(currentMoment.diff(startDate));
-                    const m = duration.minutes();
-                    result.duration = duration.hours() + _("common.hours")
-                        + _("common.timeseparator")
-                        + (m < 10 ? "0" + m : "" + m) + _("common.minutes");
-                    return result;
-                };
-                if (tournamentType === 2) {
-                    self.tournaments(data.Data.map(enchance));
-                } else {
-                    self.sngs(data.Data.map(enchance));
-                }
+        if (data.Status === "Ok") {
+            self.log("Informaton about tournaments received: ", data.Data);
+            const enchance = (item: LobbyTournamentItem) => {
+                const result = <LobbyTournamentItemEx>item;
+                const startDate = moment(item.StartDate);
+                const currentMoment = moment().add(timeService.timeDiff, "ms");
+                const duration = moment.duration(currentMoment.diff(startDate));
+                const m = duration.minutes();
+                result.duration = duration.hours() + _("common.hours")
+                    + _("common.timeseparator")
+                    + (m < 10 ? "0" + m : "" + m) + _("common.minutes");
+                return result;
+            };
+            if (tournamentType === 2) {
+                self.tournaments(data.Data.map(enchance));
+            } else {
+                self.sngs(data.Data.map(enchance));
             }
-        });
+        }
     }
     selectTable(table: GameTableModel) {
         app.processing(true);
@@ -409,25 +406,33 @@ export class LobbyPage extends PageBase {
             app.lobbyPageBlock.showSecondary("lobby");
         }
     }
-    refresh() {
-        const self = this;
-        const resetLoading = function () {
-            self.loading(false);
-        };
+    async refresh() {
         metadataManager.updateOnline();
         if (this.slider.currentIndex() === 0) {
             this.loading(true);
-            this.refreshTables().pipe(resetLoading, resetLoading);
+            try {
+                await this.refreshTables();
+            } finally {
+                this.loading(false);
+            }
         }
 
         if (this.slider.currentIndex() === 1) {
             this.loading(true);
-            this.refreshTournaments(2).pipe(resetLoading, resetLoading);
+            try {
+                await this.refreshTournaments(2);
+            } finally {
+                this.loading(false);
+            }
         }
 
         if (this.slider.currentIndex() === 2) {
             this.loading(true);
-            this.refreshTournaments(3).pipe(resetLoading, resetLoading);
+            try {
+                await this.refreshTournaments(3);
+            } finally {
+                this.loading(false);
+            }
         }
     }
     touchLock(e: Event) {

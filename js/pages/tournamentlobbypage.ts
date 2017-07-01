@@ -504,7 +504,7 @@ export class TournamentLobbyPage extends PageBase {
     back() {
         app.lobbyPageBlock.showSecondary(this.parentView);
     }
-    register() {
+    async register() {
         const self = this;
         const tournament = self.tournamentData();
         const name = tournament.TournamentName;
@@ -515,10 +515,11 @@ export class TournamentLobbyPage extends PageBase {
         const joinAmountString = numericTextBinding.withCommas(joinAmount.toFixed(0));
         const api = new OnlinePoker.Commanding.API.Account(apiHost);
         self.loading(true);
-        api.GetPersonalAccount(function (data) {
+        try {
+            const data = await api.GetPersonalAccount();
             self.loading(false);
             if (data.Status === "Ok") {
-                const personalAccountData = <PersonalAccountData>data.Data;
+                const personalAccountData = data.Data;
                 let balance = 0;
                 const tournament = self.tournamentData();
                 if (tournament.CurrencyId === 1) {
@@ -527,14 +528,14 @@ export class TournamentLobbyPage extends PageBase {
                     balance = personalAccountData.GameMoney;
                 }
 
-                self.promptRegister(balance);
+                await self.promptRegister(balance);
             } else {
                 SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("errors." + data.Status));
             }
-        }).fail(() => {
+        } catch (e) {
             self.loading(false);
             SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("tournamentLobby.registrationError"));
-        });
+        }
     }
     /**
      * Initiates cancelling registration in the tournament.
@@ -641,7 +642,7 @@ export class TournamentLobbyPage extends PageBase {
     * Shows already opened tournament table, or load new one if needed.
     * @param tableId Number Id of the tournament table to show.
     */
-    private showTournamentTable(tableId: number) {
+    private async showTournamentTable(tableId: number) {
         const self = this;
         const tableView = tableManager.getTableById(tableId);
         if (tableView === null) {
@@ -649,10 +650,12 @@ export class TournamentLobbyPage extends PageBase {
             const tdata = this.tournamentData();
             const api = new OnlinePoker.Commanding.API.Game(apiHost);
             const currentTournamentTitle = _("tournamentLobby.caption", { "number": tdata.TournamentId });
-            api.GetTable(tableId).then(function (data) {
+            try {
+                const data = await api.GetTable(tableId);
                 if (data.Status === "Ok") {
                     const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-                    tapi.GetTournament(tdata.TournamentId).then(function (tournamentData) {
+                    try {
+                        const tournamentData = await tapi.GetTournament(tdata.TournamentId);
                         if (data.Status === "Ok") {
                             self.loading(false);
                             tableManager.selectTournament(tournamentData.Data, false);
@@ -666,20 +669,20 @@ export class TournamentLobbyPage extends PageBase {
                             self.loading(false);
                             SimplePopup.display(currentTournamentTitle, _("errors." + data.Status));
                         }
-                    }, function () {
+                    } catch (e) {
                         self.loading(false);
                         self.log("Could not get tournament information for tournament #" + tdata.TournamentId);
                         SimplePopup.display(currentTournamentTitle, _("tournamentLobby.showTableError"));
-                    });
+                    }
                 } else {
                     self.loading(false);
                     SimplePopup.display(currentTournamentTitle, _("errors." + data.Status));
                 }
-            }, function () {
+            } catch (e) {
                 self.loading(false);
                 self.log("Could not get table information for table #" + tableId);
                 SimplePopup.display(currentTournamentTitle, _("tournamentLobby.showTableError"));
-            });
+            }
         } else {
             tableManager.selectById(tableId);
             app.showSubPage("tables");

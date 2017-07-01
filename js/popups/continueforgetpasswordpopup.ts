@@ -35,7 +35,7 @@ export class ContinueForgetPasswordPopup extends PopupBase implements KnockoutVa
         this.errors.showAllMessages(false);
         super.shown(args);
     }
-    confirm() {
+    async confirm() {
         const self = this;
         const isValid = this.isValid();
         if (!isValid) {
@@ -47,19 +47,18 @@ export class ContinueForgetPasswordPopup extends PopupBase implements KnockoutVa
             self.loading(true);
             self.errorMessage(null);
             const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
-            accountApi.ResetPassword(this.token(), this.password(), function (data) {
-                if (data.Status === "Ok") {
-                    self.token(null);
-                    self.password(null);
-                    self.confirmPassword(null);
-                    app.closePopup();
-                    self.loading(false);
-                    SimplePopup.display(_("auth.passwordRecovery"), _("auth.passwordRecoveredSuccess"));
-                } else {
-                    // Report authentication or authorization errors
-                    self.errorMessage(_("errors." + data.Status));
-                }
-            });
+            const data = await accountApi.ResetPassword(this.token(), this.password());
+            if (data.Status === "Ok") {
+                self.token(null);
+                self.password(null);
+                self.confirmPassword(null);
+                app.closePopup();
+                self.loading(false);
+                SimplePopup.display(_("auth.passwordRecovery"), _("auth.passwordRecoveredSuccess"));
+            } else {
+                // Report authentication or authorization errors
+                self.errorMessage(_("errors." + data.Status));
+            }
         }
     }
 }
