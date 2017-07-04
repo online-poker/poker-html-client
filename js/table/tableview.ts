@@ -2729,7 +2729,10 @@ export class TableView {
             let currentGame = self.gameId();
             if (currentGame == null) {
                 currentGame = self.currentGameId();
-                return _("table.currentHand", { id: currentGame })
+                if (currentGame == null) {
+                    return _("table.currentHandEmpty");
+                }
+                return _("table.currentHand", { id: currentGame });
             }
 
             return _("table.currentHand", { id: currentGame });
