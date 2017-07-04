@@ -330,6 +330,7 @@ var messages: any = {
         doyouwantchangeplace: 'Вы действительно хотите сесть на это место?',
         lastHand: 'Пред. №: #id#',
         currentHand: 'Раздача №: #id#',
+        currentHandEmpty: 'Раздача №: --',
         bets: 'Ставки: #sb#/#bb#',
         betsWithAnte: 'Ставки: #sb#/#bb#, Анте: #ante#',
         conectionSlow: 'Медленное соединение',

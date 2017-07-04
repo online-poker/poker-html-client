@@ -83,6 +83,7 @@ export class TableView {
     * Id of the current game on the table.
     */
     public gameId: KnockoutObservable<number>;
+    public currentGameId: KnockoutObservable<number>;
     /**
     * Indicates that game finished.
     */
@@ -224,6 +225,7 @@ export class TableView {
         this.playerActions = ko.observable();
         this.mainButtonsEnabled = ko.observable(false);
         this.gameId = ko.observable<number>();
+        this.currentGameId = ko.observable<number>();
         this.actionsCount = ko.observable(0);
         this.bigBlind = ko.observable<number>(model === null ? 0 : model.BigBlind);
         this.smallBlind = ko.observable<number>(model === null ? 0 : model.SmallBlind);
@@ -1127,6 +1129,7 @@ export class TableView {
         /// </signature>
         this.gameFinished(false);
         this.prizesDistributed(false);
+        this.currentGameId(gameId);
         this.gameId(gameId);
         this.hasPendingMoney(false);
         this.actionBlock.isRaise(true);
@@ -2745,9 +2748,14 @@ export class TableView {
                 && lastHand.id != null;
         }, this);
         this.currentHandCaption = ko.computed(function () {
-            const currentGame = self.gameId();
+            let currentGame = self.gameId();
             if (currentGame == null) {
-                return "";
+                currentGame = self.currentGameId();
+                if (currentGame == null) {
+                    return _("table.currentHandEmpty");
+                }
+
+                return _("table.currentHand", { id: currentGame });
             }
 
             return _("table.currentHand", { id: currentGame });
