@@ -2299,7 +2299,7 @@ export class TableView {
             connectionService.currentConnection.connection.Game.server.betOrRaise(this.tableId, amount);
         } else {
             try {
-                const data = await gameApi.BetOrRaise(this.tableId, amount)
+                const data = await gameApi.BetOrRaise(this.tableId, amount);
                 if (data.Status === "OperationNotValidAtThisTime") {
                     return;
                 }
