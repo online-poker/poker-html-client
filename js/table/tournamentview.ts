@@ -131,7 +131,7 @@ export class TournamentView {
         const self = this;
         if (this.connectingRequest !== null && this.connectingRequest.state() === "pending") {
             // Re-schedule updating information.
-            this.connectingRequest.fail(function () {
+            this.connectingRequest.then(null, function () {
                 self.log("Rescheduling the updating information.");
                 self.updateTournamentInformation();
             });
@@ -212,7 +212,7 @@ export class TournamentView {
             result.reject("Cancelled", true);
         };
 
-        wrapper.buildStartConnection()().pipe(function () {
+        wrapper.buildStartConnection()().then(function () {
             if (wrapper.terminated) {
                 cancelOperation();
                 return;

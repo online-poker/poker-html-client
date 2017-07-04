@@ -118,7 +118,7 @@ export class HomePage extends PageBase {
 
         app.processing(true);
         authManager.authenticate(username, password, this.rememberMe())
-            .pipe((status: string) => {
+            .then((status: string) => {
                 app.processing(false);
                 if (status === "Ok") {
                     this.errorMessage(null);

@@ -218,7 +218,7 @@ export class TableMenuPopup {
     }
     showSettingsPrompt() {
         const self = this;
-        app.requireAuthentication().done(function (authenticated) {
+        app.requireAuthentication().then(function (authenticated) {
             if (authenticated) {
                 app.executeCommand("popup.settings");
             }

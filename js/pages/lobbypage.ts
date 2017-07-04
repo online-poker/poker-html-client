@@ -244,7 +244,7 @@ export class LobbyPage extends PageBase {
         this.tables([]);
         this.tables(tables);
     }
-    update(force: boolean) {
+    async update(force: boolean) {
         if (this.loading() && !force) {
             return;
         }
@@ -257,7 +257,11 @@ export class LobbyPage extends PageBase {
             self.loading(false);
         };
         this.loading(true);
-        $.when<any>(this.refreshTables(), this.refreshTournaments(2), this.refreshTournaments(3)).pipe(resetLoading, resetLoading);
+        try {
+            await Promise.all([this.refreshTables(), this.refreshTournaments(2), this.refreshTournaments(3)]);
+        } finally {
+            resetLoading();
+        }
     }
     showGames() {
         if (this.slider.currentIndex() === 0) {
@@ -349,7 +353,7 @@ export class LobbyPage extends PageBase {
     }
     selectTable(table: GameTableModel) {
         app.processing(true);
-        app.requireGuestAuthentication().done(function (newValue, wasAuthenticated) {
+        app.requireGuestAuthentication().then(function (newValue, wasAuthenticated) {
             if (newValue) {
                 app.executeCommand("app.selectTable", [table, wasAuthenticated]);
 

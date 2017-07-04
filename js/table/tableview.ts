@@ -668,7 +668,7 @@ export class TableView {
         const self = this;
         if (this.connectingRequest !== null && this.connectingRequest.state() === "pending") {
             // Re-schedule updating information.
-            this.connectingRequest.fail(function () {
+            this.connectingRequest.then(null, function () {
                 self.log("Rescheduling the updating information.");
                 self.updateTableInformation();
             });
@@ -769,7 +769,7 @@ export class TableView {
             result.reject("Cancelled", true);
         };
 
-        wrapper.buildStartConnection()().pipe(function () {
+        wrapper.buildStartConnection()().then(function () {
             if (wrapper.terminated) {
                 cancelOperation();
                 return;
@@ -836,7 +836,7 @@ export class TableView {
             result.reject("Cancelled", true);
         };
 
-        wrapper.buildStartConnection()().pipe(function () {
+        wrapper.buildStartConnection()().then(function () {
             if (wrapper.terminated) {
                 cancelOperation();
                 return;
@@ -1933,7 +1933,7 @@ export class TableView {
     getCurrentOfflineTableSeat(): number {
         const self = this;
         let seatNumber = 0;
-        app.requireAuthentication().done(function (authenticated) {
+        app.requireAuthentication().then(function (authenticated) {
             if (authenticated) {
                 const currentPlayer = self.currentLogin();
                 seatNumber = parseInt(currentPlayer.replace("Игрок", ""));
@@ -1950,7 +1950,7 @@ export class TableView {
 
         this.sitting = true;
         const self = this;
-        app.requireAuthentication().done(function (authenticated) {
+        app.requireAuthentication().then(function (authenticated) {
             if (authenticated) {
                 const currentPlayer = self.myPlayer();
                 if (currentPlayer === null) {
@@ -2107,7 +2107,7 @@ export class TableView {
                 messages = [_("table.standupTournamentPrompt")];
             }
 
-            app.prompt(_(caption), messages).then(function () {
+            app.promptAsync(_(caption), messages).then(function () {
                 if (self.tournament() == null) {
                     self.standup();
                 }

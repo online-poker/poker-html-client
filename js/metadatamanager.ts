@@ -24,68 +24,65 @@ class MetadataManager {
     public setFailed(value: Function) {
         this.failed = value;
     }
-    update() {
+    async update() {
         const self = this;
         const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
-        const result = $.Deferred();
         const failHandler = function () {
             if (self.failed !== null) {
                 self.failed();
             }
 
-            result.reject();
-        };
-        const successHander = function () {
-            if (self.ready !== null) {
-                self.ready();
-            }
-
-            result.resolve();
+            throw new Error("Failed to update metadata");
         };
 
         const bannersRequest = this.preloadFirstBanner(this.getBannerFormat());
         const smallBannersRequest = this.preloadBanners(this.getSmallBannerFormat());
-        Promise.all([metadataApi.GetOnlinePlayers(),
-            metadataApi.GetWellKnownPrizeStructure(),
-            metadataApi.GetWellKnownBetStructure(),
-            metadataApi.GetDefaultAvatars(),
-            bannersRequest,
-            smallBannersRequest])
-            .then(function (values) {
-                const [ onlinePlayersData, prizeStructureData, betStructureData,
-                    avatarsData, bannersData, smallBannersData ] = values;
-                if (onlinePlayersData.Status !== "Ok"
-                    || prizeStructureData.Status !== "Ok"
-                    || betStructureData.Status !== "Ok"
-                    || bannersData.Status !== "Ok"
-                    || avatarsData.Status !== "Ok"
-                    || smallBannersData.Status !== "Ok") {
-                    failHandler();
-                    return;
-                }
+        try {
+            const values = await Promise.all([
+                metadataApi.GetOnlinePlayers(),
+                metadataApi.GetWellKnownPrizeStructure(),
+                metadataApi.GetWellKnownBetStructure(),
+                metadataApi.GetDefaultAvatars(),
+                bannersRequest,
+                smallBannersRequest
+            ]);
+            const [ onlinePlayersData, prizeStructureData, betStructureData,
+                avatarsData, bannersData, smallBannersData ] = values;
+            if (onlinePlayersData.Status !== "Ok"
+                || prizeStructureData.Status !== "Ok"
+                || betStructureData.Status !== "Ok"
+                || bannersData.Status !== "Ok"
+                || avatarsData.Status !== "Ok"
+                || smallBannersData.Status !== "Ok") {
+                failHandler();
+                return;
+            }
 
-                self.log("Informaton about players online received: " + JSON.stringify(onlinePlayersData.Data));
-                self.registered(onlinePlayersData.Data[1].toString());
-                self.online(onlinePlayersData.Data[0].toString());
+            self.log("Informaton about players online received: " + JSON.stringify(onlinePlayersData.Data));
+            self.registered(onlinePlayersData.Data[1].toString());
+            self.online(onlinePlayersData.Data[0].toString());
 
-                self.log("Informaton about prize structure received: " + JSON.stringify(prizeStructureData.Data));
-                self.prizes = prizeStructureData.Data;
+            self.log("Informaton about prize structure received: " + JSON.stringify(prizeStructureData.Data));
+            self.prizes = prizeStructureData.Data;
 
-                self.log("Informaton about bet structure received: " + JSON.stringify(betStructureData.Data));
-                self.bets = betStructureData.Data;
+            self.log("Informaton about bet structure received: " + JSON.stringify(betStructureData.Data));
+            self.bets = betStructureData.Data;
 
-                self.log("Informaton about avatars received: " + JSON.stringify(avatarsData.Avatars));
-                self.avatars = avatarsData.Avatars;
+            self.log("Informaton about avatars received: " + JSON.stringify(avatarsData.Avatars));
+            self.avatars = avatarsData.Avatars;
 
-                self.log("Informaton about banners received: " + JSON.stringify(bannersData.Data));
-                self.banners = bannersData.Data;
+            self.log("Informaton about banners received: " + JSON.stringify(bannersData.Data));
+            self.banners = bannersData.Data;
 
-                self.log("Informaton about small banners received: " + JSON.stringify(smallBannersData.Data));
-                self.smallBanners = smallBannersData.Data;
+            self.log("Informaton about small banners received: " + JSON.stringify(smallBannersData.Data));
+            self.smallBanners = smallBannersData.Data;
 
-                successHander();
-        }).then(null, failHandler);
-        return result;
+            if (self.ready !== null) {
+                self.ready();
+            }
+        } catch (e) {
+            failHandler();
+        }
     }
     async versionCheck() {
         const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);

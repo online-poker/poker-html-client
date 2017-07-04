@@ -40,7 +40,7 @@ export class SlowInternetService {
                     this.onDisconnected();
                 }, 3000);
             } else {
-                connectionBuilder().pipe(() => {
+                connectionBuilder().then(() => {
                     this.onReconnected();
                 }, () => {
                     this.onDisconnected();

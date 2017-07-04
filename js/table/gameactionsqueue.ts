@@ -2,7 +2,7 @@
 
 interface QueueWorker {
     /**
-    * Executes worker and generates deferred which executing operation
+    * Executes worker and generates promise which executing operation
     */
     (): Promise<any>;
 }
@@ -35,7 +35,7 @@ export class GameActionsQueue {
     }
     /**
     * Inject worker to the beginning of tasks stack
-    * @param worker QueueWorker The function which generated deferred.
+    * @param worker QueueWorker The function which generated promise.
     */
     inject(worker: QueueWorker) {
         this.tasks.unshift(worker);
@@ -43,7 +43,7 @@ export class GameActionsQueue {
     }
     /**
     * Push worker to the end of tasks stack
-    * @param worker QueueWorker The function which generated deferred.
+    * @param worker QueueWorker The function which generated promise.
     */
     push(worker: QueueWorker) {
         this.tasks.push(worker);
@@ -52,7 +52,7 @@ export class GameActionsQueue {
 
     /**
     * Push waiting task in the queue
-    * @param timeout Number The function which generated deferred.
+    * @param timeout Number The function which generated promise.
     */
     wait(timeout: number) {
         if (!GameActionsQueue.waitDisabled && timeout > 0) {
@@ -64,7 +64,7 @@ export class GameActionsQueue {
 
     /**
     * Push waiting task in the queue
-    * @param timeout Number The function which generated deferred.
+    * @param timeout Number The function which generated promise.
     */
     waitWithInterruption(timeout: number) {
         if (!GameActionsQueue.waitDisabled && timeout > 0) {
@@ -80,7 +80,7 @@ export class GameActionsQueue {
 
     /**
     * Push waiting task in the queue
-    * @param timeout Number The function which generated deferred.
+    * @param timeout Number The function which generated promise.
     */
     injectWait(timeout: number) {
         if (!GameActionsQueue.waitDisabled && timeout > 0) {
@@ -92,7 +92,7 @@ export class GameActionsQueue {
 
     /**
     * Push waiting task in the queue
-    * @param timeout Number The function which generated deferred.
+    * @param timeout Number The function which generated promise.
     */
     injectWaitWithInterruption(timeout: number) {
         if (!GameActionsQueue.waitDisabled && timeout > 0) {
@@ -108,7 +108,7 @@ export class GameActionsQueue {
 
     /**
     * Push worker to the stack
-    * @param callback Function The function which generated deferred.
+    * @param callback Function The function which generated promise.
     */
     injectCallback(callback: Function) {
         this.inject(() => {
@@ -118,7 +118,7 @@ export class GameActionsQueue {
 
     /**
     * Push worker to the stack
-    * @param callback Function The function which generated deferred.
+    * @param callback Function The function which generated promise.
     */
     pushCallback(callback: Function) {
         this.push(() => {
@@ -136,7 +136,7 @@ export class GameActionsQueue {
     /**
     * Starts execution chain.
     */
-    execute() {
+    async execute() {
         if (this.isExecuting) {
             this.log("Currently task is executing, task will be executed later.");
             return;
@@ -161,13 +161,12 @@ export class GameActionsQueue {
         }
 
         this.log("Executing task with id: " + this.counter.toString());
-        $.when(task).done(function () {
-            self.isExecuting = false;
-            self.log("Finished task with id: " + self.counter.toString());
-            setTimeout(function () {
-                self.execute();
-            }, 100);
-        });
+        await task;
+        self.isExecuting = false;
+        self.log("Finished task with id: " + self.counter.toString());
+        setTimeout(function () {
+            self.execute();
+        }, 100);
     }
 
     private log(message?: any, ...optionalParams: any[]) {
