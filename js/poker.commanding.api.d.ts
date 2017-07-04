@@ -379,6 +379,13 @@ interface GameHubClient {
     FinalTableCardsOpened: (tableId: number, cards: string) => void;
 
     /**
+     * Inform about table's tournament change.
+     * @param tableId Id of the table which tournament changed.
+     * @param tournamentId Id of the tournament to which table becomes belonging.
+     */
+    TableTournamentChanged: (tableId: number, tournamentId: number | null) => void;
+
+    /**
     * Notifies that tournament status is changed
     * tournamentId Number Id of the tournament which status was changed.
     * status TournamentStatus New status of the tournament
