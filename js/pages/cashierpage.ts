@@ -48,18 +48,19 @@ class CashierPage extends PageBase {
 
         reloadManager.setReloadCallback(() => self.updateInformation());
     }
-    updateInformation() {
+    async updateInformation() {
         const self = this;
         const realMoneySupported = true;
         const gameMoneySupported = false;
         const api = new OnlinePoker.Commanding.API.Account(apiHost);
         self.loading(true);
-        accountService.getAccount().then(function(result: AccountServiceInformation) {
+        try {
+            const result = await accountService.getAccount();
             self.loading(false);
             self.player(result);
-        }).fail(function() {
+        } catch (e) {
             app.closePopup();
-        });
+        }
     }
     back() {
         app.lobbyPageBlock.showLobby();

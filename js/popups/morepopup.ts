@@ -37,7 +37,7 @@ export class MorePopup {
         });
         this.amount = ko.observable(0);
     }
-    update() {
+    async update() {
         if (!authManager.authenticated()) {
             return;
         }
@@ -45,11 +45,12 @@ export class MorePopup {
         const self = this;
         this.loading(true);
         const api = new OnlinePoker.Commanding.API.Account(apiHost);
-        $.when(this.updateAccountData(), this.updateMessagesStatus()).then(function () {
+        try {
+            await Promise.all([this.updateAccountData(), this.updateMessagesStatus()]);
             self.loading(false);
-        }, function () {
+        } catch (e) {
             self.update();
-        });
+        }
     }
     showAccount() {
         app.executeCommand("pageblock.cashier");
@@ -83,41 +84,39 @@ export class MorePopup {
     /**
     * Starts request for the account data.
     */
-    private updateAccountData() {
+    private async updateAccountData() {
         const self = this;
         const api = new OnlinePoker.Commanding.API.Account(apiHost);
-        return api.GetPlayerDefinition(null).then(function (data) {
-            if (data.Status === "Ok") {
-                const personalAccountData = data.Data;
-                const total = settings.isGuest() ? personalAccountData.GameMoney : personalAccountData.RealMoney;
-                self.amount(total);
-                self.points(personalAccountData.Points);
-            } else {
-                console.error("Error during making call to Account.GetPlayerDefinition in MorePopup");
-            }
+        const data = await api.GetPlayerDefinition();
+        if (data.Status === "Ok") {
+            const personalAccountData = data.Data;
+            const total = settings.isGuest() ? personalAccountData.GameMoney : personalAccountData.RealMoney;
+            self.amount(total);
+            self.points(personalAccountData.Points);
+        } else {
+            console.error("Error during making call to Account.GetPlayerDefinition in MorePopup");
+        }
 
-            return data;
-        });
+        return data;
     }
 
     /**
     * Starts requesting message status
     */
-    private updateMessagesStatus() {
+    private async updateMessagesStatus() {
         const self = this;
         const mapi = new OnlinePoker.Commanding.API.Message(apiHost);
-        return mapi.GetInboxMessages(0, 20, 1 /* Unread */, false, null).then(function (data) {
-            if (data.Status === "Ok") {
-                if (data.Data.Messages.length > 0) {
-                    self.hasMessages(true);
-                } else {
-                    self.hasMessages(false);
-                }
+        const data = await mapi.GetInboxMessages(0, 20, 1 /* Unread */, false);
+        if (data.Status === "Ok") {
+            if (data.Data.Messages.length > 0) {
+                self.hasMessages(true);
             } else {
-                console.error("Error during making call to Message.GetInboxMessages in MorePopup");
+                self.hasMessages(false);
             }
+        } else {
+            console.error("Error during making call to Message.GetInboxMessages in MorePopup");
+        }
 
-            return data;
-        });
+        return data;
     }
 }

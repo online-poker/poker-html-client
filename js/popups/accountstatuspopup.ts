@@ -68,14 +68,15 @@ export class AccountStatusPopup extends PopupBase {
         });
     }
 
-    private requestData() {
+    private async requestData() {
         this.loading(true);
 
-        accountService.getAccount().then((result: AccountServiceInformation) => {
+        try {
+            const result = await accountService.getAccount();
             this.loading(false);
             this.information(result);
-        }).fail(function() {
+        } catch (e) {
             app.closePopup();
-        });
+        }
     }
 }

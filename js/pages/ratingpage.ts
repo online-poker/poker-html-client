@@ -13,25 +13,28 @@ export class RatingPage implements Page {
     deactivate() {
         // Do nothing.
     }
-    activate() {
+    async activate() {
         const self = this;
         this.loading(true);
         const api = new OnlinePoker.Commanding.API.Account(apiHost);
-        api.GetBestPlayers().done(function (data, status) {
+        try {
+            const data = await api.GetBestPlayers();
             self.loading(false);
-            if (data.Status === "Ok") {
-                const ratings = <UserRating[]>data.Data;
-                ratings.forEach((_: any) => {
-                    const points = parseInt(_.Points, 10);
-                    _.IsGold = points >= 500000;
-                    _.IsSilver = points >= 200000 && points < 500000;
-                    _.IsBronse = points >= 100000 && points < 200000;
-                });
-                self.ratings(ratings);
+            if (data.Status !== "Ok") {
+                return;
             }
-        }).fail(function () {
+
+            const ratings = data.Data;
+            ratings.forEach((_: any) => {
+                const points = parseInt(_.Points, 10);
+                _.IsGold = points >= 500000;
+                _.IsSilver = points >= 200000 && points < 500000;
+                _.IsBronse = points >= 100000 && points < 200000;
+            });
+            self.ratings(ratings);
+        } catch (e) {
             self.loading(false);
-        });
+        }
     }
     back() {
         app.lobbyPageBlock.showLobby();

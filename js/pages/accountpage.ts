@@ -86,69 +86,68 @@ export class AccountPage extends PageBase {
         app.showPopup("changePassword");
     }
 
-    private requestData(realMoneySupported: boolean, gameMoneySupported: boolean, pointsSupported: boolean) {
+    private async requestData(realMoneySupported: boolean, gameMoneySupported: boolean, pointsSupported: boolean) {
         const self = this;
         const api = new OnlinePoker.Commanding.API.Account(apiHost);
-        return api.GetPlayerDefinition(function (data) {
-            self.loading(false);
-            const personalAccountData = <PlayerDefinition>data.Data;
-            console.log(personalAccountData);
-            if (!self.visible()) {
-                return;
-            }
+        const data = await api.GetPlayerDefinition();
+        self.loading(false);
+        const personalAccountData = data.Data;
+        console.log(personalAccountData);
+        if (!self.visible()) {
+            return;
+        }
 
-            const accountsData = <AccountPagePlayerAccountModel[]>[];
-            if (realMoneySupported) {
-                accountsData.push({
-                    currencyName: "currency.realmoney",
-                    available: personalAccountData.RealMoney,
-                    ingame: 0,
-                    total: personalAccountData.RealMoney
-                });
-            }
-
-            if (gameMoneySupported) {
-                accountsData.push({
-                    currencyName: "currency.gamemoney",
-                    available: personalAccountData.GameMoney,
-                    ingame: 0,
-                    total: personalAccountData.GameMoney
-                });
-            }
-
-            if (pointsSupported) {
-                accountsData.push({
-                    currencyName: "currency.rewardpoints",
-                    available: personalAccountData.Points,
-                    ingame: 0,
-                    total: personalAccountData.Points
-                });
-            }
-
-            let status = "status0";
-            if (parseInt(personalAccountData.Properties.Points, 10) >= 100000) {
-                status = "status1";
-            }
-
-            if (parseInt(personalAccountData.Properties.Points, 10) >= 200000) {
-                status = "status2";
-            }
-
-            if (parseInt(personalAccountData.Properties.Points, 10) >= 500000) {
-                status = "status3";
-            }
-
-            self.player({
-                login: authManager.login(),
-                email: personalAccountData.Email,
-                firstName: personalAccountData.FirstName,
-                lastName: personalAccountData.LastName,
-                monthPoints: parseInt(personalAccountData.Properties.Points, 10),
-                yearPoints: parseInt(personalAccountData.Properties.Points, 10),
-                status: status,
-                accounts: accountsData,
-                stars: personalAccountData.Properties.Stars
+        const accountsData = <AccountPagePlayerAccountModel[]>[];
+        if (realMoneySupported) {
+            accountsData.push({
+                currencyName: "currency.realmoney",
+                available: personalAccountData.RealMoney,
+                ingame: 0,
+                total: personalAccountData.RealMoney
             });
+        }
+
+        if (gameMoneySupported) {
+            accountsData.push({
+                currencyName: "currency.gamemoney",
+                available: personalAccountData.GameMoney,
+                ingame: 0,
+                total: personalAccountData.GameMoney
+            });
+        }
+
+        if (pointsSupported) {
+            accountsData.push({
+                currencyName: "currency.rewardpoints",
+                available: personalAccountData.Points,
+                ingame: 0,
+                total: personalAccountData.Points
+            });
+        }
+
+        let status = "status0";
+        if (parseInt(personalAccountData.Properties.Points, 10) >= 100000) {
+            status = "status1";
+        }
+
+        if (parseInt(personalAccountData.Properties.Points, 10) >= 200000) {
+            status = "status2";
+        }
+
+        if (parseInt(personalAccountData.Properties.Points, 10) >= 500000) {
+            status = "status3";
+        }
+
+        self.player({
+            login: authManager.login(),
+            email: personalAccountData.Email,
+            firstName: personalAccountData.FirstName,
+            lastName: personalAccountData.LastName,
+            monthPoints: parseInt(personalAccountData.Properties.Points, 10),
+            yearPoints: parseInt(personalAccountData.Properties.Points, 10),
+            status: status,
+            accounts: accountsData,
+            stars: personalAccountData.Properties.Stars
         });
     }
 }

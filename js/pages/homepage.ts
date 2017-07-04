@@ -80,19 +80,18 @@ export class HomePage extends PageBase {
         this.startBanner();
         app.processing(false);
     }
-    update() {
+    async update() {
         this.logNews("Updating home page");
         const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
         metadataManager.updateOnline();
-        metadataApi.GetNews((data) => {
-            if (data.Status === "Ok") {
-                this.news(data.Data);
-                let i = 0;
-                if (data.Data.length > 0 && i < data.Data.length) {
-                    this.currentNews(data.Data[i]);
-                }
+        const data = await metadataApi.GetNews();
+        if (data.Status === "Ok") {
+            this.news(data.Data);
+            let i = 0;
+            if (data.Data.length > 0 && i < data.Data.length) {
+                this.currentNews(data.Data[i]);
             }
-        });
+        }
     }
     showGames() {
         app.showPageBlock("lobby");

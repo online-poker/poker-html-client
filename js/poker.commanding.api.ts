@@ -194,10 +194,6 @@ namespace OnlinePoker {
                         this.Call(methodName, parameters, null).then(resolve, reject);
                     });
                 }
-                SimpleCall<T>(methodName: string, successCallback: JQueryTypedCallback<T>): JQueryPromise<T> {
-                    const data = {};
-                    return <JQueryPromise<T>>this.Call(methodName, data, successCallback);
-                }
                 Log(api, msg) {
                     if (API.logging === false) {
                         return;
@@ -220,9 +216,9 @@ namespace OnlinePoker {
                     super(host, 'Chat');
                 }
 
-                Send(tableId: number, message: string, callback: JQueryTypedCallback<any>) {
+                SendAsync(tableId: number, message: string): Promise<StatusResponse> {
                     const data = { tableId: tableId, message: message };
-                    return super.Call('Send', data, callback);
+                    return super.CallAsync<StatusResponse>('Send', data);
                 }
             }
             export class Message extends WebApiProxy {
@@ -230,21 +226,21 @@ namespace OnlinePoker {
                     super(host, 'Message');
                 }
 
-                Send(recepient: number, subject: string, body: string, callback: JQueryTypedCallback<any>) {
+                Send(recepient: number, subject: string, body: string) {
                     const data = { Recipient: recepient, Subject: subject, Body: body };
-                    return super.Call('Send', data, callback);
+                    return super.CallAsync('Send', data);
                 }
-                GetInboxMessages(page: number, pageSize: number, filter: number, sortOrder: boolean, callback: JQueryTypedCallback<any>) {
+                GetInboxMessages(page: number, pageSize: number, filter: number, sortOrder: boolean) {
                     const data = { Page: page, PageSize: pageSize, Filter: filter, SortOrder: sortOrder };
-                    return super.Call('GetInboxMessages', data, callback);
+                    return super.CallAsync<ApiResult<InboxMessagesData>>('GetInboxMessages', data);
                 }
-                GetSentMessages(page: number, pageSize: number, filter: number, sortOrder: boolean, callback: JQueryTypedCallback<any>) {
+                GetSentMessages(page: number, pageSize: number, filter: number, sortOrder: boolean) {
                     const data = { Page: page, PageSize: pageSize, Filter: filter, SortOrder: sortOrder };
-                    return super.Call('GetSentMessages', data, callback);
+                    return super.CallAsync('GetSentMessages', data);
                 }
-                GetMessage(id: number, callback: JQueryTypedCallback<any>) {
+                GetMessage(id: number) {
                     const data = { Id: id };
-                    return super.Call('GetMessage', data, callback);
+                    return super.CallAsync('GetMessage', data);
                 }
             }
             export class Game extends WebApiProxy {
@@ -256,19 +252,7 @@ namespace OnlinePoker {
                     super(host, 'Game');
                 }
 
-                GetTables(fullTables: number | null, privateTables: number | null, maxPlayers: number | null, betLevels: number, moneyType: number, limitType: number,
-                    callback?: (data: ApiResult<LobbyTableItem[]>, textStatus: string, jqXHR: JQueryXHR) => any) {
-                    const data = {
-                        FullTables: fullTables,
-                        Private: privateTables,
-                        MaxPlayers: maxPlayers,
-                        BetLevels: betLevels,
-                        MoneyType: moneyType,
-                        LimitType: limitType
-                    };
-                    return <JQueryPromise<ApiResult<LobbyTableItem[]>>>super.Call('GetTables', data, callback);
-                }
-                async GetTablesAsync(fullTables: number | null, privateTables: number | null, maxPlayers: number | null, betLevels: number, moneyType: number, limitType: number) {
+                GetTables(fullTables: number | null, privateTables: number | null, maxPlayers: number | null, betLevels: number, moneyType: number, limitType: number) {
                     const data = {
                         FullTables: fullTables,
                         Private: privateTables,
@@ -279,78 +263,77 @@ namespace OnlinePoker {
                     };
                     return super.CallAsync<ApiResult<LobbyTableItem[]>>('GetTables', data);
                 }
-                GetTable(tableId: number, callback?) {
+                GetTable(tableId: number) {
                     const data = { TableId: tableId };
-                    return <JQueryPromise<ApiResult<GameTableModel>>>super.Call('GetTable', data, callback);
+                    return super.CallAsync<ApiResult<GameTableModel>>('GetTable', data);
                 }
-                GetSitingTables(callback?: JQueryTypedCallback<ApiResult<number[]>>) {
+                GetSitingTables() {
                     const data = {};
-                    return <JQueryPromise<ApiResult<number[]>>>super.Call('GetSitingTables', data, callback);
+                    return super.CallAsync<ApiResult<number[]>>('GetSitingTables', data);
                 }
-                Sit(tableId: number, seat: number, amount: number, ticketCode: string, callback) {
+                Sit(tableId: number, seat: number, amount: number, ticketCode: string) {
                     const data = { TableId: tableId, Seat: seat, Amount: amount, TicketCode: ticketCode };
-                    return super.Call('Sit', data, callback);
+                    return super.CallAsync<SitResponse>('Sit', data);
                 }
-                SitAnywhere(tableId, amount, callback) {
+                SitAnywhere(tableId, amount) {
                     const data = { TableId: tableId, Amount: amount };
-                    return super.Call('SitAnywhere', data, callback);
+                    return super.CallAsync<SitResponse>('SitAnywhere', data);
                 }
                 async Standup(tableId) {
                     const data = { TableId: tableId };
-                    const result = await super.CallAsync<StatusResponse>('Standup', data);
-                    return result;
+                    return await super.CallAsync<StatusResponse>('Standup', data);
                 }
-                Fold(tableId, callback) {
+                Fold(tableId) {
                     const data = { TableId: tableId };
-                    return super.Call('Fold', data, callback);
+                    return super.CallAsync<StatusResponse>('Fold', data);
                 }
-                CheckOrCall(tableId, callback) {
+                CheckOrCall(tableId) {
                     const data = { TableId: tableId };
-                    return super.Call('CheckOrCall', data, callback);
+                    return super.CallAsync<StatusResponse>('CheckOrCall', data);
                 }
-                BetOrRaise(tableId, amount, callback) {
+                BetOrRaise(tableId, amount) {
                     const data = { TableId: tableId, Amount: amount };
-                    return super.Call('BetOrRaise', data, callback);
+                    return super.CallAsync<StatusResponse>('BetOrRaise', data);
                 }
-                ForceJoinGame(tableId: number, callback?) {
+                ForceJoinGame(tableId: number) {
                     const data = { TableId: tableId };
-                    return super.Call('ForceJoin', data, callback);
+                    return super.CallAsync<StatusResponse>('ForceJoin', data);
                 }
-                WaitBigBlind(tableId: number, callback?) {
+                WaitBigBlind(tableId: number) {
                     const data = { TableId: tableId };
-                    return super.Call('WaitBigBlind', data, callback);
+                    return super.CallAsync<StatusResponse>('WaitBigBlind', data);
                 }
-                AddBalance(tableId: number, amount: number, ticketCode: string, callback) {
+                AddBalance(tableId: number, amount: number, ticketCode: string) {
                     const data = { TableId: tableId, Amount: amount, TicketCode: ticketCode };
-                    return super.Call('AddBalance', data, callback);
+                    return super.CallAsync<StatusResponse>('AddBalance', data);
                 }
-                SitOut(tableId: number, callback?) {
+                SitOut(tableId: number) {
                     const data = { TableId: tableId };
-                    return super.Call('SitOut', data, callback);
+                    return super.CallAsync<StatusResponse>('SitOut', data);
                 }
-                ForceSitout(tableId: number, callback?) {
+                ForceSitout(tableId: number) {
                     const data = { TableId: tableId };
-                    return super.Call('ForceSitout', data, callback);
+                    return super.CallAsync<StatusResponse>('ForceSitout', data);
                 }
-                ComeBack(tableId: number, callback?) {
+                ComeBack(tableId: number) {
                     const data = { TableId: tableId };
-                    return super.Call('ComeBack', data, callback);
+                    return super.CallAsync<StatusResponse>('ComeBack', data);
                 }
-                Muck(tableId: number, callback?) {
+                Muck(tableId: number) {
                     const data = { TableId: tableId };
-                    return super.Call('Muck', data, callback);
+                    return super.CallAsync<StatusResponse>('Muck', data);
                 }
-                ShowCards(tableId: number, callback?) {
+                ShowCards(tableId: number) {
                     const data = { TableId: tableId };
-                    return super.Call('ShowCards', data, callback);
+                    return super.CallAsync<StatusResponse>('ShowCards', data);
                 }
                 ShowHoleCards(tableId: number, cardPosition: number) {
                     const data = { TableId: tableId, CardPosition: cardPosition };
-                    return super.Call('ShowHoleCards', data, null);
+                    return super.CallAsync<StatusResponse>('ShowHoleCards', data);
                 }
-                SetOpenCardsParameters(tableId: number, openCardsAutomatically: boolean, callback) {
+                SetOpenCardsParameters(tableId: number, openCardsAutomatically: boolean) {
                     const data = { TableId: tableId, OpenCardsAutomatically: openCardsAutomatically };
-                    return super.Call('SetOpenCardsParameters', data, callback);
+                    return super.CallAsync('SetOpenCardsParameters', data);
                 }
             }
             export class Tournament extends WebApiProxy {
@@ -362,8 +345,7 @@ namespace OnlinePoker {
                     super(host, 'Tournament');
                 }
 
-                GetTournaments(prizeCurrency, tournamentType, speed, buyin, maxPlayers,
-                    callback?: (data: ApiResult<LobbyTournamentItem[]>, textStatus: string, jqXHR: JQueryXHR) => void) {
+                GetTournaments(prizeCurrency, tournamentType, speed, buyin, maxPlayers) {
                     const data = {
                         TournamentType: tournamentType,
                         PrizeCurrency: prizeCurrency,
@@ -371,39 +353,38 @@ namespace OnlinePoker {
                         BuyIn: buyin,
                         MaxPlayers: maxPlayers
                     };
-                    return <JQueryPromise<ApiResult<LobbyTournamentItem[]>>>super.Call('GetTournaments', data, callback);
+                    return super.CallAsync<ApiResult<LobbyTournamentItem[]>>('GetTournaments', data);
                 }
 
-                GetTournament(tournamentId, callback?: JQueryTypedCallback<ApiResult<TournamentDefinition>>) {
+                GetTournament(tournamentId) {
                     const data = { Id: tournamentId };
-                    return <JQueryPromise<ApiResult<TournamentDefinition>>>super.Call('GetTournament', data, callback);
+                    return super.CallAsync<ApiResult<TournamentDefinition>>('GetTournament', data);
                 }
 
-                Register(tournamentId, callback?: (data: StatusResponse, textStatus: string, jqXHR: JQueryXHR) => void) {
+                Register(tournamentId) {
                     const data = { Id: tournamentId };
-                    return super.Call('Register', data, callback);
+                    return super.CallAsync<StatusResponse>('Register', data);
                 }
 
-                CancelRegistration(tournamentId, callback?: (data: StatusResponse, textStatus: string, jqXHR: JQueryXHR) => void) {
+                CancelRegistration(tournamentId) {
                     const data = { Id: tournamentId };
-                    return super.Call('CancelRegistration', data, callback);
+                    return super.CallAsync<StatusResponse>('CancelRegistration', data);
                 }
 
-                Rebuy(tournamentId: number, double: boolean, callback?: JQueryTypedCallback<StatusResponse>) {
+                Rebuy(tournamentId: number, double: boolean) {
                     const data = { Id: tournamentId, Double: double };
-                    return <JQueryPromise<StatusResponse>>super.Call('Rebuy', data, callback);
+                    return super.CallAsync<StatusResponse>('Rebuy', data);
                 }
 
-                Addon(tournamentId: number, callback?: (data: StatusResponse, textStatus: string, jqXHR: JQueryXHR) => void) {
+                Addon(tournamentId: number) {
                     const data = { Id: tournamentId };
-                    return <JQueryPromise<StatusResponse>>super.Call('Addon', data, callback);
+                    return super.CallAsync<StatusResponse>('Addon', data);
                 }
 
-                GetRegisteredTournamentsStatus(callback?: JQueryTypedCallback<ApiResult<TournamentPlayerStateDefinition[]>>) {
+                GetRegisteredTournamentsStatus() {
                     const data = {};
                     // return super.SimpleCall('GetRegisteredTournamentsStatus', callback);
-                    return <JQueryPromise<ApiResult<TournamentPlayerStateDefinition[]>>>
-                        super.Call('GetRegisteredTournamentsStatus', data, callback);
+                    return super.CallAsync<ApiResult<TournamentPlayerStateDefinition[]>>('GetRegisteredTournamentsStatus', data);
                 }
             }
             export class Account extends WebApiProxy {
@@ -414,14 +395,14 @@ namespace OnlinePoker {
                 constructor(host) {
                     super(host, 'Account');
                 }
-                ActivateAccount(login, token, callback) {
+                ActivateAccount(login, token) {
                     const data = { Login: login, Token: token };
-                    return super.Call('ActivateAccount', data, callback);
+                    return super.CallAsync('ActivateAccount', data);
                 }
-                Logout(callback) {
+                Logout() {
                     const data = {};
                     authToken = null;
-                    return super.Call('Logout', data, callback);
+                    return super.CallAsync('Logout', data);
                 }
                 Authenticate(login, password, rememberMe, callback?: JQueryTypedCallback<AuthenticateResponse>) {
                     const data = { Login: login, Password: password, RememberMe: rememberMe };
@@ -434,19 +415,19 @@ namespace OnlinePoker {
                     };
                     return <JQueryPromise<AuthenticateResponse>>super.Call('Authenticate', data, aquireTokenCallback);
                 }
-                CancelAccountActivation(login, token, callback) {
+                CancelAccountActivation(login, token) {
                     const data = { Login: login, Token: token };
-                    return super.Call('CancelAccountActivation', data, callback);
+                    return super.CallAsync('CancelAccountActivation', data);
                 }
-                ChangePassword(oldPassword, newPassword, callback?) {
+                ChangePassword(oldPassword, newPassword) {
                     const data = { OldPassword: oldPassword, NewPassword: newPassword };
-                    return super.Call('ChangePassword', data, callback);
+                    return super.CallAsync<StatusResponse>('ChangePassword', data);
                 }
-                GetPersonalAccount(callback?) {
+                GetPersonalAccount() {
                     const data = {};
-                    return <JQueryPromise<ApiResult<PersonalAccountData>>>super.Call('GetPersonalAccount', data, callback);
+                    return super.CallAsync<ApiResult<PersonalAccountData>>('GetPersonalAccount', data);
                 }
-                GetPlayerAccountHistory(fromDate, toDate, fromAmount, toAmount, operationType, callback) {
+                GetPlayerAccountHistory(fromDate, toDate, fromAmount, toAmount, operationType) {
                     const data = {
                         FromDate: fromDate,
                         ToDate: toDate,
@@ -454,15 +435,15 @@ namespace OnlinePoker {
                         ToAmount: toAmount,
                         OperationType: operationType
                     };
-                    return super.Call('GetPlayerAccountHistory', data, callback);
+                    return super.CallAsync<ApiResult<OperationData[]>>('GetPlayerAccountHistory', data);
                 }
-                GetPlayerDefinition(callback?: (data: ApiResult<PlayerDefinition>, textStatus: string, jqXHR: JQueryXHR) => void) {
+                GetPlayerDefinition() {
                     const data = {};
-                    return <JQueryPromise<ApiResult<PlayerDefinition>>>super.Call('GetPlayerDefinition', data, callback);
+                    return super.CallAsync<ApiResult<PlayerDefinition>>('GetPlayerDefinition', data);
                 }
-                PutWithdrawalRequest(type, amount, parameters, callback) {
+                PutWithdrawalRequest(type, amount, parameters) {
                     const data = { Type: type, Amount: amount, Parameters: parameters };
-                    return super.Call('PutWithdrawalRequest', data, callback);
+                    return super.CallAsync('PutWithdrawalRequest', data);
                 }
                 Register(login, email, password, firstName, lastName, patronymicName, country, city, additionalProperties, image,
                     callback) {
@@ -490,35 +471,35 @@ namespace OnlinePoker {
                         dataType: 'json'
                     });
                 }
-                RequestResetPassword(login, email, callback) {
+                RequestResetPassword(login, email) {
                     const data = { Login: login, Email: email };
-                    return super.Call('RequestResetPassword', data, callback);
+                    return super.CallAsync<StatusResponse>('RequestResetPassword', data);
                 }
-                ResetAvatar(callback) {
+                ResetAvatar() {
                     const data = {};
-                    return super.Call('ResetAvatar', data, callback);
+                    return super.CallAsync('ResetAvatar', data);
                 }
-                ResetPassword(token, newPassword, callback) {
+                ResetPassword(token, newPassword) {
                     const data = { Token: token, Password: newPassword };
-                    return super.Call('ResetPassword', data, callback);
+                    return super.CallAsync<StatusResponse>('ResetPassword', data);
                 }
-                SetAvatarUrl(url, callback?) {
+                SetAvatarUrl(url) {
                     const data = { Url: url };
-                    return super.Call('SetAvatarUrl', data, callback);
+                    return super.CallAsync('SetAvatarUrl', data);
                 }
-                UpdatePlayerProfile(firstName, lastName, patronymicName, email, country, city, image, callback) {
+                UpdatePlayerProfile(firstName, lastName, patronymicName, email, country, city, image) {
                     throw new Error('Calls with multipart data not supported');
                 }
-                UploadAvatar(image, callback?) {
+                UploadAvatar(image) {
                     throw new Error('Calls with multipart data not supported');
                 }
-                GetBestPlayers(callback?) {
+                GetBestPlayers() {
                     const data = {};
-                    return super.Call('GetBestPlayers', data, callback);
+                    return super.CallAsync<ApiResult<UserRating[]>>('GetBestPlayers', data);
                 }
-                RegisterGuest(callback?) {
+                RegisterGuest() {
                     const data = {};
-                    return <JQueryPromise<RegisterGuestResponse>>super.Call('RegisterGuest', data, callback);
+                    return super.CallAsync<RegisterGuestResponse>('RegisterGuest', data);
                 }
             }
             export class Metadata extends WebApiProxy {
@@ -530,49 +511,47 @@ namespace OnlinePoker {
                     super(host, 'Metadata');
                     this.timeout = 10000;
                 }
-                GetServerLayout(callback = null) {
+                GetServerLayout() {
                     const data = {};
-                    return super.Call('GetServerLayout', data, callback);
+                    return super.CallAsync('GetServerLayout', data);
                 }
-                GetDefaultAvatars(callback = null) {
+                GetDefaultAvatars() {
                     const data = {};
-                    return super.Call('GetDefaultAvatars', data, callback);
+                    return super.CallAsync<AvatarsResponse>('GetDefaultAvatars', data);
                 }
-                GetWellKnownBetStructure(callback = null) {
+                GetWellKnownBetStructure() {
                     const data = {};
-                    return super.Call('GetWellKnownBetStructure', data, callback);
+                    return super.CallAsync<ApiResult<TournamentBetStructure[][]>>('GetWellKnownBetStructure', data);
                 }
-                GetWellKnownPrizeStructure(callback = null) {
+                GetWellKnownPrizeStructure() {
                     const data = {};
-                    return super.Call('GetWellKnownPrizeStructure', data, callback);
+                    return super.CallAsync<ApiResult<TournamentPrizeStructure[][]>>('GetWellKnownPrizeStructure', data);
                 }
-                GetNews(callback = null) {
+                GetNews() {
                     const data = {};
-                    return super.Call('GetNews', data, callback);
+                    return super.CallAsync<ApiResult<string[]>>('GetNews', data);
                 }
-                GetOnlinePlayers(callback = null) {
+                GetOnlinePlayers() {
                     const data = {};
-                    return <JQueryPromise<ApiResult<number[]>>>super.Call('GetOnlinePlayers', data, callback);
+                    return super.CallAsync<ApiResult<number[]>>('GetOnlinePlayers', data);
                 }
-                GetBanners(format, callback = null) {
+                GetBanners(format) {
                     const data = { Format: format };
-                    return super.Call('GetBanners', data, callback);
+                    return super.CallAsync<ApiResult<BannerData[]>>('GetBanners', data);
                 }
                 /**
                 * Request server date.
-                * @param callback A callback function that is executed if the request succeeds.
                 */
-                GetDate(callback = null) {
+                GetDate() {
                     const data = {};
-                    return <JQueryPromise<number>>super.Call('GetDate', data, callback);
+                    return super.CallAsync<number>('GetDate', data);
                 }
                 /**
                 * Perform version check.
-                * @param callback A callback function that is executed if the request succeeds.
                 */
-                VersionCheck(callback: JQueryTypedCallback<any> = null) {
+                VersionCheck() {
                     const data = {};
-                    return <JQueryPromise<VersionCheckResponse>>super.Call('VersionCheck', data, callback);
+                    return super.CallAsync<VersionCheckResponse>('VersionCheck', data);
                 }
             }
             export class Support extends WebApiProxy {
@@ -580,15 +559,14 @@ namespace OnlinePoker {
                     super(host, 'Support');
                 }
 
-                ContactUs(fullName: string, email: string, subject: string, message: string,
-                    callback?: JQueryTypedCallback<StatusResponse>) {
+                ContactUs(fullName: string, email: string, subject: string, message: string) {
                     const data = {
                         FullName: fullName,
                         Email: email,
                         Subject: subject,
                         Body: message
                     };
-                    return <JQueryPromise<StatusResponse>>super.Call('ContactUs', data, callback);
+                    return super.CallAsync<StatusResponse>('ContactUs', data);
                 }
             }
             export class TableReload extends WebApiProxy {

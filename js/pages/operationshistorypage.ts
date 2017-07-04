@@ -55,22 +55,21 @@ export class OperationsHistoryPage extends PageBase implements KnockoutValidatio
             app.lobbyPageBlock.showLobby();
         }
     }
-    applyFilter(force: boolean) {
+    async applyFilter(force: boolean) {
         if (this.loading() && !force) {
             return;
         }
 
         this.loading(true);
         const api = new OnlinePoker.Commanding.API.Account(apiHost);
-        api.GetPlayerAccountHistory(this.from(), this.to(), null, null, null, (data: BaseRequest<OperationData[]>) => {
-            this.loading(false);
-            if (!this.visible()) {
-                return;
-            }
+        const data = await api.GetPlayerAccountHistory(this.from(), this.to(), null, null, null);
+        this.loading(false);
+        if (!this.visible()) {
+            return;
+        }
 
-            if (data.Status === "Ok") {
-                this.operations(data.Data);
-            }
-        });
+        if (data.Status === "Ok") {
+            this.operations(data.Data);
+        }
     }
 }

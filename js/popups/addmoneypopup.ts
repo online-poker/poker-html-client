@@ -47,13 +47,14 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
         this.allowUsePersonalAccount = ko.observable(appConfig.joinTable.allowUsePersonalAccount);
         this.allowTickets = ko.observable(appConfig.joinTable.allowTickets);
     }
-    shown(): void {
+    async shown() {
         const self = this;
         const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
         self.loading(true);
         self.processing(false);
         if (appConfig.joinTable.allowUsePersonalAccount) {
-            accountApi.GetPersonalAccount(function (data) {
+            try {
+                const data = await accountApi.GetPersonalAccount();
                 self.loading(false);
                 if (data.Status === "Ok") {
                     const personalAccountData = data.Data;
@@ -82,15 +83,15 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
                 } else {
                     SimplePopup.display(_("addMoney.caption"), _("errors." + data.Status));
                 }
-            }).fail(() => {
+            } catch (e) {
                 self.loading(false);
                 SimplePopup.display(_("addMoney.caption"), _("addMoney.joinError"));
-            });
+            }
         } else {
             self.loading(false);
         };
     }
-    confirm() {
+    async confirm() {
         const self = this;
         const isValid = this.isValid();
         const ticketCode = this.ticketCode();
@@ -131,17 +132,18 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
         const amount = this.buyin();
         self.processing(true);
         this.loading(true);
-        this.tableView().addBalance(amount, ticketCode).then(function () {
+        try {
+            await this.tableView().addBalance(amount, ticketCode);
             self.processing(false);
             self.loading(false);
             app.closePopup("ok");
             SimplePopup.display(_("addMoney.caption"), _("addMoney.success"));
             self.ticketCode(null);
-        }, function (status: string) {
+        } catch (e) {
             self.processing(false);
             self.loading(false);
-            SimplePopup.display(_("addMoney.caption"), _("errors." + status));
+            SimplePopup.display(_("addMoney.caption"), _("errors." + e.message));
             self.ticketCode(null);
-            });
+        }
     }
 }

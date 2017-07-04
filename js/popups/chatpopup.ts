@@ -46,14 +46,17 @@ export class ChatPopup {
             this.systemMessages(value);
         });
     }
-    send() {
+    /**
+     * Handles pressing Send button on the chat popup.
+     */
+    public async send() {
         if (this.currentMessage() === "") {
             return;
         }
 
         this.tableView.chatMessage(this.currentMessage());
-        this.tableView.sendMessage();
         this.currentMessage("");
+        await this.tableView.sendMessage();
     }
     close() {
         if (this.subscription !== null) {

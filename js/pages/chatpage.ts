@@ -59,7 +59,7 @@ export class ChatPage implements Page {
         keyboardActivationService.forceHideKeyboard();
         app.lobbyPageBlock.showLobby();
     }
-    send() {
+    async send() {
         const self = this;
         const message = this.currentMessage();
         if (message === "" || message === null) {
@@ -67,14 +67,15 @@ export class ChatPage implements Page {
         }
 
         const api = new OnlinePoker.Commanding.API.Chat(apiHost);
-        api.Send(0, message, (data, textStatus, jqXHR) => {
+        try {
+            this.currentMessage("");
+            const data = await api.SendAsync(0, message);
             if (data.Status !== "Ok") {
                 SimplePopup.display(_("chat.sendingMessage"), _("errors." + data.Status));
             }
-        }).fail(() => {
+        } catch (e) {
             SimplePopup.display(_("chat.sendingMessage"), _("chat.sendingMessageGenericError"));
-        });
-        this.currentMessage("");
+        }
     }
     addMessage(messageId: number, sender: string, message: string) {
         const m = new PlayerMessage(messageId, sender, message);
