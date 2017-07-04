@@ -2732,6 +2732,7 @@ export class TableView {
                 if (currentGame == null) {
                     return _("table.currentHandEmpty");
                 }
+
                 return _("table.currentHand", { id: currentGame });
             }
 
