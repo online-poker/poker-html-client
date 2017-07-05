@@ -1,6 +1,10 @@
 Poker HTML client changelog
 ================================
 
+# v0.1.1
+- [BUG] Clear action after check/fold
+- [BUG] Display information about current game between games
+
 # v0.1.0
 - Save last opened table in game console mode.
 - [BUG] After standup displayed message insufficient funds
