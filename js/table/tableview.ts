@@ -1017,6 +1017,15 @@ export class TableView {
     onFinalTableCardsOpened(cards: number[]) {
         this.handHistory.onFinalTableCardsOpened(cards);
     }
+
+    /**
+     * Notifies that table is tournament table.
+     * @param tournamentId Id of the tournament to which table becomes belonging.
+     */
+    onTableTournamentChanged(tournamentId: number | null) {
+        throw new Error("TableView.onTableTournamentChanged not implemented");
+    }
+
     /**
     * Informs about current state on the table.
     * @param players Array of PlayerStatusInfo objects which describe current status of the players
@@ -2293,7 +2302,7 @@ export class TableView {
             connectionService.currentConnection.connection.Game.server.betOrRaise(this.tableId, amount);
         } else {
             try {
-                const data = await gameApi.BetOrRaise(this.tableId, amount)
+                const data = await gameApi.BetOrRaise(this.tableId, amount);
                 if (data.Status === "OperationNotValidAtThisTime") {
                     return;
                 }

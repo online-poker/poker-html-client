@@ -612,6 +612,19 @@ class TableManager {
 
             tableView.onFinalTableCardsOpened(decodeCardsArray(cards));
         };
+        gameHub.client.TableTournamentChanged = function (tableId, tournamentId) {
+            if (wrapper.terminated) {
+                return;
+            }
+
+            const tableView = tableManager.getTableById(tableId);
+            if (tableView == null) {
+                console.warn(`Receive unexpected TableTournamentChanged(${tableId}, ${tournamentId})`);
+                return;
+            }
+
+            tableView.onTableTournamentChanged(tournamentId);
+        };
         gameHub.client.TournamentStatusChanged = function (tournamentId, status) {
             if (wrapper.terminated) {
                 return;
