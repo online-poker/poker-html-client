@@ -668,6 +668,7 @@ export class ActionBlock {
             const requiredBet = this.tableView.maximumBet() - this.tableView.myBet();
             if (requiredBet === 0 && appConfig.game.autoFoldAsFoldOnRaise) {
                 this.checkOrCall();
+                this.autoFoldOrCheck(false);
             } else {
                 this.fold();
             }
