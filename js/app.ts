@@ -429,7 +429,7 @@ export class App {
             });
         }
     }
-    updateMetadataOnResume(lastPage, pageBlockBeforeClosing, subPageBeforeClosing) {
+    async updateMetadataOnResume(lastPage, pageBlockBeforeClosing, subPageBeforeClosing) {
         const self = this;
         if (debugSettings.initialization.stopOnResume) {
             return;
@@ -438,7 +438,7 @@ export class App {
         console.log("Launch intialization of metadata on resume");
         if (!this.fullyInitialized) {
             console.log("Application was never initialized, performing full initialization.");
-            this.updateMetadataOnLaunch();
+            await this.updateMetadataOnLaunch();
             return;
         }
 
@@ -449,11 +449,13 @@ export class App {
                 self.updateMetadataOnResume(lastPage, pageBlockBeforeClosing, subPageBeforeClosing);
             });
         };
-        const successPath = () => {
+        const successPath = async () => {
             self.preloadTableImages();
-            metadataManager.update().then(function () {
+            try {
+                await metadataManager.update();
                 tableManager.initialize();
-                tableManager.getCurrentTablesAndTournaments().then(function () {
+                try {
+                    await tableManager.getCurrentTablesAndTournaments();
                     self.spinner.stop();
                     self.establishConnection().then(function (wrapper) {
                         if (wrapper.terminated) {
@@ -488,12 +490,16 @@ export class App {
                         orientationService.setLastOrientation();
                         reloadManager.execute();
                     });
-                }).fail(failHandler);
-            }).fail(failHandler);
+                } catch (e) {
+                    failHandler();
+                }
+            } catch (e) {
+                failHandler();
+            }
         };
-        this.versionCheck(successPath);
+        await this.versionCheck(successPath);
     }
-    updateMetadataOnLaunch() {
+    async updateMetadataOnLaunch() {
         const self = this;
         if (debugSettings.initialization.stopOnLaunch) {
             return;
@@ -506,23 +512,32 @@ export class App {
                 self.updateMetadataOnLaunch();
             });
         };
-        const successPath = () => {
+        const successPath = async () => {
             self.preloadTableImages();
-            metadataManager.update().then(function () {
+            try {
+                await metadataManager.update();
                 self.spinner.stop();
                 tableManager.initialize();
-                tableManager.getCurrentTablesAndTournaments().done(function () {
+                try {
+                    await tableManager.getCurrentTablesAndTournaments();
                     self.establishConnection();
                     self.fullyInitialized = true;
                     metadataManager.setReady(null);
-                }).fail(failHandler);
-            }).fail(failHandler);
+                } catch (e) {
+                    failHandler();
+                }
+            } catch (e) {
+                failHandler();
+            }
         };
-        this.versionCheck(successPath);
+        await this.versionCheck(successPath);
     }
-    async versionCheck(successPath: () => void) {
+    async versionCheck(successPath: () => Promise<void>) {
         try {
             await metadataManager.versionCheck();
+
+            // Even if this is promise object, but we have to check that message box for update
+            // does not popup when not needed.
             successPath();
         } catch (e) {
             // Display dialog which prompts for the update.
@@ -663,7 +678,7 @@ export class App {
                 app.lobbyPageBlock.lobbyPage.tournamentOptions.currency(2);
             }
         });
-        $.when(this.loadPromises).done(function () {
+        $.when(this.loadPromises).then(function () {
             keyboardActivationService.setup();
             self.setupTouchActivation();
         });
@@ -770,15 +785,16 @@ export class App {
             slowInternetService.setRetryHandler(() => self.updateMetadataOnLaunch());
         }
     }
-    loadTablesAndTournaments(authenticated: boolean) {
+    async loadTablesAndTournaments(authenticated: boolean) {
         const self = this;
         if (authenticated) {
-            tableManager.getCurrentTablesAndTournaments().done(function () {
+            try {
+                await tableManager.getCurrentTablesAndTournaments();
                 self.establishConnection();
-            }).fail(function () {
-                    console.log("Could not get current tables!");
-                    slowInternetService.showReconnectFailedPopup();
-                });
+            } catch (e) {
+                console.log("Could not get current tables!");
+                slowInternetService.showReconnectFailedPopup();
+            }
         } else {
             tableManager.clear();
             self.establishConnection();
@@ -917,14 +933,14 @@ export class App {
                 if (!viewModel.requireGuestAuthentication) {
                     self.showPageBlock(pageBlockName);
                 } else {
-                    app.requireGuestAuthentication().done(function (value) {
+                    app.requireGuestAuthentication().then(function (value) {
                         if (value) {
                             self.showPageBlock(pageBlockName);
                         }
                     });
                 }
             } else {
-                app.requireAuthentication().done(function (value) {
+                app.requireAuthentication().then(function (value) {
                     if (value) {
                         self.showPageBlock(pageBlockName);
                     }
@@ -944,7 +960,7 @@ export class App {
             if (!requireAuthentication) {
                 self.showSubPage(pageName);
             } else {
-                app.requireAuthentication().done(function (value) {
+                app.requireAuthentication().then(function (value) {
                     if (value) {
                         self.showSubPage(pageName);
                     }

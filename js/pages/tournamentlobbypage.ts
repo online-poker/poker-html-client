@@ -545,7 +545,7 @@ export class TournamentLobbyPage extends PageBase {
         const tournament = self.tournamentData();
         const name = tournament.TournamentName;
         const operationTitle = _("tournamentLobby.registrationCancelled");
-        await app.prompt(
+        await app.promptAsync(
             _("tournamentLobby.tournamentRegistrationCancelPromptCaption"),
             [_("tournamentLobby.tournamentRegistrationCancelPrompt").replace("#name", name)]);
         self.loading(true);
@@ -704,7 +704,7 @@ export class TournamentLobbyPage extends PageBase {
 
         const balanceString = numericTextBinding.withCommas(currentBalance.toFixed(0));
         app.okcancelPopup.customStyle("popup-container-left");
-        await app.prompt(
+        await app.promptAsync(
             _("tournamentLobby.tournamentRegistrationPromptCaption"),
             [
                 _("tournamentLobby.tournamentRegistrationPrompt", { name: name }),

@@ -168,15 +168,14 @@ class TableManager {
             }
         }
     }
-    getCurrentTablesAndTournaments() {
+    async getCurrentTablesAndTournaments() {
         if (!authManager.authenticated()) {
-            const result = $.Deferred();
-            result.resolve();
-            return result;
+            return;
         }
 
         const tablesRequest = this.getCurrentTables();
-        const tournamentsRequest = this.getCurrentTournaments().then(function (value) {
+        const tournamentsRequest = async() => {
+            const value = await this.getCurrentTournaments();
             const startedTournaments = value.filter(_ => {
                 return _.Status === TournamentStatus.LateRegistration
                     || _.Status === TournamentStatus.Started;
@@ -190,8 +189,8 @@ class TableManager {
             timeService.setTimeout(() => {
                 SimplePopup.display(_("tournament.tournaments"), messages);
             }, 2000);
-        });
-        return $.when<any>(tablesRequest, tournamentsRequest);
+        }
+        await Promise.all([tablesRequest, tournamentsRequest]);
     }
     selectTableCommandHandler(parameters: any[]): void {
         // Do nothing.

@@ -20,21 +20,27 @@ class AuthManager {
         this.login = ko.observable<string>();
         this.loginId = ko.observable<number>();
     }
-    authenticate(login: string, password: string, rememberMe: boolean = false): JQueryPromise<string> {
-        const self = this;
+
+    /**
+     * Authenticate user with given password and return status of operation.
+     * @param login Login which use for authentication.
+     * @param password Password which user for login.
+     * @param rememberMe Value indicating whether remember user in manager.
+     */
+    public async authenticate(login: string, password: string, rememberMe: boolean = false): Promise<string> {
         const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
-        const result = $.Deferred<string>();
         if (rememberMe) {
             settings.login(login);
             settings.password(password);
             settings.saveSettings();
         }
 
-        accountApi.Authenticate(login, password, false, function (data) {
+        try {
+            const data = await accountApi.Authenticate(login, password, false);
             if (data.Status === "Ok") {
-                self.authenticated(true);
-                self.login(data.Login);
-                self.loginId(data.Id);
+                this.authenticated(true);
+                this.login(data.Login);
+                this.loginId(data.Id);
                 settings.isGuest(data.IsGuest);
                 settings.saveSettings();
                 if (appConfig.game.seatMode) {
@@ -42,16 +48,15 @@ class AuthManager {
                 }
             } else {
                 // Report authentication or authorization errors
-                self.authenticated(false);
-                self.login(null);
-                self.loginId(null);
+                this.authenticated(false);
+                this.login(null);
+                this.loginId(null);
             }
 
-            result.resolve(data.Status);
-        }).fail(function () {
-            result.resolve("");
-        });
-        return result;
+            return data.Status;
+        } catch (e) {
+            return "";
+        }
     }
     logout() {
         settings.login(null);
@@ -62,29 +67,29 @@ class AuthManager {
         this.authenticated(false);
         this.login(null);
     }
-    loginAsGuest(): JQueryPromise<string> {
-        const result = $.Deferred<string>();
+    /**
+     * Initiate login as guest request to server.
+     */
+    async loginAsGuest(): Promise<string> {
         const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
-        accountApi.RegisterGuest().then((value) => {
+        try {
+            const value = await accountApi.RegisterGuest();
             if (!value) {
-                result.resolve("");
+                return "";
             } else {
                 settings.login(value.Login);
                 settings.password(value.Password);
                 settings.saveSettings();
                 app.processing(false);
                 if (value.Status === "Ok") {
-                    this.authenticate(value.Login, value.Password, true).then(function (value) {
-                        result.resolve(value);
-                    });
+                    return await this.authenticate(value.Login, value.Password, true);
                 } else {
-                    result.resolve(value.Status);
+                    return value.Status;
                 }
             }
-        }, function (error) {
-            result.resolve("");
-        });
-        return result;
+        } catch (e) {
+            return "";
+        }
     }
 }
 

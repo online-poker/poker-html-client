@@ -38,7 +38,7 @@ export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
         this.errors.showAllMessages(false);
         super.shown(args);
     }
-    logon() {
+    async logon() {
         const self = this;
         if (authManager.authenticated()) {
             return;
@@ -58,7 +58,8 @@ export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
             const password = this.password();
             const rememberMe = this.rememberMe();
             self.errorMessage(null);
-            authManager.authenticate(login, password, rememberMe).done(function (result: string) {
+            try {
+                const result = await authManager.authenticate(login, password, rememberMe);
                 if (result === "Ok") {
                     self.login(null);
                     self.password(null);
@@ -72,9 +73,9 @@ export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
                         self.errorMessage(_("auth.unspecifiedError"));
                     }
                 }
-            }).always(function () {
+            } finally {
                 self.loading(false);
-            });
+            }
         }
     }
     registration() {

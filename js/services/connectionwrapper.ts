@@ -155,7 +155,7 @@ export class ConnectionWrapper {
                 }
 
                 const promise = buildMainPromise();
-                promise.pipe(() => {
+                promise.then(() => {
                     if (this.terminated) {
                         fixup.reject();
                         return;
@@ -272,7 +272,7 @@ export class ConnectionWrapper {
                 // connectionService.recoverableError.dispatch();
             }, 1000 * 60 * 60);
             result.resolve(this);
-        }).fail((message: string = "") => {
+        }).then(null, (message: string = "") => {
             this.logEvent("Could not Connect!" + message);
             timeService.setTimeout(() => {
                 this.establishConnection(maxAttempts - 1).then(() => {
