@@ -275,6 +275,11 @@ export class ConnectionWrapper {
         }).then(null, (message: string = "") => {
             this.logEvent("Could not Connect!" + message);
             timeService.setTimeout(() => {
+                if (this.terminated) {
+                    this.logEvent("Reset terminate status for connection before attemt to try new connection");
+                    this.terminated = false;
+                }
+
                 this.establishConnection(maxAttempts - 1).then(() => {
                     result.resolve(this);
                 }, () => {
