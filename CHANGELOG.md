@@ -1,6 +1,9 @@
 Poker HTML client changelog
 ================================
 
+# v0.1.2
+- [BUG] Clear terminated status in the failed connection handler
+
 # v0.1.1
 - [BUG] Clear action after check/fold
 - [BUG] Display information about current game between games
