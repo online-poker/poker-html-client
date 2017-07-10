@@ -894,8 +894,21 @@ export class TableView {
         // connectionService.currentConnection.connection.Game.server.leave(this.tableId);
         // connectionService.currentConnection.connection.Chat.server.leave(this.tableId);
     }
+    setButtons(dealerSeat: number) {
+        if (dealerSeat === 0) {
+            this.setDealer(0);
+            this.setSmallBlind(0);
+            this.setBigBlind(0);
+        } else {
+            const smallBlindSeat = this.getNextPlayerSeat(dealerSeat);
+            const bigBlindSeat = this.getNextPlayerSeat(smallBlindSeat);
 
-    setDealer(dealerSeat) {
+            this.setDealer(dealerSeat);
+            this.setSmallBlind(smallBlindSeat);
+            this.setBigBlind(bigBlindSeat);
+        }
+    }
+    setDealer(dealerSeat: number) {
         const players = this.places();
         players.forEach((p) => {
             if (p.Seat() === dealerSeat) {
@@ -905,6 +918,61 @@ export class TableView {
             }
         });
         // this.places(players);
+    }
+
+    setSmallBlind(smallBlindSeat: number) {
+        const players = this.places();
+        players.forEach((p) => {
+            if (p.Seat() === smallBlindSeat) {
+                p.IsSmallBlind(true);
+                return;
+            } else {
+                p.IsSmallBlind(false);
+            }
+        });
+    }
+
+    setBigBlind(bigBlindSeat: number) {
+        const players = this.places();
+        players.forEach((p) => {
+            if (p.Seat() === bigBlindSeat) {
+                p.IsBigBlind(true);
+                return;
+            } else {
+                p.IsBigBlind(false);
+            }
+        });
+    }
+
+    getNextPlayerSeat(currentSeat: number) {
+        const players = this.places();
+        let comparePlayer = currentSeat;
+        let nextPlayer = null;
+        let maxPlayers = this.tablePlaces.getMaxPlayers();
+        for (var i = 0; i < maxPlayers; i++) {
+            if (nextPlayer != null) {
+                break;
+            }
+
+            comparePlayer = (comparePlayer + 1) % maxPlayers;
+            if (comparePlayer === 0) {
+                continue;
+            }
+
+            players.forEach((p) => {
+                if (nextPlayer != null) {
+                    return;
+                }
+
+                if (p.Seat() === comparePlayer) {
+
+                    if (p.WasInGame() && p.IsInGameStatus()) {
+                        nextPlayer = p.Seat();
+                    }
+                }
+            });
+        };
+        return nextPlayer;
     }
 
     setCurrent(currentPlayerId: number) {
@@ -1078,7 +1146,7 @@ export class TableView {
 
             const cardsArr = decodeCardsArray(cards);
             this.setCards(cardsArr);
-            this.setDealer(dealerSeat);
+            this.setButtons(dealerSeat);
 
             this.actionBlock.buttonsEnabled(true);
             this.actionBlock.showCardsEnabled(true);
@@ -1148,7 +1216,6 @@ export class TableView {
         this.actionBlock.showHoleCard2Enabled(true);
         this.actionBlock.updateBounds();
         this.actionsCount(0);
-        this.setDealer(dealerSeat);
         this.tableCards.clear();
         this.pots([]);
         this.logGameEvent("Game started");
@@ -1176,6 +1243,7 @@ export class TableView {
                 value.WasInGame(null);
             }
         });
+        this.setButtons(dealerSeat);
         if (this.soundEnabled) {
             soundManager.playDealCards();
         }
@@ -1259,7 +1327,7 @@ export class TableView {
 
                 self.combinations(c);
 
-                self.setDealer(0);
+                self.setButtons(0);
                 self.cardsReceived = false;
                 self.actionBlock.buttonsEnabled(false);
                 self.actionBlock.dealsAllowed(false);
@@ -1292,7 +1360,7 @@ export class TableView {
                     self.tableCards.CardsHightlighted(true);
                 }
 
-                self.setDealer(0);
+                self.setButtons(0);
                 self.actionBlock.buttonsEnabled(false);
                 self.actionBlock.dealsAllowed(false);
                 self.setCurrent(0);

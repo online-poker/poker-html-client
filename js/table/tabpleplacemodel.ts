@@ -25,6 +25,8 @@ export class TablePlaceModel {
     PlayerUrl: KnockoutObservable<string>;
     IsCurrent: KnockoutObservable<boolean>;
     IsDealer: KnockoutObservable<boolean>;
+    IsBigBlind: KnockoutObservable<boolean>;
+    IsSmallBlind: KnockoutObservable<boolean>;
     Money: KnockoutObservable<number>;
     Seat: KnockoutObservable<number>;
 
@@ -151,6 +153,8 @@ export class TablePlaceModel {
 
         this.IsCurrent = ko.observable(data.IsCurrent);
         this.IsDealer = ko.observable(data.IsDealer);
+        this.IsBigBlind = ko.observable(data.IsBigBlind);
+        this.IsSmallBlind = ko.observable(data.IsSmallBlind);
         this.Money = ko.observable(data.Money);
         this.Seat = ko.observable(data.Seat);
         const cards = decodeCardsArray(data.Cards || null);

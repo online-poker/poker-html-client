@@ -130,6 +130,10 @@ export class TablePlaces {
             return result;
         }, this);
     }
+
+    getMaxPlayers() {
+        return this.maxPlayers;
+    }
     getRealOffset(seat: number) {
         if (this.maxPlayers === 0) {
             return 1;
