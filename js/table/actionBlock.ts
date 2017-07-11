@@ -570,10 +570,9 @@ export class ActionBlock {
     async check() {
         if (this.isCheck()) {
             this.tableView.checkOrCall();
+            this.expanded(false);
+            this.checkOrCallExecuted.dispatch();
         }
-
-        this.expanded(false);
-        this.checkOrCallExecuted.dispatch();
     }
     async betOrRaise() {
         if (!this.suppressActions) {
