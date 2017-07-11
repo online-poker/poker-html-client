@@ -593,6 +593,18 @@ export function registerBindings() {
         }
     };
 
+    ko.bindingHandlers["doubletap"] = {
+        init: function (element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
+            viewModel: any, bindingContext: KnockoutBindingContext) {
+            const value = valueAccessor();
+            const functionValue = <Function>value;
+            const hammer = Hammer(element, { tap: true });
+            hammer.on("doubletap", function (event) {
+                functionValue.apply(viewModel);
+            });
+        }
+    };
+
     ko.bindingHandlers["handle"] = {
         init: function (element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
                 viewModel: any, bindingContext: KnockoutBindingContext) {
