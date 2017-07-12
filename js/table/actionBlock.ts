@@ -568,7 +568,7 @@ export class ActionBlock {
         this.checkOrCallExecuted.dispatch();
     }
     async check() {
-        if (this.isCheck()) {
+        if (this.isCheck() && !this.notMyTurn()) {
             this.tableView.checkOrCall();
             this.expanded(false);
             this.checkOrCallExecuted.dispatch();
