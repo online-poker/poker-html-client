@@ -956,7 +956,7 @@ export class TableView {
 
             comparePlayer = (comparePlayer + 1) % maxPlayers;
             if (comparePlayer === 0) {
-                continue;
+                comparePlayer = maxPlayers;
             }
 
             players.forEach((p) => {
