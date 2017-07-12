@@ -600,7 +600,9 @@ export function registerBindings() {
             const functionValue = <Function>value;
             const hammer = Hammer(element, { tap: true });
             hammer.on("doubletap", function (event) {
-                functionValue.apply(viewModel);
+                if (event.gesture.target === element) {
+                    functionValue.apply(viewModel);
+                }
             });
         }
     };
