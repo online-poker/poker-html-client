@@ -17,3 +17,4 @@ export { ChatPopup } from "./chatpopup";
 export { AuthPopup } from "./authpopup";
 export { SimplePopup } from "./simplepopup";
 export { SettingsPopup } from "./settingspopup";
+export { RulesPopup } from "./rulespopup";
