@@ -46,7 +46,8 @@ import {
     AddMoneyPopup,
     ChatPopup,
     AuthPopup,
-    SettingsPopup
+    SettingsPopup,
+    RulesPopup
 } from "./popups";
 import { uiManager, UIManager } from "./services/uimanager";
 import { TabBar } from "./tabbar";
@@ -78,6 +79,7 @@ export class App {
     handHistoryPopup: HandHistoryPopup;
     accountStatusPopup: AccountStatusPopup;
     settingsPopup: SettingsPopup;
+    rulesPopup: RulesPopup;
     newsPopup = new NewsPopup();
     selectAvatarPopup = new SelectAvatarPopup();
 
@@ -118,6 +120,7 @@ export class App {
         this.customPopup = new CustomPopup();
         this.joinTablePopup = new JoinTablePopup();
         this.settingsPopup = new SettingsPopup();
+        this.rulesPopup = new RulesPopup();
         this.tableMenuPopup = new TableMenuPopup();
         this.addMoneyPopup = new AddMoneyPopup();
         this.slowConnectionPopup = new SlowConnectionPopup();
@@ -143,6 +146,7 @@ export class App {
         this.bindPopup("custom", self.customPopup);
         this.bindPopup("joinTable", self.joinTablePopup);
         this.bindPopup("settings", self.settingsPopup);
+        this.bindPopup("rules", self.rulesPopup);
         this.bindPopup("tableMenu", self.tableMenuPopup);
         this.bindPopup("addMoney", self.addMoneyPopup);
         this.bindPopup("slowConnection", self.slowConnectionPopup);

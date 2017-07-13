@@ -224,6 +224,14 @@ export class TableMenuPopup {
             }
         });
     }
+    showRules() {
+        const self = this;
+        app.requireAuthentication().then(function (authenticated) {
+            if (authenticated) {
+                app.executeCommand("popup.rules");
+            }
+        })
+    }
     leave() {
         let index = tableManager.currentIndex();
         let tableView = tableManager.tables()[index];
