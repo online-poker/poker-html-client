@@ -1,6 +1,12 @@
 Poker HTML client changelog
 ================================
 
+# v0.1.3
+- Added binding for double tap
+- Added check action
+- Add markers for Small/Big blind.
+- Add popup for game rules
+
 # v0.1.2
 - [BUG] Clear terminated status in the failed connection handler
 
