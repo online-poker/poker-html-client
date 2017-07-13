@@ -3,12 +3,6 @@ import { App } from "../app";
 
 declare var app: App;
 
-export class RulesPopup {
+export class RulesPopup extends PopupBase {
 
-    shown(): void {
-    }
-
-    confirm() {
-        app.closePopup();
-    }
 }

@@ -216,21 +216,19 @@ export class TableMenuPopup {
         const currentTable = app.tablesPage.currentTable();
         currentTable.showAddonPrompt();
     }
-    showSettingsPrompt() {
+    async showSettingsPrompt() {
         const self = this;
-        app.requireAuthentication().then(function (authenticated) {
-            if (authenticated) {
-                app.executeCommand("popup.settings");
-            }
-        });
+        const authenticated = await app.requireAuthentication();
+        if (authenticated) {
+            app.executeCommand("popup.settings");
+        }
     }
-    showRules() {
+    async showRules() {
         const self = this;
-        app.requireAuthentication().then(function (authenticated) {
-            if (authenticated) {
-                app.executeCommand("popup.rules");
-            }
-        })
+        const authenticated = await app.requireAuthentication();
+        if (authenticated) {
+            app.executeCommand("popup.rules");
+        }
     }
     leave() {
         let index = tableManager.currentIndex();
