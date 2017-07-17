@@ -9,36 +9,36 @@ declare var apiHost: string;
 declare var app: App;
 
 export class SupportPage extends PageBase implements KnockoutValidationGroup {
-    displayFullName = false;
-    displaySubject = false;
+    public displayFullName = false;
+    public displaySubject = false;
 
-    loading = ko.observable(false);
-    fullName = ko.observable("").extend({ required: this.displayFullName, maxLength: 30 });
-    email = ko.observable("").extend({ required: true, email: true });
-    subject = ko.observable("").extend({ required: this.displaySubject, maxLength: 30 });
-    body = ko.observable("").extend({ required: true, maxLength: 1000 });
-    errorMessage = ko.observable<string>();
+    public loading = ko.observable(false);
+    public fullName = ko.observable("").extend({ required: this.displayFullName, maxLength: 30 });
+    public email = ko.observable("").extend({ required: true, email: true });
+    public subject = ko.observable("").extend({ required: this.displaySubject, maxLength: 30 });
+    public body = ko.observable("").extend({ required: true, maxLength: 1000 });
+    public errorMessage = ko.observable<string>();
 
-    errors: KnockoutValidationErrors;
-    isValid: () => boolean;
+    public errors: KnockoutValidationErrors;
+    public isValid: () => boolean;
 
     constructor() {
         super();
         this.errors = ko.validation.group(this);
     }
-    backToLobby() {
+    public backToLobby() {
         keyboardActivationService.forceHideKeyboard();
         app.lobbyPageBlock.showLobby();
     }
-    back() {
+    public back() {
         keyboardActivationService.forceHideKeyboard();
         app.infoPageBlock.showPrimary();
     }
     /**
-    * Method called upon page activation.
-    * pageName String Name of the page which is activated.
-    */
-    activate(pageName?: string) {
+     * Method called upon page activation.
+     * pageName String Name of the page which is activated.
+     */
+    public activate(pageName?: string) {
         this.fullName("");
         this.email("");
         this.subject("");
@@ -47,13 +47,13 @@ export class SupportPage extends PageBase implements KnockoutValidationGroup {
     }
 
     /**
-    * Method called upon page deactivation.
-    * pageName String Name of the page which is deactivated.
-    */
-    deactivate(pageName?: string) {
+     * Method called upon page deactivation.
+     * pageName String Name of the page which is deactivated.
+     */
+    public deactivate(pageName?: string) {
         super.deactivate(pageName);
     }
-    send() {
+    public async send() {
         const self = this;
         const isValid = this.isValid();
         if (!isValid) {
@@ -69,7 +69,8 @@ export class SupportPage extends PageBase implements KnockoutValidationGroup {
         this.errorMessage(null);
         this.errors.showAllMessages(false);
         const api = new OnlinePoker.Commanding.API.Support(apiHost);
-        api.ContactUs(this.fullName(), this.email(), this.subject(), this.body()).then((data) => {
+        try {
+            const data = await api.ContactUs(this.fullName(), this.email(), this.subject(), this.body());
             self.loading(false);
             if (data.Status === "Ok") {
                 self.fullName("");
@@ -80,9 +81,9 @@ export class SupportPage extends PageBase implements KnockoutValidationGroup {
             } else {
                 self.errorMessage(_("errors." + data.Status));
             }
-        }, function (error) {
+        } catch (error) {
             self.loading(false);
             self.errorMessage(_("common.unspecifiedError"));
-        });
+        }
     }
 }

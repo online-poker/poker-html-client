@@ -1,11 +1,11 @@
 ﻿import { debugSettings } from "../debugsettings";
 
 export class ReloadManager {
-    callback: () => void;
-    setReloadCallback(callback: () => void) {
+    private callback: () => void;
+    public setReloadCallback(callback: () => void) {
         this.callback = callback;
     }
-    execute() {
+    public execute() {
         this.log("Executing reload callback");
         if (this.callback != null) {
             this.callback();
@@ -14,6 +14,7 @@ export class ReloadManager {
 
     private log(message: string) {
         if (debugSettings.application.reloadManager) {
+            // tslint:disable-next-line:no-console
             console.log(message);
         }
     }

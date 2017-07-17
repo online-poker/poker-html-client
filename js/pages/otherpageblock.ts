@@ -8,11 +8,11 @@ import { ChatPage } from "./chatpage";
 import { ChangePasswordPage } from "./changepasswordpage";
 
 export class OtherPageBlock extends PageBlock {
-    changePasswordPage: ChangePasswordPage;
-    morePage: SettingsPage;
-    ratingPage: RatingPage;
-    chatPage: ChatPage;
-    accountPage: AccountPage;
+    public changePasswordPage: ChangePasswordPage;
+    public morePage: SettingsPage;
+    public ratingPage: RatingPage;
+    public chatPage: ChatPage;
+    public accountPage: AccountPage;
 
     constructor() {
         let accountPage = new AccountPage();

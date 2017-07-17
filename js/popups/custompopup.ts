@@ -4,11 +4,11 @@ import * as ko from "knockout";
 import { PopupBase } from "../ui/popupbase";
 
 export class CustomPopup extends PopupBase {
-    title: KnockoutObservable<string>;
-    messages: KnockoutObservableArray<string>;
-    buttons = ko.observableArray<string>([]);
-    actions = ko.observableArray<Function>([]);
-    deferred: JQueryDeferred<any>;
+    public title: KnockoutObservable<string>;
+    public messages: KnockoutObservableArray<string>;
+    public buttons = ko.observableArray<string>([]);
+    public actions = ko.observableArray<Function>([]);
+    public deferred: JQueryDeferred<any>;
 
     constructor() {
         super();
@@ -16,15 +16,15 @@ export class CustomPopup extends PopupBase {
         this.messages = ko.observableArray<string>();
     }
 
-    shown() {
+    public shown() {
         super.shown();
         this.deferred = $.Deferred();
     }
-    close() {
+    public close() {
         super.close();
         this.deferred.reject();
     }
-    execute(index: number) {
+    public execute(index: number) {
         const action = this.actions()[index];
         const result = action();
         super.close();

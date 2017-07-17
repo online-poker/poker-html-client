@@ -8,15 +8,15 @@ import { imagePreloadService } from "./services";
 import { debugSettings } from "./debugsettings";
 
 class MetadataManager {
-    online = ko.observable("-");
-    registered = ko.observable("-");
-    prizes: TournamentPrizeStructure[][];
-    bets: TournamentBetStructure[][];
-    banners: BannerData[];
-    smallBanners: BannerData[];
-    avatars: string[];
-    ready: Function;
-    failed: Function;
+    public online = ko.observable("-");
+    public registered = ko.observable("-");
+    public prizes: TournamentPrizeStructure[][];
+    public bets: TournamentBetStructure[][];
+    public banners: BannerData[];
+    public smallBanners: BannerData[];
+    public avatars: string[];
+    public ready: Function;
+    public failed: Function;
 
     public setReady(value: Function) {
         this.ready = value;
@@ -24,7 +24,7 @@ class MetadataManager {
     public setFailed(value: Function) {
         this.failed = value;
     }
-    async update() {
+    public async update() {
         const self = this;
         const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
         const failHandler = function () {
@@ -44,7 +44,7 @@ class MetadataManager {
                 metadataApi.GetWellKnownBetStructure(),
                 metadataApi.GetDefaultAvatars(),
                 bannersRequest,
-                smallBannersRequest
+                smallBannersRequest,
             ]);
             const [ onlinePlayersData, prizeStructureData, betStructureData,
                 avatarsData, bannersData, smallBannersData ] = values;
@@ -84,7 +84,7 @@ class MetadataManager {
             failHandler();
         }
     }
-    async versionCheck() {
+    public async versionCheck() {
         const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
         const serverInformation = await metadataApi.VersionCheck();
         if (serverInformation.ServerApiVersion > OnlinePoker.Commanding.API.version) {
@@ -96,7 +96,7 @@ class MetadataManager {
             }
         }
     }
-    updateOnline() {
+    public updateOnline() {
         const self = this;
         const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
         return metadataApi.GetOnlinePlayers().then(function (onlinePlayers) {
@@ -132,7 +132,7 @@ class MetadataManager {
 
         return data;
     }
-    getBannerFormat() {
+    private getBannerFormat() {
         if (PageBlock.useDoubleView) {
             return 7;
         }
@@ -151,7 +151,7 @@ class MetadataManager {
 
         return 3;
     }
-    getSmallBannerFormat() {
+    private getSmallBannerFormat() {
         if (PageBlock.useDoubleView) {
             return 8;
         }
@@ -170,7 +170,7 @@ class MetadataManager {
 
         return 4;
     }
-    log(message: string) {
+    private log(message: string) {
         if (debugSettings.initialization.metadata) {
             console.log(message);
         }

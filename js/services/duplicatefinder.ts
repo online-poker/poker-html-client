@@ -1,26 +1,26 @@
 ﻿class DuplicateFinder {
-    dataEvents: any[][];
+    private dataEvents: any[][];
 
     constructor() {
         this.dataEvents = [];
     }
 
-    registerEvent(data: any[]) {
+    public registerEvent(data: any[]) {
         this.dataEvents.push(data);
         while (this.dataEvents.length > 8) {
             this.dataEvents.shift();
         }
     }
 
-    clear() {
+    public clear() {
         this.dataEvents = [];
     }
 
-    erase(callbackfn: (value: any[], index: number, array: any[][]) => boolean) {
+    public erase(callbackfn: (value: any[], index: number, array: any[][]) => boolean) {
         this.dataEvents = this.dataEvents.filter(callbackfn);
     }
 
-    validateDuplicateEvents() {
+    public validateDuplicateEvents() {
         let target = this.dataEvents.slice(0);
         let duplicatesCount = 0;
         for (let i = 0; i < target.length; i++) {
@@ -55,9 +55,11 @@
 
         return false;
     }
-    printDebug() {
+    public printDebug() {
+        // tslint:disable-next-line:no-console
         console.log("Duplicate events detected.");
         this.dataEvents.forEach((_) => {
+            // tslint:disable-next-line:no-console
             console.log(JSON.stringify(_));
         });
     }

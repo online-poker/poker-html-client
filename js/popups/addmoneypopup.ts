@@ -13,20 +13,20 @@ import { appConfig } from "../appconfig";
 declare var app: App;
 
 export class AddMoneyPopup implements KnockoutValidationGroup {
-    buyin: KnockoutObservable<number>;
-    minBuyin: KnockoutObservable<number>;
-    maxBuyin: KnockoutObservable<number>;
-    minBet: KnockoutObservable<number>;
-    maxBet: KnockoutObservable<number>;
-    accountTotal: KnockoutObservable<number>;
-    tableName: KnockoutObservable<string>;
-    errors: KnockoutValidationErrors;
-    isValid: () => boolean;
-    errorMessage: KnockoutObservable<string>;
-    tableView: KnockoutObservable<TableView>;
-    loading: KnockoutObservable<boolean>;
-    processing: KnockoutObservable<boolean>;
-    ticketCode: KnockoutObservable<string>;
+    public buyin: KnockoutObservable<number>;
+    public minBuyin: KnockoutObservable<number>;
+    public maxBuyin: KnockoutObservable<number>;
+    public minBet: KnockoutObservable<number>;
+    public maxBet: KnockoutObservable<number>;
+    public accountTotal: KnockoutObservable<number>;
+    public tableName: KnockoutObservable<string>;
+    public errors: KnockoutValidationErrors;
+    public isValid: () => boolean;
+    public errorMessage: KnockoutObservable<string>;
+    public tableView: KnockoutObservable<TableView>;
+    public loading: KnockoutObservable<boolean>;
+    public processing: KnockoutObservable<boolean>;
+    public ticketCode: KnockoutObservable<string>;
     public allowUsePersonalAccount: KnockoutObservable<boolean>;
     public allowTickets: KnockoutObservable<boolean>;
 
@@ -47,7 +47,7 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
         this.allowUsePersonalAccount = ko.observable(appConfig.joinTable.allowUsePersonalAccount);
         this.allowTickets = ko.observable(appConfig.joinTable.allowTickets);
     }
-    async shown() {
+    public async shown() {
         const self = this;
         const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
         self.loading(true);
@@ -89,9 +89,9 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
             }
         } else {
             self.loading(false);
-        };
+        }
     }
-    async confirm() {
+    public async confirm() {
         const self = this;
         const isValid = this.isValid();
         const ticketCode = this.ticketCode();
@@ -124,7 +124,9 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
                 return;
             }
 
-            if (this.buyin() + this.tableView().myPlayer().Money() + this.tableView().myPlayer().TotalBet() > this.maxBuyin()) {
+            const myPlayer = this.tableView().myPlayer();
+            const totalMoneyAmountExpected = this.buyin() + myPlayer.Money() + myPlayer.TotalBet();
+            if (totalMoneyAmountExpected > this.maxBuyin()) {
                 this.buyin.setError(_("addMoney.couldnotAddMoreThenMax"));
                 return;
             }

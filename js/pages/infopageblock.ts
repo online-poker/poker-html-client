@@ -20,34 +20,34 @@ export class InfoPageBlock extends PageBlock {
         this.addSecondary("terminology", new InfoPage());
         this.addSecondary("faq", new InfoPage());
     }
-    showLicenseAgreement() {
+    public showLicenseAgreement() {
         this.showSecondary("licenseAgreement");
     }
-    showMobileSystemSupport() {
+    public showMobileSystemSupport() {
         this.showSecondary("mobileSystemSupport");
     }
-    showAccountBlock() {
+    public showAccountBlock() {
         this.showSecondary("accountBlock");
     }
-    showPrivacyPolicy() {
+    public showPrivacyPolicy() {
         this.showSecondary("privacyPolicy");
     }
-    showSupport() {
+    public showSupport() {
         this.showSecondary("support");
     }
-    showContactUs() {
+    public showContactUs() {
         this.showSecondary("contactUs");
     }
-    showHowToPlay() {
+    public showHowToPlay() {
         this.showSecondary("howToPlay");
     }
-    showChatRules() {
+    public showChatRules() {
         this.showSecondary("chatRules");
     }
-    showTerminology() {
+    public showTerminology() {
         this.showSecondary("terminology");
     }
-    showFaq() {
+    public showFaq() {
         this.showSecondary("faq");
     }
 }

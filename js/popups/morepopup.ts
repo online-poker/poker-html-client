@@ -11,13 +11,13 @@ import { websiteService } from "../services";
 declare var app: App;
 
 export class MorePopup {
-    authenticated: KnockoutObservable<boolean>;
-    login: KnockoutComputed<string>;
-    amount: KnockoutObservable<number>;
-    points = ko.observable<number>(0);
-    loading: KnockoutObservable<boolean>;
-    hasMessages = ko.observable(false);
-    visible = ko.observable(false);
+    public authenticated: KnockoutObservable<boolean>;
+    public login: KnockoutComputed<string>;
+    public amount: KnockoutObservable<number>;
+    public points = ko.observable<number>(0);
+    public loading: KnockoutObservable<boolean>;
+    public hasMessages = ko.observable(false);
+    public visible = ko.observable(false);
 
     constructor() {
         const self = this;
@@ -37,14 +37,13 @@ export class MorePopup {
         });
         this.amount = ko.observable(0);
     }
-    async update() {
+    public async update() {
         if (!authManager.authenticated()) {
             return;
         }
 
         const self = this;
         this.loading(true);
-        const api = new OnlinePoker.Commanding.API.Account(apiHost);
         try {
             await Promise.all([this.updateAccountData(), this.updateMessagesStatus()]);
             self.loading(false);
@@ -52,38 +51,38 @@ export class MorePopup {
             self.update();
         }
     }
-    showAccount() {
+    public showAccount() {
         app.executeCommand("pageblock.cashier");
     }
-    showRating() {
+    public showRating() {
         app.executeCommand("pageblock.other");
         app.otherPageBlock.showSecondary("rating");
     }
-    showChat() {
+    public showChat() {
         app.executeCommand("pageblock.other");
         app.otherPageBlock.showSecondary("chat");
     }
-    showMessages() {
+    public showMessages() {
         websiteService.messages();
     }
-    showInformation() {
+    public showInformation() {
         app.executeCommand("pageblock.info");
         app.infoPageBlock.showPrimary();
     }
-    showProfile() {
+    public showProfile() {
         websiteService.profile();
     }
-    showContactUs() {
+    public showContactUs() {
         app.executeCommand("pageblock.info");
         app.infoPageBlock.showContactUs();
     }
-    showRegistration() {
+    public showRegistration() {
         app.showPopup("registration");
     }
 
     /**
-    * Starts request for the account data.
-    */
+     * Starts request for the account data.
+     */
     private async updateAccountData() {
         const self = this;
         const api = new OnlinePoker.Commanding.API.Account(apiHost);
@@ -101,8 +100,8 @@ export class MorePopup {
     }
 
     /**
-    * Starts requesting message status
-    */
+     * Starts requesting message status
+     */
     private async updateMessagesStatus() {
         const self = this;
         const mapi = new OnlinePoker.Commanding.API.Message(apiHost);

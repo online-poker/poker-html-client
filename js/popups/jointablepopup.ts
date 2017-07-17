@@ -11,26 +11,28 @@ import { appConfig } from "../appconfig";
 declare var app: App;
 
 export class JoinTablePopup implements KnockoutValidationGroup {
-    buyin: KnockoutObservable<number>;
-    ticketCode: KnockoutObservable<string>;
-    minBuyin: KnockoutObservable<number>;
-    maxBuyin: KnockoutObservable<number>;
-    minBet: KnockoutObservable<number>;
-    maxBet: KnockoutObservable<number>;
-    accountTotal: KnockoutObservable<number>;
-    tableName: KnockoutObservable<string>;
-    errors: KnockoutValidationErrors;
-    isValid: () => boolean;
-    errorMessage: KnockoutObservable<string>;
-    seatNumber: KnockoutObservable<number>;
-    tableView: KnockoutObservable<TableView>;
-    loading: KnockoutObservable<boolean>;
-    allowUsePersonalAccount: KnockoutObservable<boolean>;
-    allowTickets: KnockoutObservable<boolean>;
+    public buyin: KnockoutObservable<number>;
+    public ticketCode: KnockoutObservable<string>;
+    public minBuyin: KnockoutObservable<number>;
+    public maxBuyin: KnockoutObservable<number>;
+    public minBet: KnockoutObservable<number>;
+    public maxBet: KnockoutObservable<number>;
+    public accountTotal: KnockoutObservable<number>;
+    public tableName: KnockoutObservable<string>;
+    public errors: KnockoutValidationErrors;
+    public isValid: () => boolean;
+    public errorMessage: KnockoutObservable<string>;
+    public seatNumber: KnockoutObservable<number>;
+    public tableView: KnockoutObservable<TableView>;
+    public loading: KnockoutObservable<boolean>;
+    public allowUsePersonalAccount: KnockoutObservable<boolean>;
+    public allowTickets: KnockoutObservable<boolean>;
 
-    constructor() {
-        this.buyin = ko.observable<number>().extend({ required: appConfig.joinTable.allowUsePersonalAccount, validatable: true });
-        this.ticketCode = ko.observable<string>().extend({ required: appConfig.joinTable.allowTickets, validatable: true });
+    public constructor() {
+        this.buyin = ko.observable<number>()
+            .extend({ required: appConfig.joinTable.allowUsePersonalAccount, validatable: true });
+        this.ticketCode = ko.observable<string>()
+            .extend({ required: appConfig.joinTable.allowTickets, validatable: true });
         this.tableView = ko.observable<TableView>();
         this.seatNumber = ko.observable<number>(0);
         this.accountTotal = ko.observable<number>(0);
@@ -45,7 +47,7 @@ export class JoinTablePopup implements KnockoutValidationGroup {
         this.allowUsePersonalAccount = ko.observable<boolean>(appConfig.joinTable.allowUsePersonalAccount);
         this.allowTickets = ko.observable<boolean>(appConfig.joinTable.allowTickets);
     }
-    async shown() {
+    public async shown() {
         const self = this;
         const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
         self.loading(true);
@@ -64,7 +66,6 @@ export class JoinTablePopup implements KnockoutValidationGroup {
                         balance = personalAccountData.GameMoney;
                     }
 
-                    const tableView = self.tableView();
                     self.accountTotal(balance);
                     self.tableName(tableData.TableName);
                     self.minBet(tableData.SmallBlind);
@@ -84,7 +85,7 @@ export class JoinTablePopup implements KnockoutValidationGroup {
             self.loading(false);
         }
     }
-    async confirm() {
+    public async confirm() {
         const self = this;
         const isValid = this.isValid();
         if (!isValid) {

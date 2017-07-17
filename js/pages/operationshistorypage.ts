@@ -9,12 +9,12 @@ declare var apiHost: string;
 declare var app: App;
 
 export class OperationsHistoryPage extends PageBase implements KnockoutValidationGroup {
-    from: KnockoutObservable<string>;
-    to: KnockoutObservable<string>;
-    errors: KnockoutValidationErrors;
-    operations: KnockoutObservableArray<OperationData>;
-    loading: KnockoutObservable<boolean>;
-    isValid: () => boolean;
+    public from: KnockoutObservable<string>;
+    public to: KnockoutObservable<string>;
+    public errors: KnockoutValidationErrors;
+    public operations: KnockoutObservableArray<OperationData>;
+    public loading: KnockoutObservable<boolean>;
+    public isValid: () => boolean;
 
     constructor() {
         super();
@@ -25,7 +25,7 @@ export class OperationsHistoryPage extends PageBase implements KnockoutValidatio
         this.to = ko.observable<string>();
         this.errors = ko.validation.group(this);
     }
-    activate(): void {
+    public activate(): void {
         super.activate();
         this.applyFilter(false);
         if (!PageBlock.useDoubleView) {
@@ -38,7 +38,7 @@ export class OperationsHistoryPage extends PageBase implements KnockoutValidatio
 
         reloadManager.setReloadCallback(() => this.applyFilter(true));
     }
-    deactivate(): void {
+    public deactivate(): void {
         super.deactivate();
         if (!PageBlock.useDoubleView) {
             app.tabBar.visible(true);
@@ -48,14 +48,14 @@ export class OperationsHistoryPage extends PageBase implements KnockoutValidatio
             /* tslint:enable:no-string-literal no-unused-expression */
         }
     }
-    back(): void {
+    public back(): void {
         if (!PageBlock.useDoubleView) {
             app.cashierPageBlock.showPrimary();
         } else {
             app.lobbyPageBlock.showLobby();
         }
     }
-    async applyFilter(force: boolean) {
+    public async applyFilter(force: boolean) {
         if (this.loading() && !force) {
             return;
         }

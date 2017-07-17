@@ -2,71 +2,71 @@
 import { l } from "../languagemanager";
 
 /** 
-* Provides integration with the website.
-*/
+ * Provides integration with the website.
+ */
 export class WebsiteService {
-    websiteRoot = "http://www.yourpoker.com/";
+    public websiteRoot = "http://www.yourpoker.com/";
 
     /**
-    * Navigates to the forget password page
-    */
-    forgetPassword() {
+     * Navigates to the forget password page
+     */
+    public forgetPassword() {
         this.open(this.getBase() + "reset");
     }
 
     /**
-    * Navigates to the made deposit page
-    */
-    madeDeposit() {
+     * Navigates to the made deposit page
+     */
+    public madeDeposit() {
         this.open(this.getAuthUrl() + "area/kasa/deposit");
     }
 
     /**
-    * Navigates to the made deposit page
-    */
-    withdrawal() {
+     * Navigates to the made deposit page
+     */
+    public withdrawal() {
         this.open(this.getAuthUrl() + "area/kasa/pay");
     }
 
     /**
-    * Navigates to the messages page
-    */
-    messages() {
+     * Navigates to the messages page
+     */
+    public messages() {
         this.open(this.getAuthUrl() + "area/message");
     }
 
     /**
-    * Navigates to the informations page
-    */
-    information() {
+     * Navigates to the informations page
+     */
+    public information() {
         this.open(this.getBase() + "info/main/");
     }
 
     /**
-    * Navigates to the user agreement page
-    */
-    userAgreement() {
+     * Navigates to the user agreement page
+     */
+    public userAgreement() {
         this.open(this.getBase() + "info/main/team.html");
     }
 
     /**
-    * Navigates to the Contact Us page
-    */
-    contactUs() {
+     * Navigates to the Contact Us page
+     */
+    public contactUs() {
         this.open(this.getBase() + "contacts");
     }
 
     /**
-    * Navigates to the player profile
-    */
-    profile() {
+     * Navigates to the player profile
+     */
+    public profile() {
         this.open(this.getAuthUrl() + "area/");
     }
 
     /**
-    * Navigates to the update APK url.
-    */
-    navigateUpdateApk() {
+     * Navigates to the update APK url.
+     */
+    public navigateUpdateApk() {
         this.open(this.getBase() + "update/");
     }
 

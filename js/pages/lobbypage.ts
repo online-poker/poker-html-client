@@ -17,10 +17,10 @@ import { _ } from "../languagemanager";
 declare var app: App;
 
 export class CashOptions {
-    currency: KnockoutObservable<number>;
-    limits: KnockoutObservable<number>;
-    bets: KnockoutObservable<number>;
-    maxPlayers: KnockoutObservable<number>;
+    public currency: KnockoutObservable<number>;
+    public limits: KnockoutObservable<number>;
+    public bets: KnockoutObservable<number>;
+    public maxPlayers: KnockoutObservable<number>;
 
     constructor() {
         // require("extenders");
@@ -30,8 +30,8 @@ export class CashOptions {
                 items: [
                     { text: "currency.realmoney", value: 1 },
                     { text: "currency.gamemoney", value: 2 },
-                ]
-            }
+                ],
+            },
         });
         this.limits = ko.observable(0).extend({
             options: {
@@ -41,8 +41,8 @@ export class CashOptions {
                     { text: "limits.limit1", value: 1 },
                     { text: "limits.limit2", value: 2 },
                     { text: "limits.limit3", value: 3 },
-                ]
-            }
+                ],
+            },
         });
         this.bets = ko.observable(0).extend({
             options: {
@@ -52,8 +52,8 @@ export class CashOptions {
                     { text: "bets.level1", value: 1 << 0 | 1 << 1 | 1 << 2 },
                     { text: "bets.level2", value: 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6 },
                     { text: "bets.level3", value: 1 << 7 | 1 << 8 | 1 << 9 },
-                ]
-            }
+                ],
+            },
         });
         this.maxPlayers = ko.observable(0).extend({
             options: {
@@ -63,17 +63,17 @@ export class CashOptions {
                     { text: "players.players2", value: 2 },
                     { text: "players.players6", value: 6 },
                     { text: "players.players10", value: 10 },
-                ]
-            }
+                ],
+            },
         });
     }
 }
 
 export class TournamentOptions {
-    currency: KnockoutObservable<number>;
-    buyin: KnockoutObservable<number>;
-    speed: KnockoutObservable<number>;
-    maxPlayers: KnockoutObservable<number>;
+    public currency: KnockoutObservable<number>;
+    public buyin: KnockoutObservable<number>;
+    public speed: KnockoutObservable<number>;
+    public maxPlayers: KnockoutObservable<number>;
 
     constructor() {
         // require("extenders");
@@ -83,8 +83,8 @@ export class TournamentOptions {
                 items: [
                     { text: "currency.realmoney", value: 1 },
                     { text: "currency.gamemoney", value: 2 },
-                ]
-            }
+                ],
+            },
         });
         this.buyin = ko.observable(0).extend({
             options: {
@@ -95,8 +95,8 @@ export class TournamentOptions {
                     { text: "buyin.level1", value: 1 << 1 | 1 << 2 | 1 << 3 },
                     { text: "buyin.level2", value: 1 << 4 | 1 << 5 | 1 << 6 },
                     { text: "buyin.level3", value: 1 << 7 | 1 << 8 | 1 << 9 },
-                ]
-            }
+                ],
+            },
         });
         this.speed = ko.observable(0).extend({
             options: {
@@ -106,8 +106,8 @@ export class TournamentOptions {
                     { text: "speed.normal", value: 1 },
                     { text: "speed.turbo", value: 2 },
                     { text: "speed.turbo2x", value: 3 },
-                ]
-            }
+                ],
+            },
         });
         this.maxPlayers = ko.observable(0).extend({
             options: {
@@ -117,8 +117,8 @@ export class TournamentOptions {
                     { text: "players.players2", value: 1 },
                     { text: "players.players6", value: 2 },
                     { text: "players.players10", value: 3 },
-                ]
-    }
+                ],
+            },
         });
 }
 }
@@ -128,24 +128,24 @@ interface LobbyTournamentItemEx extends LobbyTournamentItem {
 }
 
 export class LobbyPage extends PageBase {
-    online: KnockoutObservable<string>;
-    registered: KnockoutObservable<string>;
-    captionLabel: KnockoutComputed<string>;
-    slider: Slider;
-    cashOptions: CashOptions;
-    tournamentOptions: TournamentOptions;
-    sngOptions: TournamentOptions;
-    showFilterSlider: KnockoutObservable<boolean>;
-    showItemsListSlider: KnockoutObservable<boolean>;
-    filterLocked: KnockoutObservable<boolean>;
+    public online: KnockoutObservable<string>;
+    public registered: KnockoutObservable<string>;
+    public captionLabel: KnockoutComputed<string>;
+    public slider: Slider;
+    public cashOptions: CashOptions;
+    public tournamentOptions: TournamentOptions;
+    public sngOptions: TournamentOptions;
+    public showFilterSlider: KnockoutObservable<boolean>;
+    public showItemsListSlider: KnockoutObservable<boolean>;
+    public filterLocked: KnockoutObservable<boolean>;
 
-    tournamentsCaption: KnockoutComputed<string>;
-    selectionCaption: KnockoutComputed<string>;
-    tournaments: KnockoutObservableArray<LobbyTournamentItemEx>;
-    sngs: KnockoutObservableArray<LobbyTournamentItemEx>;
-    tables: KnockoutObservableArray<any>;
-    loading: KnockoutObservable<boolean>;
-    currentTime: KnockoutComputed<string>;
+    public tournamentsCaption: KnockoutComputed<string>;
+    public selectionCaption: KnockoutComputed<string>;
+    public tournaments: KnockoutObservableArray<LobbyTournamentItemEx>;
+    public sngs: KnockoutObservableArray<LobbyTournamentItemEx>;
+    public tables: KnockoutObservableArray<any>;
+    public loading: KnockoutObservable<boolean>;
+    public currentTime: KnockoutComputed<string>;
 
     constructor() {
         super();
@@ -206,7 +206,7 @@ export class LobbyPage extends PageBase {
         });
     }
 
-    deactivate(pageName?: string) {
+    public deactivate(pageName?: string) {
         super.deactivate(pageName);
 
         // Clear tables and tournaments since this is 
@@ -216,7 +216,7 @@ export class LobbyPage extends PageBase {
         this.tournaments([]);
         this.sngs([]);
     }
-    activate(pageName?: string) {
+    public activate(pageName?: string) {
         if (this.visible()) {
             return;
         }
@@ -236,7 +236,7 @@ export class LobbyPage extends PageBase {
     }
         super.activate(pageName);
     }
-    updateOpenedTables() {
+    public updateOpenedTables() {
         const tables = this.tables();
         tables.forEach(function (item) {
             item.IsOpened = tableManager.isOpened(item.TableId);
@@ -244,7 +244,7 @@ export class LobbyPage extends PageBase {
         this.tables([]);
         this.tables(tables);
     }
-    async update(force: boolean) {
+    public async update(force: boolean) {
         if (this.loading() && !force) {
             return;
         }
@@ -263,7 +263,7 @@ export class LobbyPage extends PageBase {
             resetLoading();
         }
     }
-    showGames() {
+    public showGames() {
         if (this.slider.currentIndex() === 0) {
             app.lobbyPageBlock.showSecondary("tablesList");
         } else {
@@ -278,7 +278,7 @@ export class LobbyPage extends PageBase {
             }
         }
     }
-    async refreshTables() {
+    public async refreshTables() {
         const self = this;
         const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
         const privateTables = 0;
@@ -308,7 +308,7 @@ export class LobbyPage extends PageBase {
             if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
                 const tableIdString = localStorage.getItem("tableId");
                 if (tableIdString !== null) {
-                    const tableIdInt = parseInt(tableIdString);
+                    const tableIdInt = parseInt(tableIdString, 10);
                     const tableData = await gameApi.GetTable(tableIdInt);
                     self.selectTable(tableData.Data);
                 }
@@ -316,7 +316,7 @@ export class LobbyPage extends PageBase {
         }
     }
 
-    async refreshTournaments(tournamentType) {
+    public async refreshTournaments(tournamentType) {
         const self = this;
         const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
 
@@ -351,7 +351,7 @@ export class LobbyPage extends PageBase {
             }
         }
     }
-    selectTable(table: GameTableModel) {
+    public selectTable(table: GameTableModel) {
         app.processing(true);
         app.requireGuestAuthentication().then(function (newValue, wasAuthenticated) {
             if (newValue) {
@@ -375,10 +375,10 @@ export class LobbyPage extends PageBase {
             }
         });
     }
-    selectTournament(tournament) {
+    public selectTournament(tournament) {
         app.lobbyPageBlock.selectTournament(tournament);
     }
-    showFilterOptions() {
+    public showFilterOptions() {
         if (this.slider.currentIndex() === 0) {
             app.lobbyPageBlock.showSecondary("filter");
         }
@@ -391,7 +391,7 @@ export class LobbyPage extends PageBase {
             app.lobbyPageBlock.showSecondary("filter");
         }
     }
-    showLobby() {
+    public showLobby() {
         if (this.slider.currentIndex() === 0) {
             app.lobbyPageBlock.showSecondary("lobby");
         }
@@ -404,13 +404,13 @@ export class LobbyPage extends PageBase {
             app.lobbyPageBlock.showSecondary("lobby");
         }
         }
-    selectFilterParameter(parameter, value) {
+    public selectFilterParameter(parameter, value) {
         parameter(value);
         if (PageBlock.useDoubleView) {
             app.lobbyPageBlock.showSecondary("lobby");
         }
     }
-    async refresh() {
+    public async refresh() {
         metadataManager.updateOnline();
         if (this.slider.currentIndex() === 0) {
             this.loading(true);
@@ -439,7 +439,7 @@ export class LobbyPage extends PageBase {
             }
         }
     }
-    touchLock(e: Event) {
+    public touchLock(e: Event) {
         if (this.filterLocked()) {
             e.preventDefault();
         }

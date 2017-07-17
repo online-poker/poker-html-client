@@ -47,14 +47,13 @@ class TournamentPrizeInformationComponent {
                 currentPrize = filteredPrizes[0];
             }
 
-            const i = 1;
             const result = <TournamentPrizeStructureView[]>[];
             const totalPrize = self.totalPrize();
             currentPrize.PrizeLevel.forEach(function (item, index) {
                 result.push({
                     place: index + 1,
                     amount: totalPrize * item / 100,
-                    percent: item
+                    percent: item,
                 });
             });
             return result;

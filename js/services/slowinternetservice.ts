@@ -5,19 +5,19 @@ import { App } from "../app";
 declare var app: App;
 
 export class SlowInternetService {
-    static popupName = "slowConnection";
-    offline: boolean;
-    manualDisconnect: boolean;
-    retyHandler: () => void;
-    suppressReconnected: boolean;
-    fatalError = false;
+    public static popupName = "slowConnection";
+    public manualDisconnect: boolean;
+    public retyHandler: () => void;
+    public fatalError = false;
+    private offline: boolean;
+    private suppressReconnected: boolean;
 
     constructor() {
         this.offline = false;
         this.manualDisconnect = false;
         this.suppressReconnected = false;
     }
-    initialize() {
+    public initialize() {
         connectionService.reconnecting.add(() => this.onConnectionSlow());
         connectionService.reconnected.add(() => this.onReconnected());
         connectionService.received.add(() => this.onReceived());
@@ -53,12 +53,13 @@ export class SlowInternetService {
             this.onOffline();
         }
     }
-    hasInternet() {
+    public hasInternet() {
         if (navigator.connection === null || navigator.connection === undefined) {
             return true;
         }
 
         let expectedConnection = "none";
+        // tslint:disable-next-line:no-string-literal
         if (window["Connection"]) {
             expectedConnection = Connection.NONE;
         }
@@ -66,17 +67,10 @@ export class SlowInternetService {
         this.log("Connection type is " + navigator.connection.type + " testing against " + expectedConnection);
         return navigator.connection.type !== expectedConnection;
     }
-    setRetryHandler(handler: () => void) {
+    public setRetryHandler(handler: () => void) {
         this.retyHandler = handler;
     }
-    executeRetryHandler() {
-        if (this.retyHandler !== null) {
-            this.log("Executing retry handler");
-            this.retyHandler();
-            this.retyHandler = null;
-        }
-    }
-    onConnectionSlow() {
+    public onConnectionSlow() {
         if (this.fatalError) {
             return;
         }
@@ -88,7 +82,7 @@ export class SlowInternetService {
             app.showPopup(SlowInternetService.popupName);
         }
     }
-    onReceived() {
+    public onReceived() {
         if (this.fatalError) {
             return;
         }
@@ -97,7 +91,7 @@ export class SlowInternetService {
             app.slowConnectionPopup.close();
         }
     }
-    onReconnected() {
+    public onReconnected() {
         if (this.fatalError) {
             return;
         }
@@ -111,12 +105,12 @@ export class SlowInternetService {
         this.closePopup();
         this.executeRetryHandler();
     }
-    closePopup() {
+    public closePopup() {
         if (app.currentPopup === SlowInternetService.popupName) {
             app.slowConnectionPopup.close();
         }
     }
-    onDisconnected() {
+    public onDisconnected() {
         if (this.fatalError) {
             return;
         }
@@ -126,14 +120,14 @@ export class SlowInternetService {
             this.showReconnectFailedPopup();
         }
     }
-    showReconnectFailedPopup() {
+    public showReconnectFailedPopup() {
         if (app.currentPopup !== SlowInternetService.popupName) {
             app.showPopup(SlowInternetService.popupName);
         }
 
         app.slowConnectionPopup.reconnectFailed();
     }
-    showDuplicatedConnectionPopup() {
+    public showDuplicatedConnectionPopup() {
         this.log("Duplicate connection detected");
         this.fatalError = true;
         if (app.currentPopup !== SlowInternetService.popupName) {
@@ -145,7 +139,7 @@ export class SlowInternetService {
         });
         app.slowConnectionPopup.duplicatedConnection();
     }
-    onOnline() {
+    public onOnline() {
         if (this.fatalError) {
             return;
         }
@@ -156,7 +150,7 @@ export class SlowInternetService {
             app.slowConnectionPopup.connectionPresent();
         }
     }
-    onOffline() {
+    public onOffline() {
         if (this.fatalError) {
             return;
         }
@@ -170,8 +164,16 @@ export class SlowInternetService {
 
         app.slowConnectionPopup.noConnection();
     }
+    private executeRetryHandler() {
+        if (this.retyHandler !== null) {
+            this.log("Executing retry handler");
+            this.retyHandler();
+            this.retyHandler = null;
+        }
+    }
     private log(message: string) {
         if (debugSettings.connection.slowInternet) {
+            // tslint:disable-next-line:no-console
             console.log(message);
         }
     }

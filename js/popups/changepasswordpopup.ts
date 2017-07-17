@@ -11,13 +11,13 @@ import { App } from "../app";
 declare var app: App;
 
 export class ChangePasswordPopup extends PopupBase implements KnockoutValidationGroup {
-    oldPassword = ko.observable<string>().extend({ required: true });
-    password: KnockoutObservable<string>;
-    confirmPassword: KnockoutObservable<string>;
-    errorMessage: KnockoutObservable<string>;
-    errors: KnockoutValidationErrors;
-    isValid: () => boolean;
-    loading: KnockoutObservable<boolean>;
+    public oldPassword = ko.observable<string>().extend({ required: true });
+    public password: KnockoutObservable<string>;
+    public confirmPassword: KnockoutObservable<string>;
+    public errorMessage: KnockoutObservable<string>;
+    public errors: KnockoutValidationErrors;
+    public isValid: () => boolean;
+    public loading: KnockoutObservable<boolean>;
 
     constructor() {
         super();
@@ -27,14 +27,14 @@ export class ChangePasswordPopup extends PopupBase implements KnockoutValidation
         this.errorMessage = ko.observable<string>();
         this.loading = ko.observable(false);
     }
-    shown(args: any[]= []): void {
+    public shown(args: any[]= []): void {
         this.oldPassword(null);
         this.password(null);
         this.confirmPassword(null);
         this.errors.showAllMessages(false);
         super.shown(args);
     }
-    async confirm() {
+    public async confirm() {
         const self = this;
         const isValid = this.isValid();
         if (!isValid) {

@@ -1,7 +1,4 @@
-﻿/// <reference types="knockout" />
-
-import ko = require("knockout");
-import { ActionBlock } from "../../../table/actionBlock";
+﻿import { ActionBlock } from "../../../table/actionBlock";
 
 export class ActionBlockComponent {
     private actionBlock: ActionBlock;

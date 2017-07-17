@@ -9,8 +9,8 @@ import { OperationsHistoryPage } from "./operationshistorypage";
 import { WithdrawalPage } from "./withdrawalpage";
 
 export class CashierPageBlock extends PageBlock {
-    accountPage: AccountPage;
-    ratingPage: RatingPage;
+    public accountPage: AccountPage;
+    public ratingPage: RatingPage;
     constructor() {
         const accountPage = new AccountPage();
         super("cashier", "account", accountPage);

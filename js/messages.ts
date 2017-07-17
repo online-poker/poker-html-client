@@ -1,6 +1,7 @@
 /* tslint:disable:quotemark no-trailing-comma max-line-length */
 
-var messages: any = {
+// tslint:disable-next-line:no-unused-variable
+let messages: any = {
     loading: "Загрузка...",
     login: 'Вход',
     logout: 'Выход',
@@ -23,7 +24,7 @@ var messages: any = {
     updater: {
         title: 'Обновление',
         line1: 'Доступно новое обновление',
-        button: 'Обновить'
+        button: 'Обновить',
     },
     broadcast: {
         caption: 'Администрация',
@@ -106,7 +107,7 @@ var messages: any = {
             speed: 'Скорость',
             buyin: 'Байин',
             maxplayers: 'Макс. игроков',
-        }
+        },
     },
     tablesList: {
         headerCaption: 'Столы (#count)',
@@ -226,7 +227,7 @@ var messages: any = {
         selectCardsVariant: "Выберите способ отображения карт.",
         cardsUpperCorner: "В верхнем углу",
         cardsDownCorner: "В нижнем углу",
-        updateInfo: "Вы должны перезапустить приложение, чтобы изменения применились"
+        updateInfo: "Вы должны перезапустить приложение, чтобы изменения применились",
     },
     auth: {
         logon: 'Вход',
@@ -559,7 +560,7 @@ var messages: any = {
             status2: 'Серебро',
             status3: 'Золото',
             status4: 'Платина',
-        }
+        },
     },
     joinTable: {
         caption: 'Сесть тут',
@@ -653,5 +654,5 @@ var messages: any = {
         RequiredParameterIsMissing: "Обязательный параметр не указан",
         InvalidTicket: "Неправильный номер билета",
         TicketAlreadyUsed: "Билет уже использован",
-    }
+    },
 };

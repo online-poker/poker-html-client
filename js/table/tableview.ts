@@ -32,32 +32,32 @@ export class TableView {
     public tableName: KnockoutObservable<string>;
 
     /**
-    * Current login which sitting on this view.
-    */
+     * Current login which sitting on this view.
+     */
     public currentLogin: KnockoutObservable<string>;
 
     /**
-    * Represents the value indicating that information 
-    * about the table is retreiving.
-    */
+     * Represents the value indicating that information 
+     * about the table is retreiving.
+     */
     public connecting: KnockoutObservable<boolean>;
 
     /**
-    * Request which performs connecting to the table.
-    */
+     * Request which performs connecting to the table.
+     */
     public connectingRequest: JQueryDeferred<any> = null;
 
     public smallBlind: KnockoutObservable<number>;
     public bigBlind: KnockoutObservable<number>;
     public ante: KnockoutObservable<number>;
     /**
-    * Minimal amount of money which currently authenticated player 
-    * could bring on the table if he stand up from the table lately.
-    */
+     * Minimal amount of money which currently authenticated player 
+     * could bring on the table if he stand up from the table lately.
+     */
     public minimalPlayerBuyIn: KnockoutObservable<number>;
     /**
-    * Minimal base amount of buy-in in BB to bring on the table.
-    */
+     * Minimal base amount of buy-in in BB to bring on the table.
+     */
     public minimalBuyIn: KnockoutObservable<number>;
     public gamePlayers: KnockoutObservableArray<number>;
     public places: KnockoutComputed<TablePlaceModel[]>;
@@ -72,55 +72,54 @@ export class TableView {
      */
     public actionsCount: KnockoutObservable<number>;
     /**
-    * Indicating whether authenticated player is playing in the game
-    */
+     * Indicating whether authenticated player is playing in the game
+     */
     public myPlayerInGame: KnockoutComputed<boolean>;
     /**
-    * Indicating whether authenticated player was playing in the game
-    */
+     * Indicating whether authenticated player was playing in the game
+     */
     public myPlayerWasInGame: KnockoutComputed<boolean>;
     /**
-    * Id of the current game on the table.
-    */
+     * Id of the current game on the table.
+     */
     public gameId: KnockoutObservable<number>;
     public currentGameId: KnockoutObservable<number>;
     /**
-    * Indicates that game finished.
-    */
+     * Indicates that game finished.
+     */
     public gameFinished: KnockoutObservable<boolean>;
     /**
-    * Indicates that prizes distributed in the game.
-    */
+     * Indicates that prizes distributed in the game.
+     */
     public prizesDistributed: KnockoutObservable<boolean>;
     /**
-    * Indicates that game started.
-    */
+     * Indicates that game started.
+     */
     public gameStarted: KnockoutObservable<boolean>;
     /**
-    * Count of active players in the game
-    */
+     * Count of active players in the game
+     */
     public activePlayersCount: KnockoutComputed<number>;
     /**
-    * Value indicating whether all bets are rounded.
-    */
+     * Value indicating whether all bets are rounded.
+     */
     public allBetsRounded: KnockoutObservable<boolean>;
     /**
-    * Value indicating whether use cards variant up
-    */
+     * Value indicating whether use cards variant up
+     */
     public cardsVariantUp: KnockoutObservable<boolean>;
     /**
-    * Value indicating whether use cards variant down
-    */
+     * Value indicating whether use cards variant down
+     */
     public cardsVariantDown: KnockoutObservable<boolean>;
     /**
-    * Css rules for table-container
-    */
+     * Css rules for table-container
+     */
     public containerCss: KnockoutObservable<any>;
 
     public timeLeft: KnockoutComputed<number>;
     public timerInterval: number;
     public chipWidth: number;
-    private sitting = false;
 
     public chatMessage: KnockoutObservable<string>;
     public combinations: KnockoutObservableArray<string>;
@@ -135,13 +134,13 @@ export class TableView {
     public checkOrCallAmount: KnockoutComputed<number>;
 
     /**
-    * Bet amount for currently active player.
-    */
+     * Bet amount for currently active player.
+     */
     public currentBet: KnockoutComputed<number>;
 
     /**
-    * Bet amount for player.
-    */
+     * Bet amount for player.
+     */
     public myBet: KnockoutComputed<number>;
     public currentTotalBet: KnockoutComputed<number>;
     public maximumBet: KnockoutComputed<number>;
@@ -156,9 +155,6 @@ export class TableView {
     public currentCombination = ko.observable("");
     public actionBlock: ActionBlock;
     public onMyTurn: Signal;
-    private cardsReceived: boolean;
-    private queue: GameActionsQueue;
-    private handHistory: HandHistory;
     public tablePlaces: TablePlaces;
     public lastHandHistory: KnockoutObservable<HandHistory>;
     public hasPreviousHand: KnockoutComputed<boolean>;
@@ -166,44 +162,49 @@ export class TableView {
     public currentHandCaption: KnockoutComputed<string>;
     public previousHandCaption: KnockoutComputed<string>;
     /**
-    * Indicates that animation is suppressed from playing.
-    */
+     * Indicates that animation is suppressed from playing.
+     */
     public animationSuppressed = ko.observable(false);
-    private animationSettings = AnimationSettings.getSettings();
 
     /**
-    * Tournament to which belongs given table.
-    */
+     * Tournament to which belongs given table.
+     */
     public tournament = ko.observable<TournamentView>(null);
 
     /**
-    * Indicates that table is frozen.
-    */
+     * Indicates that table is frozen.
+     */
     public frozen = ko.observable(false);
 
     /**
-    * Indicates that table is opened
-    */
+     * Indicates that table is opened
+     */
     public opened = ko.observable(true);
 
     /**
-    * Indicates that table is paused
-    */
+     * Indicates that table is paused
+     */
     public paused = ko.observable(false);
     public pauseDate = ko.observable<number>(null);
-    private pauseDescription = ko.observable("");
-    private pauseDescriptionHandle: number = null;
     public soundEnabled = false;
     public hasPendingMoney = ko.observable(false);
     public hasNotification = ko.observable(false);
     public notification = ko.observable("");
     public couldAddChips: KnockoutComputed<boolean>;
-    private notificationHandleTimeout: number = null;
-    private notificationHandleInterval: number = null;
-    private displayingRebuyAddonNotification = false;
 
     /* If of the last message Id starting from which messages could be displayed */
     public lastMessageId = 0;
+
+    private animationSettings = AnimationSettings.getSettings();
+    private sitting = false;
+    private cardsReceived: boolean;
+    private queue: GameActionsQueue;
+    private handHistory: HandHistory;
+    private pauseDescription = ko.observable("");
+    private pauseDescriptionHandle: number = null;
+    private notificationHandleTimeout: number = null;
+    private notificationHandleInterval: number = null;
+    private displayingRebuyAddonNotification = false;
 
     private enableInjectPlayerCards = false;
 
@@ -305,13 +306,13 @@ export class TableView {
             return runtimeSettings.game.moveTime - pass;
         });
         this.currentRaise = ko.computed<number>({
+            owner: this,
             read: function () {
                 return self.actionBlock.tableSlider.current();
             },
             write: function (value) {
                 self.actionBlock.tableSlider.current(value);
             },
-            owner: this
         });
         this.currentPlayer = ko.computed(function () {
             self.tablePlaces.placesRefreshTrigger();
@@ -414,8 +415,8 @@ export class TableView {
             const playersInGame = self.places().filter(value => value.WasInGame()).length;
             const activePlayers = self.places().filter(value => value.WasInGame() && (value.Cards() !== null));
             const maxBet = self.maximumBet();
-            const allRounded = activePlayers.filter(player => (player.Bet() === maxBet) || (player.Money() === 0)).length
-                === activePlayers.length;
+            const allRounded = activePlayers.filter(player => (player.Bet() === maxBet)
+                || (player.Money() === 0)).length === activePlayers.length;
             if (allRounded && (self.actionsCount() >= playersInGame)) {
                 return true;
             }
@@ -587,10 +588,10 @@ export class TableView {
         this.tableBetsCaption = ko.computed(function () {
             const hasAnte = self.ante() != null;
             if (hasAnte) {
-                return _("table.betsWithAnte", { sb: self.smallBlind(), bb: self.bigBlind(), ante: self.ante() });
+                return _("table.betsWithAnte", { ante: self.ante(), bb: self.bigBlind(), sb: self.smallBlind() });
             }
 
-            return _("table.bets", { sb: self.smallBlind(), bb: self.bigBlind() });
+            return _("table.bets", { bb: self.bigBlind(), sb: self.smallBlind() });
         }, this);
 
         this.couldAddChips = ko.pureComputed(function () {
@@ -618,10 +619,9 @@ export class TableView {
         this.initHandHistory();
     }
 
-
     /**
-    * Gets current cards combination
-    */
+     * Gets current cards combination
+     */
     public getCurrentCombination() {
         const my = this.myPlayer();
         if (my == null) {
@@ -631,7 +631,7 @@ export class TableView {
         const tableCards = this.tableCards.tableCardsData();
         return my.getCombination(tableCards);
     }
-    startTimer(startTime: number = 1) {
+    public startTimer(startTime: number = 1) {
         const self: TableView = this;
         if (this.frozen()) {
             return;
@@ -656,14 +656,14 @@ export class TableView {
             }
         }, 1000);
     }
-    clearTimer() {
+    public clearTimer() {
         timeService.clearInterval(this.timerInterval);
         this.timePass(null);
     }
-    clearInformation() {
+    public clearInformation() {
         this.messages([]);
     }
-    updateTableInformation() {
+    public updateTableInformation() {
         /// <signature>
         ///     <summary>Updates the information about the table from the server</summary>
         /// </signature>
@@ -746,13 +746,13 @@ export class TableView {
         });
         this.connectingRequest = currentLoadingRequest;
     }
-    cancelUpdateTableInformation() {
+    public cancelUpdateTableInformation() {
         if (this.connectingRequest !== null) {
             this.connectingRequest.notify("cancel");
             this.connectingRequest = null;
         }
     }
-    joinTable(wrapper: ConnectionWrapper, maxAttempts = 3) {
+    public joinTable(wrapper: ConnectionWrapper, maxAttempts = 3) {
         const self = this;
         const result = $.Deferred();
         if (maxAttempts === 0 || wrapper.terminated) {
@@ -777,7 +777,7 @@ export class TableView {
                 return;
             }
 
-            self.log("Executing Game.join on connection " + wrapper.connection.id + " in state " + wrapper.connection.state);
+            self.log(`Executing Game.join on connection ${wrapper.connection.id} in state ${wrapper.connection.state}`);
             const operation = wrapper.connection.Game.server.join(self.tableId)
                 .then(function () {
                     if (wrapper.terminated) {
@@ -803,8 +803,8 @@ export class TableView {
                         subsequentDeferred = self.joinTable(wrapper, maxAttempts - 1);
                         return subsequentDeferred.then(function () {
                             result.resolve();
-                        }, function (error, cancelled: boolean) {
-                            result.reject(error, cancelled);
+                        }, function (subsequentError, subsequentCancelled: boolean) {
+                            result.reject(subsequentError, subsequentCancelled);
                         });
                     }
                 });
@@ -822,7 +822,7 @@ export class TableView {
         });
         return result;
     }
-    joinChat(wrapper: ConnectionWrapper, maxAttempts = 3) {
+    public joinChat(wrapper: ConnectionWrapper, maxAttempts = 3) {
         const self = this;
         const result = $.Deferred();
         if (maxAttempts === 0 || wrapper.terminated) {
@@ -844,7 +844,7 @@ export class TableView {
                 return;
             }
 
-            self.log("Executing Game.join on connection " + wrapper.connection.id + " in state " + wrapper.connection.state);
+            self.log(`Executing Game.join on connection ${wrapper.connection.id} in state ${wrapper.connection.state}`);
             const operation = wrapper.connection.Chat.server.join(self.tableId)
                 .then(function () {
                     if (wrapper.terminated) {
@@ -864,8 +864,8 @@ export class TableView {
                     subsequentDeferred = self.joinChat(wrapper, maxAttempts - 1);
                     return subsequentDeferred.then(function () {
                         result.resolve();
-                    }, function (error, cancelled: boolean) {
-                        result.reject(error, cancelled);
+                    }, function (subsequentError, subsequentCancelled: boolean) {
+                        result.reject(subsequentError, subsequentCancelled);
                     });
                 });
 
@@ -882,7 +882,7 @@ export class TableView {
         });
         return result;
     }
-    disconnect() {
+    public disconnect() {
         /// <signature>
         ///     <summary>Updates the information about the table from the server</summary>
         /// </signature>
@@ -894,7 +894,7 @@ export class TableView {
         // connectionService.currentConnection.connection.Game.server.leave(this.tableId);
         // connectionService.currentConnection.connection.Chat.server.leave(this.tableId);
     }
-    setButtons(dealerSeat: number) {
+    public setButtons(dealerSeat: number) {
         if (dealerSeat === 0) {
             this.setDealer(0);
             this.setSmallBlind(0);
@@ -908,7 +908,7 @@ export class TableView {
             this.setBigBlind(bigBlindSeat);
         }
     }
-    setDealer(dealerSeat: number) {
+    public setDealer(dealerSeat: number) {
         const players = this.places();
         players.forEach((p) => {
             if (p.Seat() === dealerSeat) {
@@ -920,7 +920,7 @@ export class TableView {
         // this.places(players);
     }
 
-    setSmallBlind(smallBlindSeat: number) {
+    public setSmallBlind(smallBlindSeat: number) {
         const players = this.places();
         players.forEach((p) => {
             if (p.Seat() === smallBlindSeat) {
@@ -932,7 +932,7 @@ export class TableView {
         });
     }
 
-    setBigBlind(bigBlindSeat: number) {
+    public setBigBlind(bigBlindSeat: number) {
         const players = this.places();
         players.forEach((p) => {
             if (p.Seat() === bigBlindSeat) {
@@ -944,12 +944,12 @@ export class TableView {
         });
     }
 
-    getNextPlayerSeat(currentSeat: number) {
+    public getNextPlayerSeat(currentSeat: number) {
         const players = this.places();
         let comparePlayer = currentSeat;
         let nextPlayer = null;
         let maxPlayers = this.tablePlaces.getMaxPlayers();
-        for (var i = 0; i < maxPlayers; i++) {
+        for (let i = 0; i < maxPlayers; i++) {
             if (nextPlayer != null) {
                 break;
             }
@@ -971,11 +971,12 @@ export class TableView {
                     }
                 }
             });
-        };
+        }
+
         return nextPlayer;
     }
 
-    setCurrent(currentPlayerId: number) {
+    public setCurrent(currentPlayerId: number) {
         const players = this.places();
         players.forEach((p) => {
             if (p.PlayerId() === currentPlayerId) {
@@ -986,29 +987,39 @@ export class TableView {
         });
     }
 
-    async onSit(playerId: number, seat: number, playerName: string, amount: number, playerUrl: string, points: number, stars: number) {
-        /// <signature>
-        ///     <summary>Sits players on the table.</summary>
-        ///     <param name="playerId" type="Number">Id of the player which join the table</param>
-        ///     <param name="seat" type="Number">Number of seat where player sit.</param>
-        ///     <param name="playerName" type="String">Name of the player which join the table</param>
-        ///     <param name="amount" type="Number">Amount of money which player bring to the table</param>
-        /// </signature>
+    /**
+     * Sits players on the table
+     * @param playerId Id of the player which join the table
+     * @param seat Number of seat where player sit
+     * @param playerName Name of the player which join the table
+     * @param amount Amount of money which player bring to the table
+     * @param playerUrl URL for the player avatar.
+     * @param points Point which player account has
+     * @param stars Stars which player account has
+     */
+    public async onSit(
+        playerId: number,
+        seat: number,
+        playerName: string,
+        amount: number,
+        playerUrl: string,
+        points: number,
+        stars: number) {
         this.logGameEvent("Player " + playerId + " sit on the seat " + seat);
         const places = this.places();
 
         const initialStatus = !this.paused() ? 0 : (8 /* IsParticipatingStatus */ + 16 /* IsInGame */);
         const playerModel = new TablePlaceModel({
+            Bet: null,
+            Cards: null,
+            Money: amount,
             PlayerId: playerId,
             PlayerName: playerName,
             PlayerUrl: playerUrl,
-            Seat: seat,
-            Money: amount,
-            Cards: null,
-            Bet: null,
-            Status: initialStatus,
             Points: points,
-            Stars: stars
+            Seat: seat,
+            Stars: stars,
+            Status: initialStatus,
         });
         this.tablePlaces.sit(seat, playerModel);
         this.refreshPlaces();
@@ -1019,7 +1030,7 @@ export class TableView {
             await api.SetOpenCardsParameters(this.tableId, !settings.autoHideCards());
         }
     }
-    onStandup(playerId) {
+    public onStandup(playerId) {
         /// <signature>
         ///     <summary>Standup player from the table.</summary>
         ///     <param name="playerId" type="Number">Id of the player which join the table</param>
@@ -1053,20 +1064,20 @@ export class TableView {
         this.actionBlock.updateNeedBB();
         this.actionBlock.updateBlocks();
     }
-    onFrozen() {
+    public onFrozen() {
         this.frozen(true);
         this.clearTimer();
     }
-    onUnfrozen() {
+    public onUnfrozen() {
         this.frozen(false);
         this.startTimer();
     }
-    onOpened() {
+    public onOpened() {
         this.pushCallback(() => {
             this.opened(true);
         });
     }
-    onClosed() {
+    public onClosed() {
         this.pushCallback(() => {
             this.opened(false);
             this.tablePlaces.clear();
@@ -1074,15 +1085,15 @@ export class TableView {
             this.tableCards.clear();
         });
     }
-    onPaused() {
+    public onPaused() {
         this.paused(true);
         this.pauseDate(new Date().valueOf());
         this.updatePauseDescription();
     }
-    onResumed() {
+    public onResumed() {
         this.clearPauseMessage();
     }
-    onFinalTableCardsOpened(cards: number[]) {
+    public onFinalTableCardsOpened(cards: number[]) {
         this.handHistory.onFinalTableCardsOpened(cards);
     }
 
@@ -1090,32 +1101,33 @@ export class TableView {
      * Notifies that table is tournament table.
      * @param tournamentId Id of the tournament to which table becomes belonging.
      */
-    onTableTournamentChanged(tournamentId: number | null) {
+    public onTableTournamentChanged(tournamentId: number | null) {
         throw new Error("TableView.onTableTournamentChanged not implemented");
     }
 
     /**
-    * Informs about current state on the table.
-    * @param players Array of PlayerStatusInfo objects which describe current status of the players
-    * @param pots Array of pots on the table.
-    * @param cards Cards open on the table
-    * @param dealerSeat Current dealer seat. 0 if no game on the table.
-    * @param buyIn Minimum amount of money which player should bring on the table.
-    * @param baseBuyIn Base amount in BB for joining table under normal conditions. 
-    *                   20*baseBuyIn is maximum amount which player could bring-in.
-    * @param leaveTime Time when player leave table last time.
-    * @param timePass Time in second which is pass from last player turn.
-    * @param currentPlayerId Id of the current player in the game.
-    * @param lastRaise Amount of last raise in the game.
-    * @param gameId Id of the game
-    * @param authenticated Value indicating whether current user is authenticated or not.
-    * @param actionsCount Count of actions which was performed by the player.
-    * @param frozen A value indicating whether game on the table is frozen or not.
-    * @param opened A value indicating whether the table is opened or not.
-    * @param pauseData Unix time when game was paused. If game not paused, then null.
-    * @param lastMessageId Last id of the message.
-    */
-    onTableStatusInfo(players: PlayerStatusInfo[], pots: number[], cards: string, dealerSeat: number, buyIn: number,
+     * Informs about current state on the table.
+     * @param players Array of PlayerStatusInfo objects which describe current status of the players
+     * @param pots Array of pots on the table.
+     * @param cards Cards open on the table
+     * @param dealerSeat Current dealer seat. 0 if no game on the table.
+     * @param buyIn Minimum amount of money which player should bring on the table.
+     * @param baseBuyIn Base amount in BB for joining table under normal conditions. 
+     *                   20*baseBuyIn is maximum amount which player could bring-in.
+     * @param leaveTime Time when player leave table last time.
+     * @param timePass Time in second which is pass from last player turn.
+     * @param currentPlayerId Id of the current player in the game.
+     * @param lastRaise Amount of last raise in the game.
+     * @param gameId Id of the game
+     * @param authenticated Value indicating whether current user is authenticated or not.
+     * @param actionsCount Count of actions which was performed by the player.
+     * @param frozen A value indicating whether game on the table is frozen or not.
+     * @param opened A value indicating whether the table is opened or not.
+     * @param pauseData Unix time when game was paused. If game not paused, then null.
+     * @param lastMessageId Last id of the message.
+     */
+    public onTableStatusInfo(
+        players: PlayerStatusInfo[], pots: number[], cards: string, dealerSeat: number, buyIn: number,
         baseBuyIn: number, leaveTime, timePass: number, currentPlayerId: number, lastRaise: number, gameId: number,
         authenticated: boolean, actionsCount: number, frozen: boolean, opened: boolean, pauseDate: number,
         lastMessageId: number) {
@@ -1195,88 +1207,18 @@ export class TableView {
         this.connecting(false);
         this.log("Finishing connecting to table " + this.tableId);
     }
-    onGameStartedCore(gameId, players: GamePlayerStartInformation[], actions: GameActionStartInformation[], dealerSeat) {
-        /// <signature>
-        ///     <summary>Start the game.</summary>
-        ///     <param name="gameId" type="Number">Id of the player which join the table</param>
-        ///     <param name="players" type="Array" 
-        ///             value="[{PlayerId:1,PlayerName:'Login',PlayerUrl:'http://url/1.png',Money:100,Seat:9,Cards:[1,2],Status:1}]">
-        ///     </param>
-        ///     <param name="dealerSeat" type="Number">Seat where dealer sitting.</param>
-        /// </signature>
-        this.gameFinished(false);
-        this.prizesDistributed(false);
-        this.currentGameId(gameId);
-        this.gameId(gameId);
-        this.hasPendingMoney(false);
-        this.actionBlock.isRaise(true);
-        this.actionBlock.expanded(false);
-        this.actionBlock.showCardsEnabled(true);
-        this.actionBlock.showHoleCard1Enabled(true);
-        this.actionBlock.showHoleCard2Enabled(true);
-        this.actionBlock.updateBounds();
-        this.actionsCount(0);
-        this.tableCards.clear();
-        this.pots([]);
-        this.logGameEvent("Game started");
-        if (this.displayingRebuyAddonNotification) {
-            this.clearNotification();
-        }
-
-        const combinations: string[] = [];
-
-        if (runtimeSettings.game.clearAutoFoldOrCheckOnNewGame) {
-            this.actionBlock.autoFoldOrCheck(false);
-        }
-
-        this.cardsReceived = false;
-        this.combinations(combinations);
-        this.gamePlayers(players.map((item) => item.PlayerId));
-        this.places().forEach(function (value) {
-            value.prepareForNewGame();
-            players.forEach(function (pvalue) {
-                if (pvalue.PlayerId === value.PlayerId()) {
-                    value.initializeForNewGame(pvalue.Money);
-                }
-            });
-            if (players.every((pvalue) => pvalue.PlayerId !== value.PlayerId())) {
-                value.WasInGame(null);
-            }
-        });
-        this.setButtons(dealerSeat);
-        if (this.soundEnabled) {
-            soundManager.playDealCards();
-        }
-
-        this.refreshPlaces();
-        this.lastRaise(this.bigBlind());
-
-        this.actionBlock.resetAutomaticAction();
-        if (players.some(_ => _.PlayerId === authManager.loginId())) {
-            // Reset Wait BB status since player currently join the game.
-            this.actionBlock.resetWaitBB();
-        }
-    }
-    startDealCards() {
-        const self = this;
-        this.queue.pushCallback(() => {
-            self.logGameEvent("Deal cards to players");
-            self.places().forEach(function (value) {
-                if (value.WasInGame()) {
-                    value.startDealCards();
-                }
-            });
-        });
-        this.queue.wait(this.animationSettings.dealCardsTime);
-        this.queue.pushCallback(() => {
-            self.places().forEach(function (value) {
-                value.IsDealCards(false);
-            });
-            self.clearTimer();
-            self.startTimer();
-        });
-    }
-    onGameStarted(gameId: number, players: GamePlayerStartInformation[], actions: GameActionStartInformation[], dealerSeat: number) {
+    /**
+     * Start the game
+     * @param gameId Id of the player which join the table
+     * @param players Players in the game
+     * @param actions Actions in the game
+     * @param dealerSeat Seat where dealer sitting
+     */
+    public onGameStarted(
+        gameId: number,
+        players: GamePlayerStartInformation[],
+        actions: GameActionStartInformation[],
+        dealerSeat: number) {
         this.queue.pushCallback(() => {
             this.onGameStartedCore(gameId, players, actions, dealerSeat);
             this.handHistory.onGameStarted(gameId, players, actions, dealerSeat);
@@ -1286,7 +1228,7 @@ export class TableView {
             this.startDealCards();
         }
     }
-    onGameFinished(gameId: number, winners: GameWinnerModel[], rake: number) {
+    public onGameFinished(gameId: number, winners: GameWinnerModel[], rake: number) {
         /// <signature>
         ///     <summary>Start the game.</summary>
         ///     <param name="gameId" type="Number">Id of the player which join the table</param>
@@ -1297,7 +1239,6 @@ export class TableView {
         /// </signature>
         const self = this;
         this.queue.wait(this.animationSettings.finishGamePrePause);
-        const activePlayersCount = this.activePlayersCount();
         if (this.pots().length === 0 && winners.length > 0) {
             this.onMoveMoneyToPot(winners.map(_ => _.Amount));
         }
@@ -1426,7 +1367,1056 @@ export class TableView {
             self.displayRebuyOrAddonTime();
         });
     }
-    calculateWinnerAmount(places: TablePlaceModel[], winners: GameWinnerModel[], needHightlightCards: boolean) {
+    public onPlayerStatus(playerId: number, status: number) {
+        this.queue.pushCallback(() => {
+            this.onPlayerStatusCore(playerId, status);
+        });
+    }
+    public onPlayerCards(playerId: number, cards: number[]) {
+        const self = this;
+        if (this.enableInjectPlayerCards) {
+            this.queue.injectCallback(() => {
+                this.onPlayerCardsCore(playerId, cards);
+                this.ensureCardsOpened(playerId);
+            });
+        } else {
+            this.queue.pushCallback(() => {
+                if (!self.cardsReceived) {
+                    if (playerId === authManager.loginId()) {
+                        self.startDealCards();
+                        this.queue.pushCallback(() => {
+                            self.onPlayerCardsCore(playerId, cards);
+                        });
+                    } else {
+                        self.onPlayerCardsCore(playerId, cards);
+                    }
+                } else {
+                    self.onPlayerCardsCore(playerId, cards);
+                }
+            });
+        }
+    }
+    public onPlayerCardOpened(playerId: number, cardPosition: number, cardValue: number) {
+        const self = this;
+        if (this.enableInjectPlayerCards) {
+            this.queue.injectCallback(() => {
+                this.onPlayerCardOpenedCore(playerId, cardPosition, cardValue);
+            });
+        } else {
+            this.queue.pushCallback(() => {
+                self.onPlayerCardOpenedCore(playerId, cardPosition, cardValue);
+            });
+        }
+    }
+    public onPlayerCardsMucked(playerId: number) {
+        this.queue.pushCallback(() => {
+            const currentPlayer = this.tablePlaces.getPlaceByPlayerId(playerId);
+            this.foldCardsForPlayer(currentPlayer, true, this.animationSettings.foldAnimationTimeout / 2);
+        });
+    }
+    public onBet(playerId: number, type: number, amount: number, nextPlayerId: number) {
+        /// <signature>
+        ///     <summary>Do bet.</summary>
+        ///     <param name="playerId" type="Number">Id of the player which join the table</param>
+        ///     <param name="type" type="Number">
+        ///     Type of the bet.<br/>
+        ///     0 - Blind
+        ///     1 - Ante
+        ///     2 - Check/Call
+        ///     3 - Bet/Raise
+        ///     4 - Fold
+        ///     5 - ForcedBet
+        ///     6 - ReturnMoney
+        ///     </param>
+        ///     <param name="amount" type="Number">Amount of money which player put in the bet</param>
+        ///     <param name="nextPlayerId" type="Number">Id of the player which join the table</param>
+        /// </signature>
+        this.enableInjectPlayerCards = false;
+        this.queue.pushCallback(() => {
+            this.onBetCore(playerId, type, amount, nextPlayerId);
+            this.handHistory.onBet(playerId, type, amount, nextPlayerId);
+        });
+    }
+    public onMoveMoneyToPot(amount: number[]) {
+        // Trigger animation.
+        const self = this;
+        this.actionBlock.buttonsEnabled(false);
+        this.queue.wait(this.animationSettings.movingMoneyToPotPrePause);
+        this.queue.pushCallback(() => {
+            self.startMovingChipsToPotAnimation();
+        });
+        this.queue.wait(this.animationSettings.movingMoneyToPotAnimationTimeout);
+        this.queue.pushCallback(() => {
+            self.logGameEvent("Updating pots");
+            self.setPots(amount);
+
+            self.logGameEvent("Clearing bets");
+            const places = self.places();
+            self.places().forEach(function (value) {
+                value.collectBet();
+            });
+            self.refreshPlaces();
+
+            self.lastRaise(0);
+            self.currentRaise(self.minimumRaiseAmount());
+            self.actionBlock.isRaise(false);
+            self.actionBlock.buttonsEnabled(true);
+        });
+    }
+    public onMoneyAdded(playerId: number, amount: number) {
+        const self = this;
+        const places = this.places();
+        places.forEach(function (value) {
+            if (value.PlayerId() === playerId) {
+                // Add money only if player not currently eligible to be in game.
+                // And when no game on the table.
+                if (!value.IsInGameStatus() || self.gameId() === null) {
+                    value.Money(value.Money() + amount);
+                }
+            }
+        });
+        this.refreshPlaces();
+    }
+    public onMoneyRemoved(playerId: number, amount: number) {
+        const self = this;
+        const places = this.places();
+        places.forEach(function (value) {
+            if (value.PlayerId() === playerId) {
+                // Add money only if player not currently eligible to be in game.
+                // And when no game on the table.
+                if (!value.IsInGameStatus() || self.gameId() === null) {
+                    value.Money(value.Money() - amount);
+                }
+            }
+        });
+        this.refreshPlaces();
+    }
+    public setPots(amount: number[]) {
+        // Add first number to the last pot.
+        const currentPots = this.pots();
+        const skipCollectingPot = (currentPots.length === amount.length
+            && currentPots[currentPots.length - 1] === amount[currentPots.length - 1]);
+        if (!skipCollectingPot) {
+            this.handHistory.onMoveMoneyToPot(amount);
+        }
+
+        let main = amount[0];
+        if (this.pots().length === 0) {
+            // First pot created.
+            this.handHistory.onPotCreated(1, main);
+        } else {
+            // Update last pot
+            main = amount[this.pots().length - 1];
+            if (currentPots[this.pots().length - 1] !== main) {
+                this.handHistory.onPotUpdated(currentPots.length, main);
+            }
+        }
+
+        // Append other amounts to the end of stack.
+        // and generate split pots
+        for (let i = Math.max(1, currentPots.length); i < amount.length; i++) {
+            if (currentPots[i] !== amount[i]) {
+                this.handHistory.onPotCreated(i + 1, amount[i]);
+            }
+        }
+
+        this.pots(amount);
+    }
+
+    public setCards(cards: number[]) {
+        /// <signature>
+        ///     <summary>Set cards on the table.</summary>
+        ///     <param name="cards" type="Array">Array of table cards to display</param>
+        /// </signature>
+        this.tableCards.setCards(cards);
+    }
+
+    /**
+     * Gets current seat number for offline table
+     */
+    public getCurrentOfflineTableSeat(): number {
+        const self = this;
+        let seatNumber = 0;
+        app.requireAuthentication().then(function (authenticated) {
+            if (authenticated) {
+                const currentPlayer = self.currentLogin();
+                seatNumber = parseInt(currentPlayer.replace("Игрок", ""), 10);
+                console.log("seat number " + seatNumber);
+            }
+        });
+        return seatNumber;
+    }
+
+    public showSitPrompt(seat: number) {
+        if (this.sitting) {
+            return;
+        }
+
+        this.sitting = true;
+        const self = this;
+        app.requireAuthentication().then(function (authenticated) {
+            if (authenticated) {
+                const currentPlayer = self.myPlayer();
+                if (currentPlayer === null) {
+                    app.joinTablePopup.tableView(self);
+                    app.joinTablePopup.seatNumber(seat);
+                    app.executeCommand("popup.joinTable");
+                }
+            }
+        }).always(() => {
+            self.sitting = false;
+        });
+    }
+    public rebuy() {
+        const self = this;
+        const tournamentView = this.tournament();
+        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        tapi.Rebuy(tournamentView.tournamentId, false).then((data) => {
+            if (data.Status === "Ok") {
+                self.hasPendingMoney(true);
+                if (!self.hasPlayersWithoutMoney()) {
+                    // self.clearNotification();
+                }
+
+                SimplePopup.display(_("tableMenu.rebuy"), _("tableMenu.rebuySuccess"));
+            } else {
+                SimplePopup.display(_("tableMenu.rebuy"), _("errors." + data.Status));
+            }
+        }, function () {
+            SimplePopup.display(_("tableMenu.rebuy"), _("tableMenu.rebuyError"));
+        });
+    }
+    public doubleRebuy() {
+        const self = this;
+        const tournamentView = this.tournament();
+        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        tapi.Rebuy(tournamentView.tournamentId, true).then((data) => {
+            if (data.Status === "Ok") {
+                self.hasPendingMoney(true);
+                if (!self.hasPlayersWithoutMoney()) {
+                    // self.clearNotification();
+                }
+
+                SimplePopup.display(_("tableMenu.doublerebuy"), _("tableMenu.doublerebuySuccess"));
+            } else {
+                SimplePopup.display(_("tableMenu.doublerebuy"), _("errors." + data.Status));
+            }
+        }, function () {
+            SimplePopup.display(_("tableMenu.doublerebuy"), _("tableMenu.doublerebuyError"));
+        });
+    }
+    public addon() {
+        const self = this;
+        const tournamentView = this.tournament();
+        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        tapi.Addon(tournamentView.tournamentId).then((data) => {
+            if (data.Status === "Ok") {
+                self.hasPendingMoney(true);
+                if (!self.hasPlayersWithoutMoney()) {
+                    // self.clearNotification();
+                }
+
+                // self.tournament().addonCount(self.tournament().addonCount() + 1);
+                SimplePopup.display(_("tableMenu.addon"), _("tableMenu.addonSuccess"));
+            } else {
+                SimplePopup.display(_("tableMenu.addon"), _("errors." + data.Status));
+            }
+        }, function () {
+            SimplePopup.display(_("tableMenu.addon"), _("tableMenu.addonError"));
+        });
+    }
+    public showRebuyPrompt() {
+        const self = this;
+        const tdata = this.tournament().tournamentData();
+        const prompt = [_("table.rebuyPrompt", { price: tdata.RebuyFee + tdata.RebuyPrice })];
+        app.prompt(_("table.rebuyPromptCaption"), prompt).then(function () {
+            self.rebuy();
+        });
+    }
+    public showDoubleRebuyPrompt() {
+        const self = this;
+        const tdata = this.tournament().tournamentData();
+        const prompt = [_("table.doubleRebuyPrompt", { price: 2 * (tdata.RebuyFee + tdata.RebuyPrice) })];
+        app.prompt(_("table.doubleRebuyPromptCaption"), prompt).then(function () {
+            self.doubleRebuy();
+        });
+    }
+    public showAddonPrompt() {
+        const self = this;
+        const tdata = this.tournament().tournamentData();
+        const prompt = [_("table.addonPrompt", { price: tdata.AddonFee + tdata.AddonPrice })];
+        app.prompt(_("table.addonPromptCaption"), prompt).then(function () {
+            self.addon();
+        });
+    }
+    public async sit(seat: number, amount: number, ticketCode: string) {
+        const self = this;
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        try {
+            const data = await gameApi.Sit(self.tableId, seat, amount, ticketCode);
+            // report on successfull seating.
+            if (data.Status === "OperationNotValidAtThisTime") {
+                return {
+                    minimalAmount: undefined,
+                    status: data.Status,
+                    success: false,
+                };
+            }
+
+            if (data.Status !== "Ok") {
+                return {
+                    minimalAmount: data.MinimalAmount,
+                    status: data.Status,
+                    success: false,
+                };
+            } else {
+                return {
+                    minimalAmount: data.MinimalAmount,
+                    status: data.Status,
+                    success: true,
+                };
+            }
+        } catch (e) {
+            return {
+                minimalAmount: undefined,
+                status: "NotSufficiendFunds",
+                success: false,
+            };
+        }
+    }
+
+    public showStandupPrompt(): JQueryDeferred<void> {
+        /// <signature>
+        ///     <summary>Shows stand up prompt.</summary>
+        ///     <param name="seat" type="Number">Seat where player willing to join</param>
+        ///     <param name="tableView" type="TableView">Table view where to join</param>
+        /// </signature>
+        const self = this;
+        const result = $.Deferred<void>();
+        if (self.myPlayer() != null) {
+            const tournament = this.tournament();
+            let messages: string[];
+            let caption: string;
+            if (tournament == null) {
+                const hasWin = self.myPlayer().Money() > 0 || self.myPlayerInGame();
+                const promptMesssage = hasWin ? "table.standupPrompt" : "table.standupPromptWithoutWin";
+                caption = hasWin ? "table.standupPromptCaption" : "table.leave";
+                messages = [_(promptMesssage)];
+            } else {
+                if (tournament.finishedPlaying()) {
+                    result.resolve();
+                    return result;
+                }
+                caption = "table.leave";
+                messages = [_("table.standupTournamentPrompt")];
+            }
+
+            app.promptAsync(_(caption), messages).then(function () {
+                if (self.tournament() == null) {
+                    self.standup();
+                }
+
+                result.resolve();
+            }, function () {
+                result.reject();
+            });
+        } else {
+            result.resolve();
+        }
+
+        return result;
+    }
+    public showStandupConfirm() {
+        let messages: string[];
+        messages = [_("table.standupSuccessMessage")];
+        const title = _("table.standupSuccessTitle");
+        SimplePopup.display(title, messages);
+    }
+    public async standup() {
+        const self = this;
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const data = await gameApi.Standup(this.tableId);
+        // report on successfull seating.
+        if (data.Status === "AuthorizationError") {
+            self.reportApiError("Ошибка авторизации");
+        } else if (data.Status === "Ok" && appConfig.game.seatMode) {
+            self.showStandupConfirm();
+        }
+    }
+
+    public showAddBalancePrompt(seat: number, ticketCode: string) {
+        /// <signature>
+        ///     <summary>Shows add balance prompt.</summary>
+        ///     <param name="seat" type="Number">Seat where player willing to join</param>
+        ///     <param name="tableView" type="TableView">Table view where to join</param>
+        /// </signature>
+        const targetPlayer = this.tablePlaces.getPlaceBySeat(seat);
+        const playerId = targetPlayer.PlayerId();
+
+        const amount = prompt("Укажите сумму для пополнения счета?", "1000");
+        if (amount) {
+            this.addBalance(Number(amount), ticketCode);
+        }
+    }
+
+    public async addBalance(amount: number, ticketCode: string) {
+        const places = this.places();
+        const targetPlayer = this.myPlayer();
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        try {
+            const data = await gameApi.AddBalance(this.tableId, amount, ticketCode);
+            // report on successfull seating.
+            if (data.Status !== "Ok") {
+                throw new Error(data.Status);
+            }
+
+            if (data.Status === "Ok") {
+                if (this.myPlayerInGame()) {
+                    this.hasPendingMoney(true);
+                }
+            }
+
+            return amount;
+        } catch (e) {
+            throw new Error("OperationNotAllowed");
+        }
+    }
+
+    public addMessage(messageId: number, sender: string, message: string) {
+        const messageExists = this.messages().filter(_ => _.messageId === messageId).length > 0;
+        if (!messageExists) {
+            const m = new PlayerMessage(messageId, sender, message);
+            this.messages.unshift(m);
+            while (this.messages().length > 100) {
+                this.messages.pop();
+            }
+
+            const messages = this.messages();
+            this.messages([]);
+            this.messages(messages);
+        }
+
+        if (this.lastMessageId >= messageId) {
+            return;
+        }
+
+        const player = this.getPlayerByLogin(sender);
+        if (player != null) {
+            player.displayChatMessage(message);
+        }
+    }
+
+    public addSystemMessage(messageId: number, message: string) {
+        if (this.lastMessageId >= messageId && messageId !== 0) {
+            return;
+        }
+
+        const m = new SystemMessage(messageId, message);
+        this.systemMessages.unshift(m);
+        while (this.systemMessages().length > 100) {
+            this.systemMessages.pop();
+        }
+    }
+
+    public updateMessage(messageId: number, sender: string, message: string) {
+        // TODO: Implement updating messages.
+    }
+
+    public updateSystemMessage(messageId: number, message: string) {
+        // TODO: Implement updating messages.
+    }
+
+    /**
+     * Sends mesage to the table chat.
+     */
+    public async sendMessage() {
+        const chatApi = new OnlinePoker.Commanding.API.Chat(apiHost);
+        const data = await chatApi.SendAsync(this.tableId, this.chatMessage());
+        this.chatMessage("");
+    }
+
+    public async fold() {
+        const self = this;
+        this.actionBlock.buttonsEnabled(false);
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        if (appConfig.game.useSignalR) {
+            // TODO: We should provide notification, which will return any error from the server.
+            connectionService.currentConnection.connection.Game.server.fold(this.tableId);
+        } else {
+            try {
+                const data = await gameApi.Fold(this.tableId);
+                if (data.Status === "OperationNotValidAtThisTime") {
+                    return;
+                }
+
+                if (data.Status !== "Ok") {
+                    self.reportApiError(data.Status);
+                }
+            } catch (e) {
+                self.turnRecovery();
+            }
+        }
+    }
+
+    public async checkOrCall() {
+        const self = this;
+        this.actionBlock.buttonsEnabled(false);
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        if (appConfig.game.useSignalR) {
+            // TODO: We should provide notification, which will return any error from the server.
+            connectionService.currentConnection.connection.Game.server.checkOrCall(this.tableId);
+        } else {
+            try {
+                const data = await gameApi.CheckOrCall(this.tableId);
+                if (data.Status === "OperationNotValidAtThisTime") {
+                    return;
+                }
+
+                if (data.Status !== "Ok") {
+                    self.reportApiError(data.Status);
+                }
+            } catch (e) {
+                self.turnRecovery();
+            }
+        }
+    }
+
+    public async betOrRaise() {
+        const self = this;
+        this.actionBlock.buttonsEnabled(false);
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const amount: number = this.currentRaise() - this.currentBet();
+        if (appConfig.game.useSignalR) {
+            // TODO: We should provide notification, which will return any error from the server.
+            connectionService.currentConnection.connection.Game.server.betOrRaise(this.tableId, amount);
+        } else {
+            try {
+                const data = await gameApi.BetOrRaise(this.tableId, amount);
+                if (data.Status === "OperationNotValidAtThisTime") {
+                    return;
+                }
+
+                if (data.Status !== "Ok") {
+                    self.reportApiError(data.Status);
+                }
+            } catch (e) {
+                self.turnRecovery();
+            }
+        }
+    }
+
+    /**
+     * Show cards for the current player.
+     */
+    public async showCards() {
+        this.actionBlock.showCardsEnabled(false);
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        try {
+            const data = await gameApi.ShowCards(this.tableId);
+            if (data.Status !== "Ok") {
+                this.reportApiError(data.Status);
+            }
+        } catch (e) {
+            if (app.currentPopup !== SlowInternetService.popupName) {
+                SimplePopup.display(_("table.turn"), _("table.connectionError", { tableName: this.tableName() }));
+            }
+
+            this.actionBlock.showCardsEnabled(true);
+        }
+    }
+
+    /**
+     * Muck cards for the current player.
+     */
+    public async muckCards() {
+        this.actionBlock.showCardsEnabled(false);
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        try {
+            const data = await gameApi.Muck(this.tableId);
+            if (data.Status !== "Ok") {
+                this.reportApiError(data.Status);
+            }
+        } catch (e) {
+            this.actionBlock.showCardsEnabled(true);
+        }
+    }
+
+    public toggleCards() {
+        const my = this.myPlayer();
+        if (my.IsCardsOpened()) {
+            this.muckCards();
+        } else {
+            this.showCards();
+        }
+    }
+
+    public showFirstCard() {
+        return this.showCard(0);
+    }
+
+    public showSecondCard() {
+        return this.showCard(1);
+    }
+
+    /**
+     * Show cards for the current player.
+     */
+    public async showCard(cardPosition: 0 | 1) {
+        const showCardVariable = cardPosition === 0
+            ? this.actionBlock.showHoleCard1Enabled
+            : this.actionBlock.showHoleCard2Enabled;
+        showCardVariable(false);
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        try {
+            const data = await gameApi.ShowHoleCards(this.tableId, cardPosition);
+            if (data.Status !== "Ok") {
+                this.reportApiError(data.Status);
+            }
+        } catch (e) {
+            if (app.currentPopup !== SlowInternetService.popupName) {
+                SimplePopup.display(_("table.turn"), _("table.connectionError", { tableName: this.tableName() }));
+            }
+
+            showCardVariable(true);
+        }
+    }
+
+    /**
+     * Cards opening on the table.
+     * @param cards Cards which was opened on the table.
+     */
+    public onOpenCards(cards: number[]) {
+        const self = this;
+        this.queue.pushCallback(() => {
+            self.actionsCount(0);
+            const currentCardsOpened = self.tableCards.tableCards().length;
+            const myPlayer = this.myPlayer();
+            if (myPlayer) {
+                myPlayer.cardsOverlayVisible(true);
+            }
+
+            self.tableCards.openCards(cards);
+            self.handHistory.onOpenCards(cards);
+            if (currentCardsOpened === 0 && cards.length === 3) {
+                self.handHistory.onFlop(cards[0], cards[1], cards[2]);
+                self.actionBlock.dealsAllowed(true);
+                soundManager.playFlopCards();
+            }
+            if (currentCardsOpened === 3 && cards.length === 4) {
+                self.handHistory.onTurn(cards[3]);
+                self.actionBlock.dealsAllowed(true);
+                soundManager.playTurn();
+            }
+            if (currentCardsOpened === 4 && cards.length === 5) {
+                self.handHistory.onRiver(cards[4]);
+                self.actionBlock.dealsAllowed(true);
+                soundManager.playRiver();
+            }
+            if (currentCardsOpened === 3 && cards.length === 5) {
+                self.handHistory.onTurn(cards[3]);
+                self.handHistory.onRiver(cards[4]);
+                // soundManager.playAllIn();
+            }
+            if (currentCardsOpened === 0 && cards.length === 5) {
+                self.handHistory.onFlop(cards[0], cards[1], cards[2]);
+                self.handHistory.onTurn(cards[3]);
+                self.handHistory.onRiver(cards[4]);
+                // soundManager.playAllIn();
+            }
+            self.actionBlock.resetAutomaticAction();
+            self.actionBlock.updateAdditionalButtons();
+        });
+        if (self.soundEnabled) {
+            soundManager.playFlop();
+        }
+
+        this.queue.wait(this.animationSettings.showCardsTimeout);
+        this.queue.pushCallback(() => {
+            self.updateCurrentCombination();
+            self.tableCards.clearAnimation();
+        });
+    }
+
+    public async comeBack() {
+        const self = this;
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const data = await gameApi.ComeBack(this.tableId);
+        if (data.Status === "OperationNotValidAtThisTime") {
+            return;
+        }
+
+        if (data.Status !== "Ok") {
+            self.reportApiError(data.Status);
+        }
+    }
+
+    public async sitOut() {
+        const self = this;
+        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const data = await gameApi.SitOut(this.tableId);
+        if (data.Status === "OperationNotValidAtThisTime") {
+            return;
+        }
+
+        if (data.Status !== "Ok") {
+            self.reportApiError(data.Status);
+        }
+    }
+    public showPlayerParameters() {
+        // tablePlayerParameterSelector.showPlayerParameters(this);
+    }
+
+    /**
+    * Displays last hand in the history
+    */
+    public showPreviousHand() {
+        app.handHistoryPopup.tableView(this);
+        app.showPopup("handHistory");
+    }
+    public rotate(offset: number) {
+        const myself = this.myPlayer();
+        if (myself == null) {
+            return;
+        }
+
+        const currentOffset = this.tablePlaces.getRealOffset(myself.Seat());
+        if (currentOffset === offset) {
+            return;
+        }
+
+        const self = this;
+        app.prompt(_("table.changeplace"),
+            [_("table.doyouwantchangeplace")]).then(function () {
+                self.tablePlaces.rotate(offset - currentOffset);
+            });
+    }
+
+    public hasPlayersWithoutMoney() {
+        return this.places().some(_ => _.Money() === 0);
+    }
+
+    public proposeRebuyOrAddon() {
+        const tournamentView = this.tournament();
+        if (tournamentView !== null && this.myPlayer() !== null && this.myPlayer().Money() === 0 && !this.hasPendingMoney()) {
+            if (tournamentView.rebuyAllowed()) {
+                this.proposeBuyRebuy();
+            }
+
+            if (tournamentView.addonAllowed() && tournamentView.addonCount() === 0) {
+                this.proposeBuyAddon();
+            }
+        }
+    }
+
+    /**
+     * Show table notification
+     */
+    public showNotification(message: string) {
+        this.notification(message);
+        this.hasNotification(true);
+    }
+
+    /**
+     * Show table notification for specific period of time
+     */
+    public showNotificationWithDelay(message: string, duration: number) {
+        this.clearNotification();
+        this.showNotification(message);
+        this.notificationHandleTimeout = timeService.setTimeout(() => {
+            this.clearNotification();
+        }, duration);
+    }
+
+    public pushCallback(callback: Function) {
+        this.queue.pushCallback(callback);
+    }
+
+    /*
+     * Display counter which indicates how much time left to buy addon or rebuy
+     * if player lose game.
+     */
+    private displayRebuyOrAddonTime() {
+        const self = this;
+        const tournamentView = this.tournament();
+
+        // Display notification about rebuy or addon prompt
+        // only for tournament games.
+        if (tournamentView === null || tournamentView === undefined) {
+            return;
+        }
+
+        // Display notification about rebuy or addon prompt
+        // only if rebuy or addon allowed.
+        if (!tournamentView.rebuyAllowed() && !tournamentView.addonAllowed()) {
+            return;
+        }
+
+        if (this.hasPlayersWithoutMoney()) {
+            // This time should be 500ms bigger then the actual time specified 
+            // on the server, to accomodate for the 500ms update period.
+            this.displayingRebuyAddonNotification = true;
+            const totalDuration = 10.5;
+            let i = 0;
+            let messageTemplate: string;
+            let popupCaption: string;
+            if (tournamentView.rebuyAllowed()) {
+                messageTemplate = "table.waitingForOtherPlayersRebuy";
+                popupCaption = "table.tournamentGameFinishedRebuyCaption";
+            } else if (tournamentView.addonAllowed()) {
+                messageTemplate = "table.waitingForOtherPlayersAddon";
+                popupCaption = "table.tournamentGameFinishedAddonCaption";
+            } else {
+                console.error("Unknown state during display rebuy of addon time");
+            }
+
+            this.notificationHandleInterval = timeService.setInterval(() => {
+                const secondsLeft = Math.floor(totalDuration - (i / 2));
+                self.showNotification(_(messageTemplate, { time: secondsLeft }));
+                app.customPopup.title(_(popupCaption, { time: secondsLeft }));
+                i++;
+                if (i >= totalDuration * 2) {
+                    self.clearNotification();
+                    if (app.currentPopup === "custom") {
+                        app.closePopup();
+                    }
+                }
+            }, 500);
+        }
+    }
+
+    /**
+     * Propose buying rebuy or double rebuy
+     */
+    private proposeBuyRebuy() {
+        const self = this;
+        const player = this.myPlayer();
+        if (player === null) {
+            return;
+        }
+
+        if (player.Money() === 0 && !this.hasPendingMoney()) {
+            // Display popup with three buttons.
+            const result = $.Deferred<void>();
+            app.promptEx(
+                _("table.tournamentGameFinishedCaption"),
+                [_("table.tournamentGameFinishedRebuy")],
+                [_("table.rebuy"), _("table.doubleRebuy"), _("common.cancel")],
+                [() => 1, () => 2, () => { /* nothing */ }])
+                .then(function (value: number) {
+                    if (value === 1) {
+                        self.showRebuyPrompt();
+                    }
+
+                    if (value === 2) {
+                        self.showDoubleRebuyPrompt();
+                    }
+
+                    result.resolve();
+                }, function () {
+                    result.reject();
+                });
+        }
+    }
+
+    /**
+     * Propose buying addon
+     */
+    private proposeBuyAddon() {
+        const self = this;
+        const player = this.myPlayer();
+        if (player == null) {
+            console.warn("Proposing but addon when no active player");
+            return;
+        }
+
+        if (player.Money() === 0 && !this.hasPendingMoney() && this.tournament().addonCount() === 0) {
+            // Display popup with two buttons.
+            const result = $.Deferred<void>();
+            app.promptEx(
+                _("table.tournamentGameFinishedCaption"),
+                [_("table.tournamentGameFinishedAddon")],
+                [_("table.addon"), _("common.cancel")],
+                [() => 1, () => { /* nothing */ }])
+                .then(function (value: number) {
+                    self.showAddonPrompt();
+                    result.resolve();
+                }, function () {
+                    result.reject();
+                });
+        }
+    }
+
+    private onBetCore(playerId: number, type: number, amount: number, nextPlayerId: number) {
+        this.logGameEvent("Doing bet of type " + type);
+        const places = this.places();
+        const myself = this.myPlayer();
+        const currentPlayer = this.tablePlaces.getPlaceByPlayerId(playerId);
+        if (currentPlayer === null) {
+            this.logGameEvent("No player sitting on the table.");
+            return;
+        }
+
+        this.updateBetsAndMoney(currentPlayer, type, amount);
+
+        const isMyTurn = myself !== null && nextPlayerId === myself.PlayerId();
+        // Don's enable buttons until cards would be recived for players.
+        if (this.cardsReceived) {
+            this.actionBlock.buttonsEnabled(true);
+            if (isMyTurn) {
+                this.onMyTurn.dispatch(this.tableId);
+            }
+        }
+
+        const forcedBets = type === 1 || type === 5;
+        if (!(forcedBets && nextPlayerId === 0)) {
+            this.setCurrent(nextPlayerId);
+
+            if (isMyTurn) {
+                // This will trigger reevaluation of the minimumRaiseAmount
+                this.currentRaise(this.minimumRaiseAmount());
+            } else {
+                this.currentRaise(null);
+            }
+        }
+
+        // this.refreshPlaces();
+
+        const userActions = type === 3 || type === 4 || type === 2;
+        if (userActions) {
+            this.actionsCount(this.actionsCount() + 1);
+        }
+
+        const allBetsRounded = this.allBetsRounded();
+        this.logGameEvent("All bets rounded", allBetsRounded);
+        if (allBetsRounded) {
+            this.actionBlock.buttonsEnabled(false);
+            this.actionBlock.dealsAllowed(false);
+        }
+
+        if (myself !== null) {
+            const requiredBet = this.maximumBet() - this.myBet();
+            this.actionBlock.updateSupportDirectAmountStatus(requiredBet);
+            if (nextPlayerId === myself.PlayerId()) {
+                if (!allBetsRounded && userActions) {
+                    this.actionBlock.performAutomaticActions();
+                    this.actionBlock.resetAutomaticAction();
+                }
+            }
+
+            this.actionBlock.updateAutomaticActionsText(myself.Money(), requiredBet);
+            this.actionBlock.updateAdditionalButtons();
+        }
+
+        if (nextPlayerId === authManager.loginId()) {
+            this.logGameEvent("Player turn approached");
+            this.tablePlaces.placesRefreshTrigger();
+        }
+
+        this.logGameEvent("Action block status: MMB:.", this.actionBlock.mainButtonsBlockVisible(),
+            " BEn:", this.actionBlock.buttonsEnabled(),
+            " TurnEn:", this.actionBlock.turnEnabled(),
+            " TTurnEn:", this.turnEnabled(),
+            " CP:", this.currentPlayer(),
+            " DA:", this.actionBlock.dealsAllowed(),
+            " InGame:", this.actionBlock.myPlayerInGame());
+        this.clearTimer();
+        this.startTimer();
+    }
+    private startMovingChipsToPotAnimation() {
+        this.logGameEvent("Moving chips to center");
+        const places = this.places();
+        this.places().forEach(function (value) {
+            value.IsBetAnimationLocked(false);
+            value.IsMovingBetToPot(true);
+        });
+        // this.refreshPlaces();
+    }
+
+    /**
+     * Start the game
+     * @param gameId Id of the player which join the table
+     * @param players Players in the game
+     * @param actions Actions in the game
+     * @param dealerSeat Seat where dealer sitting
+     */
+    private onGameStartedCore(
+        gameId: number,
+        players: GamePlayerStartInformation[],
+        actions: GameActionStartInformation[],
+        dealerSeat: number) {
+        this.gameFinished(false);
+        this.prizesDistributed(false);
+        this.currentGameId(gameId);
+        this.gameId(gameId);
+        this.hasPendingMoney(false);
+        this.actionBlock.isRaise(true);
+        this.actionBlock.expanded(false);
+        this.actionBlock.showCardsEnabled(true);
+        this.actionBlock.showHoleCard1Enabled(true);
+        this.actionBlock.showHoleCard2Enabled(true);
+        this.actionBlock.updateBounds();
+        this.actionsCount(0);
+        this.tableCards.clear();
+        this.pots([]);
+        this.logGameEvent("Game started");
+        if (this.displayingRebuyAddonNotification) {
+            this.clearNotification();
+        }
+
+        const combinations: string[] = [];
+
+        if (runtimeSettings.game.clearAutoFoldOrCheckOnNewGame) {
+            this.actionBlock.autoFoldOrCheck(false);
+        }
+
+        this.cardsReceived = false;
+        this.combinations(combinations);
+        this.gamePlayers(players.map((item) => item.PlayerId));
+        this.places().forEach(function (value) {
+            value.prepareForNewGame();
+            players.forEach(function (pvalue) {
+                if (pvalue.PlayerId === value.PlayerId()) {
+                    value.initializeForNewGame(pvalue.Money);
+                }
+            });
+            if (players.every((pvalue) => pvalue.PlayerId !== value.PlayerId())) {
+                value.WasInGame(null);
+            }
+        });
+        this.setButtons(dealerSeat);
+        if (this.soundEnabled) {
+            soundManager.playDealCards();
+        }
+
+        this.refreshPlaces();
+        this.lastRaise(this.bigBlind());
+
+        this.actionBlock.resetAutomaticAction();
+        if (players.some(_ => _.PlayerId === authManager.loginId())) {
+            // Reset Wait BB status since player currently join the game.
+            this.actionBlock.resetWaitBB();
+        }
+    }
+    private startDealCards() {
+        const self = this;
+        this.queue.pushCallback(() => {
+            self.logGameEvent("Deal cards to players");
+            self.places().forEach(function (value) {
+                if (value.WasInGame()) {
+                    value.startDealCards();
+                }
+            });
+        });
+        this.queue.wait(this.animationSettings.dealCardsTime);
+        this.queue.pushCallback(() => {
+            self.places().forEach(function (value) {
+                value.IsDealCards(false);
+            });
+            self.clearTimer();
+            self.startTimer();
+        });
+    }
+    private calculateWinnerAmount(places: TablePlaceModel[], winners: GameWinnerModel[], needHightlightCards: boolean) {
         const c: string[] = [];
         for (let w in winners) {
             if (!winners.hasOwnProperty(w)) {
@@ -1511,7 +2501,7 @@ export class TableView {
 
         return c;
     }
-    cleanTableAfterGameFinish() {
+    private cleanTableAfterGameFinish() {
         if (this.gameFinished()) {
             this.prizesDistributed(true);
             this.tableCards.CardsHightlighted(false);
@@ -1523,7 +2513,7 @@ export class TableView {
             });
         }
     }
-    onPlayerStatusCore(playerId: number, status: number) {
+    private onPlayerStatusCore(playerId: number, status: number) {
         this.logGameEvent("onPlayerStatus", playerId, status);
         const self = this;
         const places = this.places();
@@ -1542,12 +2532,7 @@ export class TableView {
         this.actionBlock.updateNeedBB();
         this.actionBlock.updateBlocks();
     }
-    onPlayerStatus(playerId: number, status: number) {
-        this.queue.pushCallback(() => {
-            this.onPlayerStatusCore(playerId, status);
-        });
-    }
-    onPlayerCardsCore(playerId: number, cards: number[]) {
+    private onPlayerCardsCore(playerId: number, cards: number[]) {
         const self = this;
         const oldCardsReceived = this.cardsReceived;
         this.cardsReceived = true;
@@ -1596,42 +2581,6 @@ export class TableView {
             this.handHistory.onPlayerCards(playerId, cards);
         }
     }
-    onPlayerCards(playerId: number, cards: number[]) {
-        const self = this;
-        if (this.enableInjectPlayerCards) {
-            this.queue.injectCallback(() => {
-                this.onPlayerCardsCore(playerId, cards);
-                this.ensureCardsOpened(playerId);
-            });
-        } else {
-            this.queue.pushCallback(() => {
-                if (!self.cardsReceived) {
-                    if (playerId === authManager.loginId()) {
-                        self.startDealCards();
-                        this.queue.pushCallback(() => {
-                            self.onPlayerCardsCore(playerId, cards);
-                        });
-                    } else {
-                        self.onPlayerCardsCore(playerId, cards);
-                    }
-                } else {
-                    self.onPlayerCardsCore(playerId, cards);
-                }
-            });
-        }
-    }
-    onPlayerCardOpened(playerId: number, cardPosition: number, cardValue: number) {
-        const self = this;
-        if (this.enableInjectPlayerCards) {
-            this.queue.injectCallback(() => {
-                this.onPlayerCardOpenedCore(playerId, cardPosition, cardValue);
-            });
-        } else {
-            this.queue.pushCallback(() => {
-                self.onPlayerCardOpenedCore(playerId, cardPosition, cardValue);
-            });
-        }
-    }
     private onPlayerCardOpenedCore(playerId: number, cardPosition: number, cardValue: number) {
         this.logGameEvent("onPlayerCardOpenedCore", playerId, cardPosition, cardValue);
         const places = this.places();
@@ -1641,12 +2590,6 @@ export class TableView {
             }
         });
         this.refreshPlaces();
-    }
-    onPlayerCardsMucked(playerId: number) {
-        this.queue.pushCallback(() => {
-            const currentPlayer = this.tablePlaces.getPlaceByPlayerId(playerId);
-            this.foldCardsForPlayer(currentPlayer, true, this.animationSettings.foldAnimationTimeout / 2);
-        });
     }
     private ensureCardsOpened(playerId: number) {
         const places = this.places();
@@ -1658,7 +2601,7 @@ export class TableView {
         });
         this.refreshPlaces();
     }
-    updateBetsAndMoney(currentPlayer: TablePlaceModel, type: number, amount: number) {
+    private updateBetsAndMoney(currentPlayer: TablePlaceModel, type: number, amount: number) {
         const playerId = currentPlayer.PlayerId();
         const myself = this.myPlayer();
         const totalBet = (currentPlayer.TotalBet() === null ? 0 : currentPlayer.TotalBet());
@@ -1769,7 +2712,7 @@ export class TableView {
             }
         }
     }
-    foldCardsForPlayer(currentPlayer: TablePlaceModel, forceAnimation: boolean, duration: number) {
+    private foldCardsForPlayer(currentPlayer: TablePlaceModel, forceAnimation: boolean, duration: number) {
         if (currentPlayer === null) {
             console.warn("Attempt to fold cards for the player");
             return;
@@ -1802,925 +2745,8 @@ export class TableView {
         });
         this.queue.injectWait(duration);
     }
-    finishFoldAnimation() {
+    private finishFoldAnimation() {
         // Do nothing.
-    }
-    onBetCore(playerId: number, type: number, amount: number, nextPlayerId: number) {
-        this.logGameEvent("Doing bet of type " + type);
-        const places = this.places();
-        const myself = this.myPlayer();
-        const currentPlayer = this.tablePlaces.getPlaceByPlayerId(playerId);
-        if (currentPlayer === null) {
-            this.logGameEvent("No player sitting on the table.");
-            return;
-        }
-
-        this.updateBetsAndMoney(currentPlayer, type, amount);
-
-        const isMyTurn = myself !== null && nextPlayerId === myself.PlayerId();
-        // Don's enable buttons until cards would be recived for players.
-        if (this.cardsReceived) {
-            this.actionBlock.buttonsEnabled(true);
-            if (isMyTurn) {
-                this.onMyTurn.dispatch(this.tableId);
-            }
-        }
-
-        const forcedBets = type === 1 || type === 5;
-        if (!(forcedBets && nextPlayerId === 0)) {
-            this.setCurrent(nextPlayerId);
-
-            if (isMyTurn) {
-                // This will trigger reevaluation of the minimumRaiseAmount
-                this.currentRaise(this.minimumRaiseAmount());
-            } else {
-                this.currentRaise(null);
-            }
-        }
-
-        // this.refreshPlaces();
-
-        const userActions = type === 3 || type === 4 || type === 2;
-        if (userActions) {
-            this.actionsCount(this.actionsCount() + 1);
-        }
-
-        const allBetsRounded = this.allBetsRounded();
-        this.logGameEvent("All bets rounded", allBetsRounded);
-        if (allBetsRounded) {
-            this.actionBlock.buttonsEnabled(false);
-            this.actionBlock.dealsAllowed(false);
-        }
-
-        if (myself !== null) {
-            const requiredBet = this.maximumBet() - this.myBet();
-            this.actionBlock.updateSupportDirectAmountStatus(requiredBet);
-            if (nextPlayerId === myself.PlayerId()) {
-                if (!allBetsRounded && userActions) {
-                    this.actionBlock.performAutomaticActions();
-                    this.actionBlock.resetAutomaticAction();
-                }
-            }
-
-            this.actionBlock.updateAutomaticActionsText(myself.Money(), requiredBet);
-            this.actionBlock.updateAdditionalButtons();
-        }
-
-        if (nextPlayerId === authManager.loginId()) {
-            this.logGameEvent("Player turn approached");
-            this.tablePlaces.placesRefreshTrigger();
-        }
-
-        this.logGameEvent("Action block status: MMB:.", this.actionBlock.mainButtonsBlockVisible(),
-            " BEn:", this.actionBlock.buttonsEnabled(),
-            " TurnEn:", this.actionBlock.turnEnabled(),
-            " TTurnEn:", this.turnEnabled(),
-            " CP:", this.currentPlayer(),
-            " DA:", this.actionBlock.dealsAllowed(),
-            " InGame:", this.actionBlock.myPlayerInGame());
-        this.clearTimer();
-        this.startTimer();
-    }
-    onBet(playerId: number, type: number, amount: number, nextPlayerId: number) {
-        /// <signature>
-        ///     <summary>Do bet.</summary>
-        ///     <param name="playerId" type="Number">Id of the player which join the table</param>
-        ///     <param name="type" type="Number">
-        ///     Type of the bet.<br/>
-        ///     0 - Blind
-        ///     1 - Ante
-        ///     2 - Check/Call
-        ///     3 - Bet/Raise
-        ///     4 - Fold
-        ///     5 - ForcedBet
-        ///     6 - ReturnMoney
-        ///     </param>
-        ///     <param name="amount" type="Number">Amount of money which player put in the bet</param>
-        ///     <param name="nextPlayerId" type="Number">Id of the player which join the table</param>
-        /// </signature>
-        this.enableInjectPlayerCards = false;
-        this.queue.pushCallback(() => {
-            this.onBetCore(playerId, type, amount, nextPlayerId);
-            this.handHistory.onBet(playerId, type, amount, nextPlayerId);
-        });
-    }
-    startMovingChipsToPotAnimation() {
-        this.logGameEvent("Moving chips to center");
-        const places = this.places();
-        this.places().forEach(function (value) {
-            value.IsBetAnimationLocked(false);
-            value.IsMovingBetToPot(true);
-        });
-        // this.refreshPlaces();
-    }
-    onMoveMoneyToPot(amount: number[]) {
-        // Trigger animation.
-        const self = this;
-        this.actionBlock.buttonsEnabled(false);
-        this.queue.wait(this.animationSettings.movingMoneyToPotPrePause);
-        this.queue.pushCallback(() => {
-            self.startMovingChipsToPotAnimation();
-        });
-        this.queue.wait(this.animationSettings.movingMoneyToPotAnimationTimeout);
-        this.queue.pushCallback(() => {
-            self.logGameEvent("Updating pots");
-            self.setPots(amount);
-
-            self.logGameEvent("Clearing bets");
-            const places = self.places();
-            self.places().forEach(function (value) {
-                value.collectBet();
-            });
-            self.refreshPlaces();
-
-            self.lastRaise(0);
-            self.currentRaise(self.minimumRaiseAmount());
-            self.actionBlock.isRaise(false);
-            self.actionBlock.buttonsEnabled(true);
-        });
-    }
-    onMoneyAdded(playerId: number, amount: number) {
-        const self = this;
-        const places = this.places();
-        places.forEach(function (value) {
-            if (value.PlayerId() === playerId) {
-                // Add money only if player not currently eligible to be in game.
-                // And when no game on the table.
-                if (!value.IsInGameStatus() || self.gameId() === null) {
-                    value.Money(value.Money() + amount);
-                }
-            }
-        });
-        this.refreshPlaces();
-    }
-    onMoneyRemoved(playerId: number, amount: number) {
-        const self = this;
-        const places = this.places();
-        places.forEach(function (value) {
-            if (value.PlayerId() === playerId) {
-                // Add money only if player not currently eligible to be in game.
-                // And when no game on the table.
-                if (!value.IsInGameStatus() || self.gameId() === null) {
-                    value.Money(value.Money() - amount);
-                }
-            }
-        });
-        this.refreshPlaces();
-    }
-    setPots(amount: number[]) {
-        // Add first number to the last pot.
-        const currentPots = this.pots();
-        const skipCollectingPot = (currentPots.length === amount.length
-            && currentPots[currentPots.length - 1] === amount[currentPots.length - 1]);
-        if (!skipCollectingPot) {
-            this.handHistory.onMoveMoneyToPot(amount);
-        }
-
-        let main = amount[0];
-        if (this.pots().length === 0) {
-            // First pot created.
-            this.handHistory.onPotCreated(1, main);
-        } else {
-            // Update last pot
-            main = amount[this.pots().length - 1];
-            if (currentPots[this.pots().length - 1] !== main) {
-                this.handHistory.onPotUpdated(currentPots.length, main);
-            }
-        }
-
-        // Append other amounts to the end of stack.
-        // and generate split pots
-        for (let i = Math.max(1, currentPots.length); i < amount.length; i++) {
-            if (currentPots[i] !== amount[i]) {
-                this.handHistory.onPotCreated(i + 1, amount[i]);
-            }
-        }
-
-        this.pots(amount);
-    }
-
-    setCards(cards: number[]) {
-        /// <signature>
-        ///     <summary>Set cards on the table.</summary>
-        ///     <param name="cards" type="Array">Array of table cards to display</param>
-        /// </signature>
-        this.tableCards.setCards(cards);
-    }
-
-    /**
-   * Gets current seat number for offline table
-   */
-    getCurrentOfflineTableSeat(): number {
-        const self = this;
-        let seatNumber = 0;
-        app.requireAuthentication().then(function (authenticated) {
-            if (authenticated) {
-                const currentPlayer = self.currentLogin();
-                seatNumber = parseInt(currentPlayer.replace("Игрок", ""));
-                console.log("seat number " + seatNumber);
-            }
-        });
-        return seatNumber;
-    }
-
-    showSitPrompt(seat: number) {
-        if (this.sitting) {
-            return;
-        }
-
-        this.sitting = true;
-        const self = this;
-        app.requireAuthentication().then(function (authenticated) {
-            if (authenticated) {
-                const currentPlayer = self.myPlayer();
-                if (currentPlayer === null) {
-                    app.joinTablePopup.tableView(self);
-                    app.joinTablePopup.seatNumber(seat);
-                    app.executeCommand("popup.joinTable");
-                }
-            }
-        }).always(() => {
-            self.sitting = false;
-        });
-    }
-    rebuy() {
-        const self = this;
-        const tournamentView = this.tournament();
-        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-        tapi.Rebuy(tournamentView.tournamentId, false).then((data) => {
-            if (data.Status === "Ok") {
-                self.hasPendingMoney(true);
-                if (!self.hasPlayersWithoutMoney()) {
-                    // self.clearNotification();
-                }
-
-                SimplePopup.display(_("tableMenu.rebuy"), _("tableMenu.rebuySuccess"));
-            } else {
-                SimplePopup.display(_("tableMenu.rebuy"), _("errors." + data.Status));
-            }
-        }, function () {
-            SimplePopup.display(_("tableMenu.rebuy"), _("tableMenu.rebuyError"));
-        });
-    }
-    doubleRebuy() {
-        const self = this;
-        const tournamentView = this.tournament();
-        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-        tapi.Rebuy(tournamentView.tournamentId, true).then((data) => {
-            if (data.Status === "Ok") {
-                self.hasPendingMoney(true);
-                if (!self.hasPlayersWithoutMoney()) {
-                    // self.clearNotification();
-                }
-
-                SimplePopup.display(_("tableMenu.doublerebuy"), _("tableMenu.doublerebuySuccess"));
-            } else {
-                SimplePopup.display(_("tableMenu.doublerebuy"), _("errors." + data.Status));
-            }
-        }, function () {
-            SimplePopup.display(_("tableMenu.doublerebuy"), _("tableMenu.doublerebuyError"));
-        });
-    }
-    addon() {
-        const self = this;
-        const tournamentView = this.tournament();
-        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-        tapi.Addon(tournamentView.tournamentId).then((data) => {
-            if (data.Status === "Ok") {
-                self.hasPendingMoney(true);
-                if (!self.hasPlayersWithoutMoney()) {
-                    // self.clearNotification();
-                }
-
-                // self.tournament().addonCount(self.tournament().addonCount() + 1);
-                SimplePopup.display(_("tableMenu.addon"), _("tableMenu.addonSuccess"));
-            } else {
-                SimplePopup.display(_("tableMenu.addon"), _("errors." + data.Status));
-            }
-        }, function () {
-            SimplePopup.display(_("tableMenu.addon"), _("tableMenu.addonError"));
-        });
-    }
-    showRebuyPrompt() {
-        const self = this;
-        const tdata = this.tournament().tournamentData();
-        const prompt = [_("table.rebuyPrompt", { price: tdata.RebuyFee + tdata.RebuyPrice })];
-        app.prompt(_("table.rebuyPromptCaption"), prompt).then(function () {
-            self.rebuy();
-        });
-    }
-    showDoubleRebuyPrompt() {
-        const self = this;
-        const tdata = this.tournament().tournamentData();
-        const prompt = [_("table.doubleRebuyPrompt", { price: 2 * (tdata.RebuyFee + tdata.RebuyPrice) })];
-        app.prompt(_("table.doubleRebuyPromptCaption"), prompt).then(function () {
-            self.doubleRebuy();
-        });
-    }
-    showAddonPrompt() {
-        const self = this;
-        const tdata = this.tournament().tournamentData();
-        const prompt = [_("table.addonPrompt", { price: tdata.AddonFee + tdata.AddonPrice })];
-        app.prompt(_("table.addonPromptCaption"), prompt).then(function () {
-            self.addon();
-        });
-    }
-    async sit(seat: number, amount: number, ticketCode: string) {
-        const self = this;
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        try {
-            const data = await gameApi.Sit(self.tableId, seat, amount, ticketCode);
-            // report on successfull seating.
-            if (data.Status === "OperationNotValidAtThisTime") {
-                return {
-                    success: false,
-                    status: data.Status,
-                    minimalAmount: undefined,
-                };
-            }
-
-            if (data.Status !== "Ok") {
-                return {
-                    success: false,
-                    status: data.Status,
-                    minimalAmount: data.MinimalAmount,
-                };
-            } else {
-                return {
-                    success: true,
-                    status: data.Status,
-                    minimalAmount: data.MinimalAmount,
-                };
-            }
-        } catch (e) {
-            return {
-                success: false,
-                status: "NotSufficiendFunds",
-                minimalAmount: undefined
-            };
-        }
-    }
-
-    showStandupPrompt(): JQueryDeferred<void> {
-        /// <signature>
-        ///     <summary>Shows stand up prompt.</summary>
-        ///     <param name="seat" type="Number">Seat where player willing to join</param>
-        ///     <param name="tableView" type="TableView">Table view where to join</param>
-        /// </signature>
-        const self = this;
-        const result = $.Deferred<void>();
-        if (self.myPlayer() != null) {
-            const tournament = this.tournament();
-            let messages: string[];
-            let caption: string;
-            if (tournament == null) {
-                const hasWin = self.myPlayer().Money() > 0 || self.myPlayerInGame();
-                const promptMesssage = hasWin ? "table.standupPrompt" : "table.standupPromptWithoutWin";
-                caption = hasWin ? "table.standupPromptCaption" : "table.leave";
-                messages = [_(promptMesssage)];
-            } else {
-                if (tournament.finishedPlaying()) {
-                    result.resolve();
-                    return result;
-                }
-                caption = "table.leave";
-                messages = [_("table.standupTournamentPrompt")];
-            }
-
-            app.promptAsync(_(caption), messages).then(function () {
-                if (self.tournament() == null) {
-                    self.standup();
-                }
-
-                result.resolve();
-            }, function () {
-                result.reject();
-            });
-        } else {
-            result.resolve();
-        }
-
-        return result;
-    }
-    showStandupConfirm() {
-        let messages: string[];
-        messages = [_("table.standupSuccessMessage")];
-        const title = _("table.standupSuccessTitle");
-        SimplePopup.display(title, messages);
-    }
-    async standup() {
-        const self = this;
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        const data = await gameApi.Standup(this.tableId);
-        // report on successfull seating.
-        if (data.Status === "AuthorizationError") {
-            self.reportApiError("Ошибка авторизации");
-        } else if (data.Status === "Ok" && appConfig.game.seatMode) {
-            self.showStandupConfirm();
-        }
-    }
-
-    showAddBalancePrompt(seat: number, ticketCode: string) {
-        /// <signature>
-        ///     <summary>Shows add balance prompt.</summary>
-        ///     <param name="seat" type="Number">Seat where player willing to join</param>
-        ///     <param name="tableView" type="TableView">Table view where to join</param>
-        /// </signature>
-        const self = this;
-        const targetPlayer = this.tablePlaces.getPlaceBySeat(seat);
-        const playerId = targetPlayer.PlayerId();
-
-        const amount = prompt("Укажите сумму для пополнения счета?", "1000");
-        if (amount) {
-            this.addBalance(Number(amount), ticketCode);
-        }
-    }
-
-    async addBalance(amount: number, ticketCode: string) {
-        const self = this;
-        const places = this.places();
-        const targetPlayer = this.myPlayer();
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        const result = $.Deferred();
-        try {
-            const data = await gameApi.AddBalance(this.tableId, amount, ticketCode);
-            // report on successfull seating.
-            if (data.Status !== "Ok") {
-                throw new Error(data.Status);
-            }
-
-            if (data.Status === "Ok") {
-                if (self.myPlayerInGame()) {
-                    self.hasPendingMoney(true);
-                }
-            }
-
-            return amount;
-        } catch (e) {
-            throw new Error("OperationNotAllowed");
-        }
-    }
-
-    addMessage(messageId: number, sender: string, message: string) {
-        const messageExists = this.messages().filter(_ => _.messageId === messageId).length > 0;
-        if (!messageExists) {
-            const m = new PlayerMessage(messageId, sender, message);
-            this.messages.unshift(m);
-            while (this.messages().length > 100) {
-                this.messages.pop();
-            }
-
-            const messages = this.messages();
-            this.messages([]);
-            this.messages(messages);
-        }
-
-        if (this.lastMessageId >= messageId) {
-            return;
-        }
-
-        const player = this.getPlayerByLogin(sender);
-        if (player != null) {
-            player.displayChatMessage(message);
-        }
-    }
-
-    addSystemMessage(messageId: number, message: string) {
-        if (this.lastMessageId >= messageId && messageId !== 0) {
-            return;
-        }
-
-        const m = new SystemMessage(messageId, message);
-        this.systemMessages.unshift(m);
-        while (this.systemMessages().length > 100) {
-            this.systemMessages.pop();
-        }
-    }
-
-    updateMessage(messageId: number, sender: string, message: string) {
-        // TODO: Implement updating messages.
-    }
-
-    updateSystemMessage(messageId: number, message: string) {
-        // TODO: Implement updating messages.
-    }
-
-    /**
-     * Sends mesage to the table chat.
-     */
-    async sendMessage() {
-        const chatApi = new OnlinePoker.Commanding.API.Chat(apiHost);
-        const data = await chatApi.SendAsync(this.tableId, this.chatMessage());
-        this.chatMessage("");
-    }
-
-    async fold() {
-        const self = this;
-        this.actionBlock.buttonsEnabled(false);
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        if (appConfig.game.useSignalR) {
-            // TODO: We should provide notification, which will return any error from the server.
-            connectionService.currentConnection.connection.Game.server.fold(this.tableId);
-        } else {
-            try {
-                const data = await gameApi.Fold(this.tableId);
-                if (data.Status === "OperationNotValidAtThisTime") {
-                    return;
-                }
-
-                if (data.Status !== "Ok") {
-                    self.reportApiError(data.Status);
-                }
-            } catch (e) {
-                self.turnRecovery();
-            }
-        }
-    }
-
-    async checkOrCall() {
-        const self = this;
-        this.actionBlock.buttonsEnabled(false);
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        if (appConfig.game.useSignalR) {
-            // TODO: We should provide notification, which will return any error from the server.
-            connectionService.currentConnection.connection.Game.server.checkOrCall(this.tableId);
-        } else {
-            try {
-                const data = await gameApi.CheckOrCall(this.tableId);
-                if (data.Status === "OperationNotValidAtThisTime") {
-                    return;
-                }
-
-                if (data.Status !== "Ok") {
-                    self.reportApiError(data.Status);
-                }
-            } catch (e) {
-                self.turnRecovery();
-            }
-        }
-    }
-
-    async betOrRaise() {
-        const self = this;
-        this.actionBlock.buttonsEnabled(false);
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        const amount: number = this.currentRaise() - this.currentBet();
-        if (appConfig.game.useSignalR) {
-            // TODO: We should provide notification, which will return any error from the server.
-            connectionService.currentConnection.connection.Game.server.betOrRaise(this.tableId, amount);
-        } else {
-            try {
-                const data = await gameApi.BetOrRaise(this.tableId, amount);
-                if (data.Status === "OperationNotValidAtThisTime") {
-                    return;
-                }
-
-                if (data.Status !== "Ok") {
-                    self.reportApiError(data.Status);
-                }
-            } catch (e) {
-                self.turnRecovery();
-            }
-        }
-    }
-
-    /**
-     * Show cards for the current player.
-     */
-    async showCards() {
-        this.actionBlock.showCardsEnabled(false);
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        try {
-            const data = await gameApi.ShowCards(this.tableId);
-            if (data.Status !== "Ok") {
-                this.reportApiError(data.Status);
-            }
-        } catch (e) {
-            if (app.currentPopup !== SlowInternetService.popupName) {
-                SimplePopup.display(_("table.turn"), _("table.connectionError", { tableName: this.tableName() }));
-            }
-
-            this.actionBlock.showCardsEnabled(true);
-        }
-    }
-
-    /**
-     * Muck cards for the current player.
-     */
-    async muckCards() {
-        this.actionBlock.showCardsEnabled(false);
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        try {
-            const data = await gameApi.Muck(this.tableId);
-            if (data.Status !== "Ok") {
-                this.reportApiError(data.Status);
-            }
-        } catch (e) {
-            this.actionBlock.showCardsEnabled(true);
-        }
-    }
-
-    toggleCards() {
-        const my = this.myPlayer();
-        if (my.IsCardsOpened()) {
-            this.muckCards();
-        } else {
-            this.showCards();
-        }
-    }
-
-    showFirstCard() {
-        return this.showCard(0);
-    }
-
-    showSecondCard() {
-        return this.showCard(1);
-    }
-
-    /**
-     * Show cards for the current player.
-     */
-    async showCard(cardPosition: number) {
-        const showCardVariable = cardPosition === 0 ? this.actionBlock.showHoleCard1Enabled : this.actionBlock.showHoleCard2Enabled;
-        showCardVariable(false);
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        try {
-            const data = await gameApi.ShowHoleCards(this.tableId, cardPosition);
-            if (data.Status !== "Ok") {
-                this.reportApiError(data.Status);
-            }
-        } catch (e) {
-            if (app.currentPopup !== SlowInternetService.popupName) {
-                SimplePopup.display(_("table.turn"), _("table.connectionError", { tableName: this.tableName() }));
-            }
-
-            showCardVariable(true);
-        }
-    }
-
-    /**
-     * Cards opening on the table.
-     * @param cards Cards which was opened on the table.
-     */
-    onOpenCards(cards: number[]) {
-        const self = this;
-        this.queue.pushCallback(() => {
-            self.actionsCount(0);
-            const currentCardsOpened = self.tableCards.tableCards().length;
-            const myPlayer = this.myPlayer();
-            if (myPlayer) {
-                myPlayer.cardsOverlayVisible(true);
-            }
-
-            self.tableCards.openCards(cards);
-            self.handHistory.onOpenCards(cards);
-            if (currentCardsOpened === 0 && cards.length === 3) {
-                self.handHistory.onFlop(cards[0], cards[1], cards[2]);
-                self.actionBlock.dealsAllowed(true);
-                soundManager.playFlopCards();
-            }
-            if (currentCardsOpened === 3 && cards.length === 4) {
-                self.handHistory.onTurn(cards[3]);
-                self.actionBlock.dealsAllowed(true);
-                soundManager.playTurn();
-            }
-            if (currentCardsOpened === 4 && cards.length === 5) {
-                self.handHistory.onRiver(cards[4]);
-                self.actionBlock.dealsAllowed(true);
-                soundManager.playRiver();
-            }
-            if (currentCardsOpened === 3 && cards.length === 5) {
-                self.handHistory.onTurn(cards[3]);
-                self.handHistory.onRiver(cards[4]);
-                // soundManager.playAllIn();
-            }
-            if (currentCardsOpened === 0 && cards.length === 5) {
-                self.handHistory.onFlop(cards[0], cards[1], cards[2]);
-                self.handHistory.onTurn(cards[3]);
-                self.handHistory.onRiver(cards[4]);
-                // soundManager.playAllIn();
-            }
-            self.actionBlock.resetAutomaticAction();
-            self.actionBlock.updateAdditionalButtons();
-        });
-        if (self.soundEnabled) {
-            soundManager.playFlop();
-        }
-
-        this.queue.wait(this.animationSettings.showCardsTimeout);
-        this.queue.pushCallback(() => {
-            self.updateCurrentCombination();
-            self.tableCards.clearAnimation();
-        });
-    }
-
-    async comeBack() {
-        const self = this;
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        const data = await gameApi.ComeBack(this.tableId);
-        if (data.Status === "OperationNotValidAtThisTime") {
-            return;
-        }
-
-        if (data.Status !== "Ok") {
-            self.reportApiError(data.Status);
-        }
-    }
-
-    async sitOut() {
-        const self = this;
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        const data = await gameApi.SitOut(this.tableId);
-        if (data.Status === "OperationNotValidAtThisTime") {
-            return;
-        }
-
-        if (data.Status !== "Ok") {
-            self.reportApiError(data.Status);
-        }
-    }
-    showPlayerParameters() {
-        // tablePlayerParameterSelector.showPlayerParameters(this);
-    }
-
-    /**
-    * Displays last hand in the history
-    */
-    showPreviousHand() {
-        app.handHistoryPopup.tableView(this);
-        app.showPopup("handHistory");
-    }
-    rotate(offset: number) {
-        const myself = this.myPlayer();
-        if (myself == null) {
-            return;
-        }
-
-        const currentOffset = this.tablePlaces.getRealOffset(myself.Seat());
-        if (currentOffset === offset) {
-            return;
-        }
-
-        const self = this;
-        app.prompt(_("table.changeplace"),
-            [_("table.doyouwantchangeplace")]).then(function () {
-                self.tablePlaces.rotate(offset - currentOffset);
-            });
-    }
-
-    hasPlayersWithoutMoney() {
-        return this.places().some(_ => _.Money() === 0);
-    }
-
-    /*
-    * Display counter which indicates how much time left to buy addon or rebuy
-    * if player lose game.
-    */
-    displayRebuyOrAddonTime() {
-        const self = this;
-        const tournamentView = this.tournament();
-
-        // Display notification about rebuy or addon prompt
-        // only for tournament games.
-        if (tournamentView === null || tournamentView === undefined) {
-            return;
-        }
-
-        // Display notification about rebuy or addon prompt
-        // only if rebuy or addon allowed.
-        if (!tournamentView.rebuyAllowed() && !tournamentView.addonAllowed()) {
-            return;
-        }
-
-        if (this.hasPlayersWithoutMoney()) {
-            // This time should be 500ms bigger then the actual time specified 
-            // on the server, to accomodate for the 500ms update period.
-            this.displayingRebuyAddonNotification = true;
-            const totalDuration = 10.5;
-            let i = 0;
-            let messageTemplate: string;
-            let popupCaption: string;
-            if (tournamentView.rebuyAllowed()) {
-                messageTemplate = "table.waitingForOtherPlayersRebuy";
-                popupCaption = "table.tournamentGameFinishedRebuyCaption";
-            } else if (tournamentView.addonAllowed()) {
-                messageTemplate = "table.waitingForOtherPlayersAddon";
-                popupCaption = "table.tournamentGameFinishedAddonCaption";
-            } else {
-                console.error("Unknown state during display rebuy of addon time");
-            }
-
-            this.notificationHandleInterval = timeService.setInterval(() => {
-                const secondsLeft = Math.floor(totalDuration - (i / 2));
-                self.showNotification(_(messageTemplate, { time: secondsLeft }));
-                app.customPopup.title(_(popupCaption, { time: secondsLeft }));
-                i++;
-                if (i >= totalDuration * 2) {
-                    self.clearNotification();
-                    if (app.currentPopup === "custom") {
-                        app.closePopup();
-                    }
-                }
-            }, 500);
-        }
-    }
-
-    proposeRebuyOrAddon() {
-        const tournamentView = this.tournament();
-        if (tournamentView !== null && this.myPlayer() !== null && this.myPlayer().Money() === 0 && !this.hasPendingMoney()) {
-            if (tournamentView.rebuyAllowed()) {
-                this.proposeBuyRebuy();
-            }
-
-            if (tournamentView.addonAllowed() && tournamentView.addonCount() === 0) {
-                this.proposeBuyAddon();
-            }
-        }
-    }
-
-    /**
-    * Propose buying rebuy or double rebuy
-    */
-    proposeBuyRebuy() {
-        const self = this;
-        const player = this.myPlayer();
-        if (player === null) {
-            return;
-        }
-
-        if (player.Money() === 0 && !this.hasPendingMoney()) {
-            // Display popup with three buttons.
-            const result = $.Deferred<void>();
-            app.promptEx(
-                _("table.tournamentGameFinishedCaption"),
-                [_("table.tournamentGameFinishedRebuy")],
-                [_("table.rebuy"), _("table.doubleRebuy"), _("common.cancel")],
-                [() => 1, () => 2, () => { /* nothing */ }])
-                .then(function (value: number) {
-                    if (value === 1) {
-                        self.showRebuyPrompt();
-                    }
-
-                    if (value === 2) {
-                        self.showDoubleRebuyPrompt();
-                    }
-
-                    result.resolve();
-                }, function () {
-                    result.reject();
-                });
-        }
-    }
-
-    /**
-    * Propose buying addon
-    */
-    proposeBuyAddon() {
-        const self = this;
-        const player = this.myPlayer();
-        if (player == null) {
-            console.warn("Proposing but addon when no active player");
-            return;
-        }
-
-        if (player.Money() === 0 && !this.hasPendingMoney() && this.tournament().addonCount() === 0) {
-            // Display popup with two buttons.
-            const result = $.Deferred<void>();
-            app.promptEx(
-                _("table.tournamentGameFinishedCaption"),
-                [_("table.tournamentGameFinishedAddon")],
-                [_("table.addon"), _("common.cancel")],
-                [() => 1, () => { /* nothing */ }])
-                .then(function (value: number) {
-                    self.showAddonPrompt();
-                    result.resolve();
-                }, function () {
-                    result.reject();
-                });
-        }
-    }
-
-    /**
-    * Show table notification
-    */
-    public showNotification(message: string) {
-        this.notification(message);
-        this.hasNotification(true);
-    }
-
-    /**
-    * Show table notification for specific period of time
-    */
-    public showNotificationWithDelay(message: string, duration: number) {
-        this.clearNotification();
-        this.showNotification(message);
-        this.notificationHandleTimeout = timeService.setTimeout(() => {
-            this.clearNotification();
-        }, duration);
-    }
-
-    public pushCallback(callback: Function) {
-        this.queue.pushCallback(callback);
     }
 
     private clearNotification() {
@@ -2778,8 +2804,8 @@ export class TableView {
     }
 
     /**
-    * Finish animation on the table
-    */
+     * Finish animation on the table
+     */
     private finishAnimation(places: TablePlaceModel[]) {
         for (let p in places) {
             if (!places.hasOwnProperty(p)) {
@@ -2795,8 +2821,8 @@ export class TableView {
     }
 
     /**
-    * Updates current combination based on table status.
-    */
+     * Updates current combination based on table status.
+     */
     private updateCurrentCombination() {
         this.currentCombination(this.getCurrentCombination());
     }
@@ -2813,8 +2839,8 @@ export class TableView {
     }
 
     /**
-    * Initializes the hand history
-    */
+     * Initializes the hand history
+     */
     private initHandHistory() {
         const self = this;
         this.handHistory = new HandHistory(this);
@@ -2848,16 +2874,16 @@ export class TableView {
     }
 
     /*
-    * Prompt to refresh places information.
-    */
+     * Prompt to refresh places information.
+     */
     private refreshPlaces() {
         this.logGameEvent("Refreshing places");
         this.tablePlaces.refreshPlaces();
     }
 
     /**
-    * Get player place by login
-    */
+     * Get player place by login
+     */
     private getPlayerByLogin(login: string) {
         const filteredPlaces = this.places().filter(_ => _.PlayerName() === login);
         if (filteredPlaces.length === 0) {
@@ -2868,8 +2894,8 @@ export class TableView {
     }
 
     /**
-    * Performs recovery from the network error during making turns
-    */
+     * Performs recovery from the network error during making turns
+     */
     private turnRecovery() {
         if (app.currentPopup !== SlowInternetService.popupName) {
             SimplePopup.display(_("table.turn"), _("table.connectionError", { tableName: this.tableName() }));
@@ -2879,8 +2905,8 @@ export class TableView {
     }
 
     /**
-    * Record log message
-    */
+     * Record log message
+     */
     private log(message: string, ...params: any[]) {
         const settings = debugSettings.tableView;
         if (!this.isLogEnabled()) {
@@ -2891,8 +2917,8 @@ export class TableView {
     }
 
     /**
-    * Record log message
-    */
+     * Record log message
+     */
     private logGameEvent(message: string, ...params: any[]) {
         const settings = debugSettings.tableView;
         if (!settings.traceGameEvents) {
@@ -2903,8 +2929,8 @@ export class TableView {
     }
 
     /**
-    * Checks whether logging on this table is enabled.
-    */
+     * Checks whether logging on this table is enabled.
+     */
     private isLogEnabled() {
         const settings = debugSettings.tableView;
         if (!settings.trace) {

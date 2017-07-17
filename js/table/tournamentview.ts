@@ -15,68 +15,68 @@ declare var apiHost: string;
 declare var app: App;
 
 export class TournamentView {
-    tournamentData = ko.observable<TournamentDefinition>(null);
-    loading = ko.observable(false);
+    public tournamentData = ko.observable<TournamentDefinition>(null);
+    public loading = ko.observable(false);
 
     /**
-    * Indicates that rebuy is allowed in the tournament.
-    */
-    rebuyAllowed = ko.observable(false);
+     * Indicates that rebuy is allowed in the tournament.
+     */
+    public rebuyAllowed = ko.observable(false);
 
     /**
-    * Indicates that add-on is allowed in the tournament.
-    */
-    addonAllowed = ko.observable(false);
+     * Indicates that add-on is allowed in the tournament.
+     */
+    public addonAllowed = ko.observable(false);
 
     /**
-    * Count of rebuys which player made in the tournament.
-    */
-    rebuyCount = ko.observable(0);
+     * Count of rebuys which player made in the tournament.
+     */
+    public rebuyCount = ko.observable(0);
 
     /**
-    * Count of add-ons which player made in the tournament.
-    */
-    addonCount = ko.observable(0);
+     * Count of add-ons which player made in the tournament.
+     */
+    public addonCount = ko.observable(0);
 
     /**
-    * Indicates that tournament is frozen
-    */
-    frozen = ko.observable(false);
+     * Indicates that tournament is frozen
+     */
+    public frozen = ko.observable(false);
 
     /**
-    * Id of the current table where player sitting.
-    */
-    currentTableId: number = null;
+     * Id of the current table where player sitting.
+     */
+    public currentTableId: number = null;
 
     /**
-    * Indicates that player is finished playing in the tournament.
-    */
-    finishedPlaying = ko.observable(false);
+     * Indicates that player is finished playing in the tournament.
+     */
+    public finishedPlaying = ko.observable(false);
 
     /**
-    * Indicates when player finish tournament.
-    */
-    finishTime = ko.observable(0);
+     * Indicates when player finish tournament.
+     */
+    public finishTime = ko.observable(0);
 
     /**
-    * Place which player take in the tournament.
-    */
-    finishedPlace: number = null;
+     * Place which player take in the tournament.
+     */
+    public finishedPlace: number = null;
 
     /**
-    * Request which performs connecting to the table.
-    */
+     * Request which performs connecting to the table.
+     */
     public connectingRequest: JQueryDeferred<any> = null;
 
     /**
-    * Status of the tournament.
-    */
-    status = ko.observable(TournamentStatus.Pending);
+     * Status of the tournament.
+     */
+    public status = ko.observable(TournamentStatus.Pending);
 
     /**
-    * Total prize.
-    */
-    totalPrize: KnockoutComputed<number>;
+     * Total prize.
+     */
+    public totalPrize: KnockoutComputed<number>;
 
     constructor(public tournamentId: number, data: TournamentDefinition) {
         const self = this;
@@ -102,7 +102,7 @@ export class TournamentView {
         }, this);
     }
 
-    async refreshTournament(): Promise<ApiResult<TournamentDefinition>> {
+    public async refreshTournament(): Promise<ApiResult<TournamentDefinition>> {
         if (this.tournamentId === 0) {
             return Promise.resolve({ Status: "Ok", Data: null });
         }
@@ -121,10 +121,10 @@ export class TournamentView {
         self.loading(false);
         return data;
     }
-    clearInformation() {
+    public clearInformation() {
         // Do nothing.
     }
-    updateTournamentInformation() {
+    public updateTournamentInformation() {
         /// <signature>
         ///     <summary>Updates the information about the table from the server</summary>
         /// </signature>
@@ -187,13 +187,13 @@ export class TournamentView {
         });
         this.connectingRequest = currentLoadingRequest;
     }
-    cancelUpdateTableInformation() {
+    public cancelUpdateTableInformation() {
         if (this.connectingRequest != null) {
             this.connectingRequest.notify("cancel");
             this.connectingRequest = null;
         }
     }
-    joinTournament(wrapper: ConnectionWrapper, maxAttempts = 3) {
+    public joinTournament(wrapper: ConnectionWrapper, maxAttempts = 3) {
         const self = this;
         const result = $.Deferred();
         if (maxAttempts === 0 || wrapper.terminated) {
@@ -263,7 +263,7 @@ export class TournamentView {
             });
         return result;
     }
-    async onTournamentStatusChanged(status: TournamentStatus) {
+    public async onTournamentStatusChanged(status: TournamentStatus) {
         const self = this;
         const data = this.tournamentData();
         const oldStatus = this.status();
@@ -320,6 +320,161 @@ export class TournamentView {
             });
         }
     }
+    public onTournamentTableChanged(tableId: number) {
+        const self = this;
+        if (this.finishedPlaying()) {
+            return;
+        }
+
+        if (this.currentTableId === tableId) {
+            return;
+        }
+
+        if (this.status() !== TournamentStatus.Started
+            && this.status() !== TournamentStatus.LateRegistration) {
+            this.currentTableId = tableId;
+            return;
+        }
+
+        const data = this.tournamentData();
+        if (this.currentTableId !== null) {
+            this.log("Removing player from the tournament table " + this.currentTableId + " in tournament " + this.tournamentId);
+            this.removeCurrentTable();
+            SimplePopup.display(_("tournament.caption", { tournament: data.TournamentName }),
+                _("tournament.tableChanged", { tournament: data.TournamentName }));
+        }
+
+        if (tableId != null) {
+            this.log("Put player on the tournament table " + tableId + " in tournament " + this.tournamentId);
+            this.currentTableId = tableId;
+            this.openTournamentTable(tableId);
+        }
+    }
+    public onTournamentPlayerGameCompleted(placeTaken: number) {
+        const self = this;
+        this.finishedPlaying(true);
+        this.finishTime(new Date().valueOf());
+        this.finishedPlace = placeTaken;
+
+        const data = this.tournamentData();
+        const structure = this.getPrizeStructure(data.WellKnownPrizeStructure);
+        const ascendingSort = (a, b) => {
+            return a.MaxPlayer - b.MaxPlayer;
+        };
+        const prizes = structure.filter((_) => {
+            return _.MaxPlayer > data.JoinedPlayers;
+        }).sort(ascendingSort);
+        let prize: TournamentPrizeStructure;
+        if (prizes.length > 0) {
+            prize = prizes[0];
+        } else {
+            prize = structure.sort(ascendingSort)[0];
+        }
+
+        this.executeOnCurrentTable(() => {
+            self.displayGameFinishedNotification(prize, placeTaken);
+        });
+    }
+    public onTournamentBetLevelChanged(level: number) {
+        const data = this.tournamentData();
+        const structure = this.getBetLevelStructure(data.WellKnownBetStructure).sort((a, b) => a.Level - b.Level);
+        const betLevelCandidate = structure.filter(_ => _.Level === level);
+        const betLevel = betLevelCandidate.length === 0
+            ? structure[structure.length - 1]
+            : betLevelCandidate[0];
+        const currentTable = this.getTableForNotification();
+        if (currentTable === null) {
+            this.log("Table " + this.currentTableId + " is no longer valid for the tournament " + this.tournamentId);
+            return;
+        }
+
+        currentTable.bigBlind(betLevel.BigBlind);
+        currentTable.smallBlind(betLevel.SmallBlind);
+        currentTable.ante(betLevel.Ante);
+
+        if (this.finishedPlaying()) {
+            // return;
+        }
+
+        if (level > 1) {
+            if (betLevel.Ante == null) {
+                let notificationParameters = {
+                    tournament: data.TournamentName,
+                    sb: betLevel.SmallBlind,
+                    bb: betLevel.BigBlind
+                };
+                currentTable.showNotificationWithDelay(
+                    _("tournament.betLevelChanged1", notificationParameters),
+                    debugSettings.tableView.betLevelChangeDelay);
+            } else {
+                let notificationParameters = {
+                    tournament: data.TournamentName,
+                    sb: betLevel.SmallBlind,
+                    bb: betLevel.BigBlind,
+                    ante: betLevel.Ante
+                };
+                currentTable.showNotificationWithDelay(
+                    _("tournament.betLevelChanged2", notificationParameters),
+                    debugSettings.tableView.betLevelChangeDelay);
+            }
+        }
+    }
+    public onTournamentRoundChanged(round: number) {
+        // Do nothing.
+    }
+    public onTournamentRebuyStatusChanged(rebuyAllowed: boolean, addonAllowed: boolean) {
+        if (this.finishedPlaying()) {
+            // return;
+        }
+
+        this.rebuyAllowed(rebuyAllowed);
+        this.addonAllowed(addonAllowed);
+        if (addonAllowed) {
+            const currentTable = this.getTableForNotification();
+            if (currentTable != null) {
+                if (this.isInTournament()) {
+                    currentTable.showNotificationWithDelay(
+                        _("table.addonAllowed"),
+                        debugSettings.tableView.addonPeriodStartedDelay);
+                } else {
+                    currentTable.showNotificationWithDelay(
+                        _("table.addonAllowedNotPlaying"),
+                        debugSettings.tableView.addonPeriodStartedDelay);
+                }
+            }
+        }
+    }
+
+    /**
+    * Notifies that in tournament count of made rebuy or addons changed.
+    * @param rebuyCount Count of rebuys which player done.
+    * @param addonCount Count of add-ons which player done.
+    */
+    public onTournamentRebuyCountChanged(rebuyCount: number, addonCount: number) {
+        this.rebuyCount(rebuyCount);
+        this.addonCount(addonCount);
+    }
+
+    public onTournamentFrozen() {
+        this.frozen(true);
+    }
+    public onTournamentUnfrozen() {
+        this.frozen(false);
+    }
+    public onTournamentRegistrationCancelled() {
+        // Do nothing.
+    }
+    public getBetLevelStructure(level: number) {
+        return metadataManager.bets[level];
+    }
+    public getPrizeStructure(structure: number) {
+        return metadataManager.prizes[structure];
+    }
+    public removeCurrentTable() {
+        tableManager.removeTableById(this.currentTableId);
+        tableManager.adjustTablePosition();
+        this.currentTableId = null;
+    }
     private async openTournamentTableUI() {
         const self = this;
         const data = this.tournamentData();
@@ -365,161 +520,6 @@ export class TournamentView {
             app.closePopup();
             this.finalizeTournament();
         }
-    }
-    onTournamentTableChanged(tableId: number) {
-        const self = this;
-        if (this.finishedPlaying()) {
-            return;
-        }
-
-        if (this.currentTableId === tableId) {
-            return;
-        }
-
-        if (this.status() !== TournamentStatus.Started
-            && this.status() !== TournamentStatus.LateRegistration) {
-            this.currentTableId = tableId;
-            return;
-        }
-
-        const data = this.tournamentData();
-        if (this.currentTableId !== null) {
-            this.log("Removing player from the tournament table " + this.currentTableId + " in tournament " + this.tournamentId);
-            this.removeCurrentTable();
-            SimplePopup.display(_("tournament.caption", { tournament: data.TournamentName }),
-                _("tournament.tableChanged", { tournament: data.TournamentName }));
-        }
-
-        if (tableId != null) {
-            this.log("Put player on the tournament table " + tableId + " in tournament " + this.tournamentId);
-            this.currentTableId = tableId;
-            this.openTournamentTable(tableId);
-        }
-    }
-    onTournamentPlayerGameCompleted(placeTaken: number) {
-        const self = this;
-        this.finishedPlaying(true);
-        this.finishTime(new Date().valueOf());
-        this.finishedPlace = placeTaken;
-
-        const data = this.tournamentData();
-        const structure = this.getPrizeStructure(data.WellKnownPrizeStructure);
-        const ascendingSort = (a, b) => {
-            return a.MaxPlayer - b.MaxPlayer;
-        };
-        const prizes = structure.filter((_) => {
-            return _.MaxPlayer > data.JoinedPlayers;
-        }).sort(ascendingSort);
-        let prize: TournamentPrizeStructure;
-        if (prizes.length > 0) {
-            prize = prizes[0];
-        } else {
-            prize = structure.sort(ascendingSort)[0];
-        }
-
-        this.executeOnCurrentTable(() => {
-            self.displayGameFinishedNotification(prize, placeTaken);
-        });
-    }
-    onTournamentBetLevelChanged(level: number) {
-        const data = this.tournamentData();
-        const structure = this.getBetLevelStructure(data.WellKnownBetStructure).sort((a, b) => a.Level - b.Level);
-        const betLevelCandidate = structure.filter(_ => _.Level === level);
-        const betLevel = betLevelCandidate.length === 0
-            ? structure[structure.length - 1]
-            : betLevelCandidate[0];
-        const currentTable = this.getTableForNotification();
-        if (currentTable === null) {
-            this.log("Table " + this.currentTableId + " is no longer valid for the tournament " + this.tournamentId);
-            return;
-        }
-
-        currentTable.bigBlind(betLevel.BigBlind);
-        currentTable.smallBlind(betLevel.SmallBlind);
-        currentTable.ante(betLevel.Ante);
-
-        if (this.finishedPlaying()) {
-            // return;
-        }
-
-        if (level > 1) {
-            if (betLevel.Ante == null) {
-                let notificationParameters = {
-                    tournament: data.TournamentName,
-                    sb: betLevel.SmallBlind,
-                    bb: betLevel.BigBlind
-                };
-                currentTable.showNotificationWithDelay(
-                    _("tournament.betLevelChanged1", notificationParameters),
-                    debugSettings.tableView.betLevelChangeDelay);
-            } else {
-                let notificationParameters = {
-                    tournament: data.TournamentName,
-                    sb: betLevel.SmallBlind,
-                    bb: betLevel.BigBlind,
-                    ante: betLevel.Ante
-                };
-                currentTable.showNotificationWithDelay(
-                    _("tournament.betLevelChanged2", notificationParameters),
-                    debugSettings.tableView.betLevelChangeDelay);
-            }
-        }
-    }
-    onTournamentRoundChanged(round: number) {
-        // Do nothing.
-    }
-    onTournamentRebuyStatusChanged(rebuyAllowed: boolean, addonAllowed: boolean) {
-        if (this.finishedPlaying()) {
-            // return;
-        }
-
-        this.rebuyAllowed(rebuyAllowed);
-        this.addonAllowed(addonAllowed);
-        if (addonAllowed) {
-            const currentTable = this.getTableForNotification();
-            if (currentTable != null) {
-                if (this.isInTournament()) {
-                    currentTable.showNotificationWithDelay(
-                        _("table.addonAllowed"),
-                        debugSettings.tableView.addonPeriodStartedDelay);
-                } else {
-                    currentTable.showNotificationWithDelay(
-                        _("table.addonAllowedNotPlaying"),
-                        debugSettings.tableView.addonPeriodStartedDelay);
-                }
-            }
-        }
-    }
-
-    /**
-    * Notifies that in tournament count of made rebuy or addons changed.
-    * @param rebuyCount Count of rebuys which player done.
-    * @param addonCount Count of add-ons which player done.
-    */
-    onTournamentRebuyCountChanged(rebuyCount: number, addonCount: number) {
-        this.rebuyCount(rebuyCount);
-        this.addonCount(addonCount);
-    }
-
-    onTournamentFrozen() {
-        this.frozen(true);
-    }
-    onTournamentUnfrozen() {
-        this.frozen(false);
-    }
-    onTournamentRegistrationCancelled() {
-        // Do nothing.
-    }
-    public getBetLevelStructure(level: number) {
-        return metadataManager.bets[level];
-    }
-    public getPrizeStructure(structure: number) {
-        return metadataManager.prizes[structure];
-    }
-    public removeCurrentTable() {
-        tableManager.removeTableById(this.currentTableId);
-        tableManager.adjustTablePosition();
-        this.currentTableId = null;
     }
 
     private isInTournament() {

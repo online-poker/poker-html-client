@@ -1,18 +1,17 @@
-﻿/// <reference types="knockout" />
-/// <reference path="../../slider.ts" />
+﻿/// <reference path="../../slider.ts" />
 
 import ko = require("knockout");
 import { _ } from "../../languagemanager";
 
 /**
-* Parameters for the timeblock component
-*/
+ * Parameters for the timeblock component
+ */
 interface TimeBlockComponentParameters {
     selected?: KnockoutObservable<number>;
 
     /**
-    * Optional initial slide to be presented first.
-    */
+     * Optional initial slide to be presented first.
+     */
     initial?: number | KnockoutObservable<number>;
 }
 

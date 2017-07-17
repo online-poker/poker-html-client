@@ -1,8 +1,4 @@
 ﻿/// <reference path="../pageblock.ts" />
-/// <reference path="lobbypage.ts" />
-/// <reference path="tableslistpage.ts" />
-/// <reference path="tournamentslistpage.ts" />
-/// <reference path="tournamentlobbypage.ts" />
 
 import { App } from "../app";
 import { TournamentLobbyPage } from "./tournamentlobbypage";
@@ -13,11 +9,11 @@ import { TournamentsListPage } from "./tournamentslistpage";
 declare var app: App;
 
 export class LobbyPageBlock extends PageBlock {
-    sngListPage: TournamentsListPage;
-    tournamentsListPage: TournamentsListPage;
-    lobbyPage: LobbyPage;
-    tournamentLobbyPage: TournamentLobbyPage;
-    tablesListPage: TablesListPage;
+    public sngListPage: TournamentsListPage;
+    public tournamentsListPage: TournamentsListPage;
+    public lobbyPage: LobbyPage;
+    public tournamentLobbyPage: TournamentLobbyPage;
+    public tablesListPage: TablesListPage;
 
     constructor() {
         let lobbyPage = new LobbyPage();
@@ -39,11 +35,11 @@ export class LobbyPageBlock extends PageBlock {
         this.addSecondary("lobby", this.lobbyPage, true);
         this.currentPage = "lobby";
     }
-    showLobby() {
+    public showLobby() {
         app.executeCommand("pageblock.lobby");
         app.lobbyPageBlock.showSecondary("lobby");
     }
-    selectTournament(tournament) {
+    public selectTournament(tournament) {
         this.tournamentLobbyPage.setTournament(tournament.TournamentId, this.currentPage);
         this.showSecondary("tournamentLobby");
     }

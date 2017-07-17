@@ -1,20 +1,20 @@
 ﻿class PageBlock {
-    static useDoubleView: boolean = false;
-    shown: Signal;
-    loadPromises: JQueryPromise<void>[];
-    defaultSecondaryName: string;
-    currentPage: string;
-    currentSecondary: string;
-    secondaryViews: string[];
-    requireAuthentication: boolean = false;
-    requireGuestAuthentication: boolean = false;
+    public static useDoubleView: boolean = false;
+    public shown: Signal;
+    public loadPromises: JQueryPromise<void>[];
+    public defaultSecondaryName: string;
+    public currentPage: string;
+    public currentSecondary: string;
+    public secondaryViews: string[];
+    public requireAuthentication: boolean = false;
+    public requireGuestAuthentication: boolean = false;
 
     constructor(public name: string, public primaryName: string, primaryModel: any) {
         this.loadPromises = [];
         this.secondaryViews = [];
         this.bindSubPage(primaryName, primaryModel);
     }
-    addSecondary(name: string, viewModel: any, isDefault: boolean = false): void {
+    public addSecondary(name: string, viewModel: any, isDefault: boolean = false): void {
         if (isDefault) {
             this.defaultSecondaryName = name;
         }
@@ -22,7 +22,7 @@
         this.secondaryViews.push(name);
         this.bindSubPage(name, viewModel);
     }
-    showBlock() {
+    public showBlock() {
         if (typeof window !== "undefined") {
             $(this.getSelector()).show();
         }
@@ -32,15 +32,15 @@
             this.showSecondary(this.defaultSecondaryName);
         }
     }
-    hideBlock() {
+    public hideBlock() {
         if (typeof window !== "undefined") {
             $(this.getSelector()).hide();
         }
     }
-    showPrimary() {
+    public showPrimary() {
         this.showSubPage(this.primaryName);
     }
-    showSecondary(name: string) {
+    public showSecondary(name: string) {
         this.showSubPage(name);
     }
 
@@ -55,10 +55,10 @@
     }
 
     /**
-    * Gets page by it's name
-    * @param subPageName String Name of the sub page to get.
-    */
-    getSubPage(subPageName: string) {
+     * Gets page by it's name
+     * @param subPageName String Name of the sub page to get.
+     */
+    private getSubPage(subPageName: string) {
         if (!this.hasOwnProperty(subPageName + "Page")) {
             return null;
         }

@@ -1,16 +1,14 @@
-﻿/// <reference types="knockout" />
-
-import ko = require("knockout");
+﻿import ko = require("knockout");
 
 /**
-* Parameters for the timeblock component
-*/
+ * Parameters for the timeblock component
+ */
 interface FilterOptionsComponentParameters {
     options: any;
 
     /**
-    * Optional initial slide to be presented first.
-    */
+     * Optional initial slide to be presented first.
+     */
     displayCurrency?: boolean | KnockoutObservable<boolean>;
 }
 

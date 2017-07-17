@@ -1,10 +1,8 @@
-﻿/// <reference types="knockout" />
-
-import ko = require("knockout");
+﻿import ko = require("knockout");
 
 /**
-* Parameters for the timeblock component
-*/
+ * Parameters for the timeblock component
+ */
 interface CheckboxParameters {
     checked: boolean | KnockoutObservable<boolean>;
     label: string | KnockoutObservable<string>;
@@ -13,10 +11,10 @@ interface CheckboxParameters {
 }
 
 class Checkbox {
-    checked: KnockoutObservable<boolean>;
-    label: KnockoutObservable<string>;
-    right: KnockoutObservable<boolean>;
-    color: KnockoutObservable<string>;
+    public checked: KnockoutObservable<boolean>;
+    public label: KnockoutObservable<string>;
+    public right: KnockoutObservable<boolean>;
+    public color: KnockoutObservable<string>;
 
     constructor(params: CheckboxParameters, componentInfo?: KnockoutComponentTypes.ComponentInfo) {
         const checked = params.checked;
@@ -55,7 +53,7 @@ class Checkbox {
             }
         }
     }
-    doClick(e: Event) {
+    public doClick(e: Event) {
         this.checked(!this.checked());
         e.preventDefault();
         e.stopPropagation();

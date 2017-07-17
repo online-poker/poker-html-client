@@ -2,7 +2,6 @@
 import { TableView } from "../table/tableview";
 import { PlayerWinInformation } from "../table/handhistory";
 import { GameActionsQueue } from "../table/gameactionsqueue";
-import { SimplePopup } from "../popups/simplepopup";
 import { PopupBase } from "../ui/popupbase";
 import { appConfig } from "../appconfig";
 import { App } from "../app";
@@ -15,16 +14,16 @@ enum HandHistoryDisplayMode {
 }
 
 export class HandHistoryPopup extends PopupBase {
-    detailedOperations: KnockoutObservableArray<string>;
-    shortOperations: KnockoutObservableArray<string>;
-    tableView: KnockoutObservable<TableView>;
-    mode: KnockoutObservable<HandHistoryDisplayMode>;
-    cards: KnockoutObservableArray<string>;
-    playersData: KnockoutObservableArray<PlayerWinInformation>;
-    displayLoginSeparately: boolean;
-    showHistoryModeSelector = ko.observable(true);
-    isShortMode: KnockoutComputed<boolean>;
-    isDetailedMode: KnockoutComputed<boolean>;
+    public detailedOperations: KnockoutObservableArray<string>;
+    public shortOperations: KnockoutObservableArray<string>;
+    public tableView: KnockoutObservable<TableView>;
+    public mode: KnockoutObservable<HandHistoryDisplayMode>;
+    public cards: KnockoutObservableArray<string>;
+    public playersData: KnockoutObservableArray<PlayerWinInformation>;
+    public displayLoginSeparately: boolean;
+    public showHistoryModeSelector = ko.observable(true);
+    public isShortMode: KnockoutComputed<boolean>;
+    public isDetailedMode: KnockoutComputed<boolean>;
 
     constructor() {
         super();
@@ -48,9 +47,10 @@ export class HandHistoryPopup extends PopupBase {
         this.playersData = ko.observableArray<PlayerWinInformation>([]);
         this.displayLoginSeparately = false;
     }
-    shown(): void {
+    public shown(): void {
         super.shown();
-        this.showHistoryModeSelector(appConfig.game.handHistory.showPictureHistory && appConfig.game.handHistory.showTextHistory);
+        const handHistoryConfig = appConfig.game.handHistory;
+        this.showHistoryModeSelector(handHistoryConfig.showPictureHistory && handHistoryConfig.showTextHistory);
         const view = this.tableView();
         const lastHand = view.lastHandHistory();
         this.detailedOperations(lastHand.detailedOperations());
@@ -66,13 +66,13 @@ export class HandHistoryPopup extends PopupBase {
             }
         }, this, 0);
     }
-    selectMode(mode: HandHistoryDisplayMode) {
+    public selectMode(mode: HandHistoryDisplayMode) {
         this.mode(mode);
     }
-    selectShortMode() {
+    public selectShortMode() {
         this.mode(HandHistoryDisplayMode.Short);
     }
-    selectDetailedMode() {
+    public selectDetailedMode() {
         this.mode(HandHistoryDisplayMode.Detailed);
     }
 }

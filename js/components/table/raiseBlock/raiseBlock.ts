@@ -1,12 +1,15 @@
-/// <reference types="knockout" />
-
-import ko = require("knockout");
 import { TableSlider } from "../../../table/tableSlider";
+
+export interface IRaiseBlockComponentParameters {
+    data: TableSlider;
+    updateTranslatorTrigger: KnockoutSubscribable<any>;
+    updateTranslator: Function;
+}
 
 export class RaiseBlockComponent {
     private tableSlider: TableSlider;
 
-    constructor(params: { data: TableSlider, updateTranslatorTrigger: KnockoutSubscribable<any>, updateTranslator: Function }) {
+    constructor(params: IRaiseBlockComponentParameters) {
         this.tableSlider = params.data;
         if (params.updateTranslatorTrigger) {
             params.updateTranslatorTrigger.subscribe(function (newValue) {

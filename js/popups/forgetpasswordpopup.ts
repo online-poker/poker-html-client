@@ -8,12 +8,12 @@ import { PopupBase } from "../ui/popupbase";
 import { _ } from "../languagemanager";
 
 export class ForgetPasswordPopup extends PopupBase implements KnockoutValidationGroup {
-    login: KnockoutObservable<string>;
-    email: KnockoutObservable<string>;
-    errors: KnockoutValidationErrors;
-    isValid: () => boolean;
-    errorMessage: KnockoutObservable<string>;
-    loading: KnockoutObservable<boolean>;
+    public login: KnockoutObservable<string>;
+    public email: KnockoutObservable<string>;
+    public errors: KnockoutValidationErrors;
+    public isValid: () => boolean;
+    public errorMessage: KnockoutObservable<string>;
+    public loading: KnockoutObservable<boolean>;
     constructor() {
         super();
         this.login = ko.observable<string>();
@@ -22,7 +22,7 @@ export class ForgetPasswordPopup extends PopupBase implements KnockoutValidation
         this.errorMessage = ko.observable<string>();
         this.loading = ko.observable(false);
     }
-    async confirm() {
+    public async confirm() {
         const self = this;
         const isValid = this.isValid();
         if (!isValid) {

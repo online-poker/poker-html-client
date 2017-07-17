@@ -10,10 +10,10 @@ declare var apiHost: string;
 declare var app: App;
 
 export class ChatPage implements Page {
-    currentMessage: KnockoutObservable<string>;
-    messages: KnockoutObservableArray<PlayerMessage>;
-    loading: KnockoutObservable<boolean>;
-    timeoutHandler: number = 0;
+    public currentMessage: KnockoutObservable<string>;
+    public messages: KnockoutObservableArray<PlayerMessage>;
+    public loading: KnockoutObservable<boolean>;
+    public timeoutHandler: number = 0;
 
     constructor() {
         App.addTabBarItemMapping("more", "chat");
@@ -26,6 +26,7 @@ export class ChatPage implements Page {
             const handler = (...msg: any[]) => {
                 const messageId = msg[0];
                 const tableId = msg[1];
+                // tslint:disable-next-line:no-unused-variable
                 const type = msg[2];
                 const sender = msg[3];
                 const message = msg[4];
@@ -42,12 +43,12 @@ export class ChatPage implements Page {
             }, self, 0);
         });
     }
-    deactivate() {
+    public deactivate() {
         if (this.timeoutHandler !== 0) {
             timeService.clearTimeout(this.timeoutHandler);
         }
     }
-    activate() {
+    public activate() {
         const self = this;
         this.loading(true);
         this.timeoutHandler = timeService.setTimeout(function () {
@@ -55,12 +56,11 @@ export class ChatPage implements Page {
             self.timeoutHandler = 0;
         }, 2000);
     }
-    back() {
+    public back() {
         keyboardActivationService.forceHideKeyboard();
         app.lobbyPageBlock.showLobby();
     }
-    async send() {
-        const self = this;
+    public async send() {
         const message = this.currentMessage();
         if (message === "" || message === null) {
             return;
@@ -77,7 +77,7 @@ export class ChatPage implements Page {
             SimplePopup.display(_("chat.sendingMessage"), _("chat.sendingMessageGenericError"));
         }
     }
-    addMessage(messageId: number, sender: string, message: string) {
+    public addMessage(messageId: number, sender: string, message: string) {
         const m = new PlayerMessage(messageId, sender, message);
         if (this.messages().some((item) => item.messageId === messageId)) {
             // Skip adding message if it is already in the list.

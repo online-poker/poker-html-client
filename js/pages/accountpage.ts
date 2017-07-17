@@ -27,9 +27,9 @@ interface AccountPagePlayerModel {
 }
 
 export class AccountPage extends PageBase {
-    cashierCaption: KnockoutObservable<string>;
-    loading: KnockoutObservable<boolean>;
-    player: KnockoutObservable<any>;
+    public cashierCaption: KnockoutObservable<string>;
+    public loading: KnockoutObservable<boolean>;
+    public player: KnockoutObservable<any>;
 
     constructor() {
         super();
@@ -46,7 +46,7 @@ export class AccountPage extends PageBase {
             yearPoints: 0,
             status: "status1",
             accounts: [],
-            stars: 0
+            stars: 0,
         };
         authManager.authenticated.subscribe(function (newValue) {
             if (newValue) {
@@ -57,7 +57,7 @@ export class AccountPage extends PageBase {
         });
         this.player = ko.observable(emptyElement);
     }
-    activate() {
+    public activate() {
         super.activate();
         if (!authManager.authenticated()) {
             app.showPopup("auth");
@@ -65,7 +65,13 @@ export class AccountPage extends PageBase {
             this.updateInformation(false);
         }
     }
-    updateInformation(force: boolean) {
+    public back() {
+        app.lobbyPageBlock.showLobby();
+    }
+    public changePassword() {
+        app.showPopup("changePassword");
+    }
+    private updateInformation(force: boolean) {
         if (this.loading() && !force) {
             return;
         }
@@ -78,12 +84,6 @@ export class AccountPage extends PageBase {
         this.requestData(realMoneySupported, gameMoneySupported, pointsSupported).then(
             () => self.loading(false),
             () => this.requestData(realMoneySupported, gameMoneySupported, pointsSupported));
-    }
-    back() {
-        app.lobbyPageBlock.showLobby();
-    }
-    changePassword() {
-        app.showPopup("changePassword");
     }
 
     private async requestData(realMoneySupported: boolean, gameMoneySupported: boolean, pointsSupported: boolean) {
@@ -103,7 +103,7 @@ export class AccountPage extends PageBase {
                 currencyName: "currency.realmoney",
                 available: personalAccountData.RealMoney,
                 ingame: 0,
-                total: personalAccountData.RealMoney
+                total: personalAccountData.RealMoney,
             });
         }
 
@@ -112,7 +112,7 @@ export class AccountPage extends PageBase {
                 currencyName: "currency.gamemoney",
                 available: personalAccountData.GameMoney,
                 ingame: 0,
-                total: personalAccountData.GameMoney
+                total: personalAccountData.GameMoney,
             });
         }
 
@@ -121,7 +121,7 @@ export class AccountPage extends PageBase {
                 currencyName: "currency.rewardpoints",
                 available: personalAccountData.Points,
                 ingame: 0,
-                total: personalAccountData.Points
+                total: personalAccountData.Points,
             });
         }
 
@@ -147,7 +147,7 @@ export class AccountPage extends PageBase {
             yearPoints: parseInt(personalAccountData.Properties.Points, 10),
             status: status,
             accounts: accountsData,
-            stars: personalAccountData.Properties.Stars
+            stars: personalAccountData.Properties.Stars,
         });
     }
 }

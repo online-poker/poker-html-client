@@ -3,11 +3,11 @@ import { PageBase } from "../ui/pagebase";
 import { App } from "../app";
 
 export class ChangePasswordPage extends PageBase implements KnockoutValidationGroup {
-    oldpassword: KnockoutObservable<string>;
-    password: KnockoutObservable<string>;
-    confirmpassword: KnockoutObservable<string>;
-    errors: KnockoutValidationErrors;
-    isValid: () => boolean;
+    public oldpassword: KnockoutObservable<string>;
+    public password: KnockoutObservable<string>;
+    public confirmpassword: KnockoutObservable<string>;
+    public errors: KnockoutValidationErrors;
+    public isValid: () => boolean;
 
     constructor() {
         super();

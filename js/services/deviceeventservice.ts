@@ -1,15 +1,15 @@
 ﻿import { debugSettings } from "../debugsettings";
 
 /**
-* Service which provides ability to subscribe on the 
-* device events.
-*/
+ * Service which provides ability to subscribe on the 
+ * device events.
+ */
 export class DeviceEventService {
-    ready: Signal;
-    active: Signal;
-    resignActive: Signal;
-    pause: Signal;
-    resume: Signal;
+    public ready: Signal;
+    public active: Signal;
+    public resignActive: Signal;
+    public pause: Signal;
+    public resume: Signal;
 
     constructor() {
         this.ready = new signals.Signal();
@@ -19,9 +19,9 @@ export class DeviceEventService {
         this.resume = new signals.Signal();
     }
     /**
-    * Initializes the device event handler
-    */
-    initialize() {
+     * Initializes the device event handler
+     */
+    public initialize() {
         document.addEventListener("deviceready", () => this.onDeviceReady(), false);
         if (debugSettings.ios.hasMultitasking) {
             document.addEventListener("resign", () => this.onResign(), false);

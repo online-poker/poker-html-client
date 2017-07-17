@@ -9,8 +9,8 @@ import { debugSettings } from "../debugsettings";
 import { CancelToken } from "./cancelToken";
 
 export class ConnectionWrapper {
-    terminated = false;
-    refreshHandle: number = null;
+    public terminated = false;
+    private refreshHandle: number = null;
     constructor(public connection: SignalR.Hub.Connection) {
         connection.connectionSlow(() => {
             if (this.terminated) {
@@ -25,7 +25,7 @@ export class ConnectionWrapper {
                 return;
             }
 
-           connectionService.reconnecting.dispatch();
+            connectionService.reconnecting.dispatch();
         });
         connection.reconnected(() => {
             if (this.terminated) {
@@ -77,14 +77,18 @@ export class ConnectionWrapper {
             }
 
             /* tslint:disable:no-string-literal */
-            if (error["message"] !== null && error["message"] !== undefined && error.message === "Error during negotiation request.") {
+            if (error["message"] !== null
+                && error["message"] !== undefined
+                && error.message === "Error during negotiation request.") {
                 this.logEvent("Error during negotiation. Schedule reconnecting.");
                 connectionService.recoverableError.dispatch();
                 return;
             }
 
             if (source["code"] === null || source["code"] === undefined) {
-                this.logEvent("Unrecoverable SignalR error without code happens, please discover that this is means.", source);
+                this.logEvent(
+                    "Unrecoverable SignalR error without code happens, please discover that this is means.",
+                    source);
                 return;
             }
 
@@ -100,7 +104,7 @@ export class ConnectionWrapper {
             console.warn(error);
         });
     }
-    terminateConnection(forceDisconnect = false) {
+    public terminateConnection(forceDisconnect = false) {
         const hubId = this.connection.id;
         const connectionInfo = "HID:" + hubId;
         this.logEvent("Terminating connection " + connectionInfo);
@@ -115,18 +119,18 @@ export class ConnectionWrapper {
         this.cancelRefereshConnection();
         this.terminated = true;
     }
-    establishConnection(maxAttempts = 3) {
+    public establishConnection(maxAttempts = 3) {
         const attempts = connectionService.attempts++;
         connectionService.lastAttempt = attempts;
         const result = this.establishConnectionCore(maxAttempts);
         return result;
     }
-    async establishConnectionAsync(maxAttempts = 3, cancellationToken?: CancelToken) {
+    public async establishConnectionAsync(maxAttempts = 3, cancellationToken?: CancelToken) {
         const attempts = connectionService.attempts++;
         connectionService.lastAttempt = attempts;
         return await this.establishConnectionCoreAsync(maxAttempts, cancellationToken);
     }
-    buildStartConnection() {
+    public buildStartConnection() {
         let supportedTransports = null;
         const androidVersion = this.getAndroidVersion();
         if (androidVersion === false || (<string>androidVersion).indexOf("4.4") === 0) {
@@ -185,7 +189,7 @@ export class ConnectionWrapper {
 
         return startConnection;
     }
-    async buildStartConnectionAsync() {
+    public async buildStartConnectionAsync() {
         let supportedTransports = null;
         const androidVersion = this.getAndroidVersion();
         if (androidVersion === false || (<string>androidVersion).indexOf("4.4") === 0) {
@@ -340,6 +344,7 @@ export class ConnectionWrapper {
     }
     private logEvent(message: string, ...params: any[]) {
         if (debugSettings.connection.signalR) {
+            // tslint:disable-next-line:no-console
             console.log(message, params);
         }
 
