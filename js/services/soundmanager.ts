@@ -2,6 +2,7 @@
 
 import * as ko from "knockout";
 import * as runtimeSettings from "../table/runtimesettings";
+import { wait } from "./timedeferred";
 
 export class SoundManager {
     enabled = ko.observable(false);
@@ -14,13 +15,20 @@ export class SoundManager {
         this.quickPlay("snd/fold.mp3");
         this.quickPlay("snd/fold_human.mp3");
     }
-    playCheck() {
+    async playCheck() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
 
-        this.quickPlay("snd/check.mp3");
-        this.quickPlay("snd/check_human.mp3");
+        try {
+            await this.quickPlay("snd/check_loud.mp3");
+            await wait(200);
+            await this.quickPlay("snd/check_loud.mp3");
+            await wait(100);
+            await this.quickPlay("snd/check_human.mp3");
+        } catch (e) {
+            console.log(e);
+        }
     }
     playCall() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -117,7 +125,7 @@ export class SoundManager {
 
         this.quickPlay("snd/river.mp3");
     }
-    private quickPlay(fileName) {
+    private quickPlay(fileName: string) {
         /* tslint:disable:no-string-literal */
         if (window["Media"] != null) {
             const platformPrefix = platformInfo.mediaRoot;
@@ -132,8 +140,14 @@ export class SoundManager {
         }
 
         if (window["Audio"] != null) {
-            const audio = new Audio(fileName);
-            audio.play();
+            return new Promise(function (resolve, reject) {
+                const audio = new Audio();
+                audio.preload = "auto";
+                audio.autoplay = true;
+                audio.onerror = reject;
+                audio.onended = resolve;
+                audio.src = fileName;
+            });
         }
         /* tslint:enable:no-string-literal */
     }
