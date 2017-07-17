@@ -10,8 +10,8 @@ interface ChipStackCalcIntermediate {
 }
 
 class ChipItem {
-    baseAmount: KnockoutObservable<number>;
-    maxStackCount = 5;
+    public baseAmount: KnockoutObservable<number>;
+    private maxStackCount = 5;
 
     constructor(base: number) {
         this.baseAmount = ko.observable(base);
@@ -76,29 +76,29 @@ class ChipItem {
             if (item2.count === 0) {
                 return [{
                     amount: Math.max(item1.count, 1),
-                    type: item1.index
+                    type: item1.index,
                 }];
             }
 
             if (item1.count === 0) {
                 return [{
                     amount: Math.max(item2.count, 1),
-                    type: item2.index
+                    type: item2.index,
                 }];
             }
 
             return [{
                 amount: Math.max(item1.count, 1),
-                type: item1.index
+                type: item1.index,
             }, {
                 amount: Math.max(item2.count, 1),
-                type: item2.index
+                type: item2.index,
             }];
         }
 
         return [{
             amount: Math.max(item1.count, 1),
-            type: item1.index
+            type: item1.index,
         }];
     }
 
@@ -133,14 +133,14 @@ class ChipItem {
                 return {
                     amount: item,
                     chipsAmount: Math.min(Math.floor((amount + item - 1) / item), self.maxStackCount),
-                    difference: 0
+                    difference: 0,
                 };
             });
             target = target.concat(effectiveChipsAmount.map(function (item) {
                 return {
                     amount: item,
                     chipsAmount: Math.min(Math.floor(amount / item), self.maxStackCount),
-                    difference: 0
+                    difference: 0,
                 };
             }));
         } else {
@@ -148,7 +148,7 @@ class ChipItem {
                 return {
                     amount: item,
                     chipsAmount: Math.min(Math.floor(amount / item), self.maxStackCount),
-                    difference: 0
+                    difference: 0,
                 };
             });
         }
@@ -158,15 +158,17 @@ class ChipItem {
                 return {
                     amount: item.amount,
                     chipsAmount: item.chipsAmount,
-                    difference: amount - (item.amount * item.chipsAmount)
+                    difference: amount - (item.amount * item.chipsAmount),
                 };
             });
-        const difference = target.map(item => Math.abs(item.difference)).reduce((prev, curr) => Math.min(prev, curr), Number.MAX_VALUE);
+        const difference = target
+            .map(item => Math.abs(item.difference))
+            .reduce((prev, curr) => Math.min(prev, curr), Number.MAX_VALUE);
         const minimalSlice = target.filter(item => Math.abs(item.difference) === difference)[0];
         return {
             difference: minimalSlice.difference,
             count: minimalSlice.chipsAmount,
-            index: chipAmounts.filter((item) => item <= minimalSlice.amount).length
+            index: chipAmounts.filter((item) => item <= minimalSlice.amount).length,
         };
     }
 

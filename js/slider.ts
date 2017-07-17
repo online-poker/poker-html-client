@@ -1,19 +1,19 @@
 ﻿/// <reference types="knockout" />
 
 class SliderItem {
-    caption: string;
-    childTemplate: string;
-    action: Function;
+    public caption: string;
+    public childTemplate: string;
+    public action: Function;
 }
 
 class Slider {
-    currentIndex: KnockoutObservable<number>;
-    currentIndex1: KnockoutComputed<number>;
-    items: SliderItem[];
-    current: KnockoutComputed<SliderItem>;
-    next: KnockoutComputed<SliderItem>;
-    prev: KnockoutComputed<SliderItem>;
-    enabled = ko.observable(true);
+    public currentIndex: KnockoutObservable<number>;
+    public currentIndex1: KnockoutComputed<number>;
+    public items: SliderItem[];
+    public current: KnockoutComputed<SliderItem>;
+    public next: KnockoutComputed<SliderItem>;
+    public prev: KnockoutComputed<SliderItem>;
+    public enabled = ko.observable(true);
 
     constructor() {
         const self = this;
@@ -28,7 +28,7 @@ class Slider {
                     self.currentIndex(value - 1);
                 }
             },
-            owner: this
+            owner: this,
         });
         this.current = ko.computed(function () {
             const index = this.currentIndex();
@@ -65,7 +65,7 @@ class Slider {
             return self.items[index];
         }, this);
     }
-    addOption(caption: string, childTemplate: string, callback: Function): SliderItem {
+    public addOption(caption: string, childTemplate: string, callback: Function): SliderItem {
         const item = new SliderItem();
         item.caption = caption;
         item.childTemplate = childTemplate;
@@ -74,7 +74,7 @@ class Slider {
         this.currentIndex.valueHasMutated();
         return item;
     }
-    selectNext() {
+    public selectNext() {
         if (!this.enabled()) {
             return;
         }
@@ -87,7 +87,7 @@ class Slider {
 
         this.currentIndex(index);
     }
-    selectPrev() {
+    public selectPrev() {
         if (!this.enabled()) {
             return;
         }

@@ -2,32 +2,32 @@
 import { TablePlaceModel } from "./tabpleplacemodel";
 
 export class TablePlaces {
-    placesRefreshTrigger: KnockoutObservable<{}>;
+    public placesRefreshTrigger: KnockoutObservable<{}>;
 
-    place1: KnockoutObservable<TablePlaceModel>;
-    place2: KnockoutObservable<TablePlaceModel>;
-    place3: KnockoutObservable<TablePlaceModel>;
-    place4: KnockoutObservable<TablePlaceModel>;
-    place5: KnockoutObservable<TablePlaceModel>;
-    place6: KnockoutObservable<TablePlaceModel>;
-    place7: KnockoutObservable<TablePlaceModel>;
-    place8: KnockoutObservable<TablePlaceModel>;
-    place9: KnockoutObservable<TablePlaceModel>;
-    place10: KnockoutObservable<TablePlaceModel>;
+    public place1: KnockoutObservable<TablePlaceModel>;
+    public place2: KnockoutObservable<TablePlaceModel>;
+    public place3: KnockoutObservable<TablePlaceModel>;
+    public place4: KnockoutObservable<TablePlaceModel>;
+    public place5: KnockoutObservable<TablePlaceModel>;
+    public place6: KnockoutObservable<TablePlaceModel>;
+    public place7: KnockoutObservable<TablePlaceModel>;
+    public place8: KnockoutObservable<TablePlaceModel>;
+    public place9: KnockoutObservable<TablePlaceModel>;
+    public place10: KnockoutObservable<TablePlaceModel>;
 
-    offsetPlace1: KnockoutComputed<TablePlaceModel>;
-    offsetPlace2: KnockoutComputed<TablePlaceModel>;
-    offsetPlace3: KnockoutComputed<TablePlaceModel>;
-    offsetPlace4: KnockoutComputed<TablePlaceModel>;
-    offsetPlace5: KnockoutComputed<TablePlaceModel>;
-    offsetPlace6: KnockoutComputed<TablePlaceModel>;
-    offsetPlace7: KnockoutComputed<TablePlaceModel>;
-    offsetPlace8: KnockoutComputed<TablePlaceModel>;
-    offsetPlace9: KnockoutComputed<TablePlaceModel>;
-    offsetPlace10: KnockoutComputed<TablePlaceModel>;
+    public offsetPlace1: KnockoutComputed<TablePlaceModel>;
+    public offsetPlace2: KnockoutComputed<TablePlaceModel>;
+    public offsetPlace3: KnockoutComputed<TablePlaceModel>;
+    public offsetPlace4: KnockoutComputed<TablePlaceModel>;
+    public offsetPlace5: KnockoutComputed<TablePlaceModel>;
+    public offsetPlace6: KnockoutComputed<TablePlaceModel>;
+    public offsetPlace7: KnockoutComputed<TablePlaceModel>;
+    public offsetPlace8: KnockoutComputed<TablePlaceModel>;
+    public offsetPlace9: KnockoutComputed<TablePlaceModel>;
+    public offsetPlace10: KnockoutComputed<TablePlaceModel>;
 
-    places: KnockoutComputed<TablePlaceModel[]>;
-    virtualOffset: KnockoutObservable<number>;
+    public places: KnockoutComputed<TablePlaceModel[]>;
+    public virtualOffset: KnockoutObservable<number>;
 
     constructor(private maxPlayers: number) {
         this.placesRefreshTrigger = ko.observable();
@@ -131,28 +131,28 @@ export class TablePlaces {
         }, this);
     }
 
-    getMaxPlayers() {
+    public getMaxPlayers() {
         return this.maxPlayers;
     }
-    getRealOffset(seat: number) {
+    public getRealOffset(seat: number) {
         if (this.maxPlayers === 0) {
             return 1;
         }
 
         return ((seat - 1 + this.virtualOffset()) % this.maxPlayers) + 1;
     }
-    getVirtualOffset(seat: number) {
+    public getVirtualOffset(seat: number) {
         if (this.maxPlayers === 0) {
             return 1;
         }
 
         return ((seat - 1 + this.maxPlayers - this.virtualOffset()) % this.maxPlayers) + 1;
     }
-    rotate(offset: number) {
+    public rotate(offset: number) {
         const newOffset = (this.maxPlayers + offset + this.virtualOffset()) % this.maxPlayers;
         this.virtualOffset(newOffset);
     }
-    sit(seat: number, player: TablePlaceModel) {
+    public sit(seat: number, player: TablePlaceModel) {
         if (seat < 1 || seat > this.maxPlayers) {
             throw new Error("Invalid seat number: " + seat);
         }
@@ -160,7 +160,7 @@ export class TablePlaces {
         const seatVar = <KnockoutObservable<TablePlaceModel>>this["place" + seat];
         seatVar(player);
     }
-    standup(seat: number) {
+    public standup(seat: number) {
         if (seat < 1 || seat > this.maxPlayers) {
             throw new Error("Invalid seat number: " + seat);
         }
@@ -168,11 +168,11 @@ export class TablePlaces {
         const seatVar = <KnockoutObservable<TablePlaceModel>>this["place" + seat];
         seatVar(null);
     }
-    getPlaceBySeat(seat: number) {
+    public getPlaceBySeat(seat: number) {
         const seatVar = <KnockoutObservable<TablePlaceModel>>this["place" + seat];
         return seatVar();
     }
-    getPlaceByPlayerId(playerId: number) {
+    public getPlaceByPlayerId(playerId: number) {
         const playerList = this.places().filter(_ => _.PlayerId() === playerId);
         if (playerList.length === 0) {
             return null;
@@ -180,13 +180,12 @@ export class TablePlaces {
 
         return playerList[0];
     }
-    setPlayers(players: TablePlayer[]) {
+    public setPlayers(players: TablePlayer[]) {
         /// <signature>
         ///     <summary>Sets players on the table.</summary>
         ///     <param name="players" type="Array">Array of players</param>
         /// </signature>
         this.clear();
-        const places = this.places();
         for (let i = 1; i <= this.maxPlayers; i++) {
             const playersOnSeat = players.filter((player) => player.Seat === i);
             if (playersOnSeat.length !== 0) {
@@ -198,7 +197,7 @@ export class TablePlaces {
 
         this.refreshPlaces();
     }
-    clear() {
+    public clear() {
         this.place1(null);
         this.place2(null);
         this.place3(null);
@@ -210,7 +209,7 @@ export class TablePlaces {
         this.place9(null);
         this.place10(null);
     }
-    refreshPlaces() {
+    public refreshPlaces() {
         this.placesRefreshTrigger.notifySubscribers();
         this.placesRefreshTrigger.valueHasMutated();
     }

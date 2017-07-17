@@ -17,17 +17,18 @@ import { _ } from "../languagemanager";
 declare var apiHost: string;
 
 class TableManager {
-    tables: KnockoutObservableArray<TableView>;
-    currentIndex: KnockoutObservable<number>;
-    hasTurn: KnockoutComputed<boolean>;
-    maxTablesReached: Signal;
-    duplicators: DuplicateFinder[];
-    private reserveTablesForTournaments = false;
+    public tables: KnockoutObservableArray<TableView>;
+    public currentIndex: KnockoutObservable<number>;
+    public hasTurn: KnockoutComputed<boolean>;
+    public maxTablesReached: Signal;
 
     /**
-    * Tournaments in which player registered.
-    */
-    tournaments: KnockoutObservableArray<TournamentView>;
+     * Tournaments in which player registered.
+     */
+    public tournaments: KnockoutObservableArray<TournamentView>;
+
+    private duplicators: DuplicateFinder[];
+    private reserveTablesForTournaments = false;
 
     constructor() {
         const self = this;
@@ -43,7 +44,7 @@ class TableManager {
         }, this);
     }
 
-    initialize() {
+    public initialize() {
         const self = this;
         commandManager.registerCommand("app.selectTable", function (parameters?: any[]): void {
             if (parameters.length < 1) {
@@ -104,11 +105,11 @@ class TableManager {
             settings.saveSettings();
         });
     }
-    onReconnected() {
+    public onReconnected() {
         this.connectTables();
         this.connectTournaments();
     }
-    async getCurrentTables() {
+    public async getCurrentTables() {
         const self = this;
         const api = new OnlinePoker.Commanding.API.Game(apiHost);
         const data = await api.GetTables(null, 0, 0, 0, 1, 0);
@@ -139,7 +140,7 @@ class TableManager {
             }
         }
     }
-    async getCurrentTournaments() {
+    public async getCurrentTournaments() {
         const self = this;
         const gapi = new OnlinePoker.Commanding.API.Game(apiHost);
         const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
@@ -168,7 +169,7 @@ class TableManager {
             }
         }
     }
-    async getCurrentTablesAndTournaments() {
+    public async getCurrentTablesAndTournaments() {
         if (!authManager.authenticated()) {
             return;
         }
@@ -189,14 +190,284 @@ class TableManager {
             timeService.setTimeout(() => {
                 SimplePopup.display(_("tournament.tournaments"), messages);
             }, 2000);
-        }
+        };
         await Promise.all([tablesRequest, tournamentsRequest]);
     }
-    selectTableCommandHandler(parameters: any[]): void {
+    public selectTableCommandHandler(parameters: any[]): void {
         // Do nothing.
     }
+    public clear() {
+        this.currentIndex(0);
+        this.tables([]);
+        this.tournaments([]);
+    }
+    public clearTables() {
+        this.tables().forEach((table) => {
+            table.clearInformation();
+        });
+    }
+    public connectTables() {
+        this.tables().forEach((table) => {
+            table.updateTableInformation();
+        });
+    }
+    public stopConnectingToTables() {
+        this.tables().forEach((table) => {
+            table.cancelUpdateTableInformation();
+        });
+    }
 
-    initializeChatHub(wrapper: ConnectionWrapper) {
+    public clearTournaments() {
+        this.tournaments().forEach((tournament) => {
+            tournament.clearInformation();
+        });
+    }
+    public connectTournaments() {
+        this.tournaments().forEach((tournament) => {
+            tournament.updateTournamentInformation();
+        });
+    }
+    public openTournamentById(tournamentId: number, attempts: number = 3) {
+        if (attempts === 0) {
+            SimplePopup.display(_("tournament.error"), _("tournament.errorConnectonToTournament"));
+            return;
+        }
+
+        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        tournamentApi.GetTournament(tournamentId).then((_) => {
+            if (_.Status === "Ok") {
+                const tournamentData = _.Data;
+                tableManager.selectTournament(tournamentData, true);
+            } else {
+                this.openTournamentById(tournamentId, attempts - 1);
+            }
+        });
+    }
+    public getTablesReservation() {
+        const tablesWithoutTournament = this.tables().filter(_ => _.tournament() === null);
+        const notFinishedTournaments = this.tournaments().filter(tournamentView => {
+            const tdata = tournamentView.tournamentData();
+            const tplayer = tdata.TournamentPlayers.filter(tournamentPlayer => {
+                return tournamentPlayer.PlayerId === authManager.loginId();
+            });
+            if (tplayer.length === 0) {
+                return false;
+            }
+
+            if (tplayer[0].Status !== TournamentPlayerStatus.Playing) {
+                return false;
+            }
+
+            return tdata.Status !== TournamentStatus.Completed
+                && tdata.Status !== TournamentStatus.Cancelled
+                && tdata.Status !== TournamentStatus.RegistrationCancelled;
+        });
+        this.logDataEvent("Count of tables: " + tablesWithoutTournament.length + ", "
+            + "count of tournaments: " + notFinishedTournaments.length);
+        if (this.reserveTablesForTournaments) {
+            return Math.max(tablesWithoutTournament.length + notFinishedTournaments.length, this.tables().length);
+        }
+
+        return this.tables().length;
+    }
+    public selectTournament(model: TournamentDefinition, update: boolean) {
+        const self = this;
+        const tournamentId = model.TournamentId;
+        let tournamentView = this.getTournamentById(tournamentId);
+        const append = function () {
+            if (tournamentView === null) {
+                tournamentView = self.addTournament(tournamentId, model);
+            }
+
+            if (update && connectionService.currentConnection !== null) {
+                tournamentView.updateTournamentInformation();
+            }
+        };
+        if (this.getTablesReservation() >= 4 && tournamentView === null && this.reserveTablesForTournaments) {
+            this.maxTablesReached.dispatch(append);
+        }
+
+        append();
+    }
+    public selectTable(model: GameTableModel, update: boolean) {
+        const self = this;
+        const tableId = model.TableId;
+        let tableView = this.getTableById(tableId);
+        const append = function () {
+            if (tableView === null) {
+                tableView = self.addTable(tableId, model);
+            }
+
+            self.selectById(tableId);
+            if (update && connectionService.currentConnection !== null) {
+                tableView.updateTableInformation();
+            }
+        };
+        if (tableView == null) {
+            this.removeTournamentTables(model.TournamentId);
+        }
+
+        if (this.getTablesReservation() >= 4 && tableView === null) {
+            this.removeClosedTables();
+            if (this.getTablesReservation() >= 4 && tableView === null) {
+                this.maxTablesReached.dispatch(append);
+            }
+
+            append();
+        } else {
+            append();
+        }
+    }
+    public addTable(tableId: number, model: GameTableModel) {
+        const table = new TableView(tableId, model);
+        this.tables.push(table);
+        table.onMyTurn.add(this.onMyTurn, this);
+        return table;
+    }
+
+    public remove(table: TableView) {
+        const tables = this.tables().filter(function (value: TableView) {
+            return value !== table;
+        });
+        this.tables(tables);
+        table.onMyTurn.remove(this.onMyTurn, this);
+
+        return table;
+    }
+
+    public removeTableById(tableId: number) {
+        const view = this.getTableById(tableId);
+        if (view === null) {
+            return null;
+        }
+
+        return this.remove(view);
+    }
+
+    public adjustTablePosition() {
+        let maxIndex = this.tables().length - 1;
+        maxIndex = maxIndex < 0 ? 0 : maxIndex;
+        if (this.currentIndex() > maxIndex) {
+            this.currentIndex(maxIndex);
+        }
+    }
+
+    public prevTable() {
+        const length = this.tables().length;
+        if (length <= 1) {
+            return;
+        }
+
+        const maxIndex = this.tables().length - 1;
+        const index = this.currentIndex();
+        const nextIndex = (index - 1 + this.tables().length) % this.tables().length;
+        this.currentIndex(nextIndex);
+    }
+
+    public nextTable() {
+        const length = this.tables().length;
+        if (length <= 1) {
+            return;
+        }
+
+        const maxIndex = this.tables().length - 1;
+        const index = this.currentIndex();
+        const nextIndex = (index + 1 + this.tables().length) % this.tables().length;
+        this.currentIndex(nextIndex);
+    }
+
+    public addTournament(tournamentId: number, model: TournamentDefinition) {
+        const tournament = new TournamentView(tournamentId, model);
+        this.tournaments.push(tournament);
+        return tournament;
+    }
+
+    public removeTournament(tournament: TournamentView) {
+        const tournaments = this.tournaments().filter(function (value) {
+            return value !== tournament;
+        });
+        this.tournaments(tournaments);
+        return tournament;
+    }
+
+    public removeTournamentById(tableId: number) {
+        const view = this.getTournamentById(tableId);
+        if (view === null) {
+            return null;
+        }
+
+        return this.removeTournament(view);
+    }
+
+    /**
+     * Handles notification about current turn of the player.
+     * @param tableId Number Id of the table where table playing.
+     */
+    public onMyTurn(tableId: number) {
+        if (settings.autoSwitchTables()) {
+            this.selectById(tableId);
+        }
+
+        if (settings.soundEnabled()) {
+            // Added vibration.
+        }
+    }
+
+    /**
+     * Gets table view by id
+     * @param tableId Id of the player which join the table
+     * @returns Table view for the table with given id
+     */
+    public getTableById(tableId: number) {
+        const result = this.tables().filter(function (value: TableView) {
+            return value.tableId === tableId;
+        });
+
+        if (result.length === 0) {
+            return null;
+        }
+
+        return result[0];
+    }
+
+    /**
+     * Gets tournament by it's id.
+     * tournamentId Number If of the tournament to retreive.
+     */
+    public getTournamentById(tournamentId: number) {
+        const result = this.tournaments().filter(function (value: TournamentView) {
+            return value.tournamentId === tournamentId;
+        });
+
+        if (result.length === 0) {
+            return null;
+        }
+
+        return result[0];
+    }
+
+    public isOpened(tableId: number) {
+        return this.getTableById(tableId) != null;
+    }
+
+    /**
+     * Selects current table view by id.
+     * @param tableId Id of the table which selected
+     */
+    public selectById(tableId: number): void {
+        const tables = this.tables();
+        for (let i = 0; i < tables.length; i++) {
+            const tableView = tables[i];
+            if (tableView.tableId === tableId) {
+                this.currentIndex(i);
+                return;
+            }
+        }
+
+        this.currentIndex(0);
+    }
+
+    private initializeChatHub(wrapper: ConnectionWrapper) {
         const self = this;
         const chatHub = wrapper.connection.Chat;
         chatHub.client.ChatConnected = function (tableId, lastMessageId) {
@@ -255,10 +526,11 @@ class TableManager {
             }
         };
     }
-    initializeGameHub(wrapper: ConnectionWrapper) {
+    private initializeGameHub(wrapper: ConnectionWrapper) {
         const self = this;
         const gameHub = wrapper.connection.Game;
-        gameHub.client.TableStatusInfo = function (tableId, players, pots, cards, dealerSeat, buyIn,
+        gameHub.client.TableStatusInfo = function (
+            tableId, players, pots, cards, dealerSeat, buyIn,
             baseBuyIn, leaveTime, timePass, currentPlayerId, lastRaise, gameId, authenticated,
             actionsCount, frozen, opened, pauseDate, lastMessageId) {
             if (wrapper.terminated) {
@@ -332,6 +604,9 @@ class TableManager {
                 case 6:
                     typeString = "ReturnMoney";
                     break;
+                default:
+                    typeString = "Unknown bet type: " + type.toString();
+                    break;
             }
             self.logDataEvent("Bet: TableId - ", tableId,
                 " PlayerId - ", playerId,
@@ -351,20 +626,24 @@ class TableManager {
 
             tableView.onMoveMoneyToPot(pots);
             tableView.onOpenCards(decodeCardsArray(cards));
+            let typeString: string;
             switch (type) {
                 case 0:
-                    type = "Flop";
+                    typeString = "Flop";
                     break;
                 case 1:
-                    type = "Turn";
+                    typeString = "Turn";
                     break;
                 case 2:
-                    type = "River";
+                    typeString = "River";
+                    break;
+                default:
+                    typeString = "Unknown open cards type: " + type.toString();
                     break;
             }
 
-            const cardsStirngs = cardsArray(cards);
-            self.logDataEvent("Open cards: TableId - ", tableId, " Type - ", type, " Cards - ", cardsStirngs.join(" "));
+            const cardsStrings = cardsArray(cards).join(" ");
+            self.logDataEvent(`Open cards: TableId - ${tableId} Type - ${typeString} Cards - ${cardsStrings}`);
         };
         gameHub.client.MoneyAdded = function (tableId, playerId, amount) {
             if (wrapper.terminated) {
@@ -403,8 +682,8 @@ class TableManager {
             }
 
             tableView.onPlayerCards(playerId, decodeCardsArray(cards));
-            const cardsString = cardsArray(cards);
-            self.logDataEvent("Player cards: TableId - ", tableId, " PlayerId - ", playerId, " Cards - ", cardsString.join(" "));
+            const cardsString = cardsArray(cards).join(" ");
+            self.logDataEvent("Player cards: TableId - ", tableId, " PlayerId - ", playerId, " Cards - ", cardsString);
         };
         gameHub.client.PlayerCardOpened = (tableId, playerId, cardPosition, cardValue) => {
             if (wrapper.terminated) {
@@ -773,280 +1052,10 @@ class TableManager {
             tableManager.removeTournamentById(tournamentId);
         };
     }
-    clear() {
-        this.currentIndex(0);
-        this.tables([]);
-        this.tournaments([]);
-    }
-    clearTables() {
-        this.tables().forEach((table) => {
-            table.clearInformation();
-        });
-    }
-    connectTables() {
-        this.tables().forEach((table) => {
-            table.updateTableInformation();
-        });
-    }
-    stopConnectingToTables() {
-        this.tables().forEach((table) => {
-            table.cancelUpdateTableInformation();
-        });
-    }
-
-    clearTournaments() {
-        this.tournaments().forEach((tournament) => {
-            tournament.clearInformation();
-        });
-    }
-    connectTournaments() {
-        this.tournaments().forEach((tournament) => {
-            tournament.updateTournamentInformation();
-        });
-    }
-    openTournamentById(tournamentId: number, attempts: number = 3) {
-        if (attempts === 0) {
-            SimplePopup.display(_("tournament.error"), _("tournament.errorConnectonToTournament"));
-            return;
-        }
-
-        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-        tournamentApi.GetTournament(tournamentId).then((_) => {
-            if (_.Status === "Ok") {
-                const tournamentData = _.Data;
-                tableManager.selectTournament(tournamentData, true);
-            } else {
-                this.openTournamentById(tournamentId, attempts - 1);
-            }
-        });
-    }
-    getTablesReservation() {
-        const tablesWithoutTournament = this.tables().filter(_ => _.tournament() === null);
-        const notFinishedTournaments = this.tournaments().filter(_ => {
-            const tdata = _.tournamentData();
-            const tplayer = tdata.TournamentPlayers.filter(_ => {
-                return _.PlayerId === authManager.loginId();
-            });
-            if (tplayer.length === 0) {
-                return false;
-            }
-
-            if (tplayer[0].Status !== TournamentPlayerStatus.Playing) {
-                return false;
-            }
-
-            return tdata.Status !== TournamentStatus.Completed
-                && tdata.Status !== TournamentStatus.Cancelled
-                && tdata.Status !== TournamentStatus.RegistrationCancelled;
-        });
-        this.logDataEvent("Count of tables: " + tablesWithoutTournament.length + ", "
-            + "count of tournaments: " + notFinishedTournaments.length);
-        if (this.reserveTablesForTournaments) {
-            return Math.max(tablesWithoutTournament.length + notFinishedTournaments.length, this.tables().length);
-        }
-
-        return this.tables().length;
-    }
-    selectTournament(model: TournamentDefinition, update: boolean) {
-        const self = this;
-        const tournamentId = model.TournamentId;
-        let tournamentView = this.getTournamentById(tournamentId);
-        const append = function () {
-            if (tournamentView === null) {
-                tournamentView = self.addTournament(tournamentId, model);
-            }
-
-            if (update && connectionService.currentConnection !== null) {
-                tournamentView.updateTournamentInformation();
-            }
-        };
-        if (this.getTablesReservation() >= 4 && tournamentView === null && this.reserveTablesForTournaments) {
-            this.maxTablesReached.dispatch(append);
-        }
-
-        append();
-    }
-    selectTable(model: GameTableModel, update: boolean) {
-        const self = this;
-        const tableId = model.TableId;
-        let tableView = this.getTableById(tableId);
-        const append = function () {
-            if (tableView === null) {
-                tableView = self.addTable(tableId, model);
-            }
-
-            self.selectById(tableId);
-            if (update && connectionService.currentConnection !== null) {
-                tableView.updateTableInformation();
-            }
-        };
-        if (tableView == null) {
-            this.removeTournamentTables(model.TournamentId);
-        }
-
-        if (this.getTablesReservation() >= 4 && tableView === null) {
-            this.removeClosedTables();
-            if (this.getTablesReservation() >= 4 && tableView === null) {
-                this.maxTablesReached.dispatch(append);
-            }
-
-            append();
-        } else {
-            append();
-        }
-    }
-    addTable(tableId: number, model: GameTableModel) {
-        const table = new TableView(tableId, model);
-        this.tables.push(table);
-        table.onMyTurn.add(this.onMyTurn, this);
-        return table;
-    }
-
-    remove(table: TableView) {
-        const tables = this.tables().filter(function (value: TableView) {
-            return value !== table;
-        });
-        this.tables(tables);
-        table.onMyTurn.remove(this.onMyTurn, this);
-
-        return table;
-    }
-
-    removeTableById(tableId: number) {
-        const view = this.getTableById(tableId);
-        if (view === null) {
-            return null;
-        }
-
-        return this.remove(view);
-    }
-
-    adjustTablePosition() {
-        let maxIndex = this.tables().length - 1;
-        maxIndex = maxIndex < 0 ? 0 : maxIndex;
-        if (this.currentIndex() > maxIndex) {
-            this.currentIndex(maxIndex);
-        }
-    }
-
-    prevTable() {
-        const length = this.tables().length;
-        if (length <= 1) {
-            return;
-        }
-
-        const maxIndex = this.tables().length - 1;
-        const index = this.currentIndex();
-        const nextIndex = (index - 1 + this.tables().length) % this.tables().length;
-        this.currentIndex(nextIndex);
-    }
-
-    nextTable() {
-        const length = this.tables().length;
-        if (length <= 1) {
-            return;
-        }
-
-        const maxIndex = this.tables().length - 1;
-        const index = this.currentIndex();
-        const nextIndex = (index + 1 + this.tables().length) % this.tables().length;
-        this.currentIndex(nextIndex);
-    }
-
-    addTournament(tournamentId: number, model: TournamentDefinition) {
-        const tournament = new TournamentView(tournamentId, model);
-        this.tournaments.push(tournament);
-        return tournament;
-    }
-
-    removeTournament(tournament: TournamentView) {
-        const tournaments = this.tournaments().filter(function (value) {
-            return value !== tournament;
-        });
-        this.tournaments(tournaments);
-        return tournament;
-    }
-
-    removeTournamentById(tableId: number) {
-        const view = this.getTournamentById(tableId);
-        if (view === null) {
-            return null;
-        }
-
-        return this.removeTournament(view);
-    }
-
-    /**
-    * Handles notification about current turn of the player.
-    * @param tableId Number Id of the table where table playing.
-    */
-    onMyTurn(tableId: number) {
-        if (settings.autoSwitchTables()) {
-            this.selectById(tableId);
-        }
-
-        if (settings.soundEnabled()) {
-            // Added vibration.
-        }
-    }
-
-    /**
-     * Gets table view by id
-     * @param tableId Id of the player which join the table
-     * @returns Table view for the table with given id
-     */
-    getTableById(tableId: number) {
-        const result = this.tables().filter(function (value: TableView) {
-            return value.tableId === tableId;
-        });
-
-        if (result.length === 0) {
-            return null;
-        }
-
-        return result[0];
-    }
-
-    /**
-    * Gets tournament by it's id.
-    * tournamentId Number If of the tournament to retreive.
-    */
-    getTournamentById(tournamentId: number) {
-        const result = this.tournaments().filter(function (value: TournamentView) {
-            return value.tournamentId === tournamentId;
-        });
-
-        if (result.length === 0) {
-            return null;
-        }
-
-        return result[0];
-    }
-
-    isOpened(tableId: number) {
-        return this.getTableById(tableId) != null;
-    }
-
-    /**
-     * Selects current table view by id.
-     * @param tableId Id of the table which selected
-     */
-    selectById(tableId: number): void {
-        const tables = this.tables();
-        for (let i = 0; i < tables.length; i++) {
-            const tableView = tables[i];
-            if (tableView.tableId === tableId) {
-                this.currentIndex(i);
-                return;
-            }
-        }
-
-        this.currentIndex(0);
-    }
 
     /** 
-    * Remove all tables from the given tournament
-    */
+     * Remove all tables from the given tournament
+     */
     private removeTournamentTables(tournamentId: number) {
         const tables = this.tables()
             .filter(_ => _.tournament() === null || _.tournament().tournamentId !== tournamentId);
@@ -1086,8 +1095,8 @@ class TableManager {
     }
 
     /**
-    * Remove closed table
-    */
+     * Remove closed table
+     */
     private removeClosedTables() {
         const tables = this.tables();
         let tableId = null;

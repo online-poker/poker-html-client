@@ -1,17 +1,16 @@
 ﻿/// <reference types="knockout" />
-/// <reference path="./debugsettings.ts" />
 
 import { debugSettings } from "./debugsettings";
 
 class TabBarItem {
-    name: string;
-    caption: string;
-    cssClass: string;
-    selected: KnockoutObservable<boolean>;
-    disabled: KnockoutObservable<boolean>;
-    notice: KnockoutObservable<boolean>;
-    action: Function;
-    handler() {
+    public name: string;
+    public caption: string;
+    public cssClass: string;
+    public selected: KnockoutObservable<boolean>;
+    public disabled: KnockoutObservable<boolean>;
+    public notice: KnockoutObservable<boolean>;
+    public action: Function;
+    public handler() {
         if (this.action != null) {
             this.action.call(this);
         }
@@ -19,14 +18,14 @@ class TabBarItem {
 }
 
 export class TabBar {
-    items: KnockoutObservableArray<TabBarItem>;
-    visible: KnockoutObservable<boolean>;
+    public items: KnockoutObservableArray<TabBarItem>;
+    public visible: KnockoutObservable<boolean>;
 
     constructor() {
         this.items = ko.observableArray(<TabBarItem[]>[]);
         this.visible = ko.observable(true);
     }
-    addItem(name: string, caption: string, cssClass: string, action: Function) {
+    public addItem(name: string, caption: string, cssClass: string, action: Function) {
         const item = new TabBarItem();
         item.name = name;
         item.caption = caption;
@@ -37,7 +36,7 @@ export class TabBar {
         item.notice = ko.observable(false);
         this.items.push(item);
     }
-    isSelected(name: string): boolean {
+    public isSelected(name: string): boolean {
         let result = false;
         this.items().forEach(function (item) {
             if (item.name === name) {
@@ -47,7 +46,7 @@ export class TabBar {
 
         return result;
     }
-    select(name: string, enable: boolean): void {
+    public select(name: string, enable: boolean): void {
         this.log("Tabbar item '" + name + "' " + (enable ? "selected" : "deselected"));
         this.items.valueWillMutate();
         this.items().forEach(function (item) {
@@ -57,7 +56,7 @@ export class TabBar {
         });
         this.items.valueHasMutated();
     }
-    enable(name: string, enable: boolean): void {
+    public enable(name: string, enable: boolean): void {
         this.log("Tabbar item '" + name + "' " + (enable ? "enabled" : "disabled"));
         this.items.valueWillMutate();
         this.items().forEach(function (item) {
@@ -67,7 +66,7 @@ export class TabBar {
         });
         this.items.valueHasMutated();
     }
-    notice(name: string, enable: boolean): void {
+    public notice(name: string, enable: boolean): void {
         this.log("Notice for tabbar item '" + name + "' " + (enable ? "set" : "unset"));
         this.items.valueWillMutate();
         this.items().forEach(function (item) {

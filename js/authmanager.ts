@@ -11,9 +11,9 @@ import { appConfig } from "./appconfig";
 declare const app: App;
 
 class AuthManager {
-    authenticated: KnockoutObservable<boolean>;
-    login: KnockoutObservable<string>;
-    loginId: KnockoutObservable<number>;
+    public authenticated: KnockoutObservable<boolean>;
+    public login: KnockoutObservable<string>;
+    public loginId: KnockoutObservable<number>;
 
     constructor() {
         this.authenticated = ko.observable(false);
@@ -44,6 +44,7 @@ class AuthManager {
                 settings.isGuest(data.IsGuest);
                 settings.saveSettings();
                 if (appConfig.game.seatMode) {
+                    // tslint:disable-next-line:no-string-literal
                     appInsights.context["device"].model = "Individual Console: " + login;
                 }
             } else {
@@ -58,7 +59,7 @@ class AuthManager {
             return "";
         }
     }
-    logout() {
+    public logout() {
         settings.login(null);
         settings.password(null);
         settings.saveSettings();
@@ -70,7 +71,7 @@ class AuthManager {
     /**
      * Initiate login as guest request to server.
      */
-    async loginAsGuest(): Promise<string> {
+    public async loginAsGuest(): Promise<string> {
         const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
         try {
             const value = await accountApi.RegisterGuest();

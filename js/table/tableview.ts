@@ -2067,8 +2067,8 @@ export class TableView {
     }
 
     /**
-    * Displays last hand in the history
-    */
+     * Displays last hand in the history
+     */
     public showPreviousHand() {
         app.handHistoryPopup.tableView(this);
         app.showPopup("handHistory");
@@ -2450,7 +2450,7 @@ export class TableView {
                     winnerCards = winnerCards.concat(currentPlayer.RawCards());
                     const handRepresentation = {
                         Cards: [],
-                        Suits: []
+                        Suits: [],
                     };
                     winnerCards.forEach(function (card) {
                         handRepresentation.Cards.push((card % 13) + 2);
@@ -2908,7 +2908,6 @@ export class TableView {
      * Record log message
      */
     private log(message: string, ...params: any[]) {
-        const settings = debugSettings.tableView;
         if (!this.isLogEnabled()) {
             return;
         }
