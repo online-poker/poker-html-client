@@ -1,7 +1,7 @@
 declare var apiHost: string;
 
 import { App } from "../app";
-import { appConfig } from "../appConfig";
+import { appConfig } from "../appconfig";
 import * as timeService from "../timeservice";
 import * as metadataManager from "../metadatamanager";
 import * as authManager from "../authmanager";

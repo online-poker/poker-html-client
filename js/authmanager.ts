@@ -6,7 +6,7 @@ declare var appInsights: Client;
 import ko = require("knockout");
 import { settings } from "./settings";
 import { App } from "./app";
-import { appConfig } from "./appConfig";
+import { appConfig } from "./appconfig";
 
 declare const app: App;
 
