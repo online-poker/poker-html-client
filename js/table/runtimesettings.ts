@@ -1,44 +1,45 @@
 ﻿class RuntimeSettings {
     /**
-    * Enables or disables all timer related content update on the pages
-    */
-    updateTimer: boolean = true;
+     * Enables or disables all timer related content update on the pages
+     */
+    public updateTimer: boolean = true;
     /**
-    * Enables or disables all timer related content update on the pages
-    */
-    tableCardsAnimating: boolean = true;
+     * Enables or disables all timer related content update on the pages
+     */
+    public tableCardsAnimating: boolean = true;
 
     /**
-    * Enables or disables showing news popup.
-    */
-    showNewsAfterLogin: boolean = true;
+     * Enables or disables showing news popup.
+     */
+    public showNewsAfterLogin: boolean = true;
 
     /**
      * Game settings
      */
-    game = {
+    public game = {
         /**
          * Time to perform the move in seconds.
          */
         moveTime: 60,
 
         /**
-         * Enables or disables flag indicating whether auto-fold and auto-check functionality would be reset each new game.
+         * Enables or disables flag indicating whether auto-fold 
+         * and auto-check functionality would be reset each new game.
          */
         clearAutoFoldOrCheckOnNewGame: true,
     };
 
     /**
-    * Sound settings
-    */
-    sounds = {
+     * Sound settings
+     */
+    public sounds = {
         /**
-        * Value indicating whether play sound of deal cards
-        */
-        dealCardsEnabled: false
+         * Value indicating whether play sound of deal cards
+         */
+        dealCardsEnabled: false,
     };
 
-    setShowNewsAfterLogin(value: boolean) {
+    public setShowNewsAfterLogin(value: boolean) {
         this.showNewsAfterLogin = value;
     }
 }

@@ -65,33 +65,33 @@ interface GameDebugSettings {
 }
 
 class DebugSettings {
-    initialization: InitializationDebugSettings;
-    ios: IOSDebugSettings;
-    actionBlock: ActionBlockDebugSettings;
-    tableView: TableViewDebugSettings;
-    lobby: LobbyDebugSettings;
-    game: GameDebugSettings;
-    home: HomeDebugSettings;
-    device: DeviceDebugSettings;
-    connection: ConnectionDebugSettings;
-    application: ApplicationDebugSettings;
-    ui: UIDebugSettings;
+    public initialization: InitializationDebugSettings;
+    public ios: IOSDebugSettings;
+    public actionBlock: ActionBlockDebugSettings;
+    public tableView: TableViewDebugSettings;
+    public lobby: LobbyDebugSettings;
+    public game: GameDebugSettings;
+    public home: HomeDebugSettings;
+    public device: DeviceDebugSettings;
+    public connection: ConnectionDebugSettings;
+    public application: ApplicationDebugSettings;
+    public ui: UIDebugSettings;
 
     constructor() {
         this.initialization = {
             stopOnLaunch: false,
             stopOnResume: false,
             metadata: false,
-            imagePreloading: false
+            imagePreloading: false,
         };
         this.ios = {
-            hasMultitasking: false
+            hasMultitasking: false,
         };
         this.actionBlock = {
-            traceBlocksVisbility: false
+            traceBlocksVisbility: false,
         };
         this.game = {
-            singleSidePots: true
+            singleSidePots: true,
         };
         this.tableView = {
             trace: true,
@@ -99,20 +99,20 @@ class DebugSettings {
             reportApiError: false,
             traceGameEvents: false,
             betLevelChangeDelay: 4000,
-            addonPeriodStartedDelay: 4000
+            addonPeriodStartedDelay: 4000,
         };
         this.lobby = {
             trace: false,
-            useTournamentNameForTournamentCaption: true
+            useTournamentNameForTournamentCaption: true,
         };
         this.home = {
             traceNews: false,
-            traceBanners: false
+            traceBanners: false,
         };
         this.device = {
             events: true,
             orientation: false,
-            statusbar: false
+            statusbar: false,
         };
         this.connection = {
             signalR: true,
@@ -127,11 +127,11 @@ class DebugSettings {
             reloadTablesDataOnResume: false,
             debugTimeouts: true,
             useUtcDates: false,
-            debugTabbar: false
+            debugTabbar: false,
         };
         this.ui = {
             tracePages: false,
-            tracePopups: false
+            tracePopups: false,
         };
     }
 }

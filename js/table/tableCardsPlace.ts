@@ -40,9 +40,9 @@ export class TableCardsPlace {
     }
 
     /**
-    * Clear cards on the table
-    */
-    clear() {
+     * Clear cards on the table
+     */
+    public clear() {
         this.CardsHightlighted(false);
         this.Card1Hightlighted(false);
         this.Card2Hightlighted(false);
@@ -54,9 +54,9 @@ export class TableCardsPlace {
     }
 
     /**
-    * Clear all currently running animation
-    */
-    clearAnimation() {
+     * Clear all currently running animation
+     */
+    public clearAnimation() {
         this.isFlop(false);
         this.isFlop5(false);
         this.isTurn(false);
@@ -65,16 +65,16 @@ export class TableCardsPlace {
     }
 
     /**
-    * Set cards on the table.
-    * @cardsData Array of table cards to display
-    */
-    setCards(cardsData: number[]) {
+     * Set cards on the table.
+     * @cardsData Array of table cards to display
+     */
+    public setCards(cardsData: number[]) {
         const cards: string[] = convertToCards(cardsData);
         this.tableCards(cards);
         this.tableCardsData(cardsData);
     }
 
-    openCards(cardsData: number[]) {
+    public openCards(cardsData: number[]) {
         const cards: string[] = convertToCards(cardsData);
         let currentCards = this.tableCards();
         if (runtimeSettings.tableCardsAnimating) {

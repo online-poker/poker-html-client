@@ -2,13 +2,13 @@ import * as ko from "knockout";
 import * as authManager from "../authmanager";
 
 export class PlayerMessage {
-    messageId: number;
-    sender: string;
-    message: KnockoutObservable<string>;
-    fullMessage: KnockoutComputed<string>;
-    date: string;
-    isMy: KnockoutObservable<boolean>;
-    isAdmin: boolean;
+    public messageId: number;
+    public sender: string;
+    public message: KnockoutObservable<string>;
+    public fullMessage: KnockoutComputed<string>;
+    public date: string;
+    public isMy: KnockoutObservable<boolean>;
+    public isAdmin: boolean;
 
     constructor(messageId: number, sender: string, message: string) {
         this.messageId = messageId;
@@ -31,4 +31,3 @@ export class PlayerMessage {
         });
     }
 }
-

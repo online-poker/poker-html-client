@@ -420,6 +420,7 @@ let messages: any = {
         suitDiamonds: 'бубны',
         suitHearts: 'червы',
         suitSpades: 'пики',
+        unknownSuit: 'неизвестная масть',
 
         cardsWasFolded: 'и скинул карты',
         hasFollowingCombination: 'с комбинацией #combination#',

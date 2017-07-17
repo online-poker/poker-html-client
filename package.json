@@ -6,6 +6,7 @@
   "scripts": {
     "compile": "tsc",
     "lint": "tslint --project tsconfig.json",
+    "tslint": "tslint",
     "build": "npm run compile && npm run lint",
     "test": "npm run compile && npm run lint"
   },

@@ -147,7 +147,6 @@ export class TournamentView {
         const connectionInfo = "HID:" + hubId;
         this.log("Connecting to tournament " + this.tournamentId + " on connection " + connectionInfo);
         const startConnection = app.buildStartConnection();
-        const api = new OnlinePoker.Commanding.API.Game(apiHost);
         startConnection().then(function () {
             if (wrapper.terminated) {
                 return;
@@ -218,7 +217,9 @@ export class TournamentView {
                 return;
             }
 
-            self.log("Executing Game.subscribeTournament on connection " + wrapper.connection.id + " in state " + wrapper.connection.state);
+            const connectionId = wrapper.connection.id;
+            const connectionState = wrapper.connection.state;
+            self.log(`Executing Game.subscribeTournament on connection ${connectionId} in state ${connectionState}`);
             const operation = wrapper.connection.Game.server.subscribeTournament(self.tournamentId)
                 .then(function () {
                     if (wrapper.terminated) {
@@ -234,7 +235,7 @@ export class TournamentView {
                     }
 
                     const message = "" + <string>error;
-                    self.log("Failed to join tournament " + self.tournamentId + ", " + connectionInfo + ". Reason: " + message);
+                    self.log(`Failed to join tournament ${self.tournamentId}, ${connectionInfo}. Reason: ${message}`);
                     if (message.indexOf("Connection was disconnected before invocation result was received.") >= 0) {
                         self.log("Stopped connecting to table since underlying connection is broken");
                         slowInternetService.showReconnectFailedPopup();
@@ -244,8 +245,8 @@ export class TournamentView {
                         subsequentDeferred = self.joinTournament(wrapper, maxAttempts - 1);
                         return subsequentDeferred.then(function () {
                             result.resolve();
-                        }, function (error, cancelled: boolean) {
-                                result.reject(error, cancelled);
+                        }, function (subsequentError, subsequentCancelled: boolean) {
+                                result.reject(subsequentError, subsequentCancelled);
                             });
                     }
                 });
@@ -321,7 +322,6 @@ export class TournamentView {
         }
     }
     public onTournamentTableChanged(tableId: number) {
-        const self = this;
         if (this.finishedPlaying()) {
             return;
         }
@@ -338,7 +338,8 @@ export class TournamentView {
 
         const data = this.tournamentData();
         if (this.currentTableId !== null) {
-            this.log("Removing player from the tournament table " + this.currentTableId + " in tournament " + this.tournamentId);
+            const previousTableId = this.currentTableId;
+            this.log(`Removing player from the tournament table ${previousTableId} in tournament ${this.tournamentId}`);
             this.removeCurrentTable();
             SimplePopup.display(_("tournament.caption", { tournament: data.TournamentName }),
                 _("tournament.tableChanged", { tournament: data.TournamentName }));
@@ -401,7 +402,7 @@ export class TournamentView {
                 let notificationParameters = {
                     tournament: data.TournamentName,
                     sb: betLevel.SmallBlind,
-                    bb: betLevel.BigBlind
+                    bb: betLevel.BigBlind,
                 };
                 currentTable.showNotificationWithDelay(
                     _("tournament.betLevelChanged1", notificationParameters),
@@ -411,7 +412,7 @@ export class TournamentView {
                     tournament: data.TournamentName,
                     sb: betLevel.SmallBlind,
                     bb: betLevel.BigBlind,
-                    ante: betLevel.Ante
+                    ante: betLevel.Ante,
                 };
                 currentTable.showNotificationWithDelay(
                     _("tournament.betLevelChanged2", notificationParameters),
@@ -446,10 +447,10 @@ export class TournamentView {
     }
 
     /**
-    * Notifies that in tournament count of made rebuy or addons changed.
-    * @param rebuyCount Count of rebuys which player done.
-    * @param addonCount Count of add-ons which player done.
-    */
+     * Notifies that in tournament count of made rebuy or addons changed.
+     * @param rebuyCount Count of rebuys which player done.
+     * @param addonCount Count of add-ons which player done.
+     */
     public onTournamentRebuyCountChanged(rebuyCount: number, addonCount: number) {
         this.rebuyCount(rebuyCount);
         this.addonCount(addonCount);
@@ -564,8 +565,14 @@ export class TournamentView {
                     }
                 }
             };
-            return SimplePopup.displayWithTimeout(_("tournament.caption", { tournament: data.TournamentName }),
-                _("tournament.playerGameCompletedAndWin", { tournament: data.TournamentName, place: placeTaken, win: winAmount }),
+            const message = _("tournament.playerGameCompletedAndWin", {
+                tournament: data.TournamentName,
+                place: placeTaken,
+                win: winAmount,
+            });
+            return SimplePopup.displayWithTimeout(
+                _("tournament.caption", { tournament: data.TournamentName }),
+                message,
                 10 * 1000)
                 .then(onTournamentCompleted, onTournamentCompleted);
         }

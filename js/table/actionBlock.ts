@@ -37,8 +37,8 @@ export class ActionBlock {
     public isSitOut: KnockoutObservable<boolean>;
     public inGame: KnockoutObservable<boolean>;
     /**
-    * Indicating whether authenticated player is playing in the game
-    */
+     * Indicating whether authenticated player is playing in the game
+     */
     public myPlayerInGame: KnockoutObservable<boolean>;
     public isCheck: KnockoutObservable<boolean>;
 
@@ -54,35 +54,35 @@ export class ActionBlock {
     public isAllInDuringBetOrRaise: KnockoutComputed<boolean>;
 
     /**
-    * Messages in the chat
-    */
+     * Messages in the chat
+     */
     public messages: KnockoutObservableArray<PlayerMessage>;
 
     /**
-    * Messages from system in the chat
-    */
+     * Messages from system in the chat
+     */
     public systemMessages: KnockoutObservableArray<SystemMessage>;
 
     /**
-    * Indicating thether player will support same amount which 
-    * he should suport currently to stay in the game.
-    */
+     * Indicating thether player will support same amount which 
+     * he should suport currently to stay in the game.
+     */
     public supportDirectAmount: KnockoutObservable<boolean>;
 
     /**
-    * Indicating thether player will support any amount which other players 
-    * put on the table.
-    */
+     * Indicating thether player will support any amount which other players 
+     * put on the table.
+     */
     public supportAny: KnockoutObservable<boolean>;
 
     /**
-    * Indicating whether cards should be folded automatically.
-    */
+     * Indicating whether cards should be folded automatically.
+     */
     public foldOnRaise: KnockoutObservable<boolean>;
 
     /**
-    * Text which would be 
-    */
+     * Text which would be 
+     */
     public supportDirectAmountCaption: KnockoutObservable<string>;
     public supportAnyCaption: KnockoutObservable<string>;
     public foldOnRaiseCaption: KnockoutObservable<string>;
@@ -117,89 +117,90 @@ export class ActionBlock {
     public button3Visible = ko.observable(false);
     public needBB: KnockoutObservable<boolean>;
     public myPlayer: KnockoutObservable<TablePlaceModel>;
-    private myPlayerWasInGame: KnockoutObservable<boolean>;
     /**
-    * Indicates that game finished.
-    */
-    private gameFinished: KnockoutObservable<boolean>;
-    /**
-    * Indicates that prizes distributed in the game.
-    */
+     * Indicates that prizes distributed in the game.
+     */
     public prizesDistributed: KnockoutObservable<boolean>;
     public tableView: TableView;
-    private suppressSetSitoutStatus: boolean;
 
     /**
-    * Suppress actual execution of the operations. This property is for testing purpose only.
-    */
+     * Suppress actual execution of the operations. This property is for testing purpose only.
+     */
     public suppressActions: boolean;
 
     /**
-    * Notifies that fold executed.
-    */
+     * Notifies that fold executed.
+     */
     public foldExecuted: Signal;
 
     /**
-    * Notifies that check or call executed.
-    */
+     * Notifies that check or call executed.
+     */
     public checkOrCallExecuted: Signal;
 
     /**
-    * Notifies that bet or raise executed.
-    */
+     * Notifies that bet or raise executed.
+     */
     public betOrRaiseExecuted: Signal;
 
     /**
-    * Value indicating whether chat block is visible.
-    */
+     * Value indicating whether chat block is visible.
+     */
     public chatVisible: KnockoutComputed<boolean>;
 
     /**
-    * Value indicating whether SitOut block is visible.
-    */
+     * Value indicating whether SitOut block is visible.
+     */
     public sitoutBlockVisible: KnockoutComputed<boolean>;
 
     /**
-    * Value indicating whether Start block is visible.
-    */
+     * Value indicating whether Start block is visible.
+     */
     public startBlockVisible: KnockoutComputed<boolean>;
 
     /**
-    * Value indicating whether Observer block is visible.
-    */
+     * Value indicating whether Observer block is visible.
+     */
     public observerModeBlockVisible: KnockoutComputed<boolean>;
 
     /**
-    * Value indicating whether Wait for BB checkbox is visible
-    */
+     * Value indicating whether Wait for BB checkbox is visible
+     */
     public waitBigBlindBlockVisible = ko.observable<boolean>(true);
 
     /**
-    * Value indicating whether Main buttons block is visible.
-    */
+     * Value indicating whether Main buttons block is visible.
+     */
     public mainButtonsBlockVisible: KnockoutComputed<boolean>;
 
     /**
-    * Value indicating whether Auto buttons block is visible.
-    */
+     * Value indicating whether Auto buttons block is visible.
+     */
     public autoButtonsBlockVisible: KnockoutComputed<boolean>;
 
     /**
-    * Value indicating whether Raise block is visible.
-    */
+     * Value indicating whether Raise block is visible.
+     */
     public raiseBlockVisible: KnockoutComputed<boolean>;
 
     /**
-    * Value indicating where game is closed.
-    */
+     * Value indicating where game is closed.
+     */
     public gameClosed = ko.observable(false);
 
     /**
-    * Value indicating where component operating in test mode and some checks are disabled.
-    */
+     * Value indicating where component operating in test mode and some checks are disabled.
+     */
     public testMode = ko.observable(false);
 
     public cardsOverlayVisible = ko.observable(true);
+
+    private myPlayerWasInGame: KnockoutObservable<boolean>;
+    /**
+     * Indicates that game finished.
+     */
+    private gameFinished: KnockoutObservable<boolean>;
+    private suppressSetSitoutStatus: boolean;
 
     constructor() {
         const self = this;
@@ -263,6 +264,7 @@ export class ActionBlock {
                 return false;
             }
 
+            // tslint:disable-next-line:no-unused-variable
             const maxAmountOfMoneyForOtherActivePlayers = this.maxAmountOfMoneyForOtherActivePlayers();
             const otherPlayersHasMoneyToSupport = this.maxAmountOfMoneyForOtherActivePlayers() > this.callAmount();
             return otherPlayersHasMoneyToSupport;
@@ -286,7 +288,8 @@ export class ActionBlock {
             if (playerMoney <= currentAmount) {
                 const myself = self.myPlayer();
                 if (myself != null) {
-                    return _("table.allin").replace("#amount", withCommas((myself.Bet() + playerMoney).toString(), ","));
+                    const amount = myself.Bet() + playerMoney;
+                    return _("table.allin").replace("#amount", withCommas(amount.toString(), ","));
                 }
 
                 return "";
@@ -425,7 +428,7 @@ export class ActionBlock {
             });
         }
     }
-    attach(tableView: TableView) {
+    public attach(tableView: TableView) {
         if (this.tableView != null) {
             throw new Error("Table view already attached to the action block");
         }
@@ -539,12 +542,12 @@ export class ActionBlock {
             this.expanded(false);
         });
     }
-    resetWaitBB() {
+    public resetWaitBB() {
         this.suppressWaitBBNotifications = true;
         this.waitbb(true);
         this.suppressWaitBBNotifications = false;
     }
-    fold() {
+    public fold() {
         if (!this.suppressActions) {
             this.tableView.fold();
         }
@@ -552,7 +555,7 @@ export class ActionBlock {
         this.expanded(false);
         this.foldExecuted.dispatch();
     }
-    async checkOrCall() {
+    public async checkOrCall() {
         if (!this.suppressActions) {
             if (this.isAllInDuringCheckOrCall()) {
                 const result = await app.promptAsync(_("table.allInConfirmCaption"), [_("table.allInConfirm")]);
@@ -567,14 +570,14 @@ export class ActionBlock {
         this.expanded(false);
         this.checkOrCallExecuted.dispatch();
     }
-    async check() {
+    public async check() {
         if (this.isCheck() && !this.notMyTurn()) {
             this.tableView.checkOrCall();
             this.expanded(false);
             this.checkOrCallExecuted.dispatch();
         }
     }
-    async betOrRaise() {
+    public async betOrRaise() {
         if (!this.suppressActions) {
             if (this.isAllInDuringBetOrRaise()) {
                 const result = await app.promptAsync(_("table.allInConfirmCaption"), [_("table.allInConfirm")]);
@@ -589,11 +592,11 @@ export class ActionBlock {
         this.expanded(false);
         this.betOrRaiseExecuted.dispatch();
     }
-    showChatPopup() {
+    public showChatPopup() {
         app.tableChatPopup.attach(this.tableView);
         app.showPopup("tableChat");
     }
-    async comeBack() {
+    public async comeBack() {
         if (this.tableView.myPlayer().Money() === 0) {
             if (this.tableView.tournament() != null) {
                 this.tableView.proposeRebuyOrAddon();
@@ -613,19 +616,7 @@ export class ActionBlock {
             await this.comeBackCore();
         }
     }
-    private async comeBackCore() {
-        if (this.processing()) {
-            return;
-        }
-
-        this.processing(true);
-        try {
-            await this.tableView.comeBack();
-        } catch (e) {
-            this.processing(false);
-        }
-    }
-    updateBounds() {
+    public updateBounds() {
         if ($(".slider-line").length > 0) {
             const lineWidth = $(".slider-line").width();
             const handleWidth = $(".slider-handle").width();
@@ -640,13 +631,13 @@ export class ActionBlock {
             this.tableSlider.setBounds(1, 100, x => x);
         }
     }
-    resetAutomaticAction() {
+    public resetAutomaticAction() {
         this.supportAny(false);
         this.supportDirectAmount(false);
         this.foldOnRaise(false);
         this.amountSupported(-1);
     }
-    performAutomaticActions() {
+    public performAutomaticActions() {
         if (this.automaticallyFold()) {
             return true;
         }
@@ -666,11 +657,11 @@ export class ActionBlock {
         return false;
     }
     /**
-    * Automatically fold cards if possible.
-    *
-    * @returns true if cards was folded; false otherwise.
-    */
-    automaticallyFold() {
+     * Automatically fold cards if possible.
+     *
+     * @returns true if cards was folded; false otherwise.
+     */
+    public automaticallyFold() {
         if (this.autoFoldOrCheck()) {
             const requiredBet = this.tableView.maximumBet() - this.tableView.myBet();
             if (requiredBet === 0 && appConfig.game.autoFoldAsFoldOnRaise) {
@@ -686,10 +677,10 @@ export class ActionBlock {
         return false;
     }
     /**
-    * Automatically support any bet placed on the table.
-    * @returns true if automatic action was performed; false otherwise.
-    */
-    supportAnyBet() {
+     * Automatically support any bet placed on the table.
+     * @returns true if automatic action was performed; false otherwise.
+     */
+    public supportAnyBet() {
         if (this.supportAny()) {
             this.checkOrCall();
             return true;
@@ -698,10 +689,10 @@ export class ActionBlock {
         return false;
     }
     /**
-    * Automatically support any bet placed on the table.
-    * @returns true if automatic action was performed; false otherwise.
-    */
-    supportDirectAmountBet() {
+     * Automatically support any bet placed on the table.
+     * @returns true if automatic action was performed; false otherwise.
+     */
+    public supportDirectAmountBet() {
         if (this.supportDirectAmount() && (this.amountSupported() >= 0)) {
             this.checkOrCall();
             this.supportDirectAmount(false);
@@ -713,10 +704,10 @@ export class ActionBlock {
         return false;
     }
     /**
-    * Automatically check current bet or fold in case of bet raise.
-    * @returns if automatic action was performed; false otherwise.
-    */
-    checkOrFold() {
+     * Automatically check current bet or fold in case of bet raise.
+     * @returns if automatic action was performed; false otherwise.
+     */
+    public checkOrFold() {
         if (this.foldOnRaise()) {
             const requiredBet = this.tableView.maximumBet() - this.tableView.myBet();
             if (requiredBet === 0) {
@@ -731,12 +722,13 @@ export class ActionBlock {
 
         return false;
     }
-    updateAutomaticActionsText(playerMoney: number, requiredBet: number) {
+    public updateAutomaticActionsText(playerMoney: number, requiredBet: number) {
         if (requiredBet === 0) {
             this.supportDirectAmountCaption("Чек");
         } else {
             if (playerMoney <= requiredBet) {
-                this.supportDirectAmountCaption("Олл-ин #amount".replace("#amount", withCommas(playerMoney.toFixed(), ",")));
+                this.supportDirectAmountCaption(
+                    "Олл-ин #amount".replace("#amount", withCommas(playerMoney.toFixed(), ",")));
             } else {
                 const callAmount = (this.tableView.maximumBet() - this.tableView.myBet()).toFixed();
                 this.supportDirectAmountCaption("Колл #amount".replace("#amount", withCommas(callAmount, ",")));
@@ -762,14 +754,14 @@ export class ActionBlock {
             this.supportAnyCaption("Колл любую ставку/Чек");
         }
     }
-    updateSupportDirectAmountStatus(requiredBet: number) {
+    public updateSupportDirectAmountStatus(requiredBet: number) {
         const isDirectAmountSupported = (requiredBet === this.amountSupported());
         this.supportDirectAmount(isDirectAmountSupported);
         if (!isDirectAmountSupported) {
             this.amountSupported(-1);
         }
     }
-    updateAdditionalButtons() {
+    public updateAdditionalButtons() {
         const threebbAmountOriginal = this.callAmount() + (3 * this.tableView.model.BigBlind);
         const threebbAmount = this.tableSlider.withinRange(threebbAmountOriginal);
 
@@ -815,16 +807,16 @@ export class ActionBlock {
         this.button3Visible(true);
     }
     /**
-    * Updates block visibility.
-    */
-    updateBlocks() {
+     * Updates block visibility.
+     */
+    public updateBlocks() {
         const waitBBBlockVisible = this.getWaitBBBlockVisible();
         this.waitBigBlindBlockVisible(waitBBBlockVisible);
     }
     /**
-    * Toggles automatic panel.
-    */
-    toggle() {
+     * Toggles automatic panel.
+     */
+    public toggle() {
         if (!appConfig.game.actionBlock.hasSecondaryPanel) {
             return;
         }
@@ -833,9 +825,9 @@ export class ActionBlock {
     }
 
     /**
-    * Expand automatic panel.
-    */
-    expand() {
+     * Expand automatic panel.
+     */
+    public expand() {
         if (!appConfig.game.actionBlock.hasSecondaryPanel) {
             return;
         }
@@ -848,9 +840,9 @@ export class ActionBlock {
     }
 
     /**
-    * Collapse automatic panel.
-    */
-    collapse() {
+     * Collapse automatic panel.
+     */
+    public collapse() {
         if (!appConfig.game.actionBlock.hasSecondaryPanel) {
             return;
         }
@@ -861,22 +853,22 @@ export class ActionBlock {
 
         this.expanded(false);
     }
-    allin() {
+    public allin() {
         this.tableSlider.current(this.button3Amount());
         this.betOrRaise();
         this.expanded(false);
     }
-    halfPot() {
+    public halfPot() {
         this.tableSlider.current(this.button1Amount());
         this.betOrRaise();
         this.expanded(false);
     }
-    pot() {
+    public pot() {
         this.tableSlider.current(this.button2Amount());
         this.betOrRaise();
         this.expanded(false);
     }
-    updateNeedBB() {
+    public updateNeedBB() {
         const currentPlayer = this.tableView.myPlayer();
         const hasPlayer = currentPlayer != null;
         if (!hasPlayer) {
@@ -888,14 +880,26 @@ export class ActionBlock {
         const paused = this.tableView.paused();
         this.needBB(!paused && tableIsBig && !currentPlayer.IsParticipatingStatus());
     }
-    toggleAutoFoldOrCheck() {
+    public toggleAutoFoldOrCheck() {
         this.autoFoldOrCheck(!this.autoFoldOrCheck());
     }
-    toggleSkipDeals() {
+    public toggleSkipDeals() {
         this.skipDeals(!this.skipDeals());
     }
-    toggleWaitBB() {
+    public toggleWaitBB() {
         this.waitbb(!this.waitbb());
+    }
+    private async comeBackCore() {
+        if (this.processing()) {
+            return;
+        }
+
+        this.processing(true);
+        try {
+            await this.tableView.comeBack();
+        } catch (e) {
+            this.processing(false);
+        }
     }
     private getWaitBBBlockVisible() {
         if (this.sitoutBlockVisible()) {

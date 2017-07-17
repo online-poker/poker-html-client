@@ -1,6 +1,5 @@
 ﻿import * as ko from "knockout";
 import * as timeService from "../timeservice";
-import { TablePlaceModel } from "./tabpleplacemodel";
 
 export class TableSlider {
     public current: KnockoutObservable<number>;
@@ -40,7 +39,7 @@ export class TableSlider {
                 }
 
                 self.current(ivalue);
-            }
+            },
         });
         this.minimum = ko.observable<number>();
         this.maximum = ko.observable<number>();
@@ -105,55 +104,55 @@ export class TableSlider {
                 }
 
                 self.current(currentAbsolute + self.minimum());
-            }
+            },
         });
     }
     /**
-    * Set bounds for the slider in the relative coordinates.
-    * @param minRelative Number Minimum coordinate in the relative coordinates.
-    * @param maxRelative Number Maximum coordinate in the relative coordinates.
-    * @param translator Function Function which translate the page coordinates to the relative coordinates.
-    */
-    setBounds(minRelative: number, maxRelative: number, translator: (x: number) => number) {
+     * Set bounds for the slider in the relative coordinates.
+     * @param minRelative Number Minimum coordinate in the relative coordinates.
+     * @param maxRelative Number Maximum coordinate in the relative coordinates.
+     * @param translator Function Function which translate the page coordinates to the relative coordinates.
+     */
+    public setBounds(minRelative: number, maxRelative: number, translator: (x: number) => number) {
         this.minRelative = minRelative;
         this.maxRelative = maxRelative;
         this.translator = translator;
     }
-    setParameters(value, step, min, max) {
+    public setParameters(value, step, min, max) {
         this.current(value);
         this.minimum(min);
         this.maximum(max);
         this.position.notifySubscribers();
         this.step = step;
     }
-    setStep(step: number) {
+    public setStep(step: number) {
         this.step = step;
     }
-    increase() {
+    public increase() {
         let current = this.current();
         current = Math.min(current + this.step, this.maximum());
         this.current(current);
         this.position.notifySubscribers();
     }
-    decrease() {
+    public decrease() {
         let current = this.current();
         current = Math.max(current - this.step, this.minimum());
         this.current(current);
         this.position.notifySubscribers();
     }
-    withinRange(value: number) {
+    public withinRange(value: number) {
         value = Math.max(value, this.minimum());
         value = Math.min(value, this.maximum());
         return value;
     }
-    isWithinRange(value: number) {
+    public isWithinRange(value: number) {
         if (value >= this.minimum() && value <= this.maximum()) {
             return true;
         }
 
         return false;
     }
-    fixupValue() {
+    public fixupValue() {
         const self = this;
         if (this.current() !== null && this.current() !== undefined) {
             this.currentValue(this.current().toFixed());
@@ -165,11 +164,11 @@ export class TableSlider {
             }, 10);
         }
     }
-    selectManually(event: MouseEvent) {
+    public selectManually(event: MouseEvent) {
         const relativePosition = this.translator(event.pageX);
         this.setPosition(relativePosition);
     }
-    setPosition(relativePosition: number) {
+    public setPosition(relativePosition: number) {
         relativePosition = Math.max(relativePosition, this.minRelative);
         relativePosition = Math.min(relativePosition, this.maxRelative);
         this.position(relativePosition);

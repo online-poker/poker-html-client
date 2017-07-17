@@ -1,28 +1,28 @@
 ﻿class GameHandHistory {
     /**
-    * Show game history with cards.
-    */
-    showPictureHistory = true;
+     * Show game history with cards.
+     */
+    public showPictureHistory = true;
 
     /**
-    * Show game history as text.
-    */
-    showTextHistory = true;
+     * Show game history as text.
+     */
+    public showTextHistory = true;
 }
 
 class GameActionBlock {
     /**
-    * Wherether action panel is present on the application
-    */
-    hasSecondaryPanel = true;
+     * Wherether action panel is present on the application
+     */
+    public hasSecondaryPanel = true;
 }
 
 class AppConfig {
-    auth = {
+    public auth = {
         automaticLogin: true,
         automaticTableSelection: true,
     };
-    game = {
+    public game = {
         handHistory: new GameHandHistory(),
         actionBlock: new GameActionBlock(),
         seatMode: document.body.classList.contains("poker-feature-single-seat"),
@@ -31,11 +31,11 @@ class AppConfig {
         useSignalR: false,
         noTableMoneyLimit: true,
     };
-    tournament = {
+    public tournament = {
         enabled: false,
-        openTableAutomatically: true
+        openTableAutomatically: true,
     };
-    joinTable = {
+    public joinTable = {
         allowUsePersonalAccount: false,
         allowTickets: true,
     };

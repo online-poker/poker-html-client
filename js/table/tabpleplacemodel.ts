@@ -8,135 +8,135 @@ import { withCommas } from "../helpers";
 
 export class TablePlaceModel {
     /**
-    * Default avatar for unspecified images, and 
-    * images from unknown locations.
-    */
-    static DefaultAvatarUrl = "img/1px.png";
+     * Default avatar for unspecified images, and 
+     * images from unknown locations.
+     */
+    public static DefaultAvatarUrl = "img/1px.png";
 
     /**
-    * Id of the player
-    */
-    PlayerId: KnockoutObservable<number>;
+     * Id of the player
+     */
+    public PlayerId: KnockoutObservable<number>;
 
     /**
-    * Player's login
-    */
-    PlayerName: KnockoutObservable<string>;
-    PlayerUrl: KnockoutObservable<string>;
-    IsCurrent: KnockoutObservable<boolean>;
-    IsDealer: KnockoutObservable<boolean>;
-    IsBigBlind: KnockoutObservable<boolean>;
-    IsSmallBlind: KnockoutObservable<boolean>;
-    Money: KnockoutObservable<number>;
-    Seat: KnockoutObservable<number>;
+     * Player's login
+     */
+    public PlayerName: KnockoutObservable<string>;
+    public PlayerUrl: KnockoutObservable<string>;
+    public IsCurrent: KnockoutObservable<boolean>;
+    public IsDealer: KnockoutObservable<boolean>;
+    public IsBigBlind: KnockoutObservable<boolean>;
+    public IsSmallBlind: KnockoutObservable<boolean>;
+    public Money: KnockoutObservable<number>;
+    public Seat: KnockoutObservable<number>;
 
     /**
-    * Cards which player has as displayed in the UI
-    */
-    Cards: KnockoutObservableArray<string>;
+     * Cards which player has as displayed in the UI
+     */
+    public Cards: KnockoutObservableArray<string>;
 
     /*
-    * Actual hand cards which player has in this game.
-    */
-    HandCards: KnockoutObservableArray<string>;
+     * Actual hand cards which player has in this game.
+     */
+    public HandCards: KnockoutObservableArray<string>;
 
     /*
-    * Folded hand cards which player has in this game.
-    */
-    FoldedCards: KnockoutObservableArray<string>;
+     * Folded hand cards which player has in this game.
+     */
+    public FoldedCards: KnockoutObservableArray<string>;
 
     /**
-    * Cards which player has as displayed in the UI
-    */
-    RawCards: KnockoutObservableArray<number>;
-    Bet: KnockoutObservable<number>;
+     * Cards which player has as displayed in the UI
+     */
+    public RawCards: KnockoutObservableArray<number>;
+    public Bet: KnockoutObservable<number>;
 
     /**
-    * Count of points for the player.
-    */
-    Points: KnockoutObservable<number>;
+     * Count of points for the player.
+     */
+    public Points: KnockoutObservable<number>;
 
     /**
-    * Count of stars for the player.
-    */
-    Stars: KnockoutObservable<number>;
+     * Count of stars for the player.
+     */
+    public Stars: KnockoutObservable<number>;
 
-    IsBronse: KnockoutComputed<boolean>;
-    IsSilver: KnockoutComputed<boolean>;
-    IsGold: KnockoutComputed<boolean>;
-    IsBetPlaced: KnockoutComputed<boolean>;
-    IsBetAnimationLocked: KnockoutObservable<boolean>;
-    IsMovingBetToPot: KnockoutObservable<boolean>;
-    IsDealCards: KnockoutObservable<boolean>;
+    public IsBronse: KnockoutComputed<boolean>;
+    public IsSilver: KnockoutComputed<boolean>;
+    public IsGold: KnockoutComputed<boolean>;
+    public IsBetPlaced: KnockoutComputed<boolean>;
+    public IsBetAnimationLocked: KnockoutObservable<boolean>;
+    public IsMovingBetToPot: KnockoutObservable<boolean>;
+    public IsDealCards: KnockoutObservable<boolean>;
 
     /**
      * Indicates that animation show for cards fold.
      */
-    IsFoldCards: KnockoutObservable<boolean>;
-    IsCardsAnimating: KnockoutComputed<boolean>;
-    Status: KnockoutObservable<number>;
-    WinAmount: KnockoutObservable<number>;
-    TotalBet: KnockoutObservable<number>;
-    WasInGame: KnockoutObservable<boolean>;
-    IsCardsFolded: KnockoutObservable<boolean>;
-    Card1Hightlighted: KnockoutObservable<boolean>;
-    Card2Hightlighted: KnockoutObservable<boolean>;
-    CardsHightlighted: KnockoutObservable<boolean>;
-    IsCardsOpened = ko.observable(false);
+    public IsFoldCards: KnockoutObservable<boolean>;
+    public IsCardsAnimating: KnockoutComputed<boolean>;
+    public Status: KnockoutObservable<number>;
+    public WinAmount: KnockoutObservable<number>;
+    public TotalBet: KnockoutObservable<number>;
+    public WasInGame: KnockoutObservable<boolean>;
+    public IsCardsFolded: KnockoutObservable<boolean>;
+    public Card1Hightlighted: KnockoutObservable<boolean>;
+    public Card2Hightlighted: KnockoutObservable<boolean>;
+    public CardsHightlighted: KnockoutObservable<boolean>;
+    public IsCardsOpened = ko.observable(false);
 
     /**
      * Indicates that first hole card is opened.
      */
-    IsHoleCard1Opened = ko.observable(false);
+    public IsHoleCard1Opened = ko.observable(false);
 
     /**
      * Indicates that second hole card is opened.
      */
-    IsHoleCard2Opened = ko.observable(false);
+    public IsHoleCard2Opened = ko.observable(false);
 
     /**
-    * Indicates current action which player performs now
-    */
-    CurrentAction: KnockoutObservable<string>;
+     * Indicates current action which player performs now
+     */
+    public CurrentAction: KnockoutObservable<string>;
+
+    public IsSitoutStatus: KnockoutComputed<boolean>;
 
     /**
-    * Timer which control clearing of current action text
-    */
-    private CurrentActionTimer: number;
-
-    IsSitoutStatus: KnockoutComputed<boolean>;
+     * Indicates that player has in game status.
+     */
+    public IsParticipatingStatus: KnockoutComputed<boolean>;
 
     /**
-    * Indicates that player has in game status.
-    */
-    IsParticipatingStatus: KnockoutComputed<boolean>;
+     * Indicates that player has in game status.
+     */
+    public IsInGameStatus: KnockoutComputed<boolean>;
 
     /**
-    * Indicates that player has in game status.
-    */
-    IsInGameStatus: KnockoutComputed<boolean>;
+     * Last message in the chat which this player shows
+     */
+    public LastChatMessage = ko.observable<string>(null);
 
     /**
-    * Last message in the chat which this player shows
-    */
-    LastChatMessage = ko.observable<string>(null);
-
-    /**
-    * Timer which control clearing of current action text
-    */
-    private LastChatMessageTimer: number;
-
-    /**
-    * Last message in the chat which this player shows
-    */
-    LastChatMessageTrimed: KnockoutComputed<string>;
+     * Last message in the chat which this player shows
+     */
+    public LastChatMessageTrimed: KnockoutComputed<string>;
 
     /**
      * Combination of cards for the winner.
      */
-    WinnerCombination = ko.observable<string>();
+    public WinnerCombination = ko.observable<string>();
 
     public cardsOverlayVisible = ko.observable(true);
+
+    /**
+     * Timer which control clearing of current action text
+     */
+    private CurrentActionTimer: number;
+
+    /**
+     * Timer which control clearing of current action text
+     */
+    private LastChatMessageTimer: number;
 
     constructor(data: TablePlayer) {
         this.PlayerId = ko.observable(data.PlayerId);
@@ -202,7 +202,7 @@ export class TablePlaceModel {
                     self.Status(self.Status() & ~8);
                 }
             },
-            owner: this
+            owner: this,
         });
         this.IsInGameStatus = ko.computed({
             read: function () {
@@ -215,7 +215,7 @@ export class TablePlaceModel {
                     self.Status(self.Status() & ~16);
                 }
             },
-            owner: this
+            owner: this,
         });
         this.IsInGameStatus(this.IsParticipatingStatus() && this.Cards() !== null);
 
@@ -239,7 +239,7 @@ export class TablePlaceModel {
             return self.LastChatMessage().substr(0, 17) + "\u2026";
         });
     }
-    prepareForNewGame() {
+    public prepareForNewGame() {
         this.TotalBet(null);
         this.Bet(null);
         this.IsCardsFolded(false);
@@ -259,17 +259,17 @@ export class TablePlaceModel {
         this.markCardsHidden();
         this.WinnerCombination(null);
     }
-    initializeForNewGame(money: number) {
+    public initializeForNewGame(money: number) {
         this.IsInGameStatus(true);
         this.Money(money);
         this.WasInGame(true);
         this.cardsOverlayVisible(true);
     }
-    startDealCards() {
+    public startDealCards() {
         this.Cards(allBacksClasses);
         this.IsDealCards(true);
     }
-    setCards(cards: number[]) {
+    public setCards(cards: number[]) {
         if (cards === undefined) {
             console.warn("Passed undefined cards to the TablePlaceModel.setCards");
         }
@@ -283,7 +283,7 @@ export class TablePlaceModel {
             this.HandCards(cardsClasses);
         }
     }
-    openCard(cardPosition: number, cardValue: number) {
+    public openCard(cardPosition: number, cardValue: number) {
         let cards = (this.RawCards() === null || this.RawCards() === undefined)
             ? [254, 254]
             : this.RawCards();
@@ -304,15 +304,15 @@ export class TablePlaceModel {
             this.HandCards(cardsClasses);
         }
     }
-    markCardsOpened() {
+    public markCardsOpened() {
         this.IsCardsOpened(true);
     }
-    markCardsHidden() {
+    public markCardsHidden() {
         this.IsCardsOpened(false);
         this.IsHoleCard1Opened(false);
         this.IsHoleCard2Opened(false);
     }
-    collectBet() {
+    public collectBet() {
         this.TotalBet((this.TotalBet() === null ? 0 : this.TotalBet()) + this.Bet());
         this.Bet(0);
         this.IsBetAnimationLocked(false);
@@ -320,33 +320,33 @@ export class TablePlaceModel {
     }
 
     /**
-    * Starts displaying action which player was perform during last turn.
-    */
-    startAction(action: string) {
+     * Starts displaying action which player was perform during last turn.
+     */
+    public startAction(action: string) {
         this.CurrentAction(action);
         this.CurrentActionTimer = timeService.setTimeout(() => this.clearAction(), 2000);
     }
 
     /**
-    * Clears current action.
-    */
-    clearAction() {
+     * Clears current action.
+     */
+    public clearAction() {
         timeService.clearTimeout(this.CurrentActionTimer);
         this.CurrentAction(null);
     }
 
     /**
-    * Starts displaying chat message from player.
-    */
-    displayChatMessage(message: string) {
+     * Starts displaying chat message from player.
+     */
+    public displayChatMessage(message: string) {
         this.LastChatMessage(message);
         this.LastChatMessageTimer = timeService.setTimeout(() => this.clearChatMessage(), 2000);
     }
 
     /**
-    * Clears current chat message.
-    */
-    clearChatMessage() {
+     * Clears current chat message.
+     */
+    public clearChatMessage() {
         timeService.clearTimeout(this.LastChatMessageTimer);
         this.LastChatMessage(null);
     }
@@ -410,7 +410,7 @@ export class TablePlaceModel {
         return "Желаем удачи";
     }
 
-    getCombination(tableCards: number[]) {
+    public getCombination(tableCards: number[]) {
         if (tableCards === null || tableCards === undefined || tableCards.length === 0) {
             return null;
         }
@@ -428,7 +428,7 @@ export class TablePlaceModel {
         totalCards = totalCards.concat(myCards);
         let handRepresentation = {
             Cards: [],
-            Suits: []
+            Suits: [],
         };
         totalCards.forEach(function (card) {
             handRepresentation.Cards.push((card % 13) + 2);
@@ -441,7 +441,7 @@ export class TablePlaceModel {
         });
         handRepresentation = {
             Cards: [],
-            Suits: []
+            Suits: [],
         };
         winnerCards.forEach(function (card) {
             handRepresentation.Cards.push((card % 13) + 2);

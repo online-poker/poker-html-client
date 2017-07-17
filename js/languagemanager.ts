@@ -1,20 +1,20 @@
 declare var messages: any;
 
 export class LanguageManager {
-    currentLang: string;
+    public currentLang: string;
     constructor() {
         this.currentLang = "ru_RU";
     }
-    setLang(lang: string): void {
+    public setLang(lang: string): void {
         this.currentLang = lang;
     }
-    getProvider() {
+    public getProvider() {
         return messages;
     }
-    setProvider(provider: any) {
+    public setProvider(provider: any) {
         messages = provider;
     }
-    getMessage(message: string, parameters = null): string {
+    public getMessage(message: string, parameters = null): string {
         if (message == null) {
             return "";
         }

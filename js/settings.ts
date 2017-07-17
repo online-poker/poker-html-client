@@ -1,18 +1,18 @@
 ﻿import * as ko from "knockout";
 
 class Settings {
-    login: KnockoutObservable<string>;
-    password: KnockoutObservable<string>;
-    autoSwitchTables: KnockoutObservable<boolean>;
-    autoHideCards: KnockoutObservable<boolean>;
-    soundEnabled: KnockoutObservable<boolean>;
-    lastBannerId: KnockoutObservable<number>;
+    public login: KnockoutObservable<string>;
+    public password: KnockoutObservable<string>;
+    public autoSwitchTables: KnockoutObservable<boolean>;
+    public autoHideCards: KnockoutObservable<boolean>;
+    public soundEnabled: KnockoutObservable<boolean>;
+    public lastBannerId: KnockoutObservable<number>;
 
-    authToken = ko.observable<string>();
-    lastPage = ko.observable<string>();
-    lastTime = ko.observable<number>(0);
-    isGuest = ko.observable<boolean>(false);
-    cardsVariant = ko.observable<string>();
+    public authToken = ko.observable<string>();
+    public lastPage = ko.observable<string>();
+    public lastTime = ko.observable<number>(0);
+    public isGuest = ko.observable<boolean>(false);
+    public cardsVariant = ko.observable<string>();
 
     constructor() {
         this.login = ko.observable<string>();
@@ -23,7 +23,7 @@ class Settings {
         this.soundEnabled = ko.observable(true);
         this.lastBannerId = ko.observable<number>();
     }
-    loadSettings() {
+    public loadSettings() {
         this.login(this.getItemString("auth.login"));
         this.password(this.getItemString("auth.password"));
         this.isGuest(this.getItemBoolean("auth.isGuest", false));
@@ -37,7 +37,7 @@ class Settings {
         this.authToken(this.getItemString("reload.authToken", null));
         this.cardsVariant(this.getItemString("cardsVariant", "down"));
     }
-    saveSettings() {
+    public saveSettings() {
         this.setItemString("auth.login", this.login());
         this.setItemString("auth.password", this.password());
         this.setItemBoolean("auth.isGuest", this.isGuest(), false);

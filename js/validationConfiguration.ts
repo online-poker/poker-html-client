@@ -2,6 +2,7 @@ import * as kov from "knockout.validation";
 import * as ko from "knockout";
 
 export function updateDefaultMessages() {
+    // tslint:disable-next-line:no-unused-expression
     kov;
     ko.validation.rules.required.message = "Это поле обязательно";
     ko.validation.rules.email.message = "Укажите правильный email";

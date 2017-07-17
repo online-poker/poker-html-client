@@ -4,10 +4,15 @@ const allNone = "//8=";
 const allBacksClasses = ["cards back", "cards back"];
 const allNoneClasses = ["cards back", "cards back"];
 
+// tslint:disable-next-line:no-unused-variable
 function exposeCardsConstants() {
+    // tslint:disable-next-line:no-string-literal
     window["allBacks"] = allBacks;
+    // tslint:disable-next-line:no-string-literal
     window["allNone"] = allNone;
+    // tslint:disable-next-line:no-string-literal
     window["allBacksClasses"] = allBacksClasses;
+    // tslint:disable-next-line:no-string-literal
     window["allNoneClasses"] = allNoneClasses;
 }
 
@@ -107,13 +112,11 @@ function cardValue(card: number) {
 }
 
 /**
-* Decode cards array from the base64 representation.
-*/
+ * Decode cards array from the base64 representation.
+ * @param cardsData Cards data encoded as string.
+ */
+// tslint:disable-next-line:no-unused-variable
 function decodeCardsArray(cardsData: string): number[] {
-    /// <signature>
-    ///   <summary>Get card string</summary>
-    ///   <param name="cards" type="Array">Array of the cards.</param>
-    /// </signature>
     if (cardsData === null || cardsData === null) {
         return null;
     }
@@ -140,6 +143,7 @@ function decodeCardsArray(cardsData: string): number[] {
 
     return cards;
 }
+// tslint:disable-next-line:no-unused-variable
 function convertToCards(data: number[]): string[] {
     if (data == null) {
         return null;
@@ -149,6 +153,7 @@ function convertToCards(data: number[]): string[] {
         return cardValue(n);
     });
 }
+// tslint:disable-next-line:no-unused-variable
 function cardsArray(cardsData: string): string[] {
     /// <signature>
     ///   <summary>Get card string</summary>

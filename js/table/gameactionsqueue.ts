@@ -2,59 +2,60 @@
 
 interface QueueWorker {
     /**
-    * Executes worker and generates promise which executing operation
-    */
+     * Executes worker and generates promise which executing operation
+     */
     (): Promise<any>;
 }
 
 export class GameActionsQueue {
-    static logging: boolean = false;
-    static waitDisabled = false;
+    public static logging: boolean = false;
+    public static waitDisabled = false;
 
     /**
-    * List of pending tasks
-    */
-    tasks: QueueWorker[];
+     * List of pending tasks
+     */
+    private tasks: QueueWorker[];
 
     /**
-    * Task counter
-    */
-    counter: number;
+     * Task counter
+     */
+    private counter: number;
 
     /**
-    * Executing flag.
-    */
-    isExecuting: boolean;
+     * Executing flag.
+     */
+    private isExecuting: boolean;
 
     /**
-    * Initializes a new instance of the GameActionsQueue class.
-    */
+     * Initializes a new instance of the GameActionsQueue class.
+     */
     constructor() {
         this.tasks = [];
         this.counter = 0;
     }
     /**
-    * Inject worker to the beginning of tasks stack
-    * @param worker QueueWorker The function which generated promise.
-    */
-    inject(worker: QueueWorker) {
+     * Inject worker to the beginning of tasks stack
+     * @param worker QueueWorker The function which generated promise.
+     */
+    public inject(worker: QueueWorker) {
         this.tasks.unshift(worker);
         this.execute();
     }
+
     /**
-    * Push worker to the end of tasks stack
-    * @param worker QueueWorker The function which generated promise.
-    */
-    push(worker: QueueWorker) {
+     * Push worker to the end of tasks stack
+     * @param worker QueueWorker The function which generated promise.
+     */
+    public push(worker: QueueWorker) {
         this.tasks.push(worker);
         this.execute();
     }
 
     /**
-    * Push waiting task in the queue
-    * @param timeout Number The function which generated promise.
-    */
-    wait(timeout: number) {
+     * Push waiting task in the queue
+     * @param timeout Number The function which generated promise.
+     */
+    public wait(timeout: number) {
         if (!GameActionsQueue.waitDisabled && timeout > 0) {
             this.push(() => {
                 return wait(timeout);
@@ -63,10 +64,10 @@ export class GameActionsQueue {
     }
 
     /**
-    * Push waiting task in the queue
-    * @param timeout Number The function which generated promise.
-    */
-    waitWithInterruption(timeout: number) {
+     * Push waiting task in the queue
+     * @param timeout Number The function which generated promise.
+     */
+    public waitWithInterruption(timeout: number) {
         if (!GameActionsQueue.waitDisabled && timeout > 0) {
             // Split wait interval by 100ms tasks which allow
             // inject other tasks and don't wait until everything is finished. 
@@ -79,10 +80,10 @@ export class GameActionsQueue {
     }
 
     /**
-    * Push waiting task in the queue
-    * @param timeout Number The function which generated promise.
-    */
-    injectWait(timeout: number) {
+     * Push waiting task in the queue
+     * @param timeout Number The function which generated promise.
+     */
+    public injectWait(timeout: number) {
         if (!GameActionsQueue.waitDisabled && timeout > 0) {
             this.inject(() => {
                 return wait(timeout);
@@ -91,10 +92,10 @@ export class GameActionsQueue {
     }
 
     /**
-    * Push waiting task in the queue
-    * @param timeout Number The function which generated promise.
-    */
-    injectWaitWithInterruption(timeout: number) {
+     * Push waiting task in the queue
+     * @param timeout Number The function which generated promise.
+     */
+    public injectWaitWithInterruption(timeout: number) {
         if (!GameActionsQueue.waitDisabled && timeout > 0) {
             // Split wait interval by 100ms tasks which allow
             // inject other tasks and don't wait until everything is finished. 
@@ -107,36 +108,36 @@ export class GameActionsQueue {
     }
 
     /**
-    * Push worker to the stack
-    * @param callback Function The function which generated promise.
-    */
-    injectCallback(callback: Function) {
+     * Push worker to the stack
+     * @param callback Function The function which generated promise.
+     */
+    public injectCallback(callback: Function) {
         this.inject(() => {
             return Promise.resolve().then(() => callback());
         });
     }
 
     /**
-    * Push worker to the stack
-    * @param callback Function The function which generated promise.
-    */
-    pushCallback(callback: Function) {
+     * Push worker to the stack
+     * @param callback Function The function which generated promise.
+     */
+    public pushCallback(callback: Function) {
         this.push(() => {
             return Promise.resolve().then(() => callback());
         });
     }
 
     /**
-    * Clears execution chain.
-    */
-    clear() {
+     * Clears execution chain.
+     */
+    public clear() {
         this.tasks = [];
     }
 
     /**
-    * Starts execution chain.
-    */
-    async execute() {
+     * Starts execution chain.
+     */
+    public async execute() {
         if (this.isExecuting) {
             this.log("Currently task is executing, task will be executed later.");
             return;

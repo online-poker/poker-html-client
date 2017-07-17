@@ -24,27 +24,27 @@ enum TournamentStatus {
 }
 
 /**
-* Represents player status in the tournament.
-*/
+ * Represents player status in the tournament.
+ */
 enum TournamentPlayerStatus {
     /**
-    * Player registered to play in the tournament
-    */
+     * Player registered to play in the tournament
+     */
     Registered,
 
     /**
-    * Player cancel his registration.
-    */
+     * Player cancel his registration.
+     */
     RegistrationCancelled,
 
     /**
-    * Player is currently playing in the tournament.
-    */
+     * Player is currently playing in the tournament.
+     */
     Playing,
 
     /** 
-    * Player complete playing in the tournament.
-    */
+     * Player complete playing in the tournament.
+     */
     Completed
 }
 
@@ -62,6 +62,7 @@ enum TournamentOptionsEnum {
 
 namespace OnlinePoker {
     export namespace Commanding {
+        // tslint:disable-next-line:no-namespace
         export namespace API {
             export enum MoneyType {
                 Tenge = 1,
@@ -70,13 +71,13 @@ namespace OnlinePoker {
             export let logging: boolean = false;
             export let version = 1;
             export class WebApiProxy {
-                baseUrl: string;
-                timeout = 5000;
+                public baseUrl: string;
+                public timeout = 5000;
 
                 constructor(public host: string, public baseName: string) {
                     this.baseUrl = host + '/' + baseName + '/';
                 }
-                Call(methodName: string, parameters: any, successCallback: JQueryTypedCallback<any>): JQueryXHR {
+                public Call(methodName: string, parameters: any, successCallback: JQueryTypedCallback<any>): JQueryXHR {
                     const self = this;
                     let parametersString = "null";
                     if (parameters != null) {
@@ -104,10 +105,10 @@ namespace OnlinePoker {
                         async: true,
                         contentType: 'application/json',
                         beforeSend: beforeSendHandler,
-                        dataType: 'json'
+                        dataType: 'json',
                     });
                 }
-                async getAsync<T>(methodName: string, parameters: any): Promise<T> {
+                public async getAsync<T>(methodName: string, parameters: any): Promise<T> {
                     const self = this;
                     let parametersString = "null";
                     if (parameters != null) {
@@ -124,7 +125,7 @@ namespace OnlinePoker {
                             const dataString = data != null ? JSON.stringify(data) : "NULL";
                             textStatus = textStatus != null ? textStatus : "NULL";
 
-                            const logMessage = "Method " + methodName + " finished. Status: " + textStatus + ". Results: " + dataString;
+                            const logMessage = `Method ${methodName} finished. Status: ${textStatus}. Results: ${dataString}`;
                             this.Log(self.baseName, logMessage);
                         },
                         timeout: this.timeout,
@@ -132,10 +133,10 @@ namespace OnlinePoker {
                         async: true,
                         contentType: 'application/json',
                         beforeSend: beforeSendHandler,
-                        dataType: 'json'
+                        dataType: 'json',
                     });
                 }
-                async putAsync<T>(methodName: string, parameters: any): Promise<T> {
+                public async putAsync<T>(methodName: string, parameters: any): Promise<T> {
                     const self = this;
                     let parametersString = "null";
                     if (parameters != null) {
@@ -152,17 +153,17 @@ namespace OnlinePoker {
                             const dataString = data != null ? JSON.stringify(data) : "NULL";
                             textStatus = textStatus != null ? textStatus : "NULL";
 
-                            const logMessage = "Method " + methodName + " finished. Status: " + textStatus + ". Results: " + dataString;
+                            const logMessage = `Method ${methodName} finished. Status: ${textStatus}. Results: ${dataString}`;
                             this.Log(self.baseName, logMessage);
                         },
                         timeout: this.timeout,
                         crossDomain: true,
                         async: true,
                         contentType: 'application/json',
-                        beforeSend: beforeSendHandler
+                        beforeSend: beforeSendHandler,
                     });
                 }
-                async deleteAsync<T>(methodName: string, parameters: any): Promise<T> {
+                public async deleteAsync<T>(methodName: string, parameters: any): Promise<T> {
                     const self = this;
                     let parametersString = "null";
                     if (parameters != null) {
@@ -179,22 +180,22 @@ namespace OnlinePoker {
                             const dataString = data != null ? JSON.stringify(data) : "NULL";
                             textStatus = textStatus != null ? textStatus : "NULL";
 
-                            const logMessage = "Method " + methodName + " finished. Status: " + textStatus + ". Results: " + dataString;
+                            const logMessage = `Method ${methodName} finished. Status: ${textStatus}. Results: ${dataString}`;
                             this.Log(self.baseName, logMessage);
                         },
                         timeout: this.timeout,
                         crossDomain: true,
                         async: true,
                         contentType: 'application/json',
-                        beforeSend: beforeSendHandler
+                        beforeSend: beforeSendHandler,
                     });
                 }
-                async CallAsync<T>(methodName: string, parameters: any) {
+                public async CallAsync<T>(methodName: string, parameters: any) {
                     return new Promise<T>((resolve, reject) => {
                         this.Call(methodName, parameters, null).then(resolve, reject);
                     });
                 }
-                Log(api, msg) {
+                public Log(api, msg) {
                     if (API.logging === false) {
                         return;
                     }
@@ -216,7 +217,7 @@ namespace OnlinePoker {
                     super(host, 'Chat');
                 }
 
-                SendAsync(tableId: number, message: string): Promise<StatusResponse> {
+                public SendAsync(tableId: number, message: string): Promise<StatusResponse> {
                     const data = { tableId: tableId, message: message };
                     return super.CallAsync<StatusResponse>('Send', data);
                 }
@@ -226,19 +227,19 @@ namespace OnlinePoker {
                     super(host, 'Message');
                 }
 
-                Send(recepient: number, subject: string, body: string) {
+                public Send(recepient: number, subject: string, body: string) {
                     const data = { Recipient: recepient, Subject: subject, Body: body };
                     return super.CallAsync('Send', data);
                 }
-                GetInboxMessages(page: number, pageSize: number, filter: number, sortOrder: boolean) {
+                public GetInboxMessages(page: number, pageSize: number, filter: number, sortOrder: boolean) {
                     const data = { Page: page, PageSize: pageSize, Filter: filter, SortOrder: sortOrder };
                     return super.CallAsync<ApiResult<InboxMessagesData>>('GetInboxMessages', data);
                 }
-                GetSentMessages(page: number, pageSize: number, filter: number, sortOrder: boolean) {
+                public GetSentMessages(page: number, pageSize: number, filter: number, sortOrder: boolean) {
                     const data = { Page: page, PageSize: pageSize, Filter: filter, SortOrder: sortOrder };
                     return super.CallAsync('GetSentMessages', data);
                 }
-                GetMessage(id: number) {
+                public GetMessage(id: number) {
                     const data = { Id: id };
                     return super.CallAsync('GetMessage', data);
                 }
@@ -252,86 +253,92 @@ namespace OnlinePoker {
                     super(host, 'Game');
                 }
 
-                GetTables(fullTables: number | null, privateTables: number | null, maxPlayers: number | null, betLevels: number, moneyType: number, limitType: number) {
+                public GetTables(
+                    fullTables: number | null,
+                    privateTables: number | null,
+                    maxPlayers: number | null,
+                    betLevels: number,
+                    moneyType: number,
+                    limitType: number) {
                     const data = {
                         FullTables: fullTables,
                         Private: privateTables,
                         MaxPlayers: maxPlayers,
                         BetLevels: betLevels,
                         MoneyType: moneyType,
-                        LimitType: limitType
+                        LimitType: limitType,
                     };
                     return super.CallAsync<ApiResult<LobbyTableItem[]>>('GetTables', data);
                 }
-                GetTable(tableId: number) {
+                public GetTable(tableId: number) {
                     const data = { TableId: tableId };
                     return super.CallAsync<ApiResult<GameTableModel>>('GetTable', data);
                 }
-                GetSitingTables() {
+                public GetSitingTables() {
                     const data = {};
                     return super.CallAsync<ApiResult<number[]>>('GetSitingTables', data);
                 }
-                Sit(tableId: number, seat: number, amount: number, ticketCode: string) {
+                public Sit(tableId: number, seat: number, amount: number, ticketCode: string) {
                     const data = { TableId: tableId, Seat: seat, Amount: amount, TicketCode: ticketCode };
                     return super.CallAsync<SitResponse>('Sit', data);
                 }
-                SitAnywhere(tableId, amount) {
+                public SitAnywhere(tableId, amount) {
                     const data = { TableId: tableId, Amount: amount };
                     return super.CallAsync<SitResponse>('SitAnywhere', data);
                 }
-                async Standup(tableId) {
+                public async Standup(tableId) {
                     const data = { TableId: tableId };
                     return await super.CallAsync<StatusResponse>('Standup', data);
                 }
-                Fold(tableId) {
+                public Fold(tableId) {
                     const data = { TableId: tableId };
                     return super.CallAsync<StatusResponse>('Fold', data);
                 }
-                CheckOrCall(tableId) {
+                public CheckOrCall(tableId) {
                     const data = { TableId: tableId };
                     return super.CallAsync<StatusResponse>('CheckOrCall', data);
                 }
-                BetOrRaise(tableId, amount) {
+                public BetOrRaise(tableId, amount) {
                     const data = { TableId: tableId, Amount: amount };
                     return super.CallAsync<StatusResponse>('BetOrRaise', data);
                 }
-                ForceJoinGame(tableId: number) {
+                public ForceJoinGame(tableId: number) {
                     const data = { TableId: tableId };
                     return super.CallAsync<StatusResponse>('ForceJoin', data);
                 }
-                WaitBigBlind(tableId: number) {
+                public WaitBigBlind(tableId: number) {
                     const data = { TableId: tableId };
                     return super.CallAsync<StatusResponse>('WaitBigBlind', data);
                 }
-                AddBalance(tableId: number, amount: number, ticketCode: string) {
+                public AddBalance(tableId: number, amount: number, ticketCode: string) {
                     const data = { TableId: tableId, Amount: amount, TicketCode: ticketCode };
                     return super.CallAsync<StatusResponse>('AddBalance', data);
                 }
-                SitOut(tableId: number) {
+                public SitOut(tableId: number) {
                     const data = { TableId: tableId };
                     return super.CallAsync<StatusResponse>('SitOut', data);
                 }
-                ForceSitout(tableId: number) {
+                public ForceSitout(tableId: number) {
                     const data = { TableId: tableId };
                     return super.CallAsync<StatusResponse>('ForceSitout', data);
                 }
-                ComeBack(tableId: number) {
+                public ComeBack(tableId: number) {
                     const data = { TableId: tableId };
                     return super.CallAsync<StatusResponse>('ComeBack', data);
                 }
-                Muck(tableId: number) {
+                public Muck(tableId: number) {
                     const data = { TableId: tableId };
                     return super.CallAsync<StatusResponse>('Muck', data);
                 }
-                ShowCards(tableId: number) {
+                public ShowCards(tableId: number) {
                     const data = { TableId: tableId };
                     return super.CallAsync<StatusResponse>('ShowCards', data);
                 }
-                ShowHoleCards(tableId: number, cardPosition: number) {
+                public ShowHoleCards(tableId: number, cardPosition: number) {
                     const data = { TableId: tableId, CardPosition: cardPosition };
                     return super.CallAsync<StatusResponse>('ShowHoleCards', data);
                 }
-                SetOpenCardsParameters(tableId: number, openCardsAutomatically: boolean) {
+                public SetOpenCardsParameters(tableId: number, openCardsAutomatically: boolean) {
                     const data = { TableId: tableId, OpenCardsAutomatically: openCardsAutomatically };
                     return super.CallAsync('SetOpenCardsParameters', data);
                 }
@@ -345,46 +352,46 @@ namespace OnlinePoker {
                     super(host, 'Tournament');
                 }
 
-                GetTournaments(prizeCurrency, tournamentType, speed, buyin, maxPlayers) {
+                public GetTournaments(prizeCurrency, tournamentType, speed, buyin, maxPlayers) {
                     const data = {
                         TournamentType: tournamentType,
                         PrizeCurrency: prizeCurrency,
                         Speed: speed,
                         BuyIn: buyin,
-                        MaxPlayers: maxPlayers
+                        MaxPlayers: maxPlayers,
                     };
                     return super.CallAsync<ApiResult<LobbyTournamentItem[]>>('GetTournaments', data);
                 }
 
-                GetTournament(tournamentId) {
+                public GetTournament(tournamentId) {
                     const data = { Id: tournamentId };
                     return super.CallAsync<ApiResult<TournamentDefinition>>('GetTournament', data);
                 }
 
-                Register(tournamentId) {
+                public Register(tournamentId) {
                     const data = { Id: tournamentId };
                     return super.CallAsync<StatusResponse>('Register', data);
                 }
 
-                CancelRegistration(tournamentId) {
+                public CancelRegistration(tournamentId) {
                     const data = { Id: tournamentId };
                     return super.CallAsync<StatusResponse>('CancelRegistration', data);
                 }
 
-                Rebuy(tournamentId: number, double: boolean) {
+                public Rebuy(tournamentId: number, double: boolean) {
                     const data = { Id: tournamentId, Double: double };
                     return super.CallAsync<StatusResponse>('Rebuy', data);
                 }
 
-                Addon(tournamentId: number) {
+                public Addon(tournamentId: number) {
                     const data = { Id: tournamentId };
                     return super.CallAsync<StatusResponse>('Addon', data);
                 }
 
-                GetRegisteredTournamentsStatus() {
+                public GetRegisteredTournamentsStatus(): Promise<ApiResult<TournamentPlayerStateDefinition[]>> {
                     const data = {};
                     // return super.SimpleCall('GetRegisteredTournamentsStatus', callback);
-                    return super.CallAsync<ApiResult<TournamentPlayerStateDefinition[]>>('GetRegisteredTournamentsStatus', data);
+                    return super.CallAsync('GetRegisteredTournamentsStatus', data);
                 }
             }
             export class Account extends WebApiProxy {
@@ -395,18 +402,22 @@ namespace OnlinePoker {
                 constructor(host) {
                     super(host, 'Account');
                 }
-                ActivateAccount(login, token) {
+                public ActivateAccount(login, token) {
                     const data = { Login: login, Token: token };
                     return super.CallAsync('ActivateAccount', data);
                 }
-                Logout() {
+                public Logout() {
                     const data = {};
                     authToken = null;
                     return super.CallAsync('Logout', data);
                 }
-                Authenticate(login, password, rememberMe, callback?: JQueryTypedCallback<AuthenticateResponse>) {
+                public Authenticate(login, password, rememberMe, callback?: JQueryTypedCallback<AuthenticateResponse>) {
                     const data = { Login: login, Password: password, RememberMe: rememberMe };
-                    const aquireTokenCallback = function (data: AuthenticateResponse, textStatus: string, xhr: JQueryXHR) {
+                    const aquireTokenCallback = function (
+                        // tslint:disable-next-line:no-shadowed-variable
+                        data: AuthenticateResponse,
+                        textStatus: string,
+                        xhr: JQueryXHR) {
                         authToken = xhr.getResponseHeader('X-Auth-Token');
                         console.log("Aquired auth token", authToken);
                         if (callback != null) {
@@ -415,37 +426,39 @@ namespace OnlinePoker {
                     };
                     return <JQueryPromise<AuthenticateResponse>>super.Call('Authenticate', data, aquireTokenCallback);
                 }
-                CancelAccountActivation(login, token) {
+                public CancelAccountActivation(login, token) {
                     const data = { Login: login, Token: token };
                     return super.CallAsync('CancelAccountActivation', data);
                 }
-                ChangePassword(oldPassword, newPassword) {
+                public ChangePassword(oldPassword, newPassword) {
                     const data = { OldPassword: oldPassword, NewPassword: newPassword };
                     return super.CallAsync<StatusResponse>('ChangePassword', data);
                 }
-                GetPersonalAccount() {
+                public GetPersonalAccount() {
                     const data = {};
                     return super.CallAsync<ApiResult<PersonalAccountData>>('GetPersonalAccount', data);
                 }
-                GetPlayerAccountHistory(fromDate, toDate, fromAmount, toAmount, operationType) {
+                public GetPlayerAccountHistory(fromDate, toDate, fromAmount, toAmount, operationType) {
                     const data = {
                         FromDate: fromDate,
                         ToDate: toDate,
                         FromAmount: fromAmount,
                         ToAmount: toAmount,
-                        OperationType: operationType
+                        OperationType: operationType,
                     };
                     return super.CallAsync<ApiResult<OperationData[]>>('GetPlayerAccountHistory', data);
                 }
-                GetPlayerDefinition() {
+                public GetPlayerDefinition() {
                     const data = {};
                     return super.CallAsync<ApiResult<PlayerDefinition>>('GetPlayerDefinition', data);
                 }
-                PutWithdrawalRequest(type, amount, parameters) {
+                public PutWithdrawalRequest(type, amount, parameters) {
                     const data = { Type: type, Amount: amount, Parameters: parameters };
                     return super.CallAsync('PutWithdrawalRequest', data);
                 }
-                Register(login, email, password, firstName, lastName, patronymicName, country, city, additionalProperties, image,
+                public Register(
+                    login, email, password, firstName, lastName, patronymicName,
+                    country, city, additionalProperties, image,
                     callback) {
                     const url = this.baseUrl + 'Register';
                     const data = {
@@ -458,7 +471,7 @@ namespace OnlinePoker {
                         Country: country,
                         City: city,
                         Image: image,
-                        AdditionalProperties: additionalProperties
+                        AdditionalProperties: additionalProperties,
                     };
                     return $.ajax({
                         type: 'POST',
@@ -468,36 +481,36 @@ namespace OnlinePoker {
                         crossDomain: true,
                         contentType: 'application/json',
                         beforeSend: beforeSendHandler,
-                        dataType: 'json'
+                        dataType: 'json',
                     });
                 }
-                RequestResetPassword(login, email) {
+                public RequestResetPassword(login, email) {
                     const data = { Login: login, Email: email };
                     return super.CallAsync<StatusResponse>('RequestResetPassword', data);
                 }
-                ResetAvatar() {
+                public ResetAvatar() {
                     const data = {};
                     return super.CallAsync('ResetAvatar', data);
                 }
-                ResetPassword(token, newPassword) {
+                public ResetPassword(token, newPassword) {
                     const data = { Token: token, Password: newPassword };
                     return super.CallAsync<StatusResponse>('ResetPassword', data);
                 }
-                SetAvatarUrl(url) {
+                public SetAvatarUrl(url) {
                     const data = { Url: url };
                     return super.CallAsync('SetAvatarUrl', data);
                 }
-                UpdatePlayerProfile(firstName, lastName, patronymicName, email, country, city, image) {
+                public UpdatePlayerProfile(firstName, lastName, patronymicName, email, country, city, image) {
                     throw new Error('Calls with multipart data not supported');
                 }
-                UploadAvatar(image) {
+                public UploadAvatar(image) {
                     throw new Error('Calls with multipart data not supported');
                 }
-                GetBestPlayers() {
+                public GetBestPlayers() {
                     const data = {};
                     return super.CallAsync<ApiResult<UserRating[]>>('GetBestPlayers', data);
                 }
-                RegisterGuest() {
+                public RegisterGuest() {
                     const data = {};
                     return super.CallAsync<RegisterGuestResponse>('RegisterGuest', data);
                 }
@@ -511,45 +524,45 @@ namespace OnlinePoker {
                     super(host, 'Metadata');
                     this.timeout = 10000;
                 }
-                GetServerLayout() {
+                public GetServerLayout() {
                     const data = {};
                     return super.CallAsync('GetServerLayout', data);
                 }
-                GetDefaultAvatars() {
+                public GetDefaultAvatars() {
                     const data = {};
                     return super.CallAsync<AvatarsResponse>('GetDefaultAvatars', data);
                 }
-                GetWellKnownBetStructure() {
+                public GetWellKnownBetStructure() {
                     const data = {};
                     return super.CallAsync<ApiResult<TournamentBetStructure[][]>>('GetWellKnownBetStructure', data);
                 }
-                GetWellKnownPrizeStructure() {
+                public GetWellKnownPrizeStructure() {
                     const data = {};
                     return super.CallAsync<ApiResult<TournamentPrizeStructure[][]>>('GetWellKnownPrizeStructure', data);
                 }
-                GetNews() {
+                public GetNews() {
                     const data = {};
                     return super.CallAsync<ApiResult<string[]>>('GetNews', data);
                 }
-                GetOnlinePlayers() {
+                public GetOnlinePlayers() {
                     const data = {};
                     return super.CallAsync<ApiResult<number[]>>('GetOnlinePlayers', data);
                 }
-                GetBanners(format) {
+                public GetBanners(format) {
                     const data = { Format: format };
                     return super.CallAsync<ApiResult<BannerData[]>>('GetBanners', data);
                 }
                 /**
-                * Request server date.
-                */
-                GetDate() {
+                 * Request server date.
+                 */
+                public GetDate() {
                     const data = {};
                     return super.CallAsync<number>('GetDate', data);
                 }
                 /**
-                * Perform version check.
-                */
-                VersionCheck() {
+                 * Perform version check.
+                 */
+                public VersionCheck() {
                     const data = {};
                     return super.CallAsync<VersionCheckResponse>('VersionCheck', data);
                 }
@@ -559,12 +572,12 @@ namespace OnlinePoker {
                     super(host, 'Support');
                 }
 
-                ContactUs(fullName: string, email: string, subject: string, message: string) {
+                public ContactUs(fullName: string, email: string, subject: string, message: string) {
                     const data = {
                         FullName: fullName,
                         Email: email,
                         Subject: subject,
-                        Body: message
+                        Body: message,
                     };
                     return super.CallAsync<StatusResponse>('ContactUs', data);
                 }
@@ -574,24 +587,22 @@ namespace OnlinePoker {
                     super(host, 'server/api');
                 }
 
-                async getTableReload(tableId: number) {
+                public async getTableReload(tableId: number) {
                     return await super.getAsync<TableReloadInformation>(`reload/${tableId}`, {});
                 }
 
-                async confirmEmergencyReload(tableId: number) {
+                public async confirmEmergencyReload(tableId: number) {
                     return await super.deleteAsync<void>(`reload/${tableId}/table/emergency`, {});
                 }
 
-                async confirmTableReload(tableId: number) {
+                public async confirmTableReload(tableId: number) {
                     return await super.putAsync<void>(`reload/${tableId}/table`, {});
                 }
 
-                async confirmSeatReload(tableId: number, seatId: number) {
+                public async confirmSeatReload(tableId: number, seatId: number) {
                     return await super.putAsync<void>(`reload/${tableId}/seats/${seatId}`, {});
                 }
             }
         }
     }
 }
-
-

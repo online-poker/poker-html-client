@@ -2,11 +2,11 @@
 import { PageBase } from "./ui/pagebase";
 
 export class TablesFilterPage extends PageBase {
-    oldpassword: KnockoutObservable<string>;
-    password: KnockoutObservable<string>;
-    confirmpassword: KnockoutObservable<string>;
-    errors: KnockoutValidationErrors;
-    isValid: () => boolean;
+    public oldpassword: KnockoutObservable<string>;
+    public password: KnockoutObservable<string>;
+    public confirmpassword: KnockoutObservable<string>;
+    public errors: KnockoutValidationErrors;
+    public isValid: () => boolean;
 
     constructor() {
         super();

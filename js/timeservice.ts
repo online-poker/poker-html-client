@@ -6,17 +6,17 @@ import * as runtimeSettings from "./table/runtimesettings";
 declare var apiHost: string;
 
 class TimeService {
-    currentTime: KnockoutObservable<string>;
-    handle: number;
-    timeDiff: number = 0;
+    private static MillisecondsInMinutes = 60 * 1000;
+    public currentTime: KnockoutObservable<string>;
+    public timeDiff: number = 0;
+    private handle: number;
     private timeouts: number[] = [];
     private intervals: number[] = [];
-    private static MillisecondsInMinutes = 60 * 1000;
 
     constructor() {
         this.currentTime = ko.observable<string>();
     }
-    start() {
+    public start() {
         const api = new OnlinePoker.Commanding.API.Metadata(apiHost);
         api.GetDate().then((serverTime) => {
             const currentDate = new Date();
@@ -34,11 +34,11 @@ class TimeService {
             }, pauseBeforeStartLongInterval);
         }).then(null, () => this.start());
     }
-    stop() {
+    public stop() {
         this.timeDiff = 0;
         this.clearInterval(this.handle);
     }
-    setTimeout(handler: any, timeout?: any, ...args: any[]): number {
+    public setTimeout(handler: any, timeout?: any, ...args: any[]): number {
         const handle = setTimeout(() => {
             this.timeouts = this.timeouts.filter((_) => _ !== handle);
             handler();
@@ -46,20 +46,20 @@ class TimeService {
         this.timeouts.push(handle);
         return handle;
     }
-    clearTimeout(handle: number) {
+    public clearTimeout(handle: number) {
         this.timeouts = this.timeouts.filter((_) => _ !== handle);
         clearTimeout(handle);
     }
-    setInterval(handler: any, timeout?: any, ...args: any[]): number {
+    public setInterval(handler: any, timeout?: any, ...args: any[]): number {
         const handle = setInterval(handler, timeout, args);
         this.intervals.push(handle);
         return handle;
     }
-    clearInterval(handle: number) {
+    public clearInterval(handle: number) {
         this.intervals = this.intervals.filter((_) => _ !== handle);
         clearInterval(handle);
     }
-    printDebug() {
+    public printDebug() {
         if (debugSettings.application.debugTimeouts) {
             console.log("Timeouts running = " + this.timeouts.length + ". "
                 + "Intervals running = " + this.intervals.length);
