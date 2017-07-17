@@ -1,16 +1,15 @@
 ﻿/// <reference path="../poker.commanding.api.ts" />
 
 import * as ko from "knockout";
-import * as moment from "moment";
 import * as timeService from "../timeservice";
 import { connectionService } from "../services";
 
 export class ChatControl {
-    currentMessage: KnockoutObservable<string>;
-    messages: KnockoutObservableArray<string>;
-    loading: KnockoutObservable<boolean>;
-    timeoutHandler: number;
-    tableId: KnockoutObservable<number>;
+    public currentMessage: KnockoutObservable<string>;
+    public messages: KnockoutObservableArray<string>;
+    public loading: KnockoutObservable<boolean>;
+    private timeoutHandler: number;
+    private tableId: KnockoutObservable<number>;
 
     constructor() {
         this.currentMessage = ko.observable<string>();
@@ -18,7 +17,7 @@ export class ChatControl {
         this.loading = ko.observable(false);
         this.tableId = ko.observable(0);
     }
-    initialize() {
+    public initialize() {
         connectionService.newConnection.add(() => {
             const chatHub = connectionService.currentConnection.connection.createHubProxy("chat");
             const handler = (...msg: any[]) => {
@@ -39,12 +38,12 @@ export class ChatControl {
             }, self, 0);
         });
     }
-    append(messageId: number, tableId: number, type: string, sender: string, message: string) {
+    public append(messageId: number, tableId: number, type: string, sender: string, message: string) {
         this.loading(false);
         const m = this.messages();
         this.messages(["[" + sender + "] " + message].concat(m));
     }
-    attachToHub() {
+    public attachToHub() {
         this.loading(true);
         const wrapper = connectionService.currentConnection;
         wrapper.buildStartConnection()().then(() => {
@@ -59,7 +58,7 @@ export class ChatControl {
             this.timeoutHandler = 0;
         }, 2000);
     }
-    detachFromHub() {
+    public detachFromHub() {
         const wrapper = connectionService.currentConnection;
         wrapper.buildStartConnection()().then(() => {
             if (wrapper.terminated) {

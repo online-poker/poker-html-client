@@ -12,15 +12,15 @@ declare var apiHost: string;
 declare var app: App;
 
 export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
-    login: KnockoutObservable<string>;
-    password: KnockoutObservable<string>;
-    validationLogin = ko.observable<string>().extend({ required: true, maxLength: 12 });
-    validationPassword = ko.observable<string>().extend({ required: true, maxLength: 16 });
-    errorMessage: KnockoutObservable<string>;
-    rememberMe: KnockoutObservable<boolean>;
-    errors: KnockoutValidationErrors;
-    isValid: () => boolean;
-    loading: KnockoutObservable<boolean>;
+    public login: KnockoutObservable<string>;
+    public password: KnockoutObservable<string>;
+    public validationLogin = ko.observable<string>().extend({ required: true, maxLength: 12 });
+    public validationPassword = ko.observable<string>().extend({ required: true, maxLength: 16 });
+    public errorMessage: KnockoutObservable<string>;
+    public rememberMe: KnockoutObservable<boolean>;
+    public errors: KnockoutValidationErrors;
+    public isValid: () => boolean;
+    public loading: KnockoutObservable<boolean>;
 
     constructor() {
         super();
@@ -31,14 +31,14 @@ export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
         this.errorMessage = ko.observable<string>();
         this.loading = ko.observable(false);
     }
-    shown(args: any[]= []): void {
+    public shown(args: any[]= []): void {
         this.login(settings.login());
         this.password(settings.password());
         this.rememberMe(settings.login() != null);
         this.errors.showAllMessages(false);
         super.shown(args);
     }
-    async logon() {
+    public async logon() {
         const self = this;
         if (authManager.authenticated()) {
             return;
@@ -78,10 +78,10 @@ export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
             }
         }
     }
-    registration() {
+    public registration() {
         // Do nothing.
     }
-    forgetPassword() {
+    public forgetPassword() {
         app.showPopup("forgetPassword");
     }
 }

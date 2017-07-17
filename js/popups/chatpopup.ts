@@ -12,12 +12,12 @@ declare var apiHost: string;
 declare var app: App;
 
 export class ChatPopup {
-    control: ChatControl;
-    caption: KnockoutObservable<string>;
-    currentMessage: KnockoutObservable<string>;
-    loading: KnockoutObservable<boolean>;
-    messages: KnockoutObservableArray<PlayerMessage>;
-    systemMessages: KnockoutObservableArray<SystemMessage>;
+    public control: ChatControl;
+    public caption: KnockoutObservable<string>;
+    public currentMessage: KnockoutObservable<string>;
+    public loading: KnockoutObservable<boolean>;
+    public messages: KnockoutObservableArray<PlayerMessage>;
+    public systemMessages: KnockoutObservableArray<SystemMessage>;
     private tableView: TableView;
     private subscription: KnockoutSubscription = null;
 
@@ -30,7 +30,7 @@ export class ChatPopup {
         this.messages = ko.observableArray<PlayerMessage>([]);
         this.systemMessages = ko.observableArray<PlayerMessage>([]);
     }
-    attach(view: TableView) {
+    public attach(view: TableView) {
         if (this.subscription !== null) {
             this.subscription.dispose();
             this.subscription = null;
@@ -58,7 +58,7 @@ export class ChatPopup {
         this.currentMessage("");
         await this.tableView.sendMessage();
     }
-    close() {
+    public close() {
         if (this.subscription !== null) {
             this.subscription.dispose();
             this.subscription = null;
@@ -70,7 +70,7 @@ export class ChatPopup {
             $(window).scrollLeft(0);
         }, 10);
     }
-    shown(): void {
+    public shown(): void {
         this.control.attachToHub();
     }
 }

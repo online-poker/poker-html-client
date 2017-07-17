@@ -8,20 +8,9 @@ import * as timeService from "../timeservice";
 declare var app: App;
 
 export class SimplePopup extends PopupBase {
-    title: KnockoutObservable<string>;
-    messages: KnockoutObservableArray<string>;
-
-    constructor() {
-        super();
-        this.title = ko.observable<string>();
-        this.messages = ko.observableArray<string>();
-    }
-    confirm() {
-        super.close();
-    }
-    static display(title: string, message: string): Promise<PopupResult>;
-    static display(title: string, message: string[]): Promise<PopupResult>;
-    static display(title: string, message: any): Promise<PopupResult> {
+    public static display(title: string, message: string): Promise<PopupResult>;
+    public static display(title: string, message: string[]): Promise<PopupResult>;
+    public static display(title: string, message: any): Promise<PopupResult> {
         app.simplePopup.title(title);
         if (typeof message === "string") {
             app.simplePopup.messages([message]);
@@ -32,9 +21,9 @@ export class SimplePopup extends PopupBase {
 
         return app.showPopup("simple");
     }
-    static displayWithTimeout(title: string, message: string, timeout: number): Promise<PopupResult>;
-    static displayWithTimeout(title: string, message: string[], timeout: number): Promise<PopupResult>;
-    static displayWithTimeout(title: string, message: any, timeout: number): Promise<PopupResult> {
+    public static displayWithTimeout(title: string, message: string, timeout: number): Promise<PopupResult>;
+    public static displayWithTimeout(title: string, message: string[], timeout: number): Promise<PopupResult>;
+    public static displayWithTimeout(title: string, message: any, timeout: number): Promise<PopupResult> {
         const result = SimplePopup.display(title, message);
         let handle = timeService.setTimeout(function () {
             if (handle !== null) {
@@ -52,5 +41,16 @@ export class SimplePopup extends PopupBase {
         });
 
         return promise;
+    }
+    public title: KnockoutObservable<string>;
+    public messages: KnockoutObservableArray<string>;
+
+    constructor() {
+        super();
+        this.title = ko.observable<string>();
+        this.messages = ko.observableArray<string>();
+    }
+    public confirm() {
+        super.close();
     }
 }

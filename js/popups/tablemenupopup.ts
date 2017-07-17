@@ -6,66 +6,65 @@ import { App } from "../app";
 import * as authManager from "../authmanager";
 import { settings } from "../settings";
 import { appConfig } from "../appconfig";
-import * as commandManager from "../commandmanager";
 import { tableManager } from "../table/tablemanager";
 
 declare var apiHost: string;
 declare var app: App;
 
 export class TableMenuPopup {
-    soundEnabled: KnockoutComputed<boolean>;
-    autoSwitchTables: KnockoutComputed<boolean>;
-    autoHideCards: KnockoutComputed<boolean>;
-    showInRating: KnockoutObservable<boolean>;
-    addMoneyAvailable = ko.observable(false);
-    addMoneyAllowed: KnockoutObservable<boolean>;
-    handHistoryAllowed: KnockoutObservable<boolean>;
-    accountStatusAllowed: KnockoutObservable<boolean>;
-    tournamentInformationAllowed: KnockoutObservable<boolean>;
-    rebuyAllowed: KnockoutObservable<boolean>;
-    doublerebuyAllowed: KnockoutObservable<boolean>;
-    addonAllowed: KnockoutObservable<boolean>;
-    isTournamentTable: KnockoutObservable<boolean>;
+    public soundEnabled: KnockoutComputed<boolean>;
+    public autoSwitchTables: KnockoutComputed<boolean>;
+    public autoHideCards: KnockoutComputed<boolean>;
+    public showInRating: KnockoutObservable<boolean>;
+    public addMoneyAvailable = ko.observable(false);
+    public addMoneyAllowed: KnockoutObservable<boolean>;
+    public handHistoryAllowed: KnockoutObservable<boolean>;
+    public accountStatusAllowed: KnockoutObservable<boolean>;
+    public tournamentInformationAllowed: KnockoutObservable<boolean>;
+    public rebuyAllowed: KnockoutObservable<boolean>;
+    public doublerebuyAllowed: KnockoutObservable<boolean>;
+    public addonAllowed: KnockoutObservable<boolean>;
+    public isTournamentTable: KnockoutObservable<boolean>;
     public allowUsePersonalAccount: KnockoutObservable<boolean>;
     public allowTickets: KnockoutObservable<boolean>;
-    private standupText: KnockoutComputed<string>;
+    public standupText: KnockoutComputed<string>;
     /**
-    * Tournament has rebuys.
-    */
-    tournamentHasRebuy = ko.observable(false);
+     * Tournament has rebuys.
+     */
+    public tournamentHasRebuy = ko.observable(false);
 
     /**
-    * Tournament has addons.
-    */
-    tournamentHasAddon = ko.observable(false);
+     * Tournament has addons.
+     */
+    public tournamentHasAddon = ko.observable(false);
 
     constructor() {
         this.soundEnabled = ko.computed<boolean>({
+            owner: this,
             read: function () {
                 return settings.soundEnabled();
             },
             write: function (value) {
                 settings.soundEnabled(value);
             },
-            owner: this
         });
         this.autoSwitchTables = ko.computed<boolean>({
+            owner: this,
             read: function () {
                 return settings.autoSwitchTables();
             },
             write: function (value) {
                 settings.autoSwitchTables(value);
             },
-            owner: this
         });
         this.autoHideCards = ko.computed<boolean>({
+            owner: this,
             read: function () {
                 return settings.autoHideCards();
             },
             write: function (value) {
                 settings.autoHideCards(value);
             },
-            owner: this
         });
         this.showInRating = ko.observable(false);
 
@@ -90,7 +89,7 @@ export class TableMenuPopup {
         });
     }
 
-    shown() {
+    public shown() {
         // Load settings
         const self = this;
         const currentTable = app.tablesPage.currentTable();
@@ -144,20 +143,20 @@ export class TableMenuPopup {
             this.doublerebuyAllowed(false);
         }
     }
-    confirm() {
+    public confirm() {
         app.closePopup();
     }
-    cancel() {
+    public cancel() {
         app.closePopup();
     }
-    accountStatus() {
+    public accountStatus() {
         if (!this.accountStatusAllowed()) {
             return;
         }
 
         app.showPopup("accountStatus");
     }
-    handHistory() {
+    public handHistory() {
         if (!this.handHistoryAllowed()) {
             return;
         }
@@ -166,7 +165,7 @@ export class TableMenuPopup {
         app.handHistoryPopup.tableView(currentTable);
         app.showPopup("handHistory");
     }
-    addMoney() {
+    public addMoney() {
         if (!this.addMoneyAllowed()) {
             return;
         }
@@ -180,7 +179,7 @@ export class TableMenuPopup {
             }
         });
     }
-    showTournamentInformation() {
+    public showTournamentInformation() {
         if (!this.tournamentInformationAllowed()) {
             return;
         }
@@ -192,7 +191,7 @@ export class TableMenuPopup {
         app.tablesPage.deactivate();
         this.confirm();
     }
-    rebuy() {
+    public rebuy() {
         if (!this.rebuyAllowed()) {
             return;
         }
@@ -200,7 +199,7 @@ export class TableMenuPopup {
         const currentTable = app.tablesPage.currentTable();
         currentTable.showRebuyPrompt();
     }
-    doubleRebuy() {
+    public doubleRebuy() {
         if (!this.doublerebuyAllowed()) {
             return;
         }
@@ -208,7 +207,7 @@ export class TableMenuPopup {
         const currentTable = app.tablesPage.currentTable();
         currentTable.showDoubleRebuyPrompt();
     }
-    addon() {
+    public addon() {
         if (!this.addonAllowed()) {
             return;
         }
@@ -216,21 +215,19 @@ export class TableMenuPopup {
         const currentTable = app.tablesPage.currentTable();
         currentTable.showAddonPrompt();
     }
-    async showSettingsPrompt() {
-        const self = this;
+    public async showSettingsPrompt() {
         const authenticated = await app.requireAuthentication();
         if (authenticated) {
             app.executeCommand("popup.settings");
         }
     }
-    async showRules() {
-        const self = this;
+    public async showRules() {
         const authenticated = await app.requireAuthentication();
         if (authenticated) {
             app.executeCommand("popup.rules");
         }
     }
-    leave() {
+    public leave() {
         let index = tableManager.currentIndex();
         let tableView = tableManager.tables()[index];
         tableView.showStandupPrompt();

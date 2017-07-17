@@ -30,35 +30,35 @@ interface TournamentTableListView {
 }
 
 export class TournamentLobbyPage extends PageBase {
-    loading: KnockoutObservable<boolean>;
-    tournamentId = 0;
-    tournamentData: KnockoutObservable<TournamentDefinition>;
-    tournamentCaption: KnockoutComputed<string>;
-    authenticated: KnockoutComputed<boolean>;
-    tablesAvailable: KnockoutComputed<boolean>;
-    lateRegistrationAllowed: KnockoutComputed<boolean>;
-    stackInformation: KnockoutComputed<string>;
-    participantsInformation: KnockoutComputed<string>;
-    betLevelInformation: KnockoutComputed<string>;
-    parentView: string;
-    currentView: KnockoutObservable<number>;
-    getBetStructure: KnockoutComputed<TournamentBetStructure[]>;
-    playersSortOrder = ko.observable("asc");
-    playersColumnOrder = ko.observable("Login");
-    getTournamentPlayers: KnockoutComputed<TournamentPlayerDefinition[]>;
-    tablesData: KnockoutObservable<TournamentTableListView[]>;
-    getSelectedTablePlayers: KnockoutComputed<TournamentTablePlayerView[]>;
-    couldRegister: KnockoutComputed<boolean>;
-    couldUnregister: KnockoutComputed<boolean>;
-    couldContinueGame: KnockoutComputed<boolean>;
-    couldView: KnockoutComputed<boolean>;
-    currentTime: KnockoutComputed<string>;
-    duration: KnockoutComputed<string>;
-    lateRegistrationLeft: KnockoutComputed<string>;
-    lateRegistrationRunning: KnockoutComputed<boolean>;
-    totalPrize: KnockoutComputed<number>;
-    prizesCount: KnockoutComputed<number>;
-    scrollTrigger: KnockoutComputed<number>;
+    public loading: KnockoutObservable<boolean>;
+    public tournamentId = 0;
+    public tournamentData: KnockoutObservable<TournamentDefinition>;
+    public tournamentCaption: KnockoutComputed<string>;
+    public authenticated: KnockoutComputed<boolean>;
+    public tablesAvailable: KnockoutComputed<boolean>;
+    public lateRegistrationAllowed: KnockoutComputed<boolean>;
+    public stackInformation: KnockoutComputed<string>;
+    public participantsInformation: KnockoutComputed<string>;
+    public betLevelInformation: KnockoutComputed<string>;
+    public parentView: string;
+    public currentView: KnockoutObservable<number>;
+    public getBetStructure: KnockoutComputed<TournamentBetStructure[]>;
+    public playersSortOrder = ko.observable("asc");
+    public playersColumnOrder = ko.observable("Login");
+    public getTournamentPlayers: KnockoutComputed<TournamentPlayerDefinition[]>;
+    public tablesData: KnockoutObservable<TournamentTableListView[]>;
+    public getSelectedTablePlayers: KnockoutComputed<TournamentTablePlayerView[]>;
+    public couldRegister: KnockoutComputed<boolean>;
+    public couldUnregister: KnockoutComputed<boolean>;
+    public couldContinueGame: KnockoutComputed<boolean>;
+    public couldView: KnockoutComputed<boolean>;
+    public currentTime: KnockoutComputed<string>;
+    public duration: KnockoutComputed<string>;
+    public lateRegistrationLeft: KnockoutComputed<string>;
+    public lateRegistrationRunning: KnockoutComputed<boolean>;
+    public totalPrize: KnockoutComputed<number>;
+    public prizesCount: KnockoutComputed<number>;
+    public scrollTrigger: KnockoutComputed<number>;
 
     constructor() {
         super();
@@ -79,7 +79,7 @@ export class TournamentLobbyPage extends PageBase {
                     name: table.TableName,
                     isClosed: table.IsClosed,
                     selected: ko.observable(false),
-                    players: []
+                    players: [],
                 };
                 if (!table.IsClosed) {
                     table.Players.forEach(function (item) {
@@ -198,7 +198,6 @@ export class TournamentLobbyPage extends PageBase {
                 return [];
             }
 
-            const currentPlayers = data.JoinedPlayers;
             const prizeStructure = metadataManager.bets[data.WellKnownBetStructure];
             const sortedPrizes = prizeStructure.sort(function (a, b) {
                 return a.Level > b.Level
@@ -212,8 +211,8 @@ export class TournamentLobbyPage extends PageBase {
             if (tdata === null || tdata === undefined) {
                 return null;
             }
-            let players = tdata.TournamentPlayers,
-                modifier = self.playersSortOrder() === "asc" ? 1 : -1;
+            let players = tdata.TournamentPlayers;
+            let modifier = self.playersSortOrder() === "asc" ? 1 : -1;
             const sortByName = (a: TournamentPlayerDefinition, b: TournamentPlayerDefinition) => {
                 return a.PlayerName > b.PlayerName ? modifier : a.PlayerName < b.PlayerName ? -modifier : 0;
             };
@@ -373,7 +372,8 @@ export class TournamentLobbyPage extends PageBase {
             const currentMoment = moment().add(timeService.timeDiff, "ms");
             const duration = moment.duration(currentMoment.diff(startDate));
             const m = duration.minutes();
-            return duration.hours() + _("common.hours") + _("common.timeseparator") + (m < 10 ? "0" + m : "" + m) + _("common.minutes");
+            return duration.hours() + _("common.hours") + _("common.timeseparator")
+                + (m < 10 ? "0" + m : "" + m) + _("common.minutes");
         }, this);
         this.lateRegistrationLeft = ko.pureComputed(function () {
             const tdata = self.tournamentData();
@@ -381,12 +381,12 @@ export class TournamentLobbyPage extends PageBase {
                 return "";
             }
 
-            const startDate = moment(tdata.StartDate);
             const registrationEndDate = moment(tdata.RegistrationEndDate);
             const currentMoment = moment().add(timeService.timeDiff, "ms");
             const duration = moment.duration(currentMoment.diff(registrationEndDate));
             const m = duration.minutes();
-            return duration.hours() + _("common.hours") + _("common.timeseparator") + (m < 10 ? "0" + m : "" + m) + _("common.minutes");
+            return duration.hours() + _("common.hours") + _("common.timeseparator")
+                + (m < 10 ? "0" + m : "" + m) + _("common.minutes");
         }, this);
         this.lateRegistrationRunning = ko.pureComputed(function () {
             const tdata = self.tournamentData();
@@ -435,13 +435,13 @@ export class TournamentLobbyPage extends PageBase {
             return scrollTriggerCounter++;
         }, this);
     }
-    deactivate() {
+    public deactivate() {
         super.deactivate();
         if (PageBlock.useDoubleView) {
             app.lobbyPageBlock.lobbyPage.filterLocked(false);
         }
     }
-    activate() {
+    public activate() {
         super.activate();
         this.refreshTournament();
         if (PageBlock.useDoubleView) {
@@ -450,7 +450,7 @@ export class TournamentLobbyPage extends PageBase {
 
         reloadManager.setReloadCallback(() => this.refreshTournament());
     }
-    selectTable(table: TournamentTableListView) {
+    public selectTable(table: TournamentTableListView) {
         const tables = this.tablesData();
         tables.forEach(function (item) {
             item.selected(false);
@@ -459,11 +459,11 @@ export class TournamentLobbyPage extends PageBase {
         table.selected(true);
         this.tablesData(tables);
     }
-    setTournament(tournamentId: number, parentView: string): void {
+    public setTournament(tournamentId: number, parentView: string): void {
         this.tournamentId = tournamentId || 0;
         this.parentView = parentView;
     }
-    async refreshTournament(): Promise<ApiResult<TournamentDefinition>> {
+    public async refreshTournament(): Promise<ApiResult<TournamentDefinition>> {
         if (this.tournamentId === 0) {
             return Promise.resolve({ Status: "Ok", Data: null });
         }
@@ -478,7 +478,6 @@ export class TournamentLobbyPage extends PageBase {
                 self.log("Informaton about tournament ", self.tournamentId, " received: ", data.Data);
                 self.log(tournamentData.TournamentName);
                 self.tournamentData(tournamentData);
-                const tplayer = tournamentData.TournamentPlayers.filter(_ => _.PlayerId === authManager.loginId());
                 if (tournamentData.Status === TournamentStatus.Started
                     || tournamentData.Status === TournamentStatus.LateRegistration) {
                     // Connect to the tournament so player could monitor game on it
@@ -501,18 +500,11 @@ export class TournamentLobbyPage extends PageBase {
             self.loading(false);
         }
     }
-    back() {
+    public back() {
         app.lobbyPageBlock.showSecondary(this.parentView);
     }
-    async register() {
+    public async register() {
         const self = this;
-        const tournament = self.tournamentData();
-        const name = tournament.TournamentName;
-        const joinAmount = tournament.JoinFee + tournament.BuyIn;
-        /* tslint:disable:no-string-literal */
-        const numericTextBinding = <any>ko.bindingHandlers["numericText"];
-        /* tslint:enable:no-string-literal */
-        const joinAmountString = numericTextBinding.withCommas(joinAmount.toFixed(0));
         const api = new OnlinePoker.Commanding.API.Account(apiHost);
         self.loading(true);
         try {
@@ -540,7 +532,7 @@ export class TournamentLobbyPage extends PageBase {
     /**
      * Initiates cancelling registration in the tournament.
      */
-    async unregister() {
+    public async unregister() {
         const self = this;
         const tournament = self.tournamentData();
         const name = tournament.TournamentName;
@@ -569,10 +561,10 @@ export class TournamentLobbyPage extends PageBase {
             SimplePopup.display(operationTitle, _("tournamentLobby.registrationCancelError"));
         }
     }
-    selectView(view: number) {
+    public selectView(view: number) {
         this.currentView(view);
     }
-    viewGame() {
+    public viewGame() {
         const tablesView = 2;
         if (this.currentView() !== tablesView) {
             this.currentView(tablesView);
@@ -588,18 +580,18 @@ export class TournamentLobbyPage extends PageBase {
             }
         }
     }
-    continueGame() {
+    public continueGame() {
         const tournamentView = tableManager.getTournamentById(this.tournamentId);
         this.showTournamentTable(tournamentView.currentTableId);
     }
-    showTable(table: TournamentTableDefinition) {
+    public showTable(table: TournamentTableDefinition) {
         if (!this.couldView() && this.couldContinueGame()) {
             return;
         }
 
         this.showTournamentTable(table.TableId);
     }
-    applyPlayersSort(sortColumn: string) {
+    public applyPlayersSort(sortColumn: string) {
         if (this.playersColumnOrder() === sortColumn) {
             this.playersSortOrder(this.playersSortOrder() === "asc" ? "desc" : "asc");
             return;
@@ -621,7 +613,7 @@ export class TournamentLobbyPage extends PageBase {
                 break;
         }
     }
-    setDefaultSortOrder(sortColumn: string) {
+    public setDefaultSortOrder(sortColumn: string) {
         this.playersColumnOrder(sortColumn);
         switch (sortColumn) {
             case "Login":
@@ -639,9 +631,9 @@ export class TournamentLobbyPage extends PageBase {
         }
     }
     /**
-    * Shows already opened tournament table, or load new one if needed.
-    * @param tableId Number Id of the tournament table to show.
-    */
+     * Shows already opened tournament table, or load new one if needed.
+     * @param tableId Number Id of the tournament table to show.
+     */
     private async showTournamentTable(tableId: number) {
         const self = this;
         const tableView = tableManager.getTableById(tableId);
@@ -698,7 +690,9 @@ export class TournamentLobbyPage extends PageBase {
         /* tslint:enable:no-string-literal */
         const joinAmountString = numericTextBinding.withCommas(joinAmount.toFixed(0));
         if (currentBalance < joinAmount) {
-            await SimplePopup.display(_("tournamentLobby.tournamentRegistrationPromptCaption"), _("tournamentLobby.insufficientFunds"));
+            await SimplePopup.display(
+                _("tournamentLobby.tournamentRegistrationPromptCaption"),
+                _("tournamentLobby.insufficientFunds"));
             return;
         }
 
@@ -719,11 +713,15 @@ export class TournamentLobbyPage extends PageBase {
             if (data.Status === "Ok") {
                 tableManager.openTournamentById(self.tournamentId);
                 self.log("Registration success");
-                SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("tournamentLobby.registrationCompleteSuccess"));
+                SimplePopup.display(
+                    _("tournamentLobby.registrationSuccess"),
+                    _("tournamentLobby.registrationCompleteSuccess"));
                 try {
                     await self.refreshTournament();
                 } catch (e) {
-                    SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("tournamentLobby.registrationError"));
+                    SimplePopup.display(
+                        _("tournamentLobby.registrationSuccess"),
+                        _("tournamentLobby.registrationError"));
                 }
             } else {
                 SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("errors." + data.Status));

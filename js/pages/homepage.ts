@@ -14,27 +14,27 @@ import { _ } from "../languagemanager";
 declare var app: App;
 
 export class HomePage extends PageBase {
-    online: KnockoutObservable<string>;
-    registered: KnockoutObservable<string>;
-    news = ko.observableArray<string>([]);
-    currentNews = ko.observable("");
-    username: KnockoutObservable<string>;
-    password: KnockoutObservable<string>;
-    errorMessage: KnockoutObservable<string>;
-    rememberMe: KnockoutObservable<boolean>;
+    public online: KnockoutObservable<string>;
+    public registered: KnockoutObservable<string>;
+    public news = ko.observableArray<string>([]);
+    public currentNews = ko.observable("");
+    public username: KnockoutObservable<string>;
+    public password: KnockoutObservable<string>;
+    public errorMessage: KnockoutObservable<string>;
+    public rememberMe: KnockoutObservable<boolean>;
 
-    captionLabel: KnockoutComputed<string>;
-    authenticatedUser: KnockoutComputed<string>;
-    authenticated: KnockoutComputed<boolean>;
-    intervalHandle: number = null;
-    banners = ko.observableArray<BannerData>([]);
-    currentBanner = ko.observable<BannerData>({
+    public captionLabel: KnockoutComputed<string>;
+    public authenticatedUser: KnockoutComputed<string>;
+    public authenticated: KnockoutComputed<boolean>;
+    public banners = ko.observableArray<BannerData>([]);
+    public currentBanner = ko.observable<BannerData>({
         Id: 0,
         Title: "",
         Url: "",
-        Link: ""
+        Link: "",
     });
-    bannerIntervalHandle: number = null;
+    public bannerIntervalHandle: number = null;
+    private intervalHandle: number = null;
 
     constructor() {
         super();
@@ -59,12 +59,12 @@ export class HomePage extends PageBase {
             this.banners(metadataManager.smallBanners);
         });
     }
-    deactivate(pageName?: string) {
+    public deactivate(pageName?: string) {
         super.deactivate(pageName);
         this.stopNews();
         this.stopBanner();
     }
-    activate(pageName?: string) {
+    public activate(pageName?: string) {
         super.activate(pageName);
         this.update();
         this.username(settings.login());
@@ -80,7 +80,7 @@ export class HomePage extends PageBase {
         this.startBanner();
         app.processing(false);
     }
-    async update() {
+    public async update() {
         this.logNews("Updating home page");
         const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
         metadataManager.updateOnline();
@@ -93,11 +93,11 @@ export class HomePage extends PageBase {
             }
         }
     }
-    showGames() {
+    public showGames() {
         app.showPageBlock("lobby");
         app.showSubPage("lobby");
     }
-    login() {
+    public login() {
         const username = this.username();
         const password = this.password();
         if (username === null || username.trim() === "") {
@@ -136,57 +136,19 @@ export class HomePage extends PageBase {
                 app.processing(false);
             });
     }
-    logout() {
+    public logout() {
         // do nothing.
     }
-    forgetPassword() {
+    public forgetPassword() {
         app.showPopup("forgetPassword");
     }
-    startNews() {
-        this.stopNews();
-        let i = 0;
-        this.intervalHandle = timeService.setInterval(() => {
-            i++;
-            if (this.news().length <= i) {
-                this.logNews("Reset iteration counter to 0 because " + i.toString() + " bigger then " + this.news().length);
-                i = 0;
-            }
-
-            this.logNews("Setting news item " + i.toString());
-            this.currentNews(this.news()[i]);
-        }, 20 * 1000);
-    }
-    stopNews() {
-        if (this.intervalHandle !== null) {
-            timeService.clearInterval(this.intervalHandle);
-            this.intervalHandle = null;
-        }
-    }
-    startBanner() {
-        this.stopBanner();
-        let j = 0;
-        this.bannerIntervalHandle = timeService.setInterval(() => {
-            j++;
-            if (this.banners().length <= j) {
-                j = 0;
-            }
-
-            this.currentBanner(this.banners()[j]);
-        }, 4 * 1000);
-    }
-    stopBanner() {
-        if (this.bannerIntervalHandle !== null) {
-            timeService.clearInterval(this.bannerIntervalHandle);
-            this.bannerIntervalHandle = null;
-        }
-    }
-    showAuthPopup() {
+    public showAuthPopup() {
         app.showPopup("auth");
     }
     /**
-    * Performs one click authorization as a guest.
-    */
-    loginAsGuest() {
+     * Performs one click authorization as a guest.
+     */
+    public loginAsGuest() {
         app.processing(true);
         authManager.loginAsGuest().then((status) => {
             app.processing(false);
@@ -201,8 +163,46 @@ export class HomePage extends PageBase {
             }
         });
     }
-    openBanner() {
+    public openBanner() {
         window.open(this.currentBanner().Link, "_system", "location=yes");
+    }
+    private startNews() {
+        this.stopNews();
+        let i = 0;
+        this.intervalHandle = timeService.setInterval(() => {
+            i++;
+            if (this.news().length <= i) {
+                this.logNews(`Reset iteration counter to 0 because ${i} bigger then ${this.news().length}`);
+                i = 0;
+            }
+
+            this.logNews("Setting news item " + i.toString());
+            this.currentNews(this.news()[i]);
+        }, 20 * 1000);
+    }
+    private stopNews() {
+        if (this.intervalHandle !== null) {
+            timeService.clearInterval(this.intervalHandle);
+            this.intervalHandle = null;
+        }
+    }
+    private startBanner() {
+        this.stopBanner();
+        let j = 0;
+        this.bannerIntervalHandle = timeService.setInterval(() => {
+            j++;
+            if (this.banners().length <= j) {
+                j = 0;
+            }
+
+            this.currentBanner(this.banners()[j]);
+        }, 4 * 1000);
+    }
+    private stopBanner() {
+        if (this.bannerIntervalHandle !== null) {
+            timeService.clearInterval(this.bannerIntervalHandle);
+            this.bannerIntervalHandle = null;
+        }
     }
     private logNews(message: string, ...params: any[]) {
         if (debugSettings.home.traceNews) {

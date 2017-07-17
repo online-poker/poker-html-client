@@ -6,8 +6,8 @@ import { settings } from "../settings";
 declare var app: App;
 
 export class SettingsPopup {
-    loading: KnockoutObservable<boolean>;
-    checkedRadio: KnockoutObservable<string>;
+    public loading: KnockoutObservable<boolean>;
+    public checkedRadio: KnockoutObservable<string>;
 
     constructor() {
         this.loading = ko.observable<boolean>(false);
@@ -17,11 +17,11 @@ export class SettingsPopup {
     /**
      * Executed on popup shown
      */
-    shown(): void {
+    public shown(): void {
         // Do nothing
     }
 
-    confirm() {
+    public confirm() {
         settings.cardsVariant(this.checkedRadio());
         settings.saveSettings();
         this.loading = ko.observable<boolean>(false);

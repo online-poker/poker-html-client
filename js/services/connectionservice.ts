@@ -6,28 +6,28 @@ import { debugSettings } from "../debugsettings";
 import { CancelToken } from "./cancelToken";
 
 export class ConnectionService {
-    static stateConversion = {
+    public static stateConversion = {
         0: "connecting",
         1: "connected",
         2: "reconnecting",
-        4: "disconnected"
+        4: "disconnected",
     };
-    isStopped: boolean;
-    isDisconnected: boolean;
-    isConnected: boolean;
-    connectionSlow: Signal;
-    reconnecting: Signal;
-    reconnected: Signal;
-    received: Signal;
-    disconnected: Signal;
-    recoverableError = new signals.Signal();
-    newConnection = new signals.Signal();
-    terminatedConnection = new signals.Signal();
-    attempts = 0;
-    lastAttempt = 0;
-    lastConnection: JQueryDeferred<any> = null;
-    cancelCurrentConnection: (reason: string) => void | null = null;
-    currentConnection: ConnectionWrapper = null;
+    public isStopped: boolean;
+    public isDisconnected: boolean;
+    public isConnected: boolean;
+    public connectionSlow: Signal;
+    public reconnecting: Signal;
+    public reconnected: Signal;
+    public received: Signal;
+    public disconnected: Signal;
+    public recoverableError = new signals.Signal();
+    public newConnection = new signals.Signal();
+    public terminatedConnection = new signals.Signal();
+    public attempts = 0;
+    public lastAttempt = 0;
+    public currentConnection: ConnectionWrapper = null;
+    private lastConnection: JQueryDeferred<any> = null;
+    private cancelCurrentConnection: (reason: string) => void | null = null;
 
     constructor() {
         this.connectionSlow = new signals.Signal();
@@ -36,7 +36,7 @@ export class ConnectionService {
         this.received = new signals.Signal();
         this.disconnected = new signals.Signal();
     }
-    initializeConnection() {
+    public initializeConnection() {
         if (this.currentConnection !== null) {
             return;
         }
@@ -54,7 +54,7 @@ export class ConnectionService {
         $.extend(connection, connection.createHubProxies());
         this.newConnection.dispatch(this.currentConnection);
     }
-    terminateConnection(forceDisconnect = false) {
+    public terminateConnection(forceDisconnect = false) {
         this.isStopped = true;
         this.isDisconnected = true;
         slowInternetService.manualDisconnect = true;
@@ -78,7 +78,7 @@ export class ConnectionService {
         this.currentConnection = null;
         this.terminatedConnection.dispatch(oldConnection);
     }
-    establishConnection(maxAttempts = 3) {
+    public establishConnection(maxAttempts = 3) {
         const attempts = this.attempts++;
         this.lastAttempt = attempts;
         this.cancelConnection();
@@ -86,7 +86,7 @@ export class ConnectionService {
         this.lastConnection = result;
         return result;
     }
-    async establishConnectionAsync(maxAttempts = 3) {
+    public async establishConnectionAsync(maxAttempts = 3) {
         const attempts = this.attempts++;
         this.lastAttempt = attempts;
         this.cancelConnection();
@@ -95,7 +95,7 @@ export class ConnectionService {
         const result = await this.currentConnection.establishConnectionAsync(maxAttempts, cancelToken.token);
         return result;
     }
-    cancelConnection() {
+    public cancelConnection() {
         if (this.lastConnection !== null && this.lastConnection.state() === "pending") {
             this.lastConnection.notify("cancel");
             this.lastConnection = null;
@@ -105,7 +105,7 @@ export class ConnectionService {
             this.cancelCurrentConnection("Requested connection cancel");
         }
     }
-    buildStartConnection() {
+    public buildStartConnection() {
         if (this.currentConnection === null) {
             this.logEvent("No active connection to terminate");
             return null;
@@ -113,7 +113,7 @@ export class ConnectionService {
 
         return this.currentConnection.buildStartConnection();
     }
-    async buildStartConnectionAsync() {
+    public async buildStartConnectionAsync() {
         if (this.currentConnection === null) {
             this.logEvent("No active connection to terminate");
             return null;
@@ -123,6 +123,7 @@ export class ConnectionService {
     }
     private logEvent(message: string, ...params: any[]) {
         if (debugSettings.connection.signalR) {
+            // tslint:disable-next-line:no-console
             console.log(message, params);
         }
     }

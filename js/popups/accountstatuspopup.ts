@@ -11,17 +11,17 @@ declare var apiHost: string;
 declare var app: App;
 
 export class AccountStatusPopup extends PopupBase {
-    loading: KnockoutObservable<boolean>;
-    information: KnockoutObservable<AccountServiceInformation>;
-    loginName: KnockoutObservable<string>;
-    tableName: KnockoutObservable<string>;
-    smallBlind: KnockoutObservable<number>;
-    bigBlind: KnockoutObservable<number>;
-    tableInformation: KnockoutComputed<string>;
-    betInformation: KnockoutComputed<string>;
-    displayCurrencyName: boolean;
-    addMoneyAvailable = ko.observable(false);
-    addMoneyAllowed = ko.observable(false);
+    public loading: KnockoutObservable<boolean>;
+    public information: KnockoutObservable<AccountServiceInformation>;
+    public loginName: KnockoutObservable<string>;
+    public tableName: KnockoutObservable<string>;
+    public smallBlind: KnockoutObservable<number>;
+    public bigBlind: KnockoutObservable<number>;
+    public tableInformation: KnockoutComputed<string>;
+    public betInformation: KnockoutComputed<string>;
+    public displayCurrencyName: boolean;
+    public addMoneyAvailable = ko.observable(false);
+    public addMoneyAllowed = ko.observable(false);
 
     constructor() {
         super();
@@ -41,7 +41,7 @@ export class AccountStatusPopup extends PopupBase {
         }, this);
     }
 
-    shown() {
+    public shown() {
         super.shown();
         this.requestData();
         this.loginName(authManager.login());
@@ -53,7 +53,7 @@ export class AccountStatusPopup extends PopupBase {
         this.addMoneyAvailable(tableView.tournament() == null && tableView.opened());
         this.addMoneyAllowed(tableView.couldAddChips());
     }
-    addMoney() {
+    public addMoney() {
         if (!this.addMoneyAllowed()) {
             return;
         }

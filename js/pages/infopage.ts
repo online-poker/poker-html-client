@@ -1,5 +1,4 @@
 ﻿import { App } from "../app";
-import * as authManager from "../authmanager";
 import { keyboardActivationService } from "../services";
 import { PageBase } from "../ui/pagebase";
 
@@ -9,42 +8,42 @@ export class InfoPage extends PageBase {
     constructor() {
         super();
     }
-    backToLobby() {
+    public backToLobby() {
         keyboardActivationService.forceHideKeyboard();
         app.lobbyPageBlock.showLobby();
     }
-    back() {
+    public back() {
         keyboardActivationService.forceHideKeyboard();
         app.infoPageBlock.showPrimary();
     }
-    showLicenseAgreement() {
+    public showLicenseAgreement() {
         app.infoPageBlock.showLicenseAgreement();
     }
-    showMobileSystemSupport() {
+    public showMobileSystemSupport() {
         app.infoPageBlock.showMobileSystemSupport();
     }
-    showAccountBlock() {
+    public showAccountBlock() {
         app.infoPageBlock.showAccountBlock();
     }
-    showPrivacyPolicy() {
+    public showPrivacyPolicy() {
         app.infoPageBlock.showPrivacyPolicy();
     }
-    showSupport() {
+    public showSupport() {
         app.infoPageBlock.showSupport();
     }
-    showContactUs() {
+    public showContactUs() {
         app.infoPageBlock.showContactUs();
     }
-    showHowToPlay() {
+    public showHowToPlay() {
         app.infoPageBlock.showHowToPlay();
     }
-    showChatRules() {
+    public showChatRules() {
         app.infoPageBlock.showChatRules();
     }
-    showTerminology() {
+    public showTerminology() {
         app.infoPageBlock.showTerminology();
     }
-    showFaq() {
+    public showFaq() {
         app.infoPageBlock.showFaq();
     }
 }

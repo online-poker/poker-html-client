@@ -4,16 +4,16 @@ declare var apiHost: string;
 declare var app: App;
 
 export class RatingPage implements Page {
-    ratings = ko.observableArray<UserRating>();
-    loading = ko.observable(false);
+    public ratings = ko.observableArray<UserRating>();
+    public loading = ko.observable(false);
 
     constructor() {
         App.addTabBarItemMapping("more", "rating");
     }
-    deactivate() {
+    public deactivate() {
         // Do nothing.
     }
-    async activate() {
+    public async activate() {
         const self = this;
         this.loading(true);
         const api = new OnlinePoker.Commanding.API.Account(apiHost);
@@ -36,7 +36,7 @@ export class RatingPage implements Page {
             self.loading(false);
         }
     }
-    back() {
+    public back() {
         app.lobbyPageBlock.showLobby();
     }
 }

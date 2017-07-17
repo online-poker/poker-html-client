@@ -2,14 +2,13 @@ declare var apiHost: string;
 
 import * as ko from "knockout";
 import { App } from "../app";
-import * as metadataManager from "../metadatamanager";
 import { tableManager } from "../table/tablemanager";
 import {
     connectionService,
     reloadManager,
     deviceEvents,
     soundManager,
-    orientationService
+    orientationService,
 } from "../services";
 import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
@@ -23,21 +22,21 @@ import * as commandManager from "../commandmanager";
 declare var app: App;
 
 export class SeatPage extends PageBase {
-    currentTable: KnockoutComputed<TableView>;
-    selectedTables: KnockoutComputed<TableView[]>;
-    currentIndex: KnockoutComputed<number>;
-    currentIndex1: KnockoutComputed<number>;
-    slideWidth: KnockoutObservable<number>;
-    loading: KnockoutComputed<boolean>;
-    activeHandler: SignalBinding;
-    resignHandler: SignalBinding;
-    slowConnectionHandler: SignalBinding;
-    reconnectedHandler: SignalBinding;
-    disconnectedHandler: SignalBinding;
-    isConnectionSlow: KnockoutObservable<boolean>;
-    lastConnecton: string;
-    frozen: KnockoutComputed<boolean>;
-    opened: KnockoutComputed<boolean>;
+    public currentTable: KnockoutComputed<TableView>;
+    public selectedTables: KnockoutComputed<TableView[]>;
+    public currentIndex: KnockoutComputed<number>;
+    public currentIndex1: KnockoutComputed<number>;
+    public slideWidth: KnockoutObservable<number>;
+    public loading: KnockoutComputed<boolean>;
+    public activeHandler: SignalBinding;
+    public resignHandler: SignalBinding;
+    public slowConnectionHandler: SignalBinding;
+    public reconnectedHandler: SignalBinding;
+    public disconnectedHandler: SignalBinding;
+    public isConnectionSlow: KnockoutObservable<boolean>;
+    public lastConnecton: string;
+    public frozen: KnockoutComputed<boolean>;
+    public opened: KnockoutComputed<boolean>;
     public splashShown = ko.observable(false);
     public tablesShown = ko.observable(true);
     constructor() {
@@ -53,7 +52,7 @@ export class SeatPage extends PageBase {
             write: function (value) {
                 tableManager.currentIndex(value);
                 self.log("Switched to table with index " + value);
-            }
+            },
         });
         this.currentIndex1 = ko.computed<number>({
             read: function () {
@@ -62,7 +61,7 @@ export class SeatPage extends PageBase {
             write: function (value) {
                 self.currentIndex(value - 1);
             },
-            owner: this
+            owner: this,
         });
         this.currentTable = ko.computed(function () {
             const tables = tableManager.tables();
@@ -118,7 +117,7 @@ export class SeatPage extends PageBase {
             }
         });
     }
-    calculateLandscapeWidth() {
+    public calculateLandscapeWidth() {
         // When running not within browser, skip calculations.
         if (typeof window === "undefined") {
             return;
@@ -147,16 +146,16 @@ export class SeatPage extends PageBase {
 
         this.slideWidth(viewportLandscapeWidth);
     }
-    recordConnection() {
+    public recordConnection() {
         this.lastConnecton = navigator.connection.type;
     }
-    setConnecting() {
+    public setConnecting() {
         if (this.lastConnecton !== navigator.connection.type) {
             this.lastConnecton = navigator.connection.type;
             tableManager.tables().forEach((table) => table.connecting(true));
         }
     }
-    deactivate() {
+    public deactivate() {
         super.deactivate();
         if (this.activeHandler != null) {
             this.activeHandler.detach();
@@ -196,7 +195,7 @@ export class SeatPage extends PageBase {
             orientationService.setOrientation("portrait");
         }
     }
-    activate() {
+    public activate() {
         super.activate();
         this.activeHandler = deviceEvents.active.add(this.setConnecting, this);
         this.resignHandler = deviceEvents.resignActive.add(this.recordConnection, this);
@@ -235,23 +234,23 @@ export class SeatPage extends PageBase {
             }
         });
     }
-    canActivate(): boolean {
+    public canActivate(): boolean {
         return tableManager.tables().length !== 0;
     }
-    switchTable(index) {
+    public switchTable(index) {
         this.currentIndex(index());
     }
-    prevTable() {
+    public prevTable() {
         tableManager.prevTable();
     }
-    nextTable() {
+    public nextTable() {
         tableManager.nextTable();
     }
-    addTable() {
+    public addTable() {
         app.lobbyPageBlock.showLobby();
         this.deactivate();
     }
-    toLobby() {
+    public toLobby() {
         let tableView = this.currentTable();
         if (tableView.myPlayer() != null) {
             app.lobbyPageBlock.showLobby();
@@ -260,7 +259,7 @@ export class SeatPage extends PageBase {
             this.leave();
         }
     }
-    leave() {
+    public leave() {
         let self = this;
         // Unsubscribe from table notifications.
         let tableView = this.currentTable();
@@ -274,13 +273,13 @@ export class SeatPage extends PageBase {
         let leaved = <JQueryDeferred<() => void>>commandManager.executeCommand("app.leaveTable", [tableView.tableId]);
         leaved.then(removeCurrentTable);
     }
-    showMenu() {
+    public showMenu() {
         app.executeCommand("popup.tableMenu");
     }
     /**
-    * Removes tournament tables which are finished.
-    */
-    private removeFinishedTournamentTable() {
+     * Removes tournament tables which are finished.
+     */
+    public removeFinishedTournamentTable() {
         let finishedTournamentTables = tableManager.tables().filter((_) => {
             let tournament = _.tournament();
             if (tournament == null) {

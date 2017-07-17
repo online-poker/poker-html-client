@@ -14,12 +14,12 @@ import { _ } from "../languagemanager";
 declare var app: App;
 
 export class TournamentsListPage extends PageBase {
-    tournamentsCaption: KnockoutComputed<string>;
-    tournaments: KnockoutObservableArray<LobbyTournamentItem>;
-    loading: KnockoutObservable<boolean>;
-    options: TournamentOptions;
-    tournamentType: number;
-    slider: Slider;
+    public tournamentsCaption: KnockoutComputed<string>;
+    public tournaments: KnockoutObservableArray<LobbyTournamentItem>;
+    public loading: KnockoutObservable<boolean>;
+    public options: TournamentOptions;
+    public tournamentType: number;
+    public slider: Slider;
 
     constructor() {
         super();
@@ -35,20 +35,20 @@ export class TournamentsListPage extends PageBase {
         this.slider.addOption(_("lobby.sitAndGo"), "sng", null);
         this.slider.selectPrev();
     }
-    deactivate() {
+    public deactivate() {
         super.deactivate();
     }
-    activate() {
+    public activate() {
         super.activate();
         this.refreshTournaments(false);
 
         reloadManager.setReloadCallback(() => this.refreshTournaments(true));
     }
-    setOptions(tournamentType: number, options: TournamentOptions): void {
+    public setOptions(tournamentType: number, options: TournamentOptions): void {
         this.tournamentType = tournamentType;
         this.options = options;
     }
-    async refreshTournaments(force: boolean) {
+    public async refreshTournaments(force: boolean) {
         if (this.loading() && !force) {
             return;
         }
@@ -74,10 +74,10 @@ export class TournamentsListPage extends PageBase {
             self.tournaments(data.Data);
         }
     }
-    back() {
+    public back() {
         app.lobbyPageBlock.showLobby();
     }
-    selectTournament(tournament) {
+    public selectTournament(tournament) {
         app.lobbyPageBlock.selectTournament(tournament);
     }
     private log(message: string, ...params: any[]) {

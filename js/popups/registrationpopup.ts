@@ -12,22 +12,22 @@ declare var apiHost: string;
 declare var app: App;
 
 export class RegistrationPopup extends PopupBase implements KnockoutValidationGroup {
-    login: KnockoutObservable<string>;
-    email: KnockoutObservable<string>;
-    firstName: KnockoutObservable<string>;
-    lastName: KnockoutObservable<string>;
-    patronymicName: KnockoutObservable<string>;
-    city: KnockoutObservable<string>;
-    password: KnockoutObservable<string>;
-    confirmPassword: KnockoutObservable<string>;
-    country: KnockoutObservable<number>;
-    ageValid: KnockoutObservable<boolean>;
-    agreeEula: KnockoutObservable<boolean>;
-    imageUrl: KnockoutObservable<string>;
-    imageFile = ko.observable<string>();
-    errors: KnockoutValidationErrors;
-    isValid: () => boolean;
-    loading: KnockoutObservable<boolean>;
+    public login: KnockoutObservable<string>;
+    public email: KnockoutObservable<string>;
+    public firstName: KnockoutObservable<string>;
+    public lastName: KnockoutObservable<string>;
+    public patronymicName: KnockoutObservable<string>;
+    public city: KnockoutObservable<string>;
+    public password: KnockoutObservable<string>;
+    public confirmPassword: KnockoutObservable<string>;
+    public country: KnockoutObservable<number>;
+    public ageValid: KnockoutObservable<boolean>;
+    public agreeEula: KnockoutObservable<boolean>;
+    public imageUrl: KnockoutObservable<string>;
+    public imageFile = ko.observable<string>();
+    public errors: KnockoutValidationErrors;
+    public isValid: () => boolean;
+    public loading: KnockoutObservable<boolean>;
 
     constructor() {
         super();
@@ -47,7 +47,7 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
 
         this.errors = ko.validation.group(this);
     }
-    shown(args: any[]= []): void {
+    public shown(args: any[]= []): void {
         if (args.length === 1 && args[0] === true) {
             super.shown(args);
             return;
@@ -68,9 +68,9 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
         super.shown(args);
     }
     /**
-    * Selects avatar from list of predefined avatars
-    */
-    selectPicture() {
+     * Selects avatar from list of predefined avatars
+     */
+    public selectPicture() {
         app.showPopup("selectAvatar", metadataManager.avatars);
         app.selectAvatarPopup.selected.addOnce((avatarUrl) => {
             if (avatarUrl != null) {
@@ -81,9 +81,9 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
         }, this, 0);
     }
     /**
-    * Selects avatar from the gallery.
-    */
-    uploadPicture() {
+     * Selects avatar from the gallery.
+     */
+    public uploadPicture() {
         const captureSuccess = (imageData: string) => {
             app.suppressResume = true;
             this.imageFile(imageData);
@@ -96,12 +96,12 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
         };
 
         navigator.camera.getPicture(captureSuccess, captureError, {
+            destinationType: Camera.DestinationType.DATA_URL,
             quality: 75,
             sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-            destinationType: Camera.DestinationType.DATA_URL
         });
     }
-    confirm() {
+    public confirm() {
         const self = this;
         const isValid = this.isValid();
         if (!isValid) {
@@ -113,8 +113,8 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
         this.loading(true);
         const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
         const additionalProperties = {
+            ImageDataBase64: this.imageFile(),
             ImageUrl: this.imageUrl(),
-            ImageDataBase64: this.imageFile()
         };
         accountApi.Register(this.login(), this.email(), this.password(), this.firstName(), this.lastName(),
             this.patronymicName(), this.country(), this.city(), additionalProperties, [], function (data) {
@@ -146,8 +146,8 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
     }
 
     /**
-    * Move screen to show error field.
-    */
+     * Move screen to show error field.
+     */
     private moveToError() {
         $(".popup." + app.currentPopup + " .popup-container")[0].scrollTop = 0;
     }

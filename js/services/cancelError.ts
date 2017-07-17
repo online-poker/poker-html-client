@@ -4,7 +4,7 @@ export class CancelError extends Error {
         this.name = "CancelError";
     }
 
-    toString() {
+    public toString() {
         return "Cancel" + (this.message ? ": " + this.message : "");
     }
 }

@@ -3,7 +3,7 @@
 export class PushService {
     private hub: WindowsAzure.Messaging.NotificationHubInterface;
 
-    register() {
+    public register() {
         /* tslint:disable:no-string-literal */
         if (window["WindowsAzure"] == null) {
             return;
@@ -13,13 +13,16 @@ export class PushService {
         const hub = this.getHub();
         hub.registerApplicationAsync().then(
             function (result) {
+                // tslint:disable-next-line:no-console
                 console.log("Registration successful: " + result.registrationId);
             },
             function (error) {
+                // tslint:disable-next-line:no-console
                 console.log("Registration failed: " + error);
             });
 
         hub.onPushNotificationReceived = function (msg) {
+            // tslint:disable-next-line:no-console
             console.log("onPushNotificationReceived: ", msg);
         };
     }

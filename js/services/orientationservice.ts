@@ -1,10 +1,10 @@
 ﻿/// <reference path="../typings/cordova.d.ts" />
 
 export class OrientationService {
-    lastOrientation: string = null;
-    disableRotation = false;
+    private lastOrientation: string = null;
+    private disableRotation = false;
 
-    setOrientation(orientation: string) {
+    public setOrientation(orientation: string) {
         if (this.isScreenOrientationSupported() && !this.disableRotation) {
             ScreenOrientation.setOrientation(orientation);
         }
@@ -12,27 +12,27 @@ export class OrientationService {
         this.lastOrientation = orientation;
     }
 
-    suppressRotation() {
+    public suppressRotation() {
         this.disableRotation = true;
     }
 
-    enableRotation() {
+    public enableRotation() {
         this.disableRotation = false;
     }
 
-    lock() {
+    public lock() {
         if (this.isScreenOrientationSupported() && !this.disableRotation) {
             ScreenOrientation.lock();
         }
     }
 
-    unlock() {
+    public unlock() {
         if (this.isScreenOrientationSupported() && !this.disableRotation) {
             ScreenOrientation.unlock();
         }
     }
 
-    setLastOrientation() {
+    public setLastOrientation() {
         this.setOrientation(this.lastOrientation);
     }
 

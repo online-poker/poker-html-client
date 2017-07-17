@@ -2,18 +2,18 @@
 import { PopupBase } from "../ui/popupbase";
 
 export class NewsPopup extends PopupBase {
-    link = ko.observable<string>();
-    url = ko.observable<string>();
-    title = ko.observable<string>();
-    loading = ko.observable<boolean>(false);
+    public link = ko.observable<string>();
+    public url = ko.observable<string>();
+    public title = ko.observable<string>();
+    public loading = ko.observable<boolean>(false);
 
-    setData(data: BannerData) {
+    public setData(data: BannerData) {
         this.link(data.Link);
         this.url(data.Url);
         this.title(data.Title);
     }
 
-    openBanner() {
+    public openBanner() {
         window.open(this.link(), "_system", "location=yes");
     }
 }

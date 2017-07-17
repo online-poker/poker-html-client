@@ -1,6 +1,5 @@
 ﻿/// <reference types="jquery" />
 /// <reference path="../typings/cordova.d.ts" />
-/// <reference path="../app.ts" />
 /* tslint:disable:no-string-literal */
 
 import * as timeService from "../timeservice";
@@ -10,12 +9,12 @@ import { App } from "../app";
 declare var app: App;
 
 export class KeyboardActivationService {
-    static keyboardShowModifier = "keyboard-shown";
-    lastPage: string = null;
-    lastPageBlock: string = null;
-    lastPopup: string = null;
+    public static keyboardShowModifier = "keyboard-shown";
+    private lastPage: string = null;
+    private lastPageBlock: string = null;
+    private lastPopup: string = null;
 
-    setup() {
+    public setup() {
         if (window["Keyboard"]) {
             let supported = true;
             if (window["device"]) {
@@ -63,20 +62,29 @@ export class KeyboardActivationService {
             }
         }
     }
-    applyStyles() {
+    public forceHideKeyboard() {
+        const activeElement = <HTMLElement>document.activeElement;
+        if (activeElement !== null) {
+            activeElement.blur();
+        }
+
+        this.removeStyles();
+    }
+    private applyStyles() {
+        const showModifierClassName = KeyboardActivationService.keyboardShowModifier;
         if (app.currentPopup === null) {
-            console.log("Apply kbd styles to current page");
-            $("." + uiManager.currentPage + ".sub-page").addClass(KeyboardActivationService.keyboardShowModifier);
-            $("." + uiManager.currentPageBlock + ".page-block").addClass(KeyboardActivationService.keyboardShowModifier);
+            this.log("Apply kbd styles to current page");
+            $("." + uiManager.currentPage + ".sub-page").addClass(showModifierClassName);
+            $("." + uiManager.currentPageBlock + ".page-block").addClass(showModifierClassName);
             this.lastPage = uiManager.currentPage;
             this.lastPageBlock = uiManager.currentPageBlock;
         } else {
-            console.log("Apply kbd styles to popup " + app.currentPopup);
-            $("." + app.currentPopup + ".popup").addClass(KeyboardActivationService.keyboardShowModifier);
+            this.log("Apply kbd styles to popup " + app.currentPopup);
+            $("." + app.currentPopup + ".popup").addClass(showModifierClassName);
             this.lastPopup = app.currentPopup;
         }
     }
-    removeStyles() {
+    private removeStyles() {
         if (this.lastPage !== null) {
             $("." + this.lastPage + ".sub-page").removeClass(KeyboardActivationService.keyboardShowModifier);
             this.lastPage = null;
@@ -90,12 +98,8 @@ export class KeyboardActivationService {
             $("." + this.lastPopup + ".popup").removeClass(KeyboardActivationService.keyboardShowModifier);
         }
     }
-    forceHideKeyboard() {
-        const activeElement = <HTMLElement>document.activeElement;
-        if (activeElement !== null) {
-            activeElement.blur();
-        }
-
-        this.removeStyles();
+    private log(format: string) {
+        // tslint:disable-next-line:no-console
+        console.log(format);
     }
 }

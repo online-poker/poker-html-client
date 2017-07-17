@@ -7,9 +7,9 @@ import { _ } from "../languagemanager";
 declare var app: App;
 
 export class SettingsPage implements Page {
-    online: KnockoutObservable<string>;
-    registered: KnockoutObservable<string>;
-    captionLabel: KnockoutComputed<string>;
+    public online: KnockoutObservable<string>;
+    public registered: KnockoutObservable<string>;
+    public captionLabel: KnockoutComputed<string>;
 
     constructor() {
         App.addTabBarItemMapping("more", "settings");
@@ -22,13 +22,13 @@ export class SettingsPage implements Page {
         }, this);
     }
 
-    deactivate() {
+    public deactivate() {
         // Do nothing.
     }
-    activate() {
+    public activate() {
         this.update();
     }
-    update() {
+    public update() {
         // Do nothing.
     }
 }

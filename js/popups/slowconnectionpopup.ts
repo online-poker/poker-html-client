@@ -9,13 +9,13 @@ import * as runtimeSettings from "../table/runtimesettings";
 import { _ } from "../languagemanager";
 
 export class SlowConnectionPopup extends PopupBase {
-    allowRetry: KnockoutObservable<boolean>;
-    caption: KnockoutObservable<string>;
-    message: KnockoutObservable<string>;
-    index: KnockoutObservable<number>;
-    retryCaption: KnockoutObservable<string>;
-    onretry: () => void;
-    handle: number = null;
+    public allowRetry: KnockoutObservable<boolean>;
+    public caption: KnockoutObservable<string>;
+    public message: KnockoutObservable<string>;
+    public index: KnockoutObservable<number>;
+    public retryCaption: KnockoutObservable<string>;
+    public onretry: () => void;
+    public handle: number = null;
 
     constructor() {
         super();
@@ -29,16 +29,16 @@ export class SlowConnectionPopup extends PopupBase {
         });
         this.allowRetry = ko.observable(false);
     }
-    shown(): void {
+    public shown(): void {
         super.shown();
         this.startUpdatingCaption();
         this.reset();
     }
-    close(): void {
+    public close(): void {
         this.stopUpdatingCaption();
         super.close();
     }
-    startUpdatingCaption() {
+    public startUpdatingCaption() {
         if (this.handle !== null) {
             this.stopUpdatingCaption();
         }
@@ -49,41 +49,41 @@ export class SlowConnectionPopup extends PopupBase {
             }
         }, 300);
     }
-    stopUpdatingCaption() {
+    public stopUpdatingCaption() {
         timeService.clearInterval(this.handle);
         this.handle = null;
     }
-    reset() {
+    public reset() {
         this.index();
         this.allowRetry(false);
         this.message(_("connection.slow"));
         // this.retryCaption(_("connection.retry"));
     }
 
-    reconnectFailed() {
+    public reconnectFailed() {
         this.allowRetry(true);
         this.message(_("connection.reconnectfailed"));
         this.retryCaption(_("connection.retry"));
     }
 
-    duplicatedConnection() {
+    public duplicatedConnection() {
         this.allowRetry(true);
         this.message(_("connection.duplicateconnectiondetected"));
         this.retryCaption(_("connection.reestablishConnection"));
     }
 
-    noConnection() {
+    public noConnection() {
         this.allowRetry(false);
         this.message(_("connection.noconnection"));
     }
 
-    connectionPresent() {
+    public connectionPresent() {
         this.allowRetry(true);
         this.message(_("connection.connectionpresent"));
         this.retryCaption(_("connection.reconnect"));
     }
 
-    retry() {
+    public retry() {
         this.reset();
         if (this.onretry !== null) {
             this.onretry();

@@ -1,13 +1,12 @@
-﻿/// <reference path="../platform.d.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import * as runtimeSettings from "../table/runtimesettings";
 import { wait } from "./timedeferred";
 
 export class SoundManager {
-    enabled = ko.observable(false);
-    tableSoundsEnabled = ko.observable(false);
-    playFold() {
+    public enabled = ko.observable(false);
+    public tableSoundsEnabled = ko.observable(false);
+
+    public playFold() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
@@ -15,7 +14,8 @@ export class SoundManager {
         this.quickPlay("snd/fold.mp3");
         this.quickPlay("snd/fold_human.mp3");
     }
-    async playCheck() {
+
+    public async playCheck() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
@@ -30,7 +30,7 @@ export class SoundManager {
             console.log(e);
         }
     }
-    playCall() {
+    public playCall() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
@@ -38,7 +38,7 @@ export class SoundManager {
         this.quickPlay("snd/call.mp3");
         this.quickPlay("snd/call_human.mp3");
     }
-    playBet() {
+    public playBet() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
@@ -46,7 +46,7 @@ export class SoundManager {
         this.quickPlay("snd/bet.mp3");
         this.quickPlay("snd/bet_human.mp3");
     }
-    playRaise() {
+    public playRaise() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
@@ -54,7 +54,7 @@ export class SoundManager {
         this.quickPlay("snd/raise.mp3");
         this.quickPlay("snd/raise_human.mp3");
     }
-    playAllIn() {
+    public playAllIn() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
@@ -62,63 +62,63 @@ export class SoundManager {
         this.quickPlay("snd/allin.mp3");
         this.quickPlay("snd/allin_human.mp3");
     }
-    playAllInCondition() {
+    public playAllInCondition() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
 
         this.quickPlay("snd/allin.mp3");
     }
-    playWinChips() {
+    public playWinChips() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
 
         this.quickPlay("snd/winchips.mp3");
     }
-    playTurnReminder() {
+    public playTurnReminder() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
 
         this.quickPlay("snd/turnreminder.mp3");
     }
-    playTurnReminderForAll() {
+    public playTurnReminderForAll() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
 
         this.quickPlay("snd/turnreminder.mp3");
     }
-    playDealCards() {
+    public playDealCards() {
         if (!this.enabled() || !this.tableSoundsEnabled() || !runtimeSettings.sounds.dealCardsEnabled) {
             return;
         }
 
         this.quickPlay("snd/shuffle.mp3");
     }
-    playFlop() {
+    public playFlop() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
 
         this.quickPlay("snd/flip_b.mp3");
     }
-    playFlopCards() {
+    public playFlopCards() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
 
         this.quickPlay("snd/flop.mp3");
     }
-    playTurn() {
+    public playTurn() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
 
         this.quickPlay("snd/turn.mp3");
     }
-    playRiver() {
+    public playRiver() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }

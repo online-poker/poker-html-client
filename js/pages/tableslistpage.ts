@@ -11,9 +11,9 @@ declare var apiHost: string;
 declare var app: App;
 
 export class TablesListPage extends PageBase {
-    tablesCaption: KnockoutComputed<string>;
-    tables: KnockoutObservableArray<any>;
-    loading: KnockoutObservable<boolean>;
+    public tablesCaption: KnockoutComputed<string>;
+    public tables: KnockoutObservableArray<any>;
+    public loading: KnockoutObservable<boolean>;
 
     constructor() {
         super();
@@ -28,16 +28,16 @@ export class TablesListPage extends PageBase {
             this.updateOpenedTables();
         });
     }
-    deactivate() {
+    public deactivate() {
         super.deactivate();
     }
-    activate() {
+    public activate() {
         super.activate();
         this.refreshTables(false);
 
         reloadManager.setReloadCallback(() => this.refreshTables(true));
     }
-    async refreshTables(force: boolean) {
+    public async refreshTables(force: boolean) {
         if (this.loading() && !force) {
             return;
         }
@@ -70,7 +70,7 @@ export class TablesListPage extends PageBase {
             self.tables(tables);
         }
     }
-    updateOpenedTables() {
+    public updateOpenedTables() {
         const tables = this.tables();
         tables.forEach(function (item) {
             item.IsOpened = tableManager.isOpened(item.TableId);
@@ -78,10 +78,10 @@ export class TablesListPage extends PageBase {
         this.tables([]);
         this.tables(tables);
     }
-    back() {
+    public back() {
         app.lobbyPageBlock.showLobby();
     }
-    selectTable(table: GameTableModel) {
+    public selectTable(table: GameTableModel) {
         app.executeCommand("app.selectTable", [table]);
         app.executeCommand("page.tables");
     }

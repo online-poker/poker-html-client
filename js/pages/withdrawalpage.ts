@@ -1,18 +1,17 @@
 ﻿declare var apiHost: string;
 
 import { App } from "../app";
-import * as metadataManager from "../metadatamanager";
 import * as authManager from "../authmanager";
 import { PageBase } from "../ui/pagebase";
 
 declare var app: App;
 
 export class WithdrawalPage extends PageBase {
-    player: KnockoutObservable<any>;
-    withdrawalMethods: KnockoutObservableArray<any>;
-    withdrawalMethod: KnockoutObservable<number>;
-    withdrawalAmount: KnockoutObservable<number>;
-    accountNumber: KnockoutObservable<number>;
+    public player: KnockoutObservable<any>;
+    public withdrawalMethods: KnockoutObservableArray<any>;
+    public withdrawalMethod: KnockoutObservable<number>;
+    public withdrawalAmount: KnockoutObservable<number>;
+    public accountNumber: KnockoutObservable<number>;
 
     constructor() {
         super();
@@ -33,27 +32,27 @@ export class WithdrawalPage extends PageBase {
                 const personalAccountData = data.Data;
                 self.player({
                     login: authManager.login(),
-                    amount: personalAccountData.RealMoney
+                    amount: personalAccountData.RealMoney,
                 });
             } else {
                 self.player({
                     login: "",
-                    amount: null
+                    amount: null,
                 });
             }
         });
         this.player = ko.observable({
             login: "",
-            amount: null
+            amount: null,
         });
     }
-    activate() {
+    public activate() {
         super.activate();
         if (!authManager.authenticated()) {
             app.showPopup("auth");
         }
     }
-    back() {
+    public back() {
         if (!PageBlock.useDoubleView) {
             app.cashierPageBlock.showPrimary();
         } else {

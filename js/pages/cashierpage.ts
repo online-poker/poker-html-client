@@ -2,7 +2,6 @@ declare var apiHost: string;
 
 import * as ko from "knockout";
 import { App } from "../app";
-import * as metadataManager from "../metadatamanager";
 import * as authManager from "../authmanager";
 import { PageBase } from "../ui/pagebase";
 import { accountService, reloadManager, websiteService } from "../services";
@@ -10,10 +9,10 @@ import { accountService, reloadManager, websiteService } from "../services";
 declare var app: App;
 
 class CashierPage extends PageBase {
-    cashierCaption: KnockoutObservable<string>;
-    player: KnockoutObservable<AccountServiceInformation>;
-    requireAuthentication: boolean = true;
-    loading: KnockoutObservable<boolean>;
+    public cashierCaption: KnockoutObservable<string>;
+    public player: KnockoutObservable<AccountServiceInformation>;
+    public requireAuthentication: boolean = true;
+    public loading: KnockoutObservable<boolean>;
 
     constructor() {
         super();
@@ -27,17 +26,17 @@ class CashierPage extends PageBase {
                 self.player({
                     login: "",
                     accounts: <AccountInformation[]>[],
-                    lastTransaction: null
+                    lastTransaction: null,
                 });
             }
         });
         this.player = ko.observable({
             login: "",
             accounts: <AccountInformation[]>[],
-            lastTransaction: null
+            lastTransaction: null,
         });
     }
-    activate() {
+    public activate() {
         super.activate();
         const self = this;
         if (!authManager.authenticated()) {
@@ -48,33 +47,29 @@ class CashierPage extends PageBase {
 
         reloadManager.setReloadCallback(() => self.updateInformation());
     }
-    async updateInformation() {
-        const self = this;
-        const realMoneySupported = true;
-        const gameMoneySupported = false;
-        const api = new OnlinePoker.Commanding.API.Account(apiHost);
-        self.loading(true);
+    public async updateInformation() {
+        this.loading(true);
         try {
             const result = await accountService.getAccount();
-            self.loading(false);
-            self.player(result);
+            this.loading(false);
+            this.player(result);
         } catch (e) {
             app.closePopup();
         }
     }
-    back() {
+    public back() {
         app.lobbyPageBlock.showLobby();
     }
-    withdrawal() {
+    public withdrawal() {
         websiteService.withdrawal();
     }
-    profile() {
+    public profile() {
         websiteService.profile();
     }
-    showHistory() {
+    public showHistory() {
         app.cashierPageBlock.showSecondary("operationsHistory");
     }
-    deposit() {
+    public deposit() {
         websiteService.madeDeposit();
     }
 }

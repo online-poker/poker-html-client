@@ -7,18 +7,30 @@ import { App } from "../app";
 declare var app: App;
 
 export class UIManager {
-    currentPageContainer: string;
-    effectivePageContainer: string;
-    currentPage: string;
-    currentPageBlock: string;
-    subPageHiding = new signals.Signal();
-    subPageShowing = new signals.Signal();
-    pageBlockHiding = new signals.Signal();
-    pageBlockHidden = new signals.Signal();
-    pageBlockShowing = new signals.Signal();
-    pageBlockShown = new signals.Signal();
-    popupClosed = new signals.Signal();
-    static pageMappings: string[] = [];
+    public static getTabBarItemForPage(pageName: string): string {
+        if (UIManager.pageMappings[pageName]) {
+            return UIManager.pageMappings[pageName];
+        }
+
+        return pageName;
+    }
+    public static addTabBarItemMapping(tabBarItem: string, pageName: string) {
+        UIManager.pageMappings[pageName] = tabBarItem;
+    }
+
+    private static pageMappings: string[] = [];
+
+    public currentPageContainer: string;
+    public effectivePageContainer: string;
+    public currentPage: string;
+    public currentPageBlock: string;
+    public subPageHiding = new signals.Signal();
+    public subPageShowing = new signals.Signal();
+    public pageBlockHiding = new signals.Signal();
+    public pageBlockHidden = new signals.Signal();
+    public pageBlockShowing = new signals.Signal();
+    public pageBlockShown = new signals.Signal();
+    public popupClosed = new signals.Signal();
 
     constructor() {
         this.currentPageContainer = null;
@@ -27,7 +39,7 @@ export class UIManager {
         this.currentPageBlock = null;
     }
 
-    showPageBlock(pageBlockName: string) {
+    public showPageBlock(pageBlockName: string) {
         if (pageBlockName === this.currentPageBlock) {
             this.pageBlockHiding.dispatch(this.currentPageBlock);
             this.pageBlockHidden.dispatch(this.currentPageBlock);
@@ -60,7 +72,7 @@ export class UIManager {
 
         this.pageBlockShown.dispatch(this.currentPageBlock);
     }
-    showPage(pageName: string) {
+    public showPage(pageName: string) {
         this.logPage("Showing page '" + pageName + "'");
         if (typeof window !== "undefined") {
             if (this.currentPageContainer !== null) {
@@ -78,7 +90,7 @@ export class UIManager {
             $(".page .sub-page.selector").css("display", "none");
         }
     }
-    showSubPage(pageName: string) {
+    public showSubPage(pageName: string) {
         const nextPageObject = this.getSubPage(pageName);
         if (nextPageObject !== null) {
             if (nextPageObject.canActivate !== undefined) {
@@ -99,7 +111,7 @@ export class UIManager {
             $(".page .sub-page.selector").css("display", "none");
         }
     }
-    deactivateSubPage(pageName: string) {
+    public deactivateSubPage(pageName: string) {
         const pageObject = this.getSubPage(pageName);
         if (pageObject != null) {
             pageObject.deactivate();
@@ -108,7 +120,7 @@ export class UIManager {
         this.subPageHiding.dispatch(pageName);
         $(".page .sub-page." + pageName).css("display", "none");
     }
-    activateSubPage(pageName: string) {
+    public activateSubPage(pageName: string) {
         const nextPageObject = this.getSubPage(pageName);
         if (nextPageObject != null) {
             nextPageObject.activate();
@@ -119,10 +131,10 @@ export class UIManager {
     }
 
     /**
-    * Gets page block by it's name
-    * @param pageBlockName String Name of the page block to get.
-    */
-    getPageBlock(pageBlockName: string) {
+     * Gets page block by it's name
+     * @param pageBlockName String Name of the page block to get.
+     */
+    public getPageBlock(pageBlockName: string) {
         if (!app.hasOwnProperty(pageBlockName + "PageBlock")) {
             return null;
         }
@@ -131,29 +143,20 @@ export class UIManager {
     }
 
     /**
-    * Gets page by it's name
-    * @param subPageName String Name of the sub page to get.
-    */
-    getSubPage(subPageName: string) {
+     * Gets page by it's name
+     * @param subPageName String Name of the sub page to get.
+     */
+    public getSubPage(subPageName: string) {
         if (!app.hasOwnProperty(subPageName + "Page")) {
             return null;
         }
 
         return <Page>app[subPageName + "Page"];
     }
-    static getTabBarItemForPage(pageName: string): string {
-        if (UIManager.pageMappings[pageName]) {
-            return UIManager.pageMappings[pageName];
-        }
-
-        return pageName;
-    }
-    static addTabBarItemMapping(tabBarItem: string, pageName: string) {
-        UIManager.pageMappings[pageName] = tabBarItem;
-    }
 
     private logPage(message: string, ...params: any[]) {
         if (debugSettings.ui.tracePages) {
+            // tslint:disable-next-line:no-console
             console.log(message, params);
         }
     }

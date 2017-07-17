@@ -3,6 +3,21 @@ import { CancelError } from "./cancelError";
 type CancelAction = (reason?: string) => void;
 
 export class CancelToken {
+    /**
+     * Returns an object that contains a new `CancelToken` and a function that, when called,
+     * cancels the `CancelToken`.
+     */
+    public static source() {
+        let cancel: CancelAction;
+        const token = new CancelToken(function executor(c) {
+            cancel = c;
+        });
+        return {
+            cancel: cancel,
+            token: token,
+        };
+    }
+
     private _cancelReason: CancelError;
     private _promise: Promise<CancelError>;
 
@@ -31,25 +46,9 @@ export class CancelToken {
     /**
      * Throws a `Cancel` if cancellation has been requested.
      */
-    throwIfRequested() {
+    public throwIfRequested() {
         if (this._cancelReason) {
             throw this._cancelReason;
         }
     }
-
-    /**
-     * Returns an object that contains a new `CancelToken` and a function that, when called,
-     * cancels the `CancelToken`.
-     */
-    static source() {
-        let cancel: CancelAction;
-        const token = new CancelToken(function executor(c) {
-            cancel = c;
-        });
-        return {
-            token: token,
-            cancel: cancel
-        };
-    }
-
 }

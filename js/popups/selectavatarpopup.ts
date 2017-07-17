@@ -8,22 +8,22 @@ import { App } from "../app";
 declare var app: App;
 
 export class SelectAvatarPopup extends PopupBase {
-    avatars = ko.observableArray<string>();
-    selectedAvatar = ko.observable<string>();
-    selected = new signals.Signal();
+    public avatars = ko.observableArray<string>();
+    public selectedAvatar = ko.observable<string>();
+    public selected = new signals.Signal();
 
-    shown() {
+    public shown() {
         super.shown();
         this.avatars(metadataManager.avatars);
     }
-    confirm() {
+    public confirm() {
         this.selected.dispatch(this.selectedAvatar());
     }
-    selectAvatar(item) {
+    public selectAvatar(item) {
         this.selectedAvatar(item);
         this.close();
     }
-    close() {
+    public close() {
         super.close();
         this.confirm();
         app.registrationPopup.visible(true);

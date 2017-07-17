@@ -1,16 +1,15 @@
 ﻿/// <reference path="../poker.commanding.api.ts" />
-import { debugSettings } from "../debugsettings";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
 
 declare var baseUrl: string;
 
 export class AppReloadService {
-    async getReload(tableId: number) {
+    public async getReload(tableId: number) {
         const api = new OnlinePoker.Commanding.API.TableReload(baseUrl);
         return await api.getTableReload(tableId);
     }
-    startMonitoring(tableId: number) {
+    public startMonitoring(tableId: number) {
         setInterval(() => this.checkTableReload(tableId), 5000);
     }
     private async checkTableReload(tableId: number) {
@@ -27,7 +26,7 @@ export class AppReloadService {
         if (reloadData.reloadRequired) {
             console.log("Normal reload requested.");
             if (appConfig.game.seatMode) {
-                const seatId = parseInt(authManager.login().replace("Игрок", ""));
+                const seatId = parseInt(authManager.login().replace("Игрок", ""), 10);
                 const propertyName = `seat${seatId}Reloaded`;
                 if (reloadData[propertyName] === false) {
                     console.log(`Reloading seat ${seatId}.`);
