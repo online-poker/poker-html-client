@@ -1,4 +1,4 @@
-declare var apiHost: string;
+﻿declare var apiHost: string;
 
 import * as ko from "knockout";
 import { App } from "../app";
@@ -18,6 +18,7 @@ import { debugSettings } from "../debugsettings";
 import { settings } from "../settings";
 import { appConfig } from "../appconfig";
 import * as commandManager from "../commandmanager";
+import { version } from "../version";
 
 declare var app: App;
 
@@ -34,6 +35,7 @@ export class SeatPage extends PageBase {
     public reconnectedHandler: SignalBinding;
     public disconnectedHandler: SignalBinding;
     public isConnectionSlow: KnockoutObservable<boolean>;
+    public libraryVersion: KnockoutComputed<string>;
     public lastConnecton: string;
     public frozen: KnockoutComputed<boolean>;
     public opened: KnockoutComputed<boolean>;
@@ -60,6 +62,12 @@ export class SeatPage extends PageBase {
             },
             write: function (value) {
                 self.currentIndex(value - 1);
+            },
+            owner: this,
+        });
+        this.libraryVersion = ko.computed<string>({
+            read: function () {
+                return "Библиотека: " + version;
             },
             owner: this,
         });
