@@ -1,12 +1,12 @@
 ﻿/// <reference path="../poker.commanding.api.ts" />
 
 import * as ko from "knockout";
-import { PopupBase } from "../ui/popupbase";
-import * as metadataManager from "../metadatamanager";
-import * as authManager from "../authmanager";
-import { SimplePopup } from "./simplepopup";
-import { _ } from "../languagemanager";
 import { App } from "../app";
+import * as authManager from "../authmanager";
+import { _ } from "../languagemanager";
+import * as metadataManager from "../metadatamanager";
+import { PopupBase } from "../ui/popupbase";
+import { SimplePopup } from "./simplepopup";
 
 declare var apiHost: string;
 declare var app: App;

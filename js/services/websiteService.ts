@@ -1,7 +1,7 @@
 ﻿declare var authToken: any;
 import { l } from "../languagemanager";
 
-/** 
+/**
  * Provides integration with the website.
  */
 export class WebsiteService {

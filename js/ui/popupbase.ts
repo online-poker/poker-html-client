@@ -26,6 +26,7 @@ export class PopupBase {
 
     private trace(message: string) {
         if (debugSettings.ui.tracePopups) {
+            // tslint:disable-next-line:no-console
             console.log(message);
         }
     }

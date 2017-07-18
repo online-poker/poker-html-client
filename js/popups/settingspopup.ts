@@ -1,7 +1,7 @@
 import * as ko from "knockout";
-import { PopupBase } from "../ui/popupbase";
 import { App } from "../app";
 import { settings } from "../settings";
+import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 

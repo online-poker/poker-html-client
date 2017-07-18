@@ -25,9 +25,9 @@ class ChipItem {
     }
 
     public transform(stack: ChipStack[]) {
-        const result = <number[][]>[];
+        const result = [] as number[][];
         for (let i = 0; i < stack.length; i++) {
-            const item = <number[]>[];
+            const item = [] as number[];
             for (let j = 0; j < stack[i].amount; j++) {
                 item.push(stack[i].type);
             }
@@ -67,7 +67,7 @@ class ChipItem {
 
     public calculateStackSimple(amount: number, chipAmounts: number[]): ChipStack[] {
         if (amount === 0) {
-            return <ChipStack[]>[];
+            return [] as ChipStack[];
         }
 
         const item1 = this.calculateStackSimpleInternal(amount, chipAmounts, false);
@@ -105,7 +105,7 @@ class ChipItem {
     private calculateStackSimpleInternal(amount: number, chipAmounts: number[], allowOveradd: boolean): ChipStackCalcIntermediate {
         const self = this;
         const minimumAmount = chipAmounts[0];
-        let intermediate = chipAmounts.filter(ca => amount >= ca);
+        let intermediate = chipAmounts.filter((ca) => amount >= ca);
         let upperBound: number;
         if (intermediate.length === 0) {
             upperBound = minimumAmount;
@@ -114,7 +114,7 @@ class ChipItem {
         }
 
         if (allowOveradd) {
-            intermediate = chipAmounts.filter(ca => amount <= ca);
+            intermediate = chipAmounts.filter((ca) => amount <= ca);
             if (intermediate.length === 0) {
                 upperBound = minimumAmount;
             } else {
@@ -122,21 +122,21 @@ class ChipItem {
             }
         }
 
-        const effectiveChipsAmount = chipAmounts.filter(ca => ca <= upperBound);
+        const effectiveChipsAmount = chipAmounts.filter((ca) => ca <= upperBound);
         let target: {
             amount: number;
             chipsAmount: number;
             difference: number
         }[];
         if (allowOveradd) {
-            target = effectiveChipsAmount.map(function (item) {
+            target = effectiveChipsAmount.map(function(item) {
                 return {
                     amount: item,
                     chipsAmount: Math.min(Math.floor((amount + item - 1) / item), self.maxStackCount),
                     difference: 0,
                 };
             });
-            target = target.concat(effectiveChipsAmount.map(function (item) {
+            target = target.concat(effectiveChipsAmount.map(function(item) {
                 return {
                     amount: item,
                     chipsAmount: Math.min(Math.floor(amount / item), self.maxStackCount),
@@ -144,7 +144,7 @@ class ChipItem {
                 };
             }));
         } else {
-            target = effectiveChipsAmount.map(function (item) {
+            target = effectiveChipsAmount.map(function(item) {
                 return {
                     amount: item,
                     chipsAmount: Math.min(Math.floor(amount / item), self.maxStackCount),
@@ -153,8 +153,8 @@ class ChipItem {
             });
         }
 
-        target = target.filter(item => item.chipsAmount <= self.maxStackCount)
-            .map(function (item) {
+        target = target.filter((item) => item.chipsAmount <= self.maxStackCount)
+            .map(function(item) {
                 return {
                     amount: item.amount,
                     chipsAmount: item.chipsAmount,
@@ -162,9 +162,9 @@ class ChipItem {
                 };
             });
         const difference = target
-            .map(item => Math.abs(item.difference))
+            .map((item) => Math.abs(item.difference))
             .reduce((prev, curr) => Math.min(prev, curr), Number.MAX_VALUE);
-        const minimalSlice = target.filter(item => Math.abs(item.difference) === difference)[0];
+        const minimalSlice = target.filter((item) => Math.abs(item.difference) === difference)[0];
         return {
             difference: minimalSlice.difference,
             count: minimalSlice.chipsAmount,

@@ -1,7 +1,7 @@
 ﻿import { debugSettings } from "../debugsettings";
 
 /**
- * Service which provides ability to subscribe on the 
+ * Service which provides ability to subscribe on the
  * device events.
  */
 export class DeviceEventService {

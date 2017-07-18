@@ -1,12 +1,12 @@
 ﻿/// <reference path="../poker.commanding.api.ts" />
 
-import { ChatControl } from "../ui/chatcontrol";
+import { App } from "../app";
+import { _ } from "../languagemanager";
 import { PlayerMessage } from "../table/playerMessage";
 import { SystemMessage } from "../table/SystemMessage";
 import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
-import { _ } from "../languagemanager";
-import { App } from "../app";
+import { ChatControl } from "../ui/chatcontrol";
 
 declare var apiHost: string;
 declare var app: App;

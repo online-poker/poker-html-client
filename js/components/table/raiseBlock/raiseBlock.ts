@@ -3,7 +3,7 @@ import { TableSlider } from "../../../table/tableSlider";
 export interface IRaiseBlockComponentParameters {
     data: TableSlider;
     updateTranslatorTrigger: KnockoutSubscribable<any>;
-    updateTranslator: Function;
+    updateTranslator: () => void;
 }
 
 export class RaiseBlockComponent {

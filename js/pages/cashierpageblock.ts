@@ -1,11 +1,8 @@
 ﻿/// <reference path="../pageblock.ts" />
-/// <reference path="cashierpage.ts" />
-/// <reference path="withdrawalpage.ts" />
-/// <reference path="operationshistorypage.ts" />
 
 import { AccountPage } from "./accountpage";
-import { RatingPage } from "./ratingpage";
 import { OperationsHistoryPage } from "./operationshistorypage";
+import { RatingPage } from "./ratingpage";
 import { WithdrawalPage } from "./withdrawalpage";
 
 export class CashierPageBlock extends PageBlock {

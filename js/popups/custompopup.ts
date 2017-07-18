@@ -3,11 +3,13 @@
 import * as ko from "knockout";
 import { PopupBase } from "../ui/popupbase";
 
+type PromiseOrVoid = void | Promise<void>;
+
 export class CustomPopup extends PopupBase {
     public title: KnockoutObservable<string>;
     public messages: KnockoutObservableArray<string>;
     public buttons = ko.observableArray<string>([]);
-    public actions = ko.observableArray<Function>([]);
+    public actions = ko.observableArray<() => PromiseOrVoid>([]);
     public deferred: JQueryDeferred<any>;
 
     constructor() {

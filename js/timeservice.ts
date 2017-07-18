@@ -61,6 +61,7 @@ class TimeService {
     }
     public printDebug() {
         if (debugSettings.application.debugTimeouts) {
+            // tslint:disable-next-line:no-console
             console.log("Timeouts running = " + this.timeouts.length + ". "
                 + "Intervals running = " + this.intervals.length);
         }

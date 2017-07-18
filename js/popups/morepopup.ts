@@ -5,8 +5,8 @@ declare var apiHost: string;
 import * as ko from "knockout";
 import { App } from "../app";
 import * as authManager from "../authmanager";
-import { settings } from "../settings";
 import { websiteService } from "../services";
+import { settings } from "../settings";
 
 declare var app: App;
 

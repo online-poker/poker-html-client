@@ -1,15 +1,15 @@
 ﻿import * as ko from "knockout";
+import { App } from "../app";
+import { appConfig } from "../appconfig";
+import * as authManager from "../authmanager";
+import { debugSettings } from "../debugsettings";
+import { _ } from "../languagemanager";
+import * as metadataManager from "../metadatamanager";
+import { SimplePopup } from "../popups/simplepopup";
+import { connectionService, slowInternetService } from "../services";
+import { ConnectionWrapper } from "../services/connectionwrapper";
 import * as timeService from "../timeservice";
 import { tableManager } from "./tablemanager";
-import * as authManager from "../authmanager";
-import * as metadataManager from "../metadatamanager";
-import { slowInternetService, connectionService } from "../services";
-import { ConnectionWrapper } from "../services/connectionwrapper";
-import { SimplePopup } from "../popups/simplepopup";
-import { appConfig } from "../appconfig";
-import { debugSettings } from "../debugsettings";
-import { App } from "../app";
-import { _ } from "../languagemanager";
 
 declare var apiHost: string;
 declare var app: App;
@@ -84,7 +84,7 @@ export class TournamentView {
         this.status(data.Status);
         this.rebuyAllowed(data.IsRebuyAllowed);
         this.addonAllowed(data.IsAddonAllowed);
-        const currentPlayerCandidates = data.TournamentPlayers.filter(_ => _.PlayerId === authManager.loginId());
+        const currentPlayerCandidates = data.TournamentPlayers.filter((tournamentPlayer) => tournamentPlayer.PlayerId === authManager.loginId());
         if (currentPlayerCandidates.length > 0) {
             const currentPlayer = currentPlayerCandidates[0];
             if (currentPlayer.Status === TournamentPlayerStatus.Playing) {
@@ -92,7 +92,7 @@ export class TournamentView {
             }
         }
 
-        this.totalPrize = ko.computed(function () {
+        this.totalPrize = ko.computed(function() {
             const tdata = self.tournamentData();
             if (tdata === null) {
                 return null;
@@ -131,7 +131,7 @@ export class TournamentView {
         const self = this;
         if (this.connectingRequest !== null && this.connectingRequest.state() === "pending") {
             // Re-schedule updating information.
-            this.connectingRequest.then(null, function () {
+            this.connectingRequest.then(null, function() {
                 self.log("Rescheduling the updating information.");
                 self.updateTournamentInformation();
             });
@@ -147,7 +147,7 @@ export class TournamentView {
         const connectionInfo = "HID:" + hubId;
         this.log("Connecting to tournament " + this.tournamentId + " on connection " + connectionInfo);
         const startConnection = app.buildStartConnection();
-        startConnection().then(function () {
+        startConnection().then(function() {
             if (wrapper.terminated) {
                 return;
             }
@@ -157,11 +157,11 @@ export class TournamentView {
 
             const joinTournamentRequest = self.joinTournament(wrapper);
             const joinRequest = $.when(joinTournamentRequest);
-            currentLoadingRequest.progress(function (command: string) {
+            currentLoadingRequest.progress(function(command: string) {
                 self.log("Receiving request to cancel all joining operations");
                 joinTournamentRequest.notify(command);
             });
-            joinRequest.then(function () {
+            joinRequest.then(function() {
                 if (wrapper.terminated) {
                     currentLoadingRequest.reject("Cancelled");
                     return;
@@ -169,7 +169,7 @@ export class TournamentView {
 
                 self.log("Joining to tournament finished");
                 currentLoadingRequest.resolve();
-            }, function (result1) {
+            }, function(result1) {
                     if (wrapper.terminated) {
                         return;
                     }
@@ -180,7 +180,7 @@ export class TournamentView {
                     self.log(message);
                     currentLoadingRequest.reject(message);
                 });
-        }, function (message) {
+        }, function(message) {
             self.log("Tournament connection failed. Error: " + message);
             currentLoadingRequest.reject("Table connection failed. Error: " + message);
         });
@@ -206,12 +206,12 @@ export class TournamentView {
         this.log("Joining tournament on connection " + connectionInfo);
         const cancelled = false;
         let subsequentDeferred: JQueryDeferred<any> = null;
-        const cancelOperation = function () {
+        const cancelOperation = function() {
             self.log("Cancelling join tournament request");
             result.reject("Cancelled", true);
         };
 
-        wrapper.buildStartConnection()().then(function () {
+        wrapper.buildStartConnection()().then(function() {
             if (wrapper.terminated) {
                 cancelOperation();
                 return;
@@ -221,20 +221,20 @@ export class TournamentView {
             const connectionState = wrapper.connection.state;
             self.log(`Executing Game.subscribeTournament on connection ${connectionId} in state ${connectionState}`);
             const operation = wrapper.connection.Game.server.subscribeTournament(self.tournamentId)
-                .then(function () {
+                .then(function() {
                     if (wrapper.terminated) {
                         cancelOperation();
                         return;
                     }
 
                     result.resolve();
-                }, function (error: any) {
+                }, function(error: any) {
                     if (wrapper.terminated || cancelled || error === "Cancelled") {
                         cancelOperation();
                         return;
                     }
 
-                    const message = "" + <string>error;
+                    const message = "" + error as string;
                     self.log(`Failed to join tournament ${self.tournamentId}, ${connectionInfo}. Reason: ${message}`);
                     if (message.indexOf("Connection was disconnected before invocation result was received.") >= 0) {
                         self.log("Stopped connecting to table since underlying connection is broken");
@@ -243,15 +243,15 @@ export class TournamentView {
                         return;
                     } else {
                         subsequentDeferred = self.joinTournament(wrapper, maxAttempts - 1);
-                        return subsequentDeferred.then(function () {
+                        return subsequentDeferred.then(function() {
                             result.resolve();
-                        }, function (subsequentError, subsequentCancelled: boolean) {
+                        }, function(subsequentError, subsequentCancelled: boolean) {
                                 result.reject(subsequentError, subsequentCancelled);
                             });
                     }
                 });
 
-            result.progress(function (command: string) {
+            result.progress(function(command: string) {
                 this.cancelled = true;
                 result.reject("Cancelled");
                 if (subsequentDeferred != null) {
@@ -259,7 +259,7 @@ export class TournamentView {
                     subsequentDeferred = null;
                 }
             });
-        }, function () {
+        }, function() {
                 cancelOperation();
             });
         return result;
@@ -362,8 +362,8 @@ export class TournamentView {
         const ascendingSort = (a, b) => {
             return a.MaxPlayer - b.MaxPlayer;
         };
-        const prizes = structure.filter((_) => {
-            return _.MaxPlayer > data.JoinedPlayers;
+        const prizes = structure.filter((prizeStructure) => {
+            return prizeStructure.MaxPlayer > data.JoinedPlayers;
         }).sort(ascendingSort);
         let prize: TournamentPrizeStructure;
         if (prizes.length > 0) {
@@ -379,7 +379,7 @@ export class TournamentView {
     public onTournamentBetLevelChanged(level: number) {
         const data = this.tournamentData();
         const structure = this.getBetLevelStructure(data.WellKnownBetStructure).sort((a, b) => a.Level - b.Level);
-        const betLevelCandidate = structure.filter(_ => _.Level === level);
+        const betLevelCandidate = structure.filter((betStructure) => betStructure.Level === level);
         const betLevel = betLevelCandidate.length === 0
             ? structure[structure.length - 1]
             : betLevelCandidate[0];
@@ -399,7 +399,7 @@ export class TournamentView {
 
         if (level > 1) {
             if (betLevel.Ante == null) {
-                let notificationParameters = {
+                const notificationParameters = {
                     tournament: data.TournamentName,
                     sb: betLevel.SmallBlind,
                     bb: betLevel.BigBlind,
@@ -408,7 +408,7 @@ export class TournamentView {
                     _("tournament.betLevelChanged1", notificationParameters),
                     debugSettings.tableView.betLevelChangeDelay);
             } else {
-                let notificationParameters = {
+                const notificationParameters = {
                     tournament: data.TournamentName,
                     sb: betLevel.SmallBlind,
                     bb: betLevel.BigBlind,
@@ -538,8 +538,8 @@ export class TournamentView {
             return table;
         }
 
-        const tournamentTables = tableManager.tables().filter(_ => _.tournament() !== null
-            && _.tournament().tournamentId === self.tournamentId);
+        const tournamentTables = tableManager.tables().filter((tournamentTable) => tournamentTable.tournament() !== null
+            && tournamentTable.tournament().tournamentId === self.tournamentId);
         if (tournamentTables.length !== 0) {
             return tournamentTables[0];
         }
@@ -606,6 +606,7 @@ export class TournamentView {
         this.removeCurrentTable();
     }
     private log(message: string, ...params: any[]) {
+        // tslint:disable-next-line:no-console
         console.log(message);
     }
 }

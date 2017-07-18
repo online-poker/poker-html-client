@@ -1,5 +1,5 @@
-﻿import { SimplePopup } from "../popups/simplepopup";
-import { _ } from "../languagemanager";
+﻿import { _ } from "../languagemanager";
+import { SimplePopup } from "../popups/simplepopup";
 
 /**
  * Manages broadcast services

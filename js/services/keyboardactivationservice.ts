@@ -2,9 +2,9 @@
 /// <reference path="../typings/cordova.d.ts" />
 /* tslint:disable:no-string-literal */
 
+import { App } from "../app";
 import * as timeService from "../timeservice";
 import { uiManager } from "./uimanager";
-import { App } from "../app";
 
 declare var app: App;
 
@@ -50,7 +50,7 @@ export class KeyboardActivationService {
                 }, 1);
             };
         } else {
-            let enableKeyboardEmulationOnDesktop = false;
+            const enableKeyboardEmulationOnDesktop = false;
             if (enableKeyboardEmulationOnDesktop) {
                 const selector = "input[type='text'], input[type='password'], input[type='date'], input[type='number']";
                 $("body").on("focus", selector, (event) => {
@@ -63,7 +63,7 @@ export class KeyboardActivationService {
         }
     }
     public forceHideKeyboard() {
-        const activeElement = <HTMLElement>document.activeElement;
+        const activeElement = document.activeElement as HTMLElement;
         if (activeElement !== null) {
             activeElement.blur();
         }

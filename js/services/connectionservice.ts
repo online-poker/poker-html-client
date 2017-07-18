@@ -1,9 +1,9 @@
 ﻿declare var baseUrl: string;
 
-import { ConnectionWrapper } from "./connectionwrapper";
-import { slowInternetService } from "./index";
 import { debugSettings } from "../debugsettings";
 import { CancelToken } from "./cancelToken";
+import { ConnectionWrapper } from "./connectionwrapper";
+import { slowInternetService } from "./index";
 
 export class ConnectionService {
     public static stateConversion = {
@@ -46,7 +46,7 @@ export class ConnectionService {
         if (authToken == null) {
             connection.qs = null;
         } else {
-            connection.qs = { "token": authToken };
+            connection.qs = { token: authToken };
         }
 
         this.isDisconnected = true;
@@ -90,7 +90,7 @@ export class ConnectionService {
         const attempts = this.attempts++;
         this.lastAttempt = attempts;
         this.cancelConnection();
-        let cancelToken = CancelToken.source();
+        const cancelToken = CancelToken.source();
         this.cancelCurrentConnection = cancelToken.cancel;
         const result = await this.currentConnection.establishConnectionAsync(maxAttempts, cancelToken.token);
         return result;

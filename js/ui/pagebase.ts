@@ -41,6 +41,7 @@ export class PageBase implements Page {
 
     private trace(message: string) {
         if (debugSettings.ui.tracePages) {
+            // tslint:disable-next-line:no-console
             console.log(message);
         }
     }

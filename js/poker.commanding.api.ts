@@ -1,15 +1,13 @@
 ﻿/* tslint:disable:quotemark */
 declare var authToken: string;
-const beforeSendHandler = function (xhr) {
+const beforeSendHandler = (xhr) => {
     xhr.withCredentials = true;
     if (authToken != null) {
         xhr.setRequestHeader("X-Auth-Token", authToken);
     }
 };
 
-interface JQueryTypedCallback<T> {
-    (data: T, textStatus: string, xhr: JQueryXHR): void;
-}
+type JQueryTypedCallback<T> = (data: T, textStatus: string, xhr: JQueryXHR) => void;
 
 enum TournamentStatus {
     Pending,
@@ -42,10 +40,10 @@ enum TournamentPlayerStatus {
      */
     Playing,
 
-    /** 
+    /**
      * Player complete playing in the tournament.
      */
-    Completed
+    Completed,
 }
 
 enum TournamentOptionsEnum {
@@ -67,7 +65,7 @@ namespace OnlinePoker {
             export enum MoneyType {
                 Tenge = 1,
                 GameChips = 2,
-            };
+            }
             export let logging: boolean = false;
             export let version = 1;
             export class WebApiProxy {
@@ -88,7 +86,7 @@ namespace OnlinePoker {
                     const url = this.baseUrl + methodName;
                     return $.ajax({
                         type: 'POST',
-                        url: url,
+                        url,
                         data: JSON.stringify(parameters),
                         success: (data, textStatus, jqXHR) => {
                             const dataString = data != null ? JSON.stringify(data) : "NULL";
@@ -119,7 +117,7 @@ namespace OnlinePoker {
                     const url = this.baseUrl + methodName;
                     return await $.ajax({
                         type: 'GET',
-                        url: url,
+                        url,
                         data: parameters,
                         success: (data, textStatus, jqXHR) => {
                             const dataString = data != null ? JSON.stringify(data) : "NULL";
@@ -147,7 +145,7 @@ namespace OnlinePoker {
                     const url = this.baseUrl + methodName;
                     return await $.ajax({
                         type: 'PUT',
-                        url: url,
+                        url,
                         data: parameters,
                         success: (data, textStatus, jqXHR) => {
                             const dataString = data != null ? JSON.stringify(data) : "NULL";
@@ -174,7 +172,7 @@ namespace OnlinePoker {
                     const url = this.baseUrl + methodName;
                     return await $.ajax({
                         type: 'DELETE',
-                        url: url,
+                        url,
                         data: parameters,
                         success: (data, textStatus, jqXHR) => {
                             const dataString = data != null ? JSON.stringify(data) : "NULL";
@@ -218,7 +216,7 @@ namespace OnlinePoker {
                 }
 
                 public SendAsync(tableId: number, message: string): Promise<StatusResponse> {
-                    const data = { tableId: tableId, message: message };
+                    const data = { tableId, message };
                     return super.CallAsync<StatusResponse>('Send', data);
                 }
             }
@@ -424,7 +422,7 @@ namespace OnlinePoker {
                             callback(data, textStatus, xhr);
                         }
                     };
-                    return <JQueryPromise<AuthenticateResponse>>super.Call('Authenticate', data, aquireTokenCallback);
+                    return super.Call('Authenticate', data, aquireTokenCallback) as JQueryPromise<AuthenticateResponse>;
                 }
                 public CancelAccountActivation(login, token) {
                     const data = { Login: login, Token: token };
@@ -475,7 +473,7 @@ namespace OnlinePoker {
                     };
                     return $.ajax({
                         type: 'POST',
-                        url: url,
+                        url,
                         data: JSON.stringify(data),
                         success: callback,
                         crossDomain: true,

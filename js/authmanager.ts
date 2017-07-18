@@ -4,9 +4,9 @@ declare var apiHost: string;
 declare var appInsights: Client;
 
 import ko = require("knockout");
-import { settings } from "./settings";
 import { App } from "./app";
 import { appConfig } from "./appconfig";
+import { settings } from "./settings";
 
 declare const app: App;
 

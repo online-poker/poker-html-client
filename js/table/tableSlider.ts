@@ -16,7 +16,7 @@ export class TableSlider {
         const self = this;
         this.current = ko.observable<number>(null);
         this.currentValue = ko.computed<string>({
-            read: function () {
+            read() {
                 const ivalue = self.current();
                 if (ivalue === null) {
                     return null;
@@ -24,7 +24,7 @@ export class TableSlider {
 
                 return ivalue.toString();
             },
-            write: function (value) {
+            write(value) {
                 let ivalue = parseInt(value, 10);
                 if (isNaN(ivalue) || !isFinite(ivalue)) {
                     return;
@@ -44,7 +44,7 @@ export class TableSlider {
         this.minimum = ko.observable<number>();
         this.maximum = ko.observable<number>();
         this.position = ko.computed<number>({
-            read: function () {
+            read() {
                 const pixelDistance = self.maxRelative - self.minRelative;
                 if (pixelDistance === 0) {
                     return self.maxRelative;
@@ -60,7 +60,7 @@ export class TableSlider {
 
                 return self.minRelative + currentRelative;
             },
-            write: function (value) {
+            write(value) {
                 if (value >= self.maxRelative) {
                     self.current(self.maximum());
                     return;
@@ -157,7 +157,7 @@ export class TableSlider {
         if (this.current() !== null && this.current() !== undefined) {
             this.currentValue(this.current().toFixed());
 
-            timeService.setTimeout(function () {
+            timeService.setTimeout(function() {
                 const c = self.current();
                 self.current(0);
                 self.current(c);

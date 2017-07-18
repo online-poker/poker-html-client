@@ -13,8 +13,8 @@ export class CancelToken {
             cancel = c;
         });
         return {
-            cancel: cancel,
-            token: token,
+            cancel,
+            token,
         };
     }
 

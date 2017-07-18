@@ -1,18 +1,18 @@
 ﻿/* tslint:disable:no-bitwise no-use-before-declare */
 
 import * as ko from "knockout";
+import * as authManager from "../authmanager";
+import * as commandManager from "../commandmanager";
+import { debugSettings } from "../debugsettings";
+import { _ } from "../languagemanager";
+import { SimplePopup } from "../popups/simplepopup";
+import { appReloadService, connectionService, slowInternetService } from "../services";
+import * as broadcastService from "../services/broadcastservice";
+import { ConnectionWrapper } from "../services/connectionwrapper";
+import { settings } from "../settings";
 import * as timeService from "../timeservice";
 import { TableView } from "./tableview";
 import { TournamentView } from "./tournamentview";
-import { slowInternetService, connectionService, appReloadService } from "../services";
-import { ConnectionWrapper } from "../services/connectionwrapper";
-import * as broadcastService from "../services/broadcastservice";
-import { SimplePopup } from "../popups/simplepopup";
-import * as authManager from "../authmanager";
-import { debugSettings } from "../debugsettings";
-import { settings } from "../settings";
-import * as commandManager from "../commandmanager";
-import { _ } from "../languagemanager";
 
 declare var apiHost: string;
 
@@ -39,7 +39,7 @@ class TableManager {
         this.duplicators = [];
         this.maxTablesReached = new signals.Signal();
         this.hasTurn = ko.computed(function () {
-            const tablesWithTurn = self.tables().filter(_ => _.isMyTurn());
+            const tablesWithTurn = self.tables().filter((table) => table.isMyTurn());
             return tablesWithTurn.length > 0;
         }, this);
     }
@@ -48,18 +48,22 @@ class TableManager {
         const self = this;
         commandManager.registerCommand("app.selectTable", function (parameters?: any[]): void {
             if (parameters.length < 1) {
+                // tslint:disable-next-line:no-console
                 console.log("Insufficient parameters to the 'app.selectTable' command");
                 return;
             }
 
-            const table = <GameTableModel>parameters[0];
-            const update = parameters.length <= 1 ? true : <boolean>parameters[1];
+            const table = parameters[0] as GameTableModel;
+            const update = parameters.length <= 1
+                ? true
+                : parameters[1] as boolean;
             self.selectTable(table, update);
             appReloadService.startMonitoring(table.TableId);
         });
         commandManager.registerCommand("app.leaveTable", function (parameters?: any[]): JQueryDeferred<void> {
             const result = $.Deferred<void>();
             if (parameters.length < 1) {
+                // tslint:disable-next-line:no-console
                 console.log("Insufficient parameters to the 'app.leaveTable' command");
                 result.reject();
                 return result;
@@ -67,6 +71,7 @@ class TableManager {
 
             const tableId: number = parameters[0];
             let tableView = self.getTableById(tableId);
+            // tslint:disable-next-line:no-console
             console.log("Leaving table " + tableView.tableId.toString());
             if (tableView != null) {
                 tableView.showStandupPrompt().then(function () {
@@ -89,15 +94,15 @@ class TableManager {
             result.reject();
             return result;
         });
-        connectionService.newConnection.add(function () {
+        connectionService.newConnection.add(function() {
             if (authManager.authenticated()) {
                 self.initializeChatHub(connectionService.currentConnection);
                 self.initializeGameHub(connectionService.currentConnection);
             }
         });
-        settings.autoHideCards.subscribe(function (newValue) {
+        settings.autoHideCards.subscribe(function(newValue) {
             const api = new OnlinePoker.Commanding.API.Game(apiHost);
-            self.tables().forEach(function (tableView) {
+            self.tables().forEach(function(tableView) {
                 // Set open card parameters in parallel for all tables.
                 api.SetOpenCardsParameters(tableView.tableId, !newValue);
             });
@@ -113,7 +118,7 @@ class TableManager {
         const self = this;
         const api = new OnlinePoker.Commanding.API.Game(apiHost);
         const data = await api.GetTables(null, 0, 0, 0, 1, 0);
-        const tablesData = <GameTableModel[]>data.Data;
+        const tablesData = data.Data as GameTableModel[];
         const tableData = await api.GetSitingTables();
         const status = tableData.Status;
         if (status === "Ok") {
@@ -152,7 +157,7 @@ class TableManager {
             const rtournaments = registeredTournamentsData.Data;
             if (rtournaments !== null && rtournaments.length !== 0) {
                 const args = await self.requestTournamentsInformation(rtournaments);
-                const tournaments = <TournamentDefinition[]>[];
+                const tournaments = [] as TournamentDefinition[];
                 for (let i = 0; i < args.length; i++) {
                     tournaments.push(args[i]);
                 }
@@ -175,18 +180,18 @@ class TableManager {
         }
 
         const tablesRequest = this.getCurrentTables();
-        const tournamentsRequest = async() => {
+        const tournamentsRequest = async () => {
             const value = await this.getCurrentTournaments();
-            const startedTournaments = value.filter(_ => {
-                return _.Status === TournamentStatus.LateRegistration
-                    || _.Status === TournamentStatus.Started;
+            const startedTournaments = value.filter((tournament) => {
+                return tournament.Status === TournamentStatus.LateRegistration
+                    || tournament.Status === TournamentStatus.Started;
             });
             if (startedTournaments.length === 0) {
                 return;
             }
 
             const messages = [_("tournament.areYouInFollowingTournaments")];
-            startedTournaments.forEach(_ => messages.push(_.TournamentName));
+            startedTournaments.forEach((tournament) => messages.push(tournament.TournamentName));
             timeService.setTimeout(() => {
                 SimplePopup.display(_("tournament.tournaments"), messages);
             }, 2000);
@@ -227,27 +232,26 @@ class TableManager {
             tournament.updateTournamentInformation();
         });
     }
-    public openTournamentById(tournamentId: number, attempts: number = 3) {
+    public async openTournamentById(tournamentId: number, attempts: number = 3) {
         if (attempts === 0) {
             SimplePopup.display(_("tournament.error"), _("tournament.errorConnectonToTournament"));
             return;
         }
 
         const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-        tournamentApi.GetTournament(tournamentId).then((_) => {
-            if (_.Status === "Ok") {
-                const tournamentData = _.Data;
-                tableManager.selectTournament(tournamentData, true);
-            } else {
-                this.openTournamentById(tournamentId, attempts - 1);
-            }
-        });
+        const tournamentInfo = await tournamentApi.GetTournament(tournamentId);
+        if (tournamentInfo.Status === "Ok") {
+            const tournamentData = tournamentInfo.Data;
+            tableManager.selectTournament(tournamentData, true);
+        } else {
+            this.openTournamentById(tournamentId, attempts - 1);
+        }
     }
     public getTablesReservation() {
-        const tablesWithoutTournament = this.tables().filter(_ => _.tournament() === null);
-        const notFinishedTournaments = this.tournaments().filter(tournamentView => {
+        const tablesWithoutTournament = this.tables().filter((table) => table.tournament() === null);
+        const notFinishedTournaments = this.tournaments().filter((tournamentView) => {
             const tdata = tournamentView.tournamentData();
-            const tplayer = tdata.TournamentPlayers.filter(tournamentPlayer => {
+            const tplayer = tdata.TournamentPlayers.filter((tournamentPlayer) => {
                 return tournamentPlayer.PlayerId === authManager.loginId();
             });
             if (tplayer.length === 0) {
@@ -274,7 +278,7 @@ class TableManager {
         const self = this;
         const tournamentId = model.TournamentId;
         let tournamentView = this.getTournamentById(tournamentId);
-        const append = function () {
+        const append = function() {
             if (tournamentView === null) {
                 tournamentView = self.addTournament(tournamentId, model);
             }
@@ -293,7 +297,7 @@ class TableManager {
         const self = this;
         const tableId = model.TableId;
         let tableView = this.getTableById(tableId);
-        const append = function () {
+        const append = function() {
             if (tableView === null) {
                 tableView = self.addTable(tableId, model);
             }
@@ -326,7 +330,7 @@ class TableManager {
     }
 
     public remove(table: TableView) {
-        const tables = this.tables().filter(function (value: TableView) {
+        const tables = this.tables().filter(function(value: TableView) {
             return value !== table;
         });
         this.tables(tables);
@@ -383,7 +387,7 @@ class TableManager {
     }
 
     public removeTournament(tournament: TournamentView) {
-        const tournaments = this.tournaments().filter(function (value) {
+        const tournaments = this.tournaments().filter(function(value) {
             return value !== tournament;
         });
         this.tournaments(tournaments);
@@ -419,7 +423,7 @@ class TableManager {
      * @returns Table view for the table with given id
      */
     public getTableById(tableId: number) {
-        const result = this.tables().filter(function (value: TableView) {
+        const result = this.tables().filter(function(value: TableView) {
             return value.tableId === tableId;
         });
 
@@ -435,7 +439,7 @@ class TableManager {
      * tournamentId Number If of the tournament to retreive.
      */
     public getTournamentById(tournamentId: number) {
-        const result = this.tournaments().filter(function (value: TournamentView) {
+        const result = this.tournaments().filter(function(value: TournamentView) {
             return value.tournamentId === tournamentId;
         });
 
@@ -470,7 +474,7 @@ class TableManager {
     private initializeChatHub(wrapper: ConnectionWrapper) {
         const self = this;
         const chatHub = wrapper.connection.Chat;
-        chatHub.client.ChatConnected = function (tableId, lastMessageId) {
+        chatHub.client.ChatConnected = function(tableId, lastMessageId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -483,7 +487,7 @@ class TableManager {
 
             tableView.lastMessageId = lastMessageId;
         };
-        chatHub.client.Message = function (messageId, tableId, type, sender, message) {
+        chatHub.client.Message = function(messageId, tableId, type, sender, message) {
             if (wrapper.terminated) {
                 return;
             }
@@ -506,7 +510,7 @@ class TableManager {
                 broadcastService.displayMessage(message);
             }
         };
-        chatHub.client.MessageChanged = function (messageId, tableId, type, sender, message) {
+        chatHub.client.MessageChanged = function(messageId, tableId, type, sender, message) {
             if (wrapper.terminated) {
                 return;
             }
@@ -529,7 +533,7 @@ class TableManager {
     private initializeGameHub(wrapper: ConnectionWrapper) {
         const self = this;
         const gameHub = wrapper.connection.Game;
-        gameHub.client.TableStatusInfo = function (
+        gameHub.client.TableStatusInfo = function(
             tableId, players, pots, cards, dealerSeat, buyIn,
             baseBuyIn, leaveTime, timePass, currentPlayerId, lastRaise, gameId, authenticated,
             actionsCount, frozen, opened, pauseDate, lastMessageId) {
@@ -550,7 +554,7 @@ class TableManager {
             self.logDataEvent("Table status info: TableId - ", tableId, " Players - ", players, players.length,
                 " Pots - ", pots, " Cards - ", cardsArr.join(" "));
         };
-        gameHub.client.GameStarted = function (tableId, gameId, players, actions, dealerSeat) {
+        gameHub.client.GameStarted = function(tableId, gameId, players, actions, dealerSeat) {
             if (wrapper.terminated) {
                 return;
             }
@@ -565,7 +569,7 @@ class TableManager {
             tableView.onGameStarted(gameId, players, actions, dealerSeat);
             self.logDataEvent("Game started: TableId - ", tableId, " GameId - ", gameId, " Players - ", players);
         };
-        gameHub.client.Bet = function (tableId, playerId, type, amount, nextPlayerId, actionId) {
+        gameHub.client.Bet = function(tableId, playerId, type, amount, nextPlayerId, actionId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -614,7 +618,7 @@ class TableManager {
                 " Amount - ", amount,
                 " Next Player Id - ", nextPlayerId);
         };
-        gameHub.client.OpenCards = function (tableId, type, cards: string, pots: number[]) {
+        gameHub.client.OpenCards = function(tableId, type, cards: string, pots: number[]) {
             if (wrapper.terminated) {
                 return;
             }
@@ -645,7 +649,7 @@ class TableManager {
             const cardsStrings = cardsArray(cards).join(" ");
             self.logDataEvent(`Open cards: TableId - ${tableId} Type - ${typeString} Cards - ${cardsStrings}`);
         };
-        gameHub.client.MoneyAdded = function (tableId, playerId, amount) {
+        gameHub.client.MoneyAdded = function(tableId, playerId, amount) {
             if (wrapper.terminated) {
                 return;
             }
@@ -658,7 +662,7 @@ class TableManager {
 
             tableView.onMoneyAdded(playerId, amount);
         };
-        gameHub.client.MoneyRemoved = function (tableId, playerId, amount) {
+        gameHub.client.MoneyRemoved = function(tableId, playerId, amount) {
             if (wrapper.terminated) {
                 return;
             }
@@ -671,7 +675,7 @@ class TableManager {
 
             tableView.onMoneyRemoved(playerId, amount);
         };
-        gameHub.client.PlayerCards = function (tableId, playerId, cards: string) {
+        gameHub.client.PlayerCards = function(tableId, playerId, cards: string) {
             if (wrapper.terminated) {
                 return;
             }
@@ -698,7 +702,7 @@ class TableManager {
             tableView.onPlayerCardOpened(playerId, cardPosition, cardValue);
             this.logDataEvent("Player cards: TableId - ", tableId, " PlayerId - ", playerId, " Card on position - ", cardPosition, " with value - ", cardValue);
         };
-        gameHub.client.PlayerCardsMucked = function (tableId, playerId) {
+        gameHub.client.PlayerCardsMucked = function(tableId, playerId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -711,7 +715,7 @@ class TableManager {
             tableView.onPlayerCardsMucked(playerId);
             self.logDataEvent("Cards mucked. TableId - ", tableId, " PlayerId - ", playerId);
         };
-        gameHub.client.MoveMoneyToPot = function (tableId, amount) {
+        gameHub.client.MoveMoneyToPot = function(tableId, amount) {
             if (wrapper.terminated) {
                 return;
             }
@@ -724,7 +728,7 @@ class TableManager {
 
             // tableView.onMoveMoneyToPot(amount);
         };
-        gameHub.client.GameFinished = function (tableId, gameId, winners, rake) {
+        gameHub.client.GameFinished = function(tableId, gameId, winners, rake) {
             if (wrapper.terminated) {
                 return;
             }
@@ -738,12 +742,12 @@ class TableManager {
             tableView.onGameFinished(gameId, winners, rake);
             self.logDataEvent("TableId - ", tableId, " GameId - ", gameId, " Winners - ", winners, " Rake - ", rake);
         };
-        gameHub.client.PlayerStatus = function (tableId, playerId, status) {
+        gameHub.client.PlayerStatus = function(tableId, playerId, status) {
             if (wrapper.terminated) {
                 return;
             }
 
-            let statusString = [];
+            const statusString = [];
             if ((status & 1) !== 0) {
                 statusString.push("Sitout");
             }
@@ -763,13 +767,14 @@ class TableManager {
             self.logDataEvent("TableId - ", tableId, " PlayerId - ", playerId, " Status - ", statusString.join("+"));
             const tableView = tableManager.getTableById(tableId);
             if (tableView == null) {
+                // tslint:disable-next-line:no-console
                 console.warn("Receive unexpected PlayerStatus(" + tableId + "," + playerId + "," + status + ")");
                 return;
             }
 
             tableView.onPlayerStatus(playerId, status);
         };
-        gameHub.client.Sit = function (tableId, playerId, playerName, seat, amount, playerUrl, points, stars) {
+        gameHub.client.Sit = function(tableId, playerId, playerName, seat, amount, playerUrl, points, stars) {
             if (wrapper.terminated) {
                 return;
             }
@@ -783,7 +788,7 @@ class TableManager {
             self.logDataEvent("Sit: TableId - ", tableId, " PlayerId - ", playerId, " PlayerName- ", playerName);
             tableView.onSit(playerId, seat, playerName, amount, playerUrl, points, stars);
         };
-        gameHub.client.Standup = function (tableId, playerId) {
+        gameHub.client.Standup = function(tableId, playerId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -797,7 +802,7 @@ class TableManager {
             self.logDataEvent("Standup: TableId - ", tableId, " PlayerId - ", playerId);
             tableView.onStandup(playerId);
         };
-        gameHub.client.TableFrozen = function (tableId) {
+        gameHub.client.TableFrozen = function(tableId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -810,7 +815,7 @@ class TableManager {
 
             tableView.onFrozen();
         };
-        gameHub.client.TableUnfrozen = function (tableId) {
+        gameHub.client.TableUnfrozen = function(tableId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -823,7 +828,7 @@ class TableManager {
 
             tableView.onUnfrozen();
         };
-        gameHub.client.TableOpened = function (tableId) {
+        gameHub.client.TableOpened = function(tableId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -836,7 +841,7 @@ class TableManager {
 
             tableView.onOpened();
         };
-        gameHub.client.TableClosed = function (tableId) {
+        gameHub.client.TableClosed = function(tableId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -850,7 +855,7 @@ class TableManager {
             tableView.onClosed();
         };
 
-        gameHub.client.TablePaused = function (tableId) {
+        gameHub.client.TablePaused = function(tableId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -863,7 +868,7 @@ class TableManager {
 
             tableView.onPaused();
         };
-        gameHub.client.TableResumed = function (tableId) {
+        gameHub.client.TableResumed = function(tableId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -877,7 +882,7 @@ class TableManager {
             tableView.onResumed();
         };
 
-        gameHub.client.FinalTableCardsOpened = function (tableId, cards) {
+        gameHub.client.FinalTableCardsOpened = function(tableId, cards) {
             if (wrapper.terminated) {
                 return;
             }
@@ -890,7 +895,7 @@ class TableManager {
 
             tableView.onFinalTableCardsOpened(decodeCardsArray(cards));
         };
-        gameHub.client.TableTournamentChanged = function (tableId, tournamentId) {
+        gameHub.client.TableTournamentChanged = function(tableId, tournamentId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -903,7 +908,7 @@ class TableManager {
 
             tableView.onTableTournamentChanged(tournamentId);
         };
-        gameHub.client.TournamentStatusChanged = function (tournamentId, status) {
+        gameHub.client.TournamentStatusChanged = function(tournamentId, status) {
             if (wrapper.terminated) {
                 return;
             }
@@ -916,7 +921,7 @@ class TableManager {
 
             tournamentView.onTournamentStatusChanged(status);
         };
-        gameHub.client.TournamentTableChanged = function (tournamentId, tableId) {
+        gameHub.client.TournamentTableChanged = function(tournamentId, tableId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -929,7 +934,7 @@ class TableManager {
 
             tournamentView.onTournamentTableChanged(tableId);
         };
-        gameHub.client.TournamentPlayerGameCompleted = function (tournamentId, placeTaken) {
+        gameHub.client.TournamentPlayerGameCompleted = function(tournamentId, placeTaken) {
             if (wrapper.terminated) {
                 return;
             }
@@ -942,7 +947,7 @@ class TableManager {
 
             tournamentView.onTournamentPlayerGameCompleted(placeTaken);
         };
-        gameHub.client.TournamentBetLevelChanged = function (tournamentId, level) {
+        gameHub.client.TournamentBetLevelChanged = function(tournamentId, level) {
             if (wrapper.terminated) {
                 return;
             }
@@ -955,7 +960,7 @@ class TableManager {
 
             tournamentView.onTournamentBetLevelChanged(level);
         };
-        gameHub.client.TournamentRoundChanged = function (tournamentId, round) {
+        gameHub.client.TournamentRoundChanged = function(tournamentId, round) {
             if (wrapper.terminated) {
                 return;
             }
@@ -968,7 +973,7 @@ class TableManager {
 
             tournamentView.onTournamentRoundChanged(round);
         };
-        gameHub.client.TournamentRebuyStatusChanged = function (tournamentId, rebuyAllowed, addonAllowed) {
+        gameHub.client.TournamentRebuyStatusChanged = function(tournamentId, rebuyAllowed, addonAllowed) {
             if (wrapper.terminated) {
                 return;
             }
@@ -982,7 +987,7 @@ class TableManager {
 
             tournamentView.onTournamentRebuyStatusChanged(rebuyAllowed, addonAllowed);
         };
-        gameHub.client.TournamentRebuyCountChanged = function (tournamentId, rebuyCount, addonCount) {
+        gameHub.client.TournamentRebuyCountChanged = function(tournamentId, rebuyCount, addonCount) {
             if (wrapper.terminated) {
                 return;
             }
@@ -995,7 +1000,7 @@ class TableManager {
 
             tournamentView.onTournamentRebuyCountChanged(rebuyCount, addonCount);
         };
-        gameHub.client.TournamentFrozen = function (tournamentId) {
+        gameHub.client.TournamentFrozen = function(tournamentId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -1008,7 +1013,7 @@ class TableManager {
 
             tournamentView.onTournamentFrozen();
         };
-        gameHub.client.TournamentUnfrozen = function (tournamentId) {
+        gameHub.client.TournamentUnfrozen = function(tournamentId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -1022,7 +1027,7 @@ class TableManager {
             tournamentView.onTournamentUnfrozen();
         };
 
-        gameHub.client.TournamentRegistration = function (tournamentId) {
+        gameHub.client.TournamentRegistration = function(tournamentId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -1036,7 +1041,7 @@ class TableManager {
             self.openTournamentById(tournamentId);
         };
 
-        gameHub.client.TournamentRegistrationCancelled = function (tournamentId) {
+        gameHub.client.TournamentRegistrationCancelled = function(tournamentId) {
             if (wrapper.terminated) {
                 return;
             }
@@ -1053,18 +1058,18 @@ class TableManager {
         };
     }
 
-    /** 
+    /**
      * Remove all tables from the given tournament
      */
     private removeTournamentTables(tournamentId: number) {
         const tables = this.tables()
-            .filter(_ => _.tournament() === null || _.tournament().tournamentId !== tournamentId);
+            .filter((table) => table.tournament() === null || table.tournament().tournamentId !== tournamentId);
         this.tables(tables);
     }
 
     private requestTournamentsInformation(tournaments: TournamentPlayerStateDefinition[]) {
         const self = this;
-        const deferreds = <Promise<TournamentDefinition>[]>[];
+        const deferreds = [] as Array<Promise<TournamentDefinition>>;
         for (let i = 0; i < tournaments.length; i++) {
             const tournamentPlayerState = tournaments[i];
             const d = this.buildTournamentInformationRequest(
@@ -1100,7 +1105,7 @@ class TableManager {
     private removeClosedTables() {
         const tables = this.tables();
         let tableId = null;
-        for (let t in tables) {
+        for (const t in tables) {
             if (!tables.hasOwnProperty(t)) {
                 continue;
             }

@@ -42,7 +42,7 @@ export class LanguageManager {
         }
 
         let result = template;
-        for (let propName in parameters) {
+        for (const propName in parameters) {
             if (parameters.hasOwnProperty(propName)) {
                 let value = parameters[propName];
                 if (value === null || value === undefined) {

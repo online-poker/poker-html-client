@@ -2,10 +2,10 @@
 
 import { App } from "../app";
 import { AccountPage } from "./accountpage";
+import { ChangePasswordPage } from "./changepasswordpage";
+import { ChatPage } from "./chatpage";
 import { RatingPage } from "./ratingpage";
 import { SettingsPage } from "./settingspage";
-import { ChatPage } from "./chatpage";
-import { ChangePasswordPage } from "./changepasswordpage";
 
 export class OtherPageBlock extends PageBlock {
     public changePasswordPage: ChangePasswordPage;
@@ -15,7 +15,7 @@ export class OtherPageBlock extends PageBlock {
     public accountPage: AccountPage;
 
     constructor() {
-        let accountPage = new AccountPage();
+        const accountPage = new AccountPage();
         super("other", "account", accountPage);
         this.accountPage = accountPage;
         this.morePage = new SettingsPage();

@@ -3,8 +3,8 @@ declare var apiHost: string;
 import * as ko from "knockout";
 import { App } from "../app";
 import * as authManager from "../authmanager";
-import { PageBase } from "../ui/pagebase";
 import { accountService, reloadManager, websiteService } from "../services";
+import { PageBase } from "../ui/pagebase";
 
 declare var app: App;
 
@@ -19,20 +19,20 @@ class CashierPage extends PageBase {
         const self = this;
         this.loading = ko.observable(false);
         this.cashierCaption = ko.observable<string>();
-        authManager.authenticated.subscribe(function (newValue) {
+        authManager.authenticated.subscribe(function(newValue) {
             if (newValue) {
                 self.updateInformation();
             } else {
                 self.player({
                     login: "",
-                    accounts: <AccountInformation[]>[],
+                    accounts: [] as AccountInformation[],
                     lastTransaction: null,
                 });
             }
         });
         this.player = ko.observable({
             login: "",
-            accounts: <AccountInformation[]>[],
+            accounts: [] as AccountInformation[],
             lastTransaction: null,
         });
     }

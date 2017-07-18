@@ -2,14 +2,14 @@ declare var apiHost: string;
 
 import { App } from "../app";
 import { appConfig } from "../appconfig";
-import * as timeService from "../timeservice";
-import * as metadataManager from "../metadatamanager";
 import * as authManager from "../authmanager";
-import { PageBase } from "../ui/pagebase";
-import { keyboardActivationService } from "../services";
 import { debugSettings } from "../debugsettings";
-import { settings } from "../settings";
 import { _ } from "../languagemanager";
+import * as metadataManager from "../metadatamanager";
+import { keyboardActivationService } from "../services";
+import { settings } from "../settings";
+import * as timeService from "../timeservice";
+import { PageBase } from "../ui/pagebase";
 
 declare var app: App;
 
@@ -87,7 +87,7 @@ export class HomePage extends PageBase {
         const data = await metadataApi.GetNews();
         if (data.Status === "Ok") {
             this.news(data.Data);
-            let i = 0;
+            const i = 0;
             if (data.Data.length > 0 && i < data.Data.length) {
                 this.currentNews(data.Data[i]);
             }

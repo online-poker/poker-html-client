@@ -1,9 +1,7 @@
 ﻿/// <reference path="../pageblock.ts" />
-/// <reference path="infopage.ts" />
-/// <reference path="supportpage.ts" />
 
-import { SupportPage } from "./supportpage";
 import { InfoPage } from "./infopage";
+import { SupportPage } from "./supportpage";
 
 export class InfoPageBlock extends PageBlock {
     constructor() {

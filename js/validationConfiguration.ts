@@ -1,5 +1,5 @@
-import * as kov from "knockout.validation";
 import * as ko from "knockout";
+import * as kov from "knockout.validation";
 
 export function updateDefaultMessages() {
     // tslint:disable-next-line:no-unused-expression

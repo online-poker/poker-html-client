@@ -1,6 +1,6 @@
-import { connectionService } from "./index";
-import { debugSettings } from "../debugsettings";
 import { App } from "../app";
+import { debugSettings } from "../debugsettings";
+import { connectionService } from "./index";
 
 declare var app: App;
 

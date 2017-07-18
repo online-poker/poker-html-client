@@ -1,6 +1,4 @@
-﻿/// <reference types="knockout" />
-
-import ko = require("knockout");
+﻿import ko = require("knockout");
 import { debugSettings } from "../../debugsettings";
 
 class TabBarItem {
@@ -10,7 +8,7 @@ class TabBarItem {
     public selected: KnockoutObservable<boolean>;
     public disabled: KnockoutObservable<boolean>;
     public notice: KnockoutObservable<boolean>;
-    public action: Function;
+    public action: () => void;
     public handler() {
         if (this.action != null) {
             this.action.call(this);
@@ -23,10 +21,10 @@ class TabBar {
     public visible: KnockoutObservable<boolean>;
 
     constructor() {
-        this.items = ko.observableArray(<TabBarItem[]>[]);
+        this.items = ko.observableArray<TabBarItem>([]);
         this.visible = ko.observable(true);
     }
-    public addItem(name: string, caption: string, cssClass: string, action: Function) {
+    public addItem(name: string, caption: string, cssClass: string, action: () => void) {
         const item = new TabBarItem();
         item.name = name;
         item.caption = caption;
@@ -80,7 +78,7 @@ class TabBar {
 
     private log(message: string, ...params: any[]) {
         if (debugSettings.application.debugTabbar) {
-            const traceFunction = <Function>console.trace;
+            const traceFunction = console.trace as (message: string, ...args) => void;
             traceFunction.bind(console, message, params)();
         }
     }

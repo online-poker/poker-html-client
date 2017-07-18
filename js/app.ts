@@ -1,58 +1,60 @@
-import * as timeService from "./timeservice";
-import * as metadataManager from "./metadatamanager";
-import { SimplePopup } from "./popups/simplepopup";
 import * as authManager from "./authmanager";
-import { settings } from "./settings";
-import * as broadcastService from "./services/broadcastservice";
 import * as commandManager from "./commandmanager";
+import { debugSettings } from "./debugsettings";
 import { _ } from "./languagemanager";
+import * as metadataManager from "./metadatamanager";
 import {
-    slowInternetService,
-    keyboardActivationService,
-    connectionService,
-    imagePreloadService,
-    deviceEvents,
-    reloadManager,
-    soundManager,
-    orientationService,
-    pushService,
-    websiteService,
-} from "./services";
-import { tableManager } from "./table/tablemanager";
-import {
-    HomePage,
-    LobbyPageBlock,
     CashierPageBlock,
-    TablesPage,
+    HomePage,
     InfoPageBlock,
+    LobbyPageBlock,
     OtherPageBlock,
     SeatPage,
+    TablesPage,
 } from "./pages";
 import {
-    MorePopup,
     AccountStatusPopup,
-    TableMenuPopup,
-    SelectAvatarPopup,
-    SlowConnectionPopup,
-    RegistrationPopup,
-    OkCancelPopup,
-    NewsPopup,
-    JoinTablePopup,
-    HandHistoryPopup,
-    ForgetPasswordPopup,
-    CustomPopup,
-    ContinueForgetPasswordPopup,
-    ChangePasswordPopup,
     AddMoneyPopup,
-    ChatPopup,
     AuthPopup,
-    SettingsPopup,
+    ChangePasswordPopup,
+    ChatPopup,
+    ContinueForgetPasswordPopup,
+    CustomPopup,
+    ForgetPasswordPopup,
+    HandHistoryPopup,
+    JoinTablePopup,
+    MorePopup,
+    NewsPopup,
+    OkCancelPopup,
+    RegistrationPopup,
     RulesPopup,
+    SelectAvatarPopup,
+    SettingsPopup,
+    SlowConnectionPopup,
+    TableMenuPopup,
 } from "./popups";
+import { SimplePopup } from "./popups/simplepopup";
+import {
+    connectionService,
+    deviceEvents,
+    imagePreloadService,
+    keyboardActivationService,
+    orientationService,
+    pushService,
+    reloadManager,
+    slowInternetService,
+    soundManager,
+    websiteService,
+} from "./services";
+import * as broadcastService from "./services/broadcastservice";
 import { uiManager, UIManager } from "./services/uimanager";
+import { settings } from "./settings";
 import { TabBar } from "./tabbar";
-import { debugSettings } from "./debugsettings";
 import * as runtimeSettings from "./table/runtimesettings";
+import { tableManager } from "./table/tablemanager";
+import * as timeService from "./timeservice";
+
+type PromiseOrVoid = void | Promise<void>;
 
 export class App {
     public static addTabBarItemMapping(tabBarItem: string, pageName: string) {
@@ -181,7 +183,7 @@ export class App {
         // var progressBackgroundElement = $(".progress-background")[0];
         // ko.applyBindings(this, progressBackgroundElement);
         if (typeof window !== "undefined") {
-            this.processing.subscribe(function (newValue) {
+            this.processing.subscribe(function(newValue) {
                 if (newValue) {
                     $(".progress-background").show();
                 } else {
@@ -267,13 +269,13 @@ export class App {
         app.tablesPage.calculateLandscapeWidth();
         pushService.register();
 
-        tableManager.maxTablesReached.add(function (continuation) {
+        tableManager.maxTablesReached.add(function(continuation) {
             SimplePopup.display(_("maxtables.caption"), _("maxtables.maxtablesreached"));
         });
-        tableManager.hasTurn.subscribe(function (value) {
+        tableManager.hasTurn.subscribe(function(value) {
             app.tabBar.notice("tables", value);
         });
-        app.popupClosed.add(function (popupName) {
+        app.popupClosed.add(function(popupName) {
             keyboardActivationService.forceHideKeyboard();
             console.log("Popup " + popupName + " closed");
         });
@@ -283,11 +285,11 @@ export class App {
     public receivedEvent(id) {
         const self = this;
         timeService.start();
-        settings.soundEnabled.subscribe(function (value) {
+        settings.soundEnabled.subscribe(function(value) {
             soundManager.enabled(value);
         });
         settings.loadSettings();
-        settings.isGuest.subscribe(function (value) {
+        settings.isGuest.subscribe(function(value) {
             if (authManager.authenticated() && !value) {
                 app.lobbyPageBlock.lobbyPage.cashOptions.currency(1);
                 app.lobbyPageBlock.lobbyPage.sngOptions.currency(1);
@@ -298,7 +300,7 @@ export class App {
                 app.lobbyPageBlock.lobbyPage.tournamentOptions.currency(2);
             }
         });
-        authManager.authenticated.subscribe(function (value) {
+        authManager.authenticated.subscribe(function(value) {
             if (value && !settings.isGuest()) {
                 app.lobbyPageBlock.lobbyPage.cashOptions.currency(1);
                 app.lobbyPageBlock.lobbyPage.sngOptions.currency(1);
@@ -309,7 +311,7 @@ export class App {
                 app.lobbyPageBlock.lobbyPage.tournamentOptions.currency(2);
             }
         });
-        $.when(this.loadPromises).then(function () {
+        $.when(this.loadPromises).then(function() {
             keyboardActivationService.setup();
             self.setupTouchActivation();
         });
@@ -344,7 +346,7 @@ export class App {
             slowInternetService.onDisconnected();
             self.metadataUpdateFailed();
         });
-        metadataManager.setReady(function () {
+        metadataManager.setReady(function() {
             // Adjust height
             const toolpadHeight = platformInfo.hasTabBar() ? 49 : 15;
             const logoHeight = 102;
@@ -379,13 +381,15 @@ export class App {
                 self.loadTablesAndTournaments(true);
             }
 
-            tableManager.tables.subscribe(function (newValue) {
+            tableManager.tables.subscribe(function(newValue) {
                 self.updateTabbar(authManager.authenticated(), newValue);
             });
-            authManager.authenticated.subscribe(function (newValue) {
+            authManager.authenticated.subscribe(function(newValue) {
                 self.updateTabbar(newValue, tableManager.tables());
                 if (newValue && metadataManager.banners != null) {
-                    const filteredBanners = metadataManager.banners.filter(_ => _.Id > settings.lastBannerId()).sort((a, b) => a.Id - b.Id);
+                    const filteredBanners = metadataManager.banners
+                        .filter((banner) => banner.Id > settings.lastBannerId())
+                        .sort((a, b) => a.Id - b.Id);
                     if (filteredBanners.length > 0) {
                         const currentBanner = filteredBanners[0];
                         settings.lastBannerId(currentBanner.Id);
@@ -397,6 +401,7 @@ export class App {
                     }
                 }
 
+                // tslint:disable-next-line:no-console
                 console.log("Authentication changed.");
                 self.terminateConnection();
                 self.loadTablesAndTournaments(newValue);
@@ -405,6 +410,7 @@ export class App {
 
         slowInternetService.initialize();
         const hasInternet = slowInternetService.hasInternet();
+        // tslint:disable-next-line:no-console
         console.log("Detecting internet status..." + hasInternet ? "connected" : "not connected");
         if (hasInternet) {
             slowInternetService.setRetryHandler(null);
@@ -436,14 +442,14 @@ export class App {
     public showPageBlock(pageBlockName: string) {
         uiManager.showPageBlock(pageBlockName);
     }
-    public showSelector(selectorCaption: string, options: SelectorItem[], success: Function) {
+    public showSelector(selectorCaption: string, options: SelectorItem[], success: (item: SelectorItem) => void) {
         const successCallback = (item: SelectorItem) => {
             $(".page .page-block." + uiManager.currentPageBlock).css("display", "block");
             $(".page .sub-page." + uiManager.currentPage).css("display", "block");
             $(".page .sub-page.selector").css("display", "none");
             success(item);
         };
-        const cancelCallback = (item: SelectorItem) => {
+        const cancelCallback = () => {
             $(".page .page-block." + uiManager.currentPageBlock).css("display", "block");
             $(".page .sub-page." + uiManager.currentPage).css("display", "block");
             $(".page .sub-page.selector").css("display", "none");
@@ -455,20 +461,20 @@ export class App {
     }
     public bindPageBlock(pageBlockName: string, viewModel: PageBlock) {
         const self = this;
-        commandManager.registerCommand("pageblock." + pageBlockName, function () {
+        commandManager.registerCommand("pageblock." + pageBlockName, function() {
             const requireAuthentication = viewModel.requireAuthentication;
             if (!requireAuthentication) {
                 if (!viewModel.requireGuestAuthentication) {
                     self.showPageBlock(pageBlockName);
                 } else {
-                    app.requireGuestAuthentication().then(function (value) {
+                    app.requireGuestAuthentication().then(function(value) {
                         if (value) {
                             self.showPageBlock(pageBlockName);
                         }
                     });
                 }
             } else {
-                app.requireAuthentication().then(function (value) {
+                app.requireAuthentication().then(function(value) {
                     if (value) {
                         self.showPageBlock(pageBlockName);
                     }
@@ -483,12 +489,12 @@ export class App {
     }
     public bindSubPage(pageName: string, viewModel: any) {
         const self = this;
-        commandManager.registerCommand("page." + pageName, function () {
+        commandManager.registerCommand("page." + pageName, function() {
             const requireAuthentication = viewModel.requireAuthentication || false;
             if (!requireAuthentication) {
                 self.showSubPage(pageName);
             } else {
-                app.requireAuthentication().then(function (value) {
+                app.requireAuthentication().then(function(value) {
                     if (value) {
                         self.showSubPage(pageName);
                     }
@@ -513,8 +519,8 @@ export class App {
 
         const pageElement = pagejElement[0];
         if (!pageElement.hasChildNodes()) {
-            const templateSource: string = <any>pagejElement.data("template");
-            const pageLoadPromise = $.get(templateSource, "text/html").then(function (data: string) {
+            const templateSource: string = pagejElement.data("template") as any;
+            const pageLoadPromise = $.get(templateSource, "text/html").then(function(data: string) {
                 pagejElement.html(data);
                 try {
                     ko.applyBindings(viewModel, pageElement);
@@ -530,7 +536,7 @@ export class App {
     }
     public bindPopup(popup: string, viewModel: any): void {
         const self = this;
-        commandManager.registerCommand("popup." + popup, function () {
+        commandManager.registerCommand("popup." + popup, function() {
             self.showPopup(popup);
         });
         if (typeof window === "undefined") {
@@ -550,8 +556,8 @@ export class App {
 
         const popupElement = popupjElement[0];
         if (!popupElement.hasChildNodes()) {
-            const templateSource: string = <any>popupjElement.data("template");
-            $.get(templateSource, "text/html").then(function (data) {
+            const templateSource: string = popupjElement.data("template") as any;
+            $.get(templateSource, "text/html").then(function(data) {
                 popupjElement.html(data);
                 try {
                     ko.applyBindings(viewModel, popupElement);
@@ -583,8 +589,8 @@ export class App {
 
         const domElement = uiElement[0];
         if (!domElement.hasChildNodes()) {
-            const templateSource: string = <any>uiElement.data("template");
-            $.get(templateSource, "text/html").then(function (data) {
+            const templateSource: string = uiElement.data("template") as any;
+            $.get(templateSource, "text/html").then(function(data) {
                 uiElement.html(data);
                 try {
                     ko.applyBindings(viewModel, domElement);
@@ -611,13 +617,13 @@ export class App {
         this.currentPopup = popupName;
         console.log("Show popup " + popupName);
         const result = new Promise<PopupResult>((resolve) => {
-            this.popupClosed.addOnce(function (name: string, dialogResults?: any) {
+            this.popupClosed.addOnce(function(name: string, dialogResults?: any) {
                 if (popupName !== name) {
                     console.warn("Responding to popup " + name + " instead of " + popupName);
                 }
 
                 const signalData = {
-                    name: name,
+                    name,
                     result: dialogResults,
                 };
                 resolve(signalData);
@@ -734,8 +740,8 @@ export class App {
         const result = $.Deferred<boolean>();
         if (!authManager.authenticated()) {
             // We don't authenticated, so display authentication popup.
-            this.popupClosed.addOnce(function () {
-                // Resolve with current authentication status, so 
+            this.popupClosed.addOnce(function() {
+                // Resolve with current authentication status, so
                 // caller would know operation was successful or not.
                 result.resolve(authManager.authenticated(), false);
             }, this, null);
@@ -751,7 +757,7 @@ export class App {
         const result = $.Deferred<boolean>();
         if (!authManager.authenticated()) {
             // We don't authenticated, so display authentication popup.
-            authManager.loginAsGuest().then(function (status) {
+            authManager.loginAsGuest().then(function(status) {
                 result.resolve(authManager.authenticated(), false);
             });
         } else {
@@ -775,7 +781,7 @@ export class App {
         popupObject.customStyle("");
         return deferred;
     }
-    public promptEx(title: string, messages: string[], buttons: string[], actions: Function[]) {
+    public promptEx(title: string, messages: string[], buttons: string[], actions: Array<() => PromiseOrVoid>) {
         this.showPopup("custom");
         const popupObject = this.customPopup;
         const deferred = popupObject.deferred;
@@ -786,21 +792,21 @@ export class App {
         return deferred;
     }
 
-    public promptAsync(title: string, messages: string[], buttons: string[]= null) {
+    public promptAsync(title: string, messages: string[], buttons: string[] = null) {
         return new Promise<boolean>((resolve, reject) => {
             this.prompt(title, messages, buttons).then(() => resolve(true), () => resolve(false));
         });
     }
     private initializeTabbar() {
         this.tabBar = new TabBar();
-        this.tabBar.addItem("home", _("tabbar.home"), "home", function () {
+        this.tabBar.addItem("home", _("tabbar.home"), "home", function() {
             app.executeCommand("page.home");
             app.showPageBlock("home");
         });
-        this.tabBar.addItem("lobby", _("tabbar.lobby"), "lobby", function () {
+        this.tabBar.addItem("lobby", _("tabbar.lobby"), "lobby", function() {
             app.lobbyPageBlock.showLobby();
         });
-        this.tabBar.addItem("tables", _("tabbar.tables"), "tables", function () {
+        this.tabBar.addItem("tables", _("tabbar.tables"), "tables", function() {
             const currentTable = app.tablesPage.currentTable();
             if (currentTable === null || currentTable.model === null) {
                 console.warn("No tables opened. Could not open tables page");
@@ -811,11 +817,11 @@ export class App {
             app.executeCommand("app.selectTable", [currentTable.model]);
             app.showSubPage("tables");
         });
-        this.tabBar.addItem("cashier", _("tabbar.cashier"), "cashier", function () {
+        this.tabBar.addItem("cashier", _("tabbar.cashier"), "cashier", function() {
             app.executeCommand("pageblock.cashier");
             // app.executeCommand("pageblock.other");
         });
-        this.tabBar.addItem("more", _("tabbar.more"), "more", function () {
+        this.tabBar.addItem("more", _("tabbar.more"), "more", function() {
             const currentTabBarItem = UIManager.getTabBarItemForPage(uiManager.currentPageBlock);
             const isMoreSelected = app.tabBar.isSelected("more");
             const isMoreOpened = $("body").hasClass("more-opened");
@@ -843,23 +849,23 @@ export class App {
             }
         }
 
-        uiManager.subPageHiding.add(function (blockHiding: string) {
+        uiManager.subPageHiding.add(function(blockHiding: string) {
             const name = UIManager.getTabBarItemForPage(blockHiding);
             app.tabBar.select(name, false);
         });
-        uiManager.subPageShowing.add(function (blockShowing: string) {
+        uiManager.subPageShowing.add(function(blockShowing: string) {
             const name = UIManager.getTabBarItemForPage(blockShowing);
             app.tabBar.select(name, true);
         });
-        uiManager.pageBlockHiding.add(function (blockHiding: string) {
+        uiManager.pageBlockHiding.add(function(blockHiding: string) {
             const name = UIManager.getTabBarItemForPage(blockHiding);
             app.tabBar.select(name, false);
         });
-        uiManager.pageBlockShowing.add(function (blockShowing: string) {
+        uiManager.pageBlockShowing.add(function(blockShowing: string) {
             const name = UIManager.getTabBarItemForPage(blockShowing);
             app.tabBar.select(name, true);
         });
-        uiManager.pageBlockHidden.add(function (pageBlock: string) {
+        uiManager.pageBlockHidden.add(function(pageBlock: string) {
             if (app.tabBar.isSelected("more")) {
                 if (pageBlock !== "more" && !app.morePopup.visible()) {
                     app.tabBar.select("more", false);
@@ -912,7 +918,7 @@ export class App {
 
         self.logEvent("Pause application");
         // Wrap code in the timeout to prevent application from freezing.
-        timeService.setTimeout(function () {
+        timeService.setTimeout(function() {
             self.logEvent("Pause application#2");
             self.showSplash();
             settings.saveSettings();
@@ -987,7 +993,7 @@ export class App {
         } else {
             slowInternetService.onOffline();
             self.hideSplash();
-            slowInternetService.setRetryHandler(function () {
+            slowInternetService.setRetryHandler(function() {
                 self.updateMetadataOnResume(pageBeforeClosing, pageBlockBeforeClosing, subPageBeforeClosing);
             });
         }
@@ -1005,7 +1011,7 @@ export class App {
             return;
         }
 
-        const failHandler = function () {
+        const failHandler = function() {
             console.log("Failed updating metadata on resume, rescheduling attempt.");
             slowInternetService.showReconnectFailedPopup();
             slowInternetService.setRetryHandler(() => {
@@ -1020,7 +1026,7 @@ export class App {
                 try {
                     await tableManager.getCurrentTablesAndTournaments();
                     self.spinner.stop();
-                    self.establishConnection().then(function (wrapper) {
+                    self.establishConnection().then(function(wrapper) {
                         if (wrapper.terminated) {
                             return;
                         }
@@ -1069,7 +1075,7 @@ export class App {
         }
 
         console.log("Launch intialization of metadata first time");
-        const failHandler = function () {
+        const failHandler = function() {
             console.log("Failed updating metadata for first time, rescheduling attempt.");
             slowInternetService.setRetryHandler(() => {
                 self.updateMetadataOnLaunch();
@@ -1112,14 +1118,14 @@ export class App {
     private setupTouchActivation() {
         // This is a fix which updates binding for the knockout value binding.
         // This is nescessary since touchstart event start handling.
-        $("body").on("keyup", "input", function (event) {
+        $("body").on("keyup", "input", function(event) {
             $(this).trigger("change");
         });
-        $("body").on("touchstart", ".button, .actionable", function (event) {
+        $("body").on("touchstart", ".button, .actionable", function(event) {
             $(this).addClass("pressed");
-        }).on("touchend", ".button, .actionable", function (event) {
+        }).on("touchend", ".button, .actionable", function(event) {
                 $(this).removeClass("pressed");
-        }).on("touchcancel", ".button, .actionable", function (event) {
+        }).on("touchcancel", ".button, .actionable", function(event) {
                 $(this).removeClass("pressed");
             });
     }
@@ -1135,7 +1141,7 @@ export class App {
             { id: 8, order: 1, name: _("menu.messages") },
             { id: 9, order: 1, name: _("menu.information") },
         ]);
-        menu.optionItemClick = function (itemId) {
+        menu.optionItemClick = function(itemId) {
             if (itemId === 1) {
                 app.executeCommand("page.home");
                 app.showPageBlock("home");
@@ -1207,7 +1213,7 @@ export class App {
     private initializeConnection() {
         const self = this;
         // connectionService.initializeConnection();
-        connectionService.recoverableError.add(function () {
+        connectionService.recoverableError.add(function() {
             self.establishConnection();
         });
     }
@@ -1217,10 +1223,10 @@ export class App {
     }
     private establishConnection(maxAttempts = 3) {
         const self = this;
-        // This part should be moved up to the stack to remove dependency on other services 
+        // This part should be moved up to the stack to remove dependency on other services
         // in the connection management.
         connectionService.initializeConnection();
-        return connectionService.establishConnection(maxAttempts).then(function (wrapper) {
+        return connectionService.establishConnection(maxAttempts).then(function(wrapper) {
             if (wrapper.terminated) {
                 return wrapper;
             }
@@ -1240,7 +1246,7 @@ export class App {
 
             self.logEvent("Listening lobby chat messages.");
             const chatHub = connection.createHubProxy("chat");
-            chatHub.on("Message", function (...msg: any[]) {
+            chatHub.on("Message", function(...msg: any[]) {
                 const messageId = msg[0];
                 const tableId = msg[1];
                 const type = msg[2];

@@ -12,17 +12,14 @@ export class PushService {
 
         const hub = this.getHub();
         hub.registerApplicationAsync().then(
-            function (result) {
-                // tslint:disable-next-line:no-console
+            function(result) {
                 console.log("Registration successful: " + result.registrationId);
             },
-            function (error) {
-                // tslint:disable-next-line:no-console
+            function(error) {
                 console.log("Registration failed: " + error);
             });
 
-        hub.onPushNotificationReceived = function (msg) {
-            // tslint:disable-next-line:no-console
+        hub.onPushNotificationReceived = function(msg) {
             console.log("onPushNotificationReceived: ", msg);
         };
     }

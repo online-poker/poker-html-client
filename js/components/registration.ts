@@ -7,7 +7,7 @@ const trivialViewModelFactory = function (params, componentInfo) {
 };
 
 const tableIconViewModelFactory = function (params, componentInfo) {
-    const tableData = <LobbyTableItem>params.data;
+    const tableData = params.data as LobbyTableItem;
     return {
         displayTakenSeats: true,
         hasLoadingIndicator: false,

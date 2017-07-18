@@ -23,7 +23,7 @@
         moveTime: 60,
 
         /**
-         * Enables or disables flag indicating whether auto-fold 
+         * Enables or disables flag indicating whether auto-fold
          * and auto-check functionality would be reset each new game.
          */
         clearAutoFoldOrCheckOnNewGame: true,

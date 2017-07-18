@@ -1,10 +1,10 @@
 ﻿import * as ko from "knockout";
-import { TableView } from "../table/tableview";
-import { PlayerWinInformation } from "../table/handhistory";
-import { GameActionsQueue } from "../table/gameactionsqueue";
-import { PopupBase } from "../ui/popupbase";
-import { appConfig } from "../appconfig";
 import { App } from "../app";
+import { appConfig } from "../appconfig";
+import { GameActionsQueue } from "../table/gameactionsqueue";
+import { PlayerWinInformation } from "../table/handhistory";
+import { TableView } from "../table/tableview";
+import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 

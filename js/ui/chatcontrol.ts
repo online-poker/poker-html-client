@@ -1,8 +1,8 @@
 ﻿/// <reference path="../poker.commanding.api.ts" />
 
 import * as ko from "knockout";
-import * as timeService from "../timeservice";
 import { connectionService } from "../services";
+import * as timeService from "../timeservice";
 
 export class ChatControl {
     public currentMessage: KnockoutObservable<string>;
@@ -33,7 +33,7 @@ export class ChatControl {
                 this.append(messageId, tableId, type, sender, message);
             };
             chatHub.on("Message", handler);
-            connectionService.terminatedConnection.addOnce(function () {
+            connectionService.terminatedConnection.addOnce(function() {
                 chatHub.off("Message", handler);
             }, self, 0);
         });

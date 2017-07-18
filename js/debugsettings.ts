@@ -136,4 +136,4 @@ class DebugSettings {
     }
 }
 
-export var debugSettings = new DebugSettings();
+export const debugSettings = new DebugSettings();
