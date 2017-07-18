@@ -3,21 +3,21 @@
 import * as ko from "knockout";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
-import { tableManager } from "../table/tablemanager";
+import * as commandManager from "../commandmanager";
+import { debugSettings } from "../debugsettings";
 import {
     connectionService,
-    reloadManager,
     deviceEvents,
-    soundManager,
     orientationService,
+    reloadManager,
+    soundManager,
 } from "../services";
+import { uiManager } from "../services/uimanager";
+import { settings } from "../settings";
+import { tableManager } from "../table/tablemanager";
 import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
-import { uiManager } from "../services/uimanager";
 import { PageBase } from "../ui/pagebase";
-import { debugSettings } from "../debugsettings";
-import { settings } from "../settings";
-import * as commandManager from "../commandmanager";
 
 declare var app: App;
 
@@ -46,66 +46,66 @@ export class TablesPage extends PageBase {
         this.isConnectionSlow = ko.observable(false);
         this.calculateLandscapeWidth();
         this.currentIndex = ko.computed<number>({
-            read: function () {
+            read() {
                 return tableManager.currentIndex();
             },
-            write: function (value) {
+            write(value) {
                 tableManager.currentIndex(value);
                 self.log("Switched to table with index " + value);
             },
         });
         this.currentIndex1 = ko.computed<number>({
-            read: function () {
+            read() {
                 return self.currentIndex() + 1;
             },
-            write: function (value) {
+            write(value) {
                 self.currentIndex(value - 1);
             },
             owner: this,
         });
-        this.currentTable = ko.computed(function () {
+        this.currentTable = ko.computed(() => {
             const tables = tableManager.tables();
             if (tables.length === 0) {
                 return new TableView(0, null);
             }
 
             const index = this.currentIndex();
-            if (!tables.hasOwnProperty(index)) {
+            if (!tables.hasOwnProperty(index.toString())) {
                 return new TableView(0, null);
             }
 
             return tables[index];
         }, this);
-        this.selectedTables = ko.computed(function () {
+        this.selectedTables = ko.computed(() => {
             const tables = tableManager.tables();
             return tables;
         }, this);
-        this.loading = ko.computed(function () {
-            const ct = self.currentTable();
+        this.loading = ko.computed(() => {
+            const ct = this.currentTable();
             if (ct == null) {
                 return false;
             }
 
             return ct.connecting();
         }, this);
-        this.frozen = ko.computed(function () {
-            const ct = self.currentTable();
+        this.frozen = ko.computed(() => {
+            const ct = this.currentTable();
             if (ct === null) {
                 return false;
             }
 
             return ct.frozen();
         }, this);
-        this.opened = ko.computed(function () {
-            const ct = self.currentTable();
+        this.opened = ko.computed(() => {
+            const ct = this.currentTable();
             if (ct === null) {
                 return false;
             }
 
             return ct.opened();
         }, this);
-        this.currentTable.subscribe(function (value: TableView) {
-            tableManager.tables().forEach(_ => {
+        this.currentTable.subscribe((value: TableView) => {
+            tableManager.tables().forEach((_) => {
                 if (_ !== value) {
                     _.soundEnabled = false;
                     _.animationSuppressed(true);
@@ -205,7 +205,7 @@ export class TablesPage extends PageBase {
         uiManager.showPage("table");
         app.tabBar.visible(false);
         orientationService.setOrientation("landscape");
-        timeService.setTimeout(function () {
+        timeService.setTimeout(() => {
             orientationService.lock();
         }, 200);
         const currentTable = this.currentTable();
@@ -263,14 +263,14 @@ export class TablesPage extends PageBase {
         const self = this;
         // Unsubscribe from table notifications.
         const tableView = this.currentTable();
-        const removeCurrentTable = function () {
+        const removeCurrentTable = () => {
             // Navigate back to the lobby.
             if (tableManager.tables().length === 0) {
                 app.lobbyPageBlock.showLobby();
                 self.deactivate();
             }
         };
-        const leaved = <JQueryDeferred<() => void>>commandManager.executeCommand("app.leaveTable", [tableView.tableId]);
+        const leaved = commandManager.executeCommand("app.leaveTable", [tableView.tableId]) as JQueryDeferred<() => void>;
         leaved.then(removeCurrentTable);
     }
     public showMenu() {
@@ -288,14 +288,14 @@ export class TablesPage extends PageBase {
 
             return tournament.finishedPlaying();
         });
-        finishedTournamentTables.forEach(_ => tableManager.remove(_));
+        finishedTournamentTables.forEach((_) => tableManager.remove(_));
     }
     private onConnectionSlow() {
         const self = this;
         this.isConnectionSlow(true);
 
         // Clear message after some time passed by.
-        timeService.setTimeout(function () {
+        timeService.setTimeout(() => {
             self.isConnectionSlow(false);
         }, 3000);
     }
@@ -304,6 +304,7 @@ export class TablesPage extends PageBase {
     }
     private log(message: string, ...params: any[]) {
         if (debugSettings.tableView.trace) {
+            // tslint:disable-next-line:no-console
             console.log(message, params);
         }
     }

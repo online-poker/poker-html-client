@@ -1,11 +1,11 @@
 /// <reference path="../poker.commanding.api.ts" />
 
 import { App } from "../app";
-import { PageBase } from "../ui/pagebase";
-import { tableManager } from "../table/tablemanager";
 import { debugSettings } from "../debugsettings";
-import { reloadManager } from "../services";
 import { _ } from "../languagemanager";
+import { reloadManager } from "../services";
+import { tableManager } from "../table/tablemanager";
+import { PageBase } from "../ui/pagebase";
 
 declare var apiHost: string;
 declare var app: App;
@@ -63,7 +63,7 @@ export class TablesListPage extends PageBase {
 
         if (data.Status === "Ok") {
             self.log("Informaton about tables received: ", data.Data);
-            const tables = <any[]>data.Data;
+            const tables = data.Data as any[];
             tables.forEach(function (item) {
                 item.IsOpened = tableManager.isOpened(item.TableId);
             });

@@ -4,8 +4,8 @@
 declare var apiHost: string;
 
 import * as ko from "knockout";
-import { imagePreloadService } from "./services";
 import { debugSettings } from "./debugsettings";
+import { imagePreloadService } from "./services";
 
 class MetadataManager {
     public online = ko.observable("-");
@@ -15,21 +15,21 @@ class MetadataManager {
     public banners: BannerData[];
     public smallBanners: BannerData[];
     public avatars: string[];
-    public ready: Function;
-    public failed: Function;
+    public ready: () => void | null;
+    public failed: () => void;
 
-    public setReady(value: Function) {
+    public setReady(value: () => void | null) {
         this.ready = value;
     }
-    public setFailed(value: Function) {
+    public setFailed(value: () => void) {
         this.failed = value;
     }
     public async update() {
         const self = this;
         const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
-        const failHandler = function () {
-            if (self.failed !== null) {
-                self.failed();
+        const failHandler = () => {
+            if (this.failed !== null) {
+                this.failed();
             }
 
             throw new Error("Failed to update metadata");
@@ -96,14 +96,13 @@ class MetadataManager {
             }
         }
     }
-    public updateOnline() {
+    public async updateOnline() {
         const self = this;
         const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
-        return metadataApi.GetOnlinePlayers().then(function (onlinePlayers) {
-            self.registered(onlinePlayers.Data[1].toString());
-            self.online(onlinePlayers.Data[0].toString());
-            return onlinePlayers;
-        });
+        const onlinePlayers = await metadataApi.GetOnlinePlayers();
+        self.registered(onlinePlayers.Data[1].toString());
+        self.online(onlinePlayers.Data[0].toString());
+        return onlinePlayers;
     }
     private async preloadFirstBanner(format: number) {
         const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
@@ -172,10 +171,11 @@ class MetadataManager {
     }
     private log(message: string) {
         if (debugSettings.initialization.metadata) {
+            // tslint:disable-next-line:no-console
             console.log(message);
         }
     }
 }
 
-let metadataManager = new MetadataManager();
+const metadataManager = new MetadataManager();
 export = metadataManager;

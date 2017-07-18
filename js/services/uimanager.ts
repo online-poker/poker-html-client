@@ -1,8 +1,8 @@
 ﻿/// <reference types="jquery" />
 /// <reference path="../pageblock.ts" />
 
-import { debugSettings } from "../debugsettings";
 import { App } from "../app";
+import { debugSettings } from "../debugsettings";
 
 declare var app: App;
 
@@ -139,7 +139,7 @@ export class UIManager {
             return null;
         }
 
-        return <PageBlock>app[pageBlockName + "PageBlock"];
+        return app[pageBlockName + "PageBlock"] as PageBlock;
     }
 
     /**
@@ -151,7 +151,7 @@ export class UIManager {
             return null;
         }
 
-        return <Page>app[subPageName + "Page"];
+        return app[subPageName + "Page"] as Page;
     }
 
     private logPage(message: string, ...params: any[]) {
@@ -162,4 +162,4 @@ export class UIManager {
     }
 }
 
-export var uiManager = new UIManager();
+export const uiManager = new UIManager();

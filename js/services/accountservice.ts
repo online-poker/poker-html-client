@@ -12,7 +12,7 @@ export class AccountService {
         const api = new OnlinePoker.Commanding.API.Account(apiHost);
         const apiResult = await api.GetPersonalAccount();
         const data = apiResult.Data;
-        const accountsData = <AccountInformation[]>[];
+        const accountsData = [] as AccountInformation[];
         if (realMoneySupported) {
             accountsData.push({
                 available: data.RealMoney,

@@ -1,14 +1,14 @@
 ﻿/* tslint:disable:no-bitwise */
 
 import * as ko from "knockout";
+import { withCommas } from "../helpers";
+import { _ } from "../languagemanager";
 import * as timeService from "../timeservice";
 import { TableView } from "./tableview";
-import { _ } from "../languagemanager";
-import { withCommas } from "../helpers";
 
 export class TablePlaceModel {
     /**
-     * Default avatar for unspecified images, and 
+     * Default avatar for unspecified images, and
      * images from unknown locations.
      */
     public static DefaultAvatarUrl = "img/1px.png";
@@ -182,20 +182,20 @@ export class TablePlaceModel {
         this.CurrentAction = ko.observable<string>();
 
         const self = this;
-        this.IsCardsAnimating = ko.computed(function () {
+        this.IsCardsAnimating = ko.computed(function() {
             return self.IsDealCards() || self.IsFoldCards();
         }, this);
-        this.IsBetPlaced = ko.computed(function () {
+        this.IsBetPlaced = ko.computed(function() {
             return self.Bet() > 0 && !self.IsMovingBetToPot();
         }, this);
-        this.IsSitoutStatus = ko.computed(function () {
+        this.IsSitoutStatus = ko.computed(function() {
             return (self.Status() & 1) !== 0;
         }, this);
         this.IsParticipatingStatus = ko.computed({
-            read: function () {
+            read() {
                 return (self.Status() & 8) !== 0;
             },
-            write: function (value: boolean) {
+            write(value: boolean) {
                 if (value) {
                     self.Status(self.Status() | 8);
                 } else {
@@ -205,10 +205,10 @@ export class TablePlaceModel {
             owner: this,
         });
         this.IsInGameStatus = ko.computed({
-            read: function () {
+            read() {
                 return (self.Status() & 16) !== 0;
             },
-            write: function (value: boolean) {
+            write(value: boolean) {
                 if (value) {
                     self.Status(self.Status() | 16);
                 } else {
@@ -219,19 +219,19 @@ export class TablePlaceModel {
         });
         this.IsInGameStatus(this.IsParticipatingStatus() && this.Cards() !== null);
 
-        this.IsBronse = ko.computed(function () {
+        this.IsBronse = ko.computed(function() {
             return self.Points() >= 100 * 1000
                 && self.Points() < 200 * 1000;
         });
-        this.IsSilver = ko.computed(function () {
+        this.IsSilver = ko.computed(function() {
             return self.Points() >= 200 * 1000
                 && self.Points() < 500 * 1000;
         });
-        this.IsGold = ko.computed(function () {
+        this.IsGold = ko.computed(function() {
             return self.Points() >= 500 * 1000;
         });
 
-        this.LastChatMessageTrimed = ko.computed(function () {
+        this.LastChatMessageTrimed = ko.computed(function() {
             if (self.LastChatMessage() === null) {
                 return null;
             }
@@ -271,6 +271,7 @@ export class TablePlaceModel {
     }
     public setCards(cards: number[]) {
         if (cards === undefined) {
+            // tslint:disable-next-line:no-console
             console.warn("Passed undefined cards to the TablePlaceModel.setCards");
         }
 
@@ -405,7 +406,7 @@ export class TablePlaceModel {
             return "Желаем удачи";
         }
 
-        // This is fallback case for situations in the 
+        // This is fallback case for situations in the
         // beginning of the game start, pause between move confirmation.
         return "Желаем удачи";
     }
@@ -420,7 +421,7 @@ export class TablePlaceModel {
             return null;
         }
 
-        let totalCards = <number[]>[];
+        let totalCards = [] as number[];
         if (tableCards !== null) {
             totalCards = totalCards.concat(tableCards);
         }
@@ -430,20 +431,20 @@ export class TablePlaceModel {
             Cards: [],
             Suits: [],
         };
-        totalCards.forEach(function (card) {
+        totalCards.forEach(function(card) {
             handRepresentation.Cards.push((card % 13) + 2);
             handRepresentation.Suits.push(1 << (card / 13));
         });
         const rank = HoldemHand.getCardRank(handRepresentation);
-        let winnerCards = [];
-        rank.WinnerCardsSet.forEach(function (item) {
+        const winnerCards = [];
+        rank.WinnerCardsSet.forEach(function(item) {
             winnerCards.push(totalCards[item]);
         });
         handRepresentation = {
             Cards: [],
             Suits: [],
         };
-        winnerCards.forEach(function (card) {
+        winnerCards.forEach(function(card) {
             handRepresentation.Cards.push((card % 13) + 2);
             handRepresentation.Suits.push(1 << (card / 13));
         });

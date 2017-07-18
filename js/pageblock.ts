@@ -63,7 +63,7 @@
             return null;
         }
 
-        return <Page>this[subPageName + "Page"];
+        return this[subPageName + "Page"] as Page;
     }
     private showSubPage(pageName: string) {
         const nextPageObject = this.getSubPage(pageName);
@@ -84,7 +84,7 @@
         }
 
         if (needHidePrevView) {
-            let pageObject = this.getSubPage(this.currentPage);
+            const pageObject = this.getSubPage(this.currentPage);
             if (pageObject !== null) {
                 pageObject.deactivate(this.currentPage);
             }
@@ -117,23 +117,26 @@
 
         const pagejElement = $(this.getPageSelector(pageName));
         if (pagejElement.length === 0) {
+            // tslint:disable-next-line:no-console
             console.error("Could not bind sub page " + pageName + " since DOM element not found.");
             return;
         }
 
         if (pagejElement.length > 1) {
+            // tslint:disable-next-line:no-console
             console.warn("Page " + pageName + " has more then one element to bind.");
             return;
         }
 
         const pageElement = pagejElement[0];
         if (!pageElement.hasChildNodes()) {
-            const templateSource: string = <any>pagejElement.data("template");
+            const templateSource: string = pagejElement.data("template") as any;
             const pageLoadPromise = $.get(templateSource, "text/html").then(function (data: string) {
                 pagejElement.html(data);
                 try {
                     ko.applyBindings(viewModel, pageElement);
                 } catch (e) {
+                    // tslint:disable-next-line:no-console
                     console.log("Bind page " + pageName + " failed");
                 }
             });

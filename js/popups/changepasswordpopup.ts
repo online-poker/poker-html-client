@@ -3,10 +3,10 @@
 declare var apiHost: string;
 
 import * as ko from "knockout";
+import { App } from "../app";
+import { _ } from "../languagemanager";
 import { SimplePopup } from "../popups/simplepopup";
 import { PopupBase } from "../ui/popupbase";
-import { _ } from "../languagemanager";
-import { App } from "../app";
 
 declare var app: App;
 

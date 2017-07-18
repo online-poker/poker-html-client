@@ -1,9 +1,9 @@
 ﻿/// <reference path="../poker.commanding.api.ts" />
 
 import * as ko from "knockout";
-import { PopupBase } from "../ui/popupbase";
-import * as metadataManager from "../metadatamanager";
 import { App } from "../app";
+import * as metadataManager from "../metadatamanager";
+import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 

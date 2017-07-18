@@ -1,13 +1,13 @@
 import ko = require("knockout");
 import { App } from "./app";
 import { registerBindings } from "./bindings";
-import { registerExtenders } from "./extenders";
-import { updateDefaultMessages } from "./validationConfiguration";
 import { registerComponents } from "./components/registration";
-import { _ } from "./languagemanager";
 import { debugSettings } from "./debugsettings";
-import { TableView } from "./table/tableview";
+import { registerExtenders } from "./extenders";
+import { _ } from "./languagemanager";
 import { ActionBlock } from "./table/actionBlock";
+import { TableView } from "./table/tableview";
+import { updateDefaultMessages } from "./validationConfiguration";
 // import { ChipItem } from "./table/chipItem";
 
 declare const host: string;
@@ -25,6 +25,7 @@ function isRunningStandalone() {
 
 function bootstrap() {
     if (typeof host === "undefined") {
+        // tslint:disable-next-line:no-console
         console.error("File environment.js is missing");
         return;
     }
@@ -44,7 +45,7 @@ function bootstrap() {
     // tslint:disable-next-line:no-string-literal
     window["moment"].locale("ru");
 
-    // This function prevents the rotation from 
+    // This function prevents the rotation from
     function shouldRotateToOrientation(interfaceOrientation) {
         return app.shouldRotateToOrientation(interfaceOrientation);
     }

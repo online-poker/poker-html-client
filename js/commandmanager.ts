@@ -1,7 +1,5 @@
 
-interface CommandHandler {
-    (params?: any[]): any;
-}
+type CommandHandler = (params?: any[]) => any;
 
 class CommandManager {
     public commands: any[] = [];
@@ -12,6 +10,7 @@ class CommandManager {
     public executeCommand(commandName: string, parameters: any[]= []): any {
         const handler: CommandHandler = this.commands[commandName];
         if (handler == null) {
+            // tslint:disable-next-line:no-console
             console.log("Command call " + commandName + " not executed, since no handler registered");
             return null;
         }
@@ -20,5 +19,5 @@ class CommandManager {
     }
 }
 
-let commandManager = new CommandManager();
+const commandManager = new CommandManager();
 export = commandManager;

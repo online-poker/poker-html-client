@@ -1,6 +1,6 @@
 ﻿import * as ko from "knockout";
-import { PageBase } from "../ui/pagebase";
 import { App } from "../app";
+import { PageBase } from "../ui/pagebase";
 
 export class ChangePasswordPage extends PageBase implements KnockoutValidationGroup {
     public oldpassword: KnockoutObservable<string>;

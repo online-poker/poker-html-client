@@ -1,9 +1,9 @@
 ﻿/// <reference path="../pageblock.ts" />
 
 import { App } from "../app";
-import { TournamentLobbyPage } from "./tournamentlobbypage";
-import { TablesListPage } from "./tableslistpage";
 import { LobbyPage } from "./lobbypage";
+import { TablesListPage } from "./tableslistpage";
+import { TournamentLobbyPage } from "./tournamentlobbypage";
 import { TournamentsListPage } from "./tournamentslistpage";
 
 declare var app: App;
@@ -16,7 +16,7 @@ export class LobbyPageBlock extends PageBlock {
     public tablesListPage: TablesListPage;
 
     constructor() {
-        let lobbyPage = new LobbyPage();
+        const lobbyPage = new LobbyPage();
         super("lobby", "filter", lobbyPage);
 
         this.lobbyPage = lobbyPage;

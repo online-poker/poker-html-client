@@ -3,10 +3,10 @@
 declare var apiHost: string;
 
 import * as ko from "knockout";
+import { _ } from "../languagemanager";
+import * as runtimeSettings from "../table/runtimesettings";
 import * as timeService from "../timeservice";
 import { PopupBase } from "../ui/popupbase";
-import * as runtimeSettings from "../table/runtimesettings";
-import { _ } from "../languagemanager";
 
 export class SlowConnectionPopup extends PopupBase {
     public allowRetry: KnockoutObservable<boolean>;

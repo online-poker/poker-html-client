@@ -9,13 +9,13 @@ interface SelectorItem {
 class Selector {
     public caption: KnockoutObservable<string>;
     public items: KnockoutObservableArray<SelectorItem>;
-    public selected: Function;
-    public cancelled: Function;
+    public selected: (item: SelectorItem) => void;
+    public cancelled: () => void;
     constructor() {
-        this.caption = ko.observable(<string>null);
-        this.items = ko.observableArray(<SelectorItem[]>[]);
+        this.caption = ko.observable<string>(null);
+        this.items = ko.observableArray<SelectorItem>([]);
     }
-    public setParams(caption: string, items: SelectorItem[], success: Function, cancel: Function): void {
+    public setParams(caption: string, items: SelectorItem[], success: (item: SelectorItem) => void, cancel: () => void): void {
         this.caption(caption);
         this.items.valueWillMutate();
         this.items([]);

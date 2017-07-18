@@ -52,7 +52,7 @@ class Settings {
         this.setItemString("cardsVariant", this.cardsVariant());
     }
     private getItemBoolean(name: string, defaultValue: boolean = false) {
-        const item = <string>localStorage.getItem(name);
+        const item = localStorage.getItem(name) as string;
         if (item === null) {
             return defaultValue;
         }
@@ -67,7 +67,7 @@ class Settings {
         }
     }
     private getItemString(name: string, defaultValue: string = null) {
-        return <string>localStorage.getItem(name) || defaultValue;
+        return localStorage.getItem(name) as string || defaultValue;
     }
     private setItemString(name: string, value: string, defaultValue: string = null) {
         if (value === defaultValue) {
@@ -88,4 +88,4 @@ class Settings {
     }
 }
 
-export var settings = new Settings();
+export const settings = new Settings();

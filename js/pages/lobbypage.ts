@@ -5,14 +5,14 @@ declare var apiHost: string;
 import * as ko from "knockout";
 import * as moment from "moment";
 import { App } from "../app";
-import * as metadataManager from "../metadatamanager";
-import * as timeService from "../timeservice";
-import { tableManager } from "../table/tablemanager";
-import { PageBase } from "../ui/pagebase";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
-import { reloadManager } from "../services";
 import { _ } from "../languagemanager";
+import * as metadataManager from "../metadatamanager";
+import { reloadManager } from "../services";
+import { tableManager } from "../table/tablemanager";
+import * as timeService from "../timeservice";
+import { PageBase } from "../ui/pagebase";
 
 declare var app: App;
 
@@ -209,7 +209,7 @@ export class LobbyPage extends PageBase {
     public deactivate(pageName?: string) {
         super.deactivate(pageName);
 
-        // Clear tables and tournaments since this is 
+        // Clear tables and tournaments since this is
         // show page faster and it could quicker respond
         // to the user input.
         this.tables([]);
@@ -296,7 +296,7 @@ export class LobbyPage extends PageBase {
 
         if (data.Status === "Ok") {
             self.log("Informaton about tables received: ", data.Data);
-            const tables = <any[]>data.Data;
+            const tables = data.Data as any[];
             tables.forEach(function (item) {
                 item.IsOpened = tableManager.isOpened(item.TableId);
             });
@@ -334,7 +334,7 @@ export class LobbyPage extends PageBase {
         if (data.Status === "Ok") {
             self.log("Informaton about tournaments received: ", data.Data);
             const enchance = (item: LobbyTournamentItem) => {
-                const result = <LobbyTournamentItemEx>item;
+                const result = item as LobbyTournamentItemEx;
                 const startDate = moment(item.StartDate);
                 const currentMoment = moment().add(timeService.timeDiff, "ms");
                 const duration = moment.duration(currentMoment.diff(startDate));

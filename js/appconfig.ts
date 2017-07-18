@@ -41,4 +41,4 @@ class AppConfig {
     };
 }
 
-export var appConfig = new AppConfig();
+export const appConfig = new AppConfig();

@@ -2,11 +2,11 @@
 declare var baseUrl: string;
 declare var appInsights: Client;
 
-import * as timeService from "../timeservice";
-import { ConnectionService } from "./connectionservice";
-import { slowInternetService, connectionService } from "./index";
 import { debugSettings } from "../debugsettings";
+import * as timeService from "../timeservice";
 import { CancelToken } from "./cancelToken";
+import { ConnectionService } from "./connectionservice";
+import { connectionService, slowInternetService } from "./index";
 
 export class ConnectionWrapper {
     public terminated = false;
@@ -67,7 +67,7 @@ export class ConnectionWrapper {
                 return;
             }
 
-            const source = <CloseEvent>error.source;
+            const source = error.source as CloseEvent;
 
             if (source === null || source === undefined) {
                 // We don't know that this is means, so just fail
@@ -133,7 +133,7 @@ export class ConnectionWrapper {
     public buildStartConnection() {
         let supportedTransports = null;
         const androidVersion = this.getAndroidVersion();
-        if (androidVersion === false || (<string>androidVersion).indexOf("4.4") === 0) {
+        if (androidVersion === false || (androidVersion as string).indexOf("4.4") === 0) {
             supportedTransports = ["webSockets"];
             this.logEvent("Select WebSockets as single protocol");
         } else {
@@ -175,7 +175,7 @@ export class ConnectionWrapper {
                         return;
                     }
 
-                    timeService.setTimeout(function () {
+                    timeService.setTimeout(function() {
                         x(attempts - 1);
                     }, 100);
                 }, () => {
@@ -192,7 +192,7 @@ export class ConnectionWrapper {
     public async buildStartConnectionAsync() {
         let supportedTransports = null;
         const androidVersion = this.getAndroidVersion();
-        if (androidVersion === false || (<string>androidVersion).indexOf("4.4") === 0) {
+        if (androidVersion === false || (androidVersion as string).indexOf("4.4") === 0) {
             supportedTransports = ["webSockets"];
             this.logEvent("Select WebSockets as single protocol");
         } else {
@@ -221,8 +221,8 @@ export class ConnectionWrapper {
                 throw new Error("SignalR connection has invalid state.");
             }
 
-            return new Promise<any>(function (resolve, reject) {
-                timeService.setTimeout(async function () {
+            return new Promise<any>(function(resolve, reject) {
+                timeService.setTimeout(async function() {
                     if (attemptsLeft <= 0) {
                         reject(new Error("Last retry did not work. Stop attempts."));
                     } else {

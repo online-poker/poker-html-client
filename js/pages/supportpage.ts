@@ -1,9 +1,9 @@
 ﻿import * as ko from "knockout";
 import { App } from "../app";
-import { SimplePopup } from "../popups/simplepopup";
-import { PageBase } from "../ui/pagebase";
-import { keyboardActivationService } from "../services";
 import { _ } from "../languagemanager";
+import { SimplePopup } from "../popups/simplepopup";
+import { keyboardActivationService } from "../services";
+import { PageBase } from "../ui/pagebase";
 
 declare var apiHost: string;
 declare var app: App;

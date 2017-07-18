@@ -16,5 +16,5 @@ interface Page {
     /**
      * Performs check that page could be activated
      */
-    canActivate? (): boolean;
+    canActivate?(): boolean;
 }

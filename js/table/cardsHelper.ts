@@ -122,8 +122,10 @@ function decodeCardsArray(cardsData: string): number[] {
     }
 
     if (typeof cardsData === "object") {
+        // tslint:disable:no-console
         console.log(cardsData[0]);
         console.log(cardsData[1]);
+        // tslint:enable:no-console
         cardsData = "//8=";
     }
 
@@ -149,7 +151,7 @@ function convertToCards(data: number[]): string[] {
         return null;
     }
 
-    return data.map(function (n) {
+    return data.map(function(n) {
         return cardValue(n);
     });
 }
@@ -164,8 +166,10 @@ function cardsArray(cardsData: string): string[] {
     }
 
     if (typeof cardsData === "object") {
+        // tslint:disable:no-console
         console.log(cardsData[0]);
         console.log(cardsData[1]);
+        // tslint:enable:no-console
         cardsData = "//8=";
     }
 

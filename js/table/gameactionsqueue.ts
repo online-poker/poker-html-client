@@ -1,11 +1,6 @@
 ﻿import { wait } from "../services/timedeferred";
 
-interface QueueWorker {
-    /**
-     * Executes worker and generates promise which executing operation
-     */
-    (): Promise<any>;
-}
+type QueueWorker = () => Promise<any>;
 
 export class GameActionsQueue {
     public static logging: boolean = false;
@@ -70,7 +65,7 @@ export class GameActionsQueue {
     public waitWithInterruption(timeout: number) {
         if (!GameActionsQueue.waitDisabled && timeout > 0) {
             // Split wait interval by 100ms tasks which allow
-            // inject other tasks and don't wait until everything is finished. 
+            // inject other tasks and don't wait until everything is finished.
             for (let i = 0; i < timeout / 200; i++) {
                 this.push(() => {
                     return wait(200);
@@ -98,7 +93,7 @@ export class GameActionsQueue {
     public injectWaitWithInterruption(timeout: number) {
         if (!GameActionsQueue.waitDisabled && timeout > 0) {
             // Split wait interval by 100ms tasks which allow
-            // inject other tasks and don't wait until everything is finished. 
+            // inject other tasks and don't wait until everything is finished.
             for (let i = 0; i < timeout / 200; i++) {
                 this.inject(() => {
                     return wait(200);
@@ -111,7 +106,7 @@ export class GameActionsQueue {
      * Push worker to the stack
      * @param callback Function The function which generated promise.
      */
-    public injectCallback(callback: Function) {
+    public injectCallback(callback: () => void) {
         this.inject(() => {
             return Promise.resolve().then(() => callback());
         });
@@ -121,7 +116,7 @@ export class GameActionsQueue {
      * Push worker to the stack
      * @param callback Function The function which generated promise.
      */
-    public pushCallback(callback: Function) {
+    public pushCallback(callback: () => void) {
         this.push(() => {
             return Promise.resolve().then(() => callback());
         });

@@ -1,8 +1,8 @@
 ﻿import * as ko from "knockout";
-import * as authManager from "../authmanager";
-import { PageBase } from "../ui/pagebase";
-import { settings } from "../settings";
 import { App } from "../app";
+import * as authManager from "../authmanager";
+import { settings } from "../settings";
+import { PageBase } from "../ui/pagebase";
 
 declare var apiHost: string;
 declare var app: App;
@@ -48,7 +48,7 @@ export class AccountPage extends PageBase {
             accounts: [],
             stars: 0,
         };
-        authManager.authenticated.subscribe(function (newValue) {
+        authManager.authenticated.subscribe(function(newValue) {
             if (newValue) {
                 self.updateInformation(true);
             } else {
@@ -97,7 +97,7 @@ export class AccountPage extends PageBase {
             return;
         }
 
-        const accountsData = <AccountPagePlayerAccountModel[]>[];
+        const accountsData = [] as AccountPagePlayerAccountModel[];
         if (realMoneySupported) {
             accountsData.push({
                 currencyName: "currency.realmoney",
@@ -145,7 +145,7 @@ export class AccountPage extends PageBase {
             lastName: personalAccountData.LastName,
             monthPoints: parseInt(personalAccountData.Properties.Points, 10),
             yearPoints: parseInt(personalAccountData.Properties.Points, 10),
-            status: status,
+            status,
             accounts: accountsData,
             stars: personalAccountData.Properties.Stars,
         });

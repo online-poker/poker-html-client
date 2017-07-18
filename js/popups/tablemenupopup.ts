@@ -1,12 +1,12 @@
 /// <reference path="../poker.commanding.api.ts" />
 /* tslint:disable:no-bitwise */
 
-import { TournamentView } from "../table/tournamentview";
 import { App } from "../app";
+import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
 import { settings } from "../settings";
-import { appConfig } from "../appconfig";
 import { tableManager } from "../table/tablemanager";
+import { TournamentView } from "../table/tournamentview";
 
 declare var apiHost: string;
 declare var app: App;
@@ -41,28 +41,28 @@ export class TableMenuPopup {
     constructor() {
         this.soundEnabled = ko.computed<boolean>({
             owner: this,
-            read: function () {
+            read() {
                 return settings.soundEnabled();
             },
-            write: function (value) {
+            write(value) {
                 settings.soundEnabled(value);
             },
         });
         this.autoSwitchTables = ko.computed<boolean>({
             owner: this,
-            read: function () {
+            read() {
                 return settings.autoSwitchTables();
             },
-            write: function (value) {
+            write(value) {
                 settings.autoSwitchTables(value);
             },
         });
         this.autoHideCards = ko.computed<boolean>({
             owner: this,
-            read: function () {
+            read() {
                 return settings.autoHideCards();
             },
-            write: function (value) {
+            write(value) {
                 settings.autoHideCards(value);
             },
         });
@@ -106,7 +106,7 @@ export class TableMenuPopup {
             // Set rebuy/addon status temporary to current tournament status
             // until data is loaded.
 
-            // The rebuy and addons could be not supported by the 
+            // The rebuy and addons could be not supported by the
             // actual tournament so buttons should be hidden.
             const tdata = tournamentView.tournamentData();
             this.tournamentHasRebuy((tdata.Options & TournamentOptionsEnum.HasRebuy) > 0);
@@ -123,7 +123,7 @@ export class TableMenuPopup {
                     && (moneyInGame + tdata.ChipsAddedAtDoubleReBuy) <= tdata.MaximumAmountForRebuy);
                 if (tournamentView.addonAllowed() || tournamentView.rebuyAllowed()) {
                     const api = new OnlinePoker.Commanding.API.Account(apiHost);
-                    api.GetPersonalAccount().then(function (data) {
+                    api.GetPersonalAccount().then(function(data) {
                         const personalAccount = data.Data;
                         const currentMoney = self.getCurrentMoney(tournamentView, personalAccount);
                         const addonPrice = tdata.AddonPrice + tdata.AddonFee;
@@ -173,7 +173,7 @@ export class TableMenuPopup {
         const currentTable = app.tablesPage.currentTable();
         app.addMoneyPopup.tableView(currentTable);
         app.closePopup();
-        app.showPopup("addMoney").then(function (results: { name: string; result: any }) {
+        app.showPopup("addMoney").then(function(results: { name: string; result: any }) {
             if (results.result === "cancel") {
                 app.executeCommand("popup.tableMenu");
             }
@@ -228,8 +228,8 @@ export class TableMenuPopup {
         }
     }
     public leave() {
-        let index = tableManager.currentIndex();
-        let tableView = tableManager.tables()[index];
+        const index = tableManager.currentIndex();
+        const tableView = tableManager.tables()[index];
         tableView.showStandupPrompt();
     }
     private getCurrentMoney(tournament: TournamentView, personalAccount: PersonalAccountData) {

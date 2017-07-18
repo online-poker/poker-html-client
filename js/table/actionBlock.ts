@@ -2,17 +2,17 @@
 
 import * as ko from "knockout";
 import { App } from "../app";
-import { TableSlider } from "./tableSlider";
+import { appConfig } from "../appconfig";
+import * as authManager from "../authmanager";
+import { debugSettings } from "../debugsettings";
+import { withCommas } from "../helpers";
+import { _ } from "../languagemanager";
+import { SimplePopup } from "../popups";
 import { PlayerMessage } from "./playerMessage";
 import { SystemMessage } from "./SystemMessage";
-import { TablePlaceModel } from "./tabpleplacemodel";
+import { TableSlider } from "./tableSlider";
 import { TableView } from "./tableview";
-import * as authManager from "../authmanager";
-import { SimplePopup } from "../popups";
-import { appConfig } from "../appconfig";
-import { debugSettings } from "../debugsettings";
-import { _ } from "../languagemanager";
-import { withCommas } from "../helpers";
+import { TablePlaceModel } from "./tabpleplacemodel";
 
 declare var apiHost: string;
 declare var app: App;
@@ -64,13 +64,13 @@ export class ActionBlock {
     public systemMessages: KnockoutObservableArray<SystemMessage>;
 
     /**
-     * Indicating thether player will support same amount which 
+     * Indicating thether player will support same amount which
      * he should suport currently to stay in the game.
      */
     public supportDirectAmount: KnockoutObservable<boolean>;
 
     /**
-     * Indicating thether player will support any amount which other players 
+     * Indicating thether player will support any amount which other players
      * put on the table.
      */
     public supportAny: KnockoutObservable<boolean>;
@@ -81,7 +81,7 @@ export class ActionBlock {
     public foldOnRaise: KnockoutObservable<boolean>;
 
     /**
-     * Text which would be 
+     * Text which would indicate amount of some specific amount is supported.
      */
     public supportDirectAmountCaption: KnockoutObservable<string>;
     public supportAnyCaption: KnockoutObservable<string>;
@@ -317,7 +317,7 @@ export class ActionBlock {
 
             return false;
         });
-        this.raiseBetButtonCaption = ko.computed(function () {
+        this.raiseBetButtonCaption = ko.computed(function() {
             let currentAmount = self.tableSlider.current();
             currentAmount = currentAmount == null ? 0 : currentAmount;
             const player = self.myPlayer();
@@ -343,13 +343,13 @@ export class ActionBlock {
             }
         });
 
-        this.foldOnRaise.subscribe(function (value) {
+        this.foldOnRaise.subscribe(function(value) {
             if (value) {
                 self.supportAny(false);
                 self.supportDirectAmount(false);
             }
         });
-        this.supportDirectAmount.subscribe(function (value) {
+        this.supportDirectAmount.subscribe(function(value) {
             if (value) {
                 self.supportAny(false);
                 self.foldOnRaise(false);
@@ -357,21 +357,21 @@ export class ActionBlock {
                 self.amountSupported(self.tableView.maximumBet() - self.tableView.myBet());
             }
         });
-        this.supportAny.subscribe(function (value) {
+        this.supportAny.subscribe(function(value) {
             if (value) {
                 self.supportDirectAmount(false);
                 self.foldOnRaise(false);
             }
         });
-        this.sitoutBlockVisible = ko.computed(function () {
+        this.sitoutBlockVisible = ko.computed(function() {
             return self.isSitOut() && !self.gameClosed();
         });
-        this.mainButtonsBlockVisible = ko.computed(function () {
+        this.mainButtonsBlockVisible = ko.computed(function() {
             return self.turnEnabled() && !self.isSitOut() && self.buttonsEnabled()
                 && self.dealsAllowed() && self.myPlayerInGame()
                 && !self.gameClosed();
         });
-        this.autoButtonsBlockVisible = ko.computed(function () {
+        this.autoButtonsBlockVisible = ko.computed(function() {
             if (!self.isInGame()) {
                 return false;
             }
@@ -381,7 +381,7 @@ export class ActionBlock {
                 && self.dealsAllowed() && self.myPlayerInGame()
                 && !self.gameClosed();
         });
-        this.raiseBlockVisible = ko.computed(function () {
+        this.raiseBlockVisible = ko.computed(function() {
             if (self.gameFinished()) {
                 return false;
             }
@@ -390,10 +390,10 @@ export class ActionBlock {
                 && self.couldRaise() && self.myPlayerInGame()
                 && !self.gameClosed();
         });
-        this.observerModeBlockVisible = ko.computed(function () {
+        this.observerModeBlockVisible = ko.computed(function() {
             return (!authManager.authenticated() && !self.testMode()) || self.myPlayer() == null;
         });
-        this.startBlockVisible = ko.computed(function () {
+        this.startBlockVisible = ko.computed(function() {
             if (self.sitoutBlockVisible()) {
                 return false;
             }
@@ -408,19 +408,19 @@ export class ActionBlock {
 
             return !self.gameClosed() && !self.observerModeBlockVisible();
         });
-        this.chatVisible = ko.computed(function () {
+        this.chatVisible = ko.computed(function() {
             return !self.raiseBlockVisible()
                 && !self.gameClosed();
         });
 
         if (debugSettings.actionBlock.traceBlocksVisbility) {
-            this.waitBigBlindBlockVisible.subscribe(function (visbile) {
+            this.waitBigBlindBlockVisible.subscribe(function(visbile) {
                 self.log("WaitBB block " + (visbile ? "visible" : "hidden"));
             });
-            this.mainButtonsBlockVisible.subscribe(function (visbile) {
+            this.mainButtonsBlockVisible.subscribe(function(visbile) {
                 self.log("Main Buttons block " + (visbile ? "visible" : "hidden"));
             });
-            this.sitoutBlockVisible.subscribe(function (visbile) {
+            this.sitoutBlockVisible.subscribe(function(visbile) {
                 self.log("Sit out block " + (visbile ? "visible" : "hidden"));
             });
             this.autoButtonsBlockVisible.subscribe((visbile) => {
@@ -628,7 +628,7 @@ export class ActionBlock {
             // -5 is base adjustment from one size; width - 5(base adj.) - 10(?)
             this.tableSlider.setBounds(adj, lineWidth - handleWidth + (-adj), translator);
         } else {
-            this.tableSlider.setBounds(1, 100, x => x);
+            this.tableSlider.setBounds(1, 100, (x) => x);
         }
     }
     public resetAutomaticAction() {
@@ -765,10 +765,10 @@ export class ActionBlock {
         const threebbAmountOriginal = this.callAmount() + (3 * this.tableView.model.BigBlind);
         const threebbAmount = this.tableSlider.withinRange(threebbAmountOriginal);
 
-        let potAmountOriginal = this.tableView.pots().reduce(function (pv, v) {
+        let potAmountOriginal = this.tableView.pots().reduce(function(pv, v) {
             return pv + v;
         }, 0); // + this.checkOrCallAmount();
-        potAmountOriginal += this.tableView.places().reduce(function (pv: number, v: TablePlaceModel) {
+        potAmountOriginal += this.tableView.places().reduce(function(pv: number, v: TablePlaceModel) {
             if (v.Bet() == null) {
                 return pv;
             }
@@ -876,7 +876,7 @@ export class ActionBlock {
             return;
         }
 
-        const tableIsBig = this.tableView.places().filter(item => item != null).length > 3;
+        const tableIsBig = this.tableView.places().filter((item) => item != null).length > 3;
         const paused = this.tableView.paused();
         this.needBB(!paused && tableIsBig && !currentPlayer.IsParticipatingStatus());
     }
@@ -919,6 +919,7 @@ export class ActionBlock {
     }
     private log(message: string, ...params: any[]) {
         if (debugSettings.actionBlock.traceBlocksVisbility) {
+            // tslint:disable-next-line:no-console
             console.log(message, params);
         }
     }

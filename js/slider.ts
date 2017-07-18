@@ -3,7 +3,7 @@
 class SliderItem {
     public caption: string;
     public childTemplate: string;
-    public action: Function;
+    public action: () => void;
 }
 
 class Slider {
@@ -20,10 +20,10 @@ class Slider {
         this.items = [];
         this.currentIndex = ko.observable(0);
         this.currentIndex1 = ko.computed<number>({
-            read: function () {
+            read () {
                 return self.currentIndex() + 1;
             },
-            write: function (value) {
+            write (value) {
                 if (this.enabled()) {
                     self.currentIndex(value - 1);
                 }
@@ -65,7 +65,7 @@ class Slider {
             return self.items[index];
         }, this);
     }
-    public addOption(caption: string, childTemplate: string, callback: Function): SliderItem {
+    public addOption(caption: string, childTemplate: string, callback: () => void): SliderItem {
         const item = new SliderItem();
         item.caption = caption;
         item.childTemplate = childTemplate;

@@ -2,15 +2,13 @@
 
 import * as ko from "knockout";
 import { App } from "../app";
-import { PopupBase } from "../ui/popupbase";
 import * as timeService from "../timeservice";
+import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 
 export class SimplePopup extends PopupBase {
-    public static display(title: string, message: string): Promise<PopupResult>;
-    public static display(title: string, message: string[]): Promise<PopupResult>;
-    public static display(title: string, message: any): Promise<PopupResult> {
+    public static display(title: string, message: string | string[]): Promise<PopupResult> {
         app.simplePopup.title(title);
         if (typeof message === "string") {
             app.simplePopup.messages([message]);
@@ -21,21 +19,19 @@ export class SimplePopup extends PopupBase {
 
         return app.showPopup("simple");
     }
-    public static displayWithTimeout(title: string, message: string, timeout: number): Promise<PopupResult>;
-    public static displayWithTimeout(title: string, message: string[], timeout: number): Promise<PopupResult>;
-    public static displayWithTimeout(title: string, message: any, timeout: number): Promise<PopupResult> {
+    public static displayWithTimeout(title: string, message: string | string[], timeout: number): Promise<PopupResult> {
         const result = SimplePopup.display(title, message);
-        let handle = timeService.setTimeout(function () {
+        let handle = timeService.setTimeout(function() {
             if (handle !== null) {
                 app.closePopup();
                 handle = null;
             }
         }, timeout);
         const promise = new Promise<PopupResult>((resolve, reject) => {
-            result.then(function (value) {
+            result.then(function(value) {
                 timeService.clearTimeout(handle);
                 resolve(value);
-            }, function (reason) {
+            }, function(reason) {
                 reject(reason);
             });
         });

@@ -2,8 +2,8 @@
 
 import * as ko from "knockout";
 import { App } from "../app";
+import { orientationService, reloadManager } from "../services";
 import { PageBase } from "../ui/pagebase";
-import { reloadManager, orientationService } from "../services";
 
 declare var apiHost: string;
 declare var app: App;

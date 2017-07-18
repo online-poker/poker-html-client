@@ -32,21 +32,21 @@ namespace HoldemHand {
     }
 
     /// <summary>Human readable names of the hand types.</summary>
-    export var handTypeNames = ["4 of a Kind", "Straight Flush", "Straight", "Flush", "High Card",
+    export let handTypeNames = ["4 of a Kind", "Straight Flush", "Straight", "Flush", "High Card",
         "1 Pair", "2 Pair", "Royal Flush", "3 of a Kind", "Full House", "-Invalid-"];
 
     /// <summary>Strength of each hand type.</summary>
     /// <remarks>
-    /// Due to nature of the algorithm, the hand types not 
+    /// Due to nature of the algorithm, the hand types not
     /// have order corresponding to the strength or cards combinations.
     /// </remarks>
-    export var handTypeRanks = [8, 9, 5, 6, 1, 2, 3, 10, 4, 7, 0];
+    export let handTypeRanks = [8, 9, 5, 6, 1, 2, 3, 10, 4, 7, 0];
 
     /**
      * Gets type of hand for given hand representation.
      * @param hand 5 cards hand for which current combination should be calculated.
      * @return Hand type.
-     * @description To obtain real strength of hand type, use hand 
+     * @description To obtain real strength of hand type, use hand
      * type returned from this function as index to the handTypeRanks array.
      */
     export function getHandType(hand: HandRepresentation) {
@@ -69,7 +69,7 @@ namespace HoldemHand {
             | 1 << hand.Cards[4];
         rankCountBitMask -= ((rankBitMask / (rankBitMask & -rankBitMask) === 31) || (rankBitMask === 0x403c) ? 3 : 1);
         // tslint:disable-next-line:max-line-length
-        const isSameSuit = <any>(hand.Suits[0] === (hand.Suits[0] | hand.Suits[1] | hand.Suits[2] | hand.Suits[3] | hand.Suits[4]));
+        const isSameSuit = (hand.Suits[0] === (hand.Suits[0] | hand.Suits[1] | hand.Suits[2] | hand.Suits[3] | hand.Suits[4])) as any;
         return rankCountBitMask - isSameSuit * ((rankBitMask === 0x7c00) ? -5 : 1);
     }
 
@@ -254,12 +254,12 @@ namespace HoldemHand {
     export function getCombinations(k: number, n: number) {
         /// <signature>
         ///    <summary>
-        ///    Generates all possible unordered permutations 
+        ///    Generates all possible unordered permutations
         ///    of k element in the set with n elements.
         ///    </summary>
         /// </signature>
-        let result: number[][] = [];
-        let combination: number[] = [];
+        const result: number[][] = [];
+        const combination: number[] = [];
 
         function next_comb(comb: number[], k1: number, n1: number) {
             let i: number;
@@ -312,8 +312,8 @@ namespace HoldemHand {
         const tempCards = cards.slice(0);
         const cardsCount = {};
         for (let i = 0; i < 5; i++) {
-            const cardValue = tempCards[i];
-            cardsCount[cardValue] = (cardsCount[cardValue] >= 1) ? cardsCount[cardValue] + 1 : 1;
+            const tempCardValue = tempCards[i];
+            cardsCount[tempCardValue] = (cardsCount[tempCardValue] >= 1) ? cardsCount[tempCardValue] + 1 : 1;
         }
 
         tempCards.sort(function (left, right) {
@@ -344,10 +344,10 @@ namespace HoldemHand {
             return { Status: HandParseResultStatus.InvalidHand };
         }
 
-        let cardStr = str.replace(/A/g, "14").replace(/K/g, "13").replace(/Q/g, "12")
+        const cardStr = str.replace(/A/g, "14").replace(/K/g, "13").replace(/Q/g, "12")
             .replace(/J/g, "11").replace(/♠|♣|♥|♦/g, ",");
-        const cards = <any[]>cardStr.replace(/\s/g, "").slice(0, -1).split(",");
-        const suits = <any[]>str.match(/♠|♣|♥|♦/g);
+        const cards = cardStr.replace(/\s/g, "").slice(0, -1).split(",") as any[];
+        const suits = str.match(/♠|♣|♥|♦/g) as any[];
         if (cards === null) {
             return { Status: HandParseResultStatus.CardsMissing };
         }
@@ -360,13 +360,13 @@ namespace HoldemHand {
             return { Status: HandParseResultStatus.AllCardsShouldHaveOneSuit };
         }
 
-        let o = {};
+        const o = {};
         let keyCount = 0;
         for (let i = 0; i < cards.length; i++) {
             const e = cards[i] + suits[i];
             o[e] = 1;
         }
-        for (let j in o) {
+        for (const j in o) {
             if (o.hasOwnProperty(j)) {
                 keyCount++;
             }
@@ -391,7 +391,7 @@ namespace HoldemHand {
 
         for (let i = 0; i < suits.length; i++) {
             // Convert the suit characters to the numbers.
-            // Since unicode symbols starts with 0x2660 (9824) Unicode symbols 
+            // Since unicode symbols starts with 0x2660 (9824) Unicode symbols
             suits[i] = Math.pow(2, (suits[i].charCodeAt(0) - 9824));
         }
 

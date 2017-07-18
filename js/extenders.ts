@@ -3,12 +3,12 @@
 import * as ko from "knockout";
 
 export function registerExtenders() {
-    ko.extenders["options"] = function (target, option: { caption: string; items: SelectorItem[]}) {
+    ko.extenders["options"] = (target, option: { caption: string; items: SelectorItem[]}) => {
         target.options = option.items;
         target.caption = option.caption;
-        target.currentValue = ko.computed(function () {
+        target.currentValue = ko.computed(() => {
             const value = target();
-            const selectedItem = option.items.filter(function (item: SelectorItem) {
+            const selectedItem = option.items.filter((item: SelectorItem) => {
                 return item.value === value;
             });
             if (selectedItem.length === 0) {

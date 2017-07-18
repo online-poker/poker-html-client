@@ -27,6 +27,7 @@ export class SoundManager {
             await wait(100);
             await this.quickPlay("snd/check_human.mp3");
         } catch (e) {
+            // tslint:disable-next-line:no-console
             console.log(e);
         }
     }
@@ -140,7 +141,7 @@ export class SoundManager {
         }
 
         if (window["Audio"] != null) {
-            return new Promise(function (resolve, reject) {
+            return new Promise(function(resolve, reject) {
                 const audio = new Audio();
                 audio.preload = "auto";
                 audio.autoplay = true;

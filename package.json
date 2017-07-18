@@ -42,7 +42,7 @@
     "@types/requirejs": "^2.1.26",
     "@types/signalr": "^2.2.31",
     "poker-server-api": "0.0.2",
-    "tslint": "^3.15.1",
+    "tslint": "^5.5.0",
     "typescript": "^2.4.1"
   }
 }

@@ -11,18 +11,23 @@
             "spaces"
         ],
         "object-literal-sort-keys": false,
-        "interface-name": [],
+        "interface-name": [false],
         "eofline": true,
         "no-duplicate-variable": true,
         "no-eval": true,
         "no-empty": true,
-        "no-console": [],
+        "no-console": [false],
         "no-reference": false,
         "no-internal-module": true,
         "no-trailing-whitespace": true,
         "no-unsafe-finally": true,
         /* This to be removed after code cleanup */
         "no-unused-variable": false,
+        "only-arrow-functions": [false],
+        "prefer-for-of": false,
+        "space-before-function-paren": false,
+        "array-type": [false],
+        "max-classes-per-file": [false],
         "max-line-length": [
             140
         ],

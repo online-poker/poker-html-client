@@ -1,10 +1,10 @@
 ﻿import * as ko from "knockout";
+import { App } from "../app";
+import { _ } from "../languagemanager";
+import { SimplePopup } from "../popups/simplepopup";
+import { connectionService, keyboardActivationService } from "../services";
 import { PlayerMessage } from "../table/playerMessage";
 import * as timeService from "../timeservice";
-import { connectionService, keyboardActivationService } from "../services";
-import { SimplePopup } from "../popups/simplepopup";
-import { _ } from "../languagemanager";
-import { App } from "../app";
 
 declare var apiHost: string;
 declare var app: App;
@@ -21,7 +21,7 @@ export class ChatPage implements Page {
         this.messages = ko.observableArray<PlayerMessage>([]);
         this.loading = ko.observable(false);
         const self = this;
-        connectionService.newConnection.add(function () {
+        connectionService.newConnection.add(function() {
             const chatHub = connectionService.currentConnection.connection.createHubProxy("chat");
             const handler = (...msg: any[]) => {
                 const messageId = msg[0];
@@ -38,7 +38,7 @@ export class ChatPage implements Page {
                 self.addMessage(messageId, sender, message);
             };
             chatHub.on("Message", handler);
-            connectionService.terminatedConnection.addOnce(function () {
+            connectionService.terminatedConnection.addOnce(function() {
                 chatHub.off("Message", handler);
             }, self, 0);
         });
@@ -51,7 +51,7 @@ export class ChatPage implements Page {
     public activate() {
         const self = this;
         this.loading(true);
-        this.timeoutHandler = timeService.setTimeout(function () {
+        this.timeoutHandler = timeService.setTimeout(function() {
             self.loading(false);
             self.timeoutHandler = 0;
         }, 2000);
