@@ -55,9 +55,6 @@ export class HomePage extends PageBase {
         this.authenticatedUser = ko.computed(function () {
             return authManager.login();
         }, this);
-        authManager.authenticated.subscribe((value) => {
-            this.banners(metadataManager.smallBanners);
-        });
     }
     public deactivate(pageName?: string) {
         super.deactivate(pageName);
@@ -84,14 +81,6 @@ export class HomePage extends PageBase {
         this.logNews("Updating home page");
         const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
         metadataManager.updateOnline();
-        const data = await metadataApi.GetNews();
-        if (data.Status === "Ok") {
-            this.news(data.Data);
-            const i = 0;
-            if (data.Data.length > 0 && i < data.Data.length) {
-                this.currentNews(data.Data[i]);
-            }
-        }
     }
     public showGames() {
         app.showPageBlock("lobby");

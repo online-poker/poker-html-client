@@ -4,11 +4,9 @@ import { debugSettings } from "./debugsettings";
 import { _ } from "./languagemanager";
 import * as metadataManager from "./metadatamanager";
 import {
-    CashierPageBlock,
     HomePage,
     InfoPageBlock,
     LobbyPageBlock,
-    OtherPageBlock,
     SeatPage,
     TablesPage,
 } from "./pages";
@@ -18,17 +16,12 @@ import {
     AuthPopup,
     ChangePasswordPopup,
     ChatPopup,
-    ContinueForgetPasswordPopup,
     CustomPopup,
-    ForgetPasswordPopup,
     HandHistoryPopup,
     JoinTablePopup,
     MorePopup,
-    NewsPopup,
     OkCancelPopup,
-    RegistrationPopup,
     RulesPopup,
-    SelectAvatarPopup,
     SettingsPopup,
     SlowConnectionPopup,
     TableMenuPopup,
@@ -64,16 +57,11 @@ export class App {
     public currentPopup: string = null;
     public homePage: HomePage;
     public lobbyPageBlock: LobbyPageBlock;
-    public cashierPageBlock: CashierPageBlock;
     public tablesPage: TablesPage;
     public seatsPage: SeatPage;
     public infoPageBlock: InfoPageBlock;
-    public otherPageBlock: OtherPageBlock;
     public authPopup: AuthPopup;
-    public forgetPasswordPopup: ForgetPasswordPopup;
-    public continueForgetPasswordPopup: ContinueForgetPasswordPopup;
     public changePasswordPopup: ChangePasswordPopup;
-    public registrationPopup: RegistrationPopup;
     public simplePopup: SimplePopup;
     public okcancelPopup: OkCancelPopup;
     public customPopup: CustomPopup;
@@ -86,8 +74,6 @@ export class App {
     public accountStatusPopup: AccountStatusPopup;
     public settingsPopup: SettingsPopup;
     public rulesPopup: RulesPopup;
-    public newsPopup = new NewsPopup();
-    public selectAvatarPopup = new SelectAvatarPopup();
 
     public morePopup: MorePopup;
     public tabBar: TabBar;
@@ -109,18 +95,13 @@ export class App {
         this.loadPromises = [];
         // register pages.
         this.homePage = new HomePage();
-        this.otherPageBlock = new OtherPageBlock();
         this.infoPageBlock = new InfoPageBlock();
         this.lobbyPageBlock = new LobbyPageBlock();
-        this.cashierPageBlock = new CashierPageBlock();
         this.tablesPage = new TablesPage();
         this.seatsPage = new SeatPage();
 
         this.authPopup = new AuthPopup();
-        this.forgetPasswordPopup = new ForgetPasswordPopup();
-        this.continueForgetPasswordPopup = new ContinueForgetPasswordPopup();
         this.changePasswordPopup = new ChangePasswordPopup();
-        this.registrationPopup = new RegistrationPopup();
         this.simplePopup = new SimplePopup();
         this.okcancelPopup = new OkCancelPopup();
         this.customPopup = new CustomPopup();
@@ -143,10 +124,7 @@ export class App {
         this.bindSubPage("seats", self.seatsPage);
 
         this.bindPopup("auth", self.authPopup);
-        this.bindPopup("forgetPassword", self.forgetPasswordPopup);
-        this.bindPopup("continueForgetPassword", self.continueForgetPasswordPopup);
         this.bindPopup("changePassword", self.changePasswordPopup);
-        this.bindPopup("registration", self.registrationPopup);
         this.bindPopup("simple", self.simplePopup);
         this.bindPopup("okcancel", self.okcancelPopup);
         this.bindPopup("custom", self.customPopup);
@@ -159,12 +137,8 @@ export class App {
         this.bindPopup("tableChat", self.tableChatPopup);
         this.bindPopup("handHistory", self.handHistoryPopup);
         this.bindPopup("accountStatus", self.accountStatusPopup);
-        this.bindPopup("news", self.newsPopup);
-        this.bindPopup("selectAvatar", self.selectAvatarPopup);
 
         this.bindPageBlock("lobby", this.lobbyPageBlock);
-        this.bindPageBlock("other", this.otherPageBlock);
-        this.bindPageBlock("cashier", this.cashierPageBlock);
         this.bindPageBlock("info", this.infoPageBlock);
 
         this.bindUIElement(".more-block", this.morePopup);
@@ -386,20 +360,6 @@ export class App {
             });
             authManager.authenticated.subscribe(function(newValue) {
                 self.updateTabbar(newValue, tableManager.tables());
-                if (newValue && metadataManager.banners != null) {
-                    const filteredBanners = metadataManager.banners
-                        .filter((banner) => banner.Id > settings.lastBannerId())
-                        .sort((a, b) => a.Id - b.Id);
-                    if (filteredBanners.length > 0) {
-                        const currentBanner = filteredBanners[0];
-                        settings.lastBannerId(currentBanner.Id);
-                        settings.saveSettings();
-                        if (runtimeSettings.showNewsAfterLogin) {
-                            app.newsPopup.setData(currentBanner);
-                            app.showPopup("news");
-                        }
-                    }
-                }
 
                 // tslint:disable-next-line:no-console
                 console.log("Authentication changed.");

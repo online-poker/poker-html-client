@@ -18,6 +18,7 @@ import { tableManager } from "../table/tablemanager";
 import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";
+import { version } from "../version";
 
 declare var app: App;
 
@@ -34,7 +35,7 @@ export class SeatPage extends PageBase {
     public reconnectedHandler: SignalBinding;
     public disconnectedHandler: SignalBinding;
     public isConnectionSlow: KnockoutObservable<boolean>;
-    public libraryVersion: KnockoutComputed<string>;
+    public libraryVersion: KnockoutComputed<string> = ko.computed(() => version);
     public lastConnecton: string;
     public frozen: KnockoutComputed<boolean>;
     public opened: KnockoutComputed<boolean>;

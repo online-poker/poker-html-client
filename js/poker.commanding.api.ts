@@ -220,28 +220,6 @@ namespace OnlinePoker {
                     return super.CallAsync<StatusResponse>('Send', data);
                 }
             }
-            export class Message extends WebApiProxy {
-                constructor(host) {
-                    super(host, 'Message');
-                }
-
-                public Send(recepient: number, subject: string, body: string) {
-                    const data = { Recipient: recepient, Subject: subject, Body: body };
-                    return super.CallAsync('Send', data);
-                }
-                public GetInboxMessages(page: number, pageSize: number, filter: number, sortOrder: boolean) {
-                    const data = { Page: page, PageSize: pageSize, Filter: filter, SortOrder: sortOrder };
-                    return super.CallAsync<ApiResult<InboxMessagesData>>('GetInboxMessages', data);
-                }
-                public GetSentMessages(page: number, pageSize: number, filter: number, sortOrder: boolean) {
-                    const data = { Page: page, PageSize: pageSize, Filter: filter, SortOrder: sortOrder };
-                    return super.CallAsync('GetSentMessages', data);
-                }
-                public GetMessage(id: number) {
-                    const data = { Id: id };
-                    return super.CallAsync('GetMessage', data);
-                }
-            }
             export class Game extends WebApiProxy {
                 /**
                  * Wrapper for the Game Commanding API
@@ -400,10 +378,6 @@ namespace OnlinePoker {
                 constructor(host) {
                     super(host, 'Account');
                 }
-                public ActivateAccount(login, token) {
-                    const data = { Login: login, Token: token };
-                    return super.CallAsync('ActivateAccount', data);
-                }
                 public Logout() {
                     const data = {};
                     authToken = null;
@@ -424,10 +398,6 @@ namespace OnlinePoker {
                     };
                     return super.Call('Authenticate', data, aquireTokenCallback) as JQueryPromise<AuthenticateResponse>;
                 }
-                public CancelAccountActivation(login, token) {
-                    const data = { Login: login, Token: token };
-                    return super.CallAsync('CancelAccountActivation', data);
-                }
                 public ChangePassword(oldPassword, newPassword) {
                     const data = { OldPassword: oldPassword, NewPassword: newPassword };
                     return super.CallAsync<StatusResponse>('ChangePassword', data);
@@ -435,16 +405,6 @@ namespace OnlinePoker {
                 public GetPersonalAccount() {
                     const data = {};
                     return super.CallAsync<ApiResult<PersonalAccountData>>('GetPersonalAccount', data);
-                }
-                public GetPlayerAccountHistory(fromDate, toDate, fromAmount, toAmount, operationType) {
-                    const data = {
-                        FromDate: fromDate,
-                        ToDate: toDate,
-                        FromAmount: fromAmount,
-                        ToAmount: toAmount,
-                        OperationType: operationType,
-                    };
-                    return super.CallAsync<ApiResult<OperationData[]>>('GetPlayerAccountHistory', data);
                 }
                 public GetPlayerDefinition() {
                     const data = {};
@@ -454,63 +414,8 @@ namespace OnlinePoker {
                     const data = { Type: type, Amount: amount, Parameters: parameters };
                     return super.CallAsync('PutWithdrawalRequest', data);
                 }
-                public Register(
-                    login, email, password, firstName, lastName, patronymicName,
-                    country, city, additionalProperties, image,
-                    callback) {
-                    const url = this.baseUrl + 'Register';
-                    const data = {
-                        Login: login,
-                        Email: email,
-                        Password: password,
-                        FirstName: firstName,
-                        LastName: lastName,
-                        PatronymicName: patronymicName,
-                        Country: country,
-                        City: city,
-                        Image: image,
-                        AdditionalProperties: additionalProperties,
-                    };
-                    return $.ajax({
-                        type: 'POST',
-                        url,
-                        data: JSON.stringify(data),
-                        success: callback,
-                        crossDomain: true,
-                        contentType: 'application/json',
-                        beforeSend: beforeSendHandler,
-                        dataType: 'json',
-                    });
-                }
-                public RequestResetPassword(login, email) {
-                    const data = { Login: login, Email: email };
-                    return super.CallAsync<StatusResponse>('RequestResetPassword', data);
-                }
-                public ResetAvatar() {
-                    const data = {};
-                    return super.CallAsync('ResetAvatar', data);
-                }
-                public ResetPassword(token, newPassword) {
-                    const data = { Token: token, Password: newPassword };
-                    return super.CallAsync<StatusResponse>('ResetPassword', data);
-                }
-                public SetAvatarUrl(url) {
-                    const data = { Url: url };
-                    return super.CallAsync('SetAvatarUrl', data);
-                }
-                public UpdatePlayerProfile(firstName, lastName, patronymicName, email, country, city, image) {
-                    throw new Error('Calls with multipart data not supported');
-                }
-                public UploadAvatar(image) {
-                    throw new Error('Calls with multipart data not supported');
-                }
-                public GetBestPlayers() {
-                    const data = {};
-                    return super.CallAsync<ApiResult<UserRating[]>>('GetBestPlayers', data);
-                }
-                public RegisterGuest() {
-                    const data = {};
-                    return super.CallAsync<RegisterGuestResponse>('RegisterGuest', data);
+                public RegisterGuest(): Promise<RegisterGuestResponse> {
+                    throw new Error("Not implmented.");
                 }
             }
             export class Metadata extends WebApiProxy {
@@ -522,14 +427,6 @@ namespace OnlinePoker {
                     super(host, 'Metadata');
                     this.timeout = 10000;
                 }
-                public GetServerLayout() {
-                    const data = {};
-                    return super.CallAsync('GetServerLayout', data);
-                }
-                public GetDefaultAvatars() {
-                    const data = {};
-                    return super.CallAsync<AvatarsResponse>('GetDefaultAvatars', data);
-                }
                 public GetWellKnownBetStructure() {
                     const data = {};
                     return super.CallAsync<ApiResult<TournamentBetStructure[][]>>('GetWellKnownBetStructure', data);
@@ -538,17 +435,9 @@ namespace OnlinePoker {
                     const data = {};
                     return super.CallAsync<ApiResult<TournamentPrizeStructure[][]>>('GetWellKnownPrizeStructure', data);
                 }
-                public GetNews() {
-                    const data = {};
-                    return super.CallAsync<ApiResult<string[]>>('GetNews', data);
-                }
                 public GetOnlinePlayers() {
                     const data = {};
                     return super.CallAsync<ApiResult<number[]>>('GetOnlinePlayers', data);
-                }
-                public GetBanners(format) {
-                    const data = { Format: format };
-                    return super.CallAsync<ApiResult<BannerData[]>>('GetBanners', data);
                 }
                 /**
                  * Request server date.
