@@ -1,6 +1,7 @@
 ﻿/// <reference path="../typings/signalr.d.ts" />
 
 import * as ko from "knockout";
+import { Game } from "../api/game";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
@@ -14,7 +15,7 @@ import { TableSlider } from "./tableSlider";
 import { TableView } from "./tableview";
 import { TablePlaceModel } from "./tabpleplacemodel";
 
-declare var apiHost: string;
+declare var host: string;
 declare var app: App;
 
 export class ActionBlock {
@@ -515,11 +516,11 @@ export class ActionBlock {
                 return;
             }
 
-            const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+            const gameApi = new Game(host);
             if (value) {
-                gameApi.WaitBigBlind(this.tableView.tableId);
+                gameApi.changeWaitQueueSettings(this.tableView.tableId, true);
             } else {
-                gameApi.ForceJoinGame(this.tableView.tableId);
+                gameApi.changeWaitQueueSettings(this.tableView.tableId, false);
             }
         });
 
@@ -532,11 +533,11 @@ export class ActionBlock {
                 return;
             }
 
-            const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+            const gameApi = new Game(host);
             if (value) {
-                gameApi.SitOut(this.tableView.tableId);
+                gameApi.sitOut(this.tableView.tableId);
             } else {
-                gameApi.ComeBack(this.tableView.tableId);
+                gameApi.comeBack(this.tableView.tableId);
             }
 
             this.expanded(false);

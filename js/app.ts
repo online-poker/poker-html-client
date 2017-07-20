@@ -424,15 +424,7 @@ export class App {
         commandManager.registerCommand("pageblock." + pageBlockName, function() {
             const requireAuthentication = viewModel.requireAuthentication;
             if (!requireAuthentication) {
-                if (!viewModel.requireGuestAuthentication) {
-                    self.showPageBlock(pageBlockName);
-                } else {
-                    app.requireGuestAuthentication().then(function(value) {
-                        if (value) {
-                            self.showPageBlock(pageBlockName);
-                        }
-                    });
-                }
+                self.showPageBlock(pageBlockName);
             } else {
                 app.requireAuthentication().then(function(value) {
                     if (value) {

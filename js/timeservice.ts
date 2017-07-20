@@ -1,9 +1,11 @@
 ﻿import * as ko from "knockout";
 import * as moment from "moment";
+import { Information } from "./api/information";
 import { debugSettings } from "./debugsettings";
 import * as runtimeSettings from "./table/runtimesettings";
 
 declare var apiHost: string;
+declare var host: string;
 
 class TimeService {
     private static MillisecondsInMinutes = 60 * 1000;
@@ -16,9 +18,10 @@ class TimeService {
     constructor() {
         this.currentTime = ko.observable<string>();
     }
-    public start() {
-        const api = new OnlinePoker.Commanding.API.Metadata(apiHost);
-        api.GetDate().then((serverTime) => {
+    public async start() {
+        const api = new Information(host);
+        try {
+            const serverTime = await api.getDate();
             const currentDate = new Date();
             this.timeDiff = serverTime - currentDate.valueOf();
 
@@ -32,7 +35,9 @@ class TimeService {
                     this.updateCurrentTime();
                 }, TimeService.MillisecondsInMinutes);
             }, pauseBeforeStartLongInterval);
-        }).then(null, () => this.start());
+        } catch (e) {
+            this.start();
+        }
     }
     public stop() {
         this.timeDiff = 0;

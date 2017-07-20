@@ -1,4 +1,6 @@
 ﻿import ko = require("knockout");
+import { TournamentPrizeStructure } from "../../../api/information";
+import { TournamentDefinition } from "../../../api/tournament";
 import * as metadataManager from "../../../metadatamanager";
 
 interface TournamentPrizeStructureView {

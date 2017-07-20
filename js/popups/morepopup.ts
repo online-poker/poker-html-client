@@ -6,6 +6,7 @@ import * as ko from "knockout";
 import { App } from "../app";
 import * as authManager from "../authmanager";
 import { websiteService } from "../services";
+import { AccountManager } from "../services/accountManager";
 import { settings } from "../settings";
 
 declare var app: App;
@@ -77,8 +78,8 @@ export class MorePopup {
      */
     private async updateAccountData() {
         const self = this;
-        const api = new OnlinePoker.Commanding.API.Account(apiHost);
-        const data = await api.GetPlayerDefinition();
+        const manager = new AccountManager();
+        const data = await manager.getAccount();
         if (data.Status === "Ok") {
             const personalAccountData = data.Data;
             const total = settings.isGuest() ? personalAccountData.GameMoney : personalAccountData.RealMoney;

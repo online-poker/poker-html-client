@@ -35,7 +35,7 @@ export class SeatPage extends PageBase {
     public reconnectedHandler: SignalBinding;
     public disconnectedHandler: SignalBinding;
     public isConnectionSlow: KnockoutObservable<boolean>;
-    public libraryVersion: KnockoutComputed<string> = ko.computed(() => version);
+    public libraryVersion: KnockoutComputed<string> = ko.computed(() => "Библиотека: " + version);
     public lastConnecton: string;
     public frozen: KnockoutComputed<boolean>;
     public opened: KnockoutComputed<boolean>;

@@ -1,9 +1,12 @@
 /// <reference path="../poker.commanding.api.ts" />
 /* tslint:disable:no-bitwise */
 
+import { PersonalAccountData } from "../api/account";
+import { TournamentOptionsEnum } from "../api/tournament";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
+import { AccountManager } from "../services/accountManager";
 import { settings } from "../settings";
 import { tableManager } from "../table/tablemanager";
 import { TournamentView } from "../table/tournamentview";
@@ -89,7 +92,7 @@ export class TableMenuPopup {
         });
     }
 
-    public shown() {
+    public async shown() {
         // Load settings
         const self = this;
         const currentTable = app.tablesPage.currentTable();
@@ -122,16 +125,15 @@ export class TableMenuPopup {
                 this.doublerebuyAllowed(tournamentView.rebuyAllowed()
                     && (moneyInGame + tdata.ChipsAddedAtDoubleReBuy) <= tdata.MaximumAmountForRebuy);
                 if (tournamentView.addonAllowed() || tournamentView.rebuyAllowed()) {
-                    const api = new OnlinePoker.Commanding.API.Account(apiHost);
-                    api.GetPersonalAccount().then(function(data) {
-                        const personalAccount = data.Data;
-                        const currentMoney = self.getCurrentMoney(tournamentView, personalAccount);
-                        const addonPrice = tdata.AddonPrice + tdata.AddonFee;
-                        const rebuyPrice = tdata.RebuyFee + tdata.RebuyPrice;
-                        self.addonAllowed(self.addonAllowed() && addonPrice < currentMoney);
-                        self.rebuyAllowed(self.rebuyAllowed() && (rebuyPrice < currentMoney));
-                        self.doublerebuyAllowed(self.doublerebuyAllowed() && ((2 * rebuyPrice) > currentMoney));
-                    });
+                    const api = new AccountManager();
+                    const data = await api.getAccount();
+                    const personalAccount = data.Data;
+                    const currentMoney = self.getCurrentMoney(tournamentView, personalAccount);
+                    const addonPrice = tdata.AddonPrice + tdata.AddonFee;
+                    const rebuyPrice = tdata.RebuyFee + tdata.RebuyPrice;
+                    self.addonAllowed(self.addonAllowed() && addonPrice < currentMoney);
+                    self.rebuyAllowed(self.rebuyAllowed() && (rebuyPrice < currentMoney));
+                    self.doublerebuyAllowed(self.doublerebuyAllowed() && ((2 * rebuyPrice) > currentMoney));
                 }
             }
         } else {

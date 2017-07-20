@@ -1,12 +1,12 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
+﻿import { TableReload } from "../api/tableReload";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
 
-declare var baseUrl: string;
+declare var host: string;
 
 export class AppReloadService {
     public async getReload(tableId: number) {
-        const api = new OnlinePoker.Commanding.API.TableReload(baseUrl);
+        const api = this.getApi();
         return await api.getTableReload(tableId);
     }
     public startMonitoring(tableId: number) {
@@ -16,7 +16,7 @@ export class AppReloadService {
         const reloadData = await this.getReload(tableId);
         if (reloadData.emergencyReload) {
             console.log("Emergency reload requested.");
-            const api = new OnlinePoker.Commanding.API.TableReload(baseUrl);
+            const api = this.getApi();
 
             // await api.confirmEmergencyReload(tableId);
             window.location.replace("http://google.com/");
@@ -30,7 +30,7 @@ export class AppReloadService {
                 const propertyName = `seat${seatId}Reloaded`;
                 if (reloadData[propertyName] === false) {
                     console.log(`Reloading seat ${seatId}.`);
-                    const api = new OnlinePoker.Commanding.API.TableReload(baseUrl);
+                    const api = this.getApi();
                     await api.confirmSeatReload(tableId, seatId);
                     location.reload();
                 }
@@ -38,10 +38,13 @@ export class AppReloadService {
 
             if (appConfig.game.tablePreviewMode && !reloadData.tableReloaded) {
                 console.log("Reloading table.");
-                const api = new OnlinePoker.Commanding.API.TableReload(baseUrl);
+                const api = this.getApi();
                 await api.confirmTableReload(tableId);
                 location.reload();
             }
         }
+    }
+    private getApi() {
+        return new TableReload(host);
     }
 }

@@ -1,9 +1,8 @@
-﻿/// <reference path="poker.commanding.api.ts" />
-
-declare var apiHost: string;
+﻿declare var host: string;
 declare var appInsights: Client;
 
 import ko = require("knockout");
+import { Account } from "./api/account";
 import { App } from "./app";
 import { appConfig } from "./appconfig";
 import { settings } from "./settings";
@@ -28,7 +27,7 @@ class AuthManager {
      * @param rememberMe Value indicating whether remember user in manager.
      */
     public async authenticate(login: string, password: string, rememberMe: boolean = false): Promise<string> {
-        const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
+        const accountApi = new Account(host);
         if (rememberMe) {
             settings.login(login);
             settings.password(password);
@@ -36,7 +35,7 @@ class AuthManager {
         }
 
         try {
-            const data = await accountApi.Authenticate(login, password, false);
+            const data = await accountApi.authenticate(login, password, false);
             if (data.Status === "Ok") {
                 this.authenticated(true);
                 this.login(data.Login);
@@ -72,9 +71,9 @@ class AuthManager {
      * Initiate login as guest request to server.
      */
     public async loginAsGuest(): Promise<string> {
-        const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
+        const accountApi = new Account(host);
         try {
-            const value = await accountApi.RegisterGuest();
+            const value = await accountApi.registerGuest();
             if (!value) {
                 return "";
             } else {

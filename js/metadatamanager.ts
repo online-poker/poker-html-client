@@ -1,9 +1,9 @@
-﻿/// <reference path="poker.commanding.api.ts" />
-/// <reference path="poker.commanding.api.d.ts" />
+﻿/// <reference path="poker.commanding.api.d.ts" />
 
-declare var apiHost: string;
+declare var host: string;
 
 import * as ko from "knockout";
+import { Information, TournamentBetStructure, TournamentPrizeStructure } from "./api/information";
 import { debugSettings } from "./debugsettings";
 import { imagePreloadService } from "./services";
 
@@ -23,7 +23,7 @@ class MetadataManager {
     }
     public async update() {
         const self = this;
-        const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
+        const metadataApi = new Information(host);
         const failHandler = () => {
             if (this.failed !== null) {
                 this.failed();
@@ -34,9 +34,9 @@ class MetadataManager {
 
         try {
             const values = await Promise.all([
-                metadataApi.GetOnlinePlayers(),
-                metadataApi.GetWellKnownPrizeStructure(),
-                metadataApi.GetWellKnownBetStructure(),
+                metadataApi.getOnlinePlayers(),
+                metadataApi.getWellKnownPrizeStructure(),
+                metadataApi.getWellKnownBetStructure(),
             ]);
             const [ onlinePlayersData, prizeStructureData, betStructureData  ] = values;
             if (onlinePlayersData.Status !== "Ok"
@@ -60,12 +60,13 @@ class MetadataManager {
                 self.ready();
             }
         } catch (e) {
+            this.log(e);
             failHandler();
         }
     }
     public async versionCheck() {
-        const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
-        const serverInformation = await metadataApi.VersionCheck();
+        const metadataApi = new Information(host);
+        const serverInformation = await metadataApi.getVersion();
         if (serverInformation.ServerApiVersion > OnlinePoker.Commanding.API.version) {
             if (serverInformation.MinimumClientApiVersion <= OnlinePoker.Commanding.API.version) {
                 // Could work.
@@ -77,13 +78,13 @@ class MetadataManager {
     }
     public async updateOnline() {
         const self = this;
-        const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
-        const onlinePlayers = await metadataApi.GetOnlinePlayers();
+        const metadataApi = new Information(host);
+        const onlinePlayers = await metadataApi.getOnlinePlayers();
         self.registered(onlinePlayers.Data[1].toString());
         self.online(onlinePlayers.Data[0].toString());
         return onlinePlayers;
     }
-    private log(message: string) {
+    private log(message: string | Error) {
         if (debugSettings.initialization.metadata) {
             // tslint:disable-next-line:no-console
             console.log(message);

@@ -1,6 +1,8 @@
 ﻿/* tslint:disable:no-bitwise no-use-before-declare */
 
 import * as ko from "knockout";
+import { Game } from "../api/game";
+import { Tournament, TournamentDefinition, TournamentPlayerStatus } from "../api/tournament";
 import * as authManager from "../authmanager";
 import * as commandManager from "../commandmanager";
 import { debugSettings } from "../debugsettings";
@@ -15,6 +17,7 @@ import { TableView } from "./tableview";
 import { TournamentView } from "./tournamentview";
 
 declare var apiHost: string;
+declare var host: string;
 
 class TableManager {
     public tables: KnockoutObservableArray<TableView>;
@@ -101,10 +104,10 @@ class TableManager {
             }
         });
         settings.autoHideCards.subscribe(function(newValue) {
-            const api = new OnlinePoker.Commanding.API.Game(apiHost);
+            const api = new Game(host);
             self.tables().forEach(function(tableView) {
                 // Set open card parameters in parallel for all tables.
-                api.SetOpenCardsParameters(tableView.tableId, !newValue);
+                api.setTableParameters(tableView.tableId, !newValue);
             });
 
             settings.saveSettings();
@@ -116,10 +119,10 @@ class TableManager {
     }
     public async getCurrentTables() {
         const self = this;
-        const api = new OnlinePoker.Commanding.API.Game(apiHost);
-        const data = await api.GetTables(null, 0, 0, 0, 1, 0);
+        const api = new Game(host);
+        const data = await api.getTables();
         const tablesData = data.Data as GameTableModel[];
-        const tableData = await api.GetSitingTables();
+        const tableData = await api.getSitingTables();
         const status = tableData.Status;
         if (status === "Ok") {
             const tables = tableData.Data;
@@ -147,11 +150,11 @@ class TableManager {
     }
     public async getCurrentTournaments() {
         const self = this;
-        const gapi = new OnlinePoker.Commanding.API.Game(apiHost);
-        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-        const data = await tapi.GetTournaments(0, 0, 0, 0, 0);
+        const gapi = new Game(host);
+        const tapi = new Tournament(host);
+        const data = await tapi.getTournaments(0, 0, 0, 0, 0);
         const tournamentsData = data.Data;
-        const registeredTournamentsData = await tapi.GetRegisteredTournamentsStatus();
+        const registeredTournamentsData = await tapi.getRegisteredTournaments();
         const status = registeredTournamentsData.Status;
         if (status === "Ok") {
             const rtournaments = registeredTournamentsData.Data;
@@ -238,8 +241,8 @@ class TableManager {
             return;
         }
 
-        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-        const tournamentInfo = await tournamentApi.GetTournament(tournamentId);
+        const tournamentApi = new Tournament(host);
+        const tournamentInfo = await tournamentApi.getTournament(tournamentId);
         if (tournamentInfo.Status === "Ok") {
             const tournamentData = tournamentInfo.Data;
             tableManager.selectTournament(tournamentData, true);
@@ -1083,13 +1086,13 @@ class TableManager {
 
     private async buildTournamentInformationRequest(tournamentId: number, tableId: number): Promise<TournamentDefinition> {
         const self = this;
-        const gapi = new OnlinePoker.Commanding.API.Game(apiHost);
-        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-        const data = await tapi.GetTournament(tournamentId);
+        const gapi = new Game(host);
+        const tapi = new Tournament(host);
+        const data = await tapi.getTournament(tournamentId);
         const tournamentData = data.Data;
         self.selectTournament(tournamentData, false);
         if (tableId != null) {
-            const tableData = await gapi.GetTable(tableId);
+            const tableData = await gapi.getTableById(tableId);
             self.selectTable(tableData.Data, false);
             const tournamentTableView = self.getTableById(tableId);
             const tournamentView = self.getTournamentById(tournamentId);

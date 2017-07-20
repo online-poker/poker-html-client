@@ -2,6 +2,9 @@
 
 import * as ko from "knockout";
 import * as moment from "moment";
+import { Game } from "../api/game";
+import { TournamentBetStructure, TournamentPrizeStructure } from "../api/information";
+import { Tournament, TournamentDefinition, TournamentPlayerDefinition, TournamentPlayerStatus, TournamentTableDefinition } from "../api/tournament";
 import { App } from "../app";
 import * as authManager from "../authmanager";
 import { debugSettings } from "../debugsettings";
@@ -9,11 +12,13 @@ import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";
 import { SimplePopup } from "../popups/simplepopup";
 import { reloadManager } from "../services";
+import { AccountManager } from "../services/accountManager";
 import { tableManager } from "../table/tablemanager";
 import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";
 
 declare var apiHost: string;
+declare var host: string;
 declare var app: App;
 
 interface TournamentTablePlayerView {
@@ -469,10 +474,10 @@ export class TournamentLobbyPage extends PageBase {
         }
 
         const self = this;
-        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        const tournamentApi = new Tournament(host);
         this.loading(true);
         try {
-            const data = await tournamentApi.GetTournament(this.tournamentId);
+            const data = await tournamentApi.getTournament(this.tournamentId);
             if (data.Status === "Ok") {
                 const tournamentData = data.Data;
                 self.log("Informaton about tournament ", self.tournamentId, " received: ", data.Data);
@@ -505,10 +510,10 @@ export class TournamentLobbyPage extends PageBase {
     }
     public async register() {
         const self = this;
-        const api = new OnlinePoker.Commanding.API.Account(apiHost);
+        const manager = new AccountManager();
         self.loading(true);
         try {
-            const data = await api.GetPersonalAccount();
+            const data = await manager.getAccount();
             self.loading(false);
             if (data.Status === "Ok") {
                 const personalAccountData = data.Data;
@@ -541,9 +546,9 @@ export class TournamentLobbyPage extends PageBase {
             _("tournamentLobby.tournamentRegistrationCancelPromptCaption"),
             [_("tournamentLobby.tournamentRegistrationCancelPrompt").replace("#name", name)]);
         self.loading(true);
-        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        const tournamentApi = new Tournament(host);
         try {
-            const data = await tournamentApi.CancelRegistration(self.tournamentId);
+            const data = await tournamentApi.cancelRegistration(self.tournamentId);
             self.loading(false);
             if (data.Status === "Ok") {
                 self.log("Registration cancelled");
@@ -640,14 +645,14 @@ export class TournamentLobbyPage extends PageBase {
         if (tableView === null) {
             this.loading(true);
             const tdata = this.tournamentData();
-            const api = new OnlinePoker.Commanding.API.Game(apiHost);
+            const api = new Game(host);
             const currentTournamentTitle = _("tournamentLobby.caption", { number: tdata.TournamentId });
             try {
-                const data = await api.GetTable(tableId);
+                const data = await api.getTableById(tableId);
                 if (data.Status === "Ok") {
-                    const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+                    const tapi = new Tournament(host);
                     try {
-                        const tournamentData = await tapi.GetTournament(tdata.TournamentId);
+                        const tournamentData = await tapi.getTournament(tdata.TournamentId);
                         if (data.Status === "Ok") {
                             self.loading(false);
                             tableManager.selectTournament(tournamentData.Data, false);
@@ -706,9 +711,9 @@ export class TournamentLobbyPage extends PageBase {
                 _("tournamentLobby.tournamentRegistrationPromptBalance").replace("#amount", balanceString),
             ]);
         self.loading(true);
-        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        const tournamentApi = new Tournament(host);
         try {
-            const data = await tournamentApi.Register(self.tournamentId);
+            const data = await tournamentApi.register(self.tournamentId);
             self.loading(false);
             if (data.Status === "Ok") {
                 tableManager.openTournamentById(self.tournamentId);

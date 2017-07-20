@@ -6,6 +6,7 @@ import * as ko from "knockout";
 import { App } from "../app";
 import { _ } from "../languagemanager";
 import { SimplePopup } from "../popups/simplepopup";
+import { AccountManager } from "../services/accountManager";
 import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
@@ -45,8 +46,8 @@ export class ChangePasswordPopup extends PopupBase implements KnockoutValidation
         if (!this.loading()) {
             self.loading(true);
             self.errorMessage(null);
-            const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
-            const data = await accountApi.ChangePassword(this.oldPassword(), this.password());
+            const accountApi = new AccountManager();
+            const data = await accountApi.changePasword(this.oldPassword(), this.password());
             if (data.Status === "Ok") {
                 self.loading(false);
                 self.oldPassword(null);

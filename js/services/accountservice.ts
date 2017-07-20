@@ -1,16 +1,14 @@
-/// <reference path="services.d.ts" />
-/// <reference path="../poker.commanding.api.ts" />
-
 declare var apiHost: string;
 
 import * as authManager from "../authmanager";
+import { AccountManager } from "./accountManager";
 
 export class AccountService {
     public async getAccount() {
         const realMoneySupported = true;
         const gameMoneySupported = false;
-        const api = new OnlinePoker.Commanding.API.Account(apiHost);
-        const apiResult = await api.GetPersonalAccount();
+        const api = new AccountManager();
+        const apiResult = await api.getAccount();
         const data = apiResult.Data;
         const accountsData = [] as AccountInformation[];
         if (realMoneySupported) {

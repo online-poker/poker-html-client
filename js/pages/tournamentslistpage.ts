@@ -2,8 +2,10 @@
 /* tslint:disable:no-bitwise */
 
 declare var apiHost: string;
+declare var host: string;
 
 import * as ko from "knockout";
+import { LobbyTournamentItem, Tournament } from "../api/tournament";
 import { App } from "../app";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
@@ -55,7 +57,7 @@ export class TournamentsListPage extends PageBase {
 
         this.loading(true);
         const self = this;
-        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        const tournamentApi = new Tournament(host);
 
         const options = this.options;
         const prizeCurrency = options.currency();
@@ -63,7 +65,7 @@ export class TournamentsListPage extends PageBase {
         const speed = options.speed() === 0 ? 0 : 1 << options.speed();
         const buyin = options.buyin() === 0 ? 0 : 1 << options.buyin();
         self.tournaments([]);
-        const data = await tournamentApi.GetTournaments(prizeCurrency, tournamentTypeMask, speed, buyin, null);
+        const data = await tournamentApi.getTournaments(prizeCurrency, tournamentTypeMask, speed, buyin, null);
         self.loading(false);
         if (!self.visible()) {
             return;
