@@ -667,19 +667,22 @@ export class TableView {
     public clearInformation() {
         this.messages([]);
     }
-    public updateTableInformation() {
-        /// <signature>
-        ///     <summary>Updates the information about the table from the server</summary>
-        /// </signature>
+    /**
+     * Updates information about the table from the server.
+     */
+    public async updateTableInformation() {
         const self = this;
         if (this.connectingRequest !== null && this.connectingRequest.state() === "pending") {
+            this.log("Cancelling the connection request process");
+            this.cancelUpdateTableInformation();
             // Re-schedule updating information.
-            this.connectingRequest.then(null, function() {
-                self.log("Rescheduling the updating information.");
-                self.updateTableInformation();
-            });
-            self.log("Cancelling the connection request process");
-            self.cancelUpdateTableInformation();
+            try {
+                await this.connectingRequest;
+            } catch (e) {
+                this.log("Rescheduling the updating information.");
+                await this.updateTableInformation();
+            }
+
             return;
         }
 
@@ -694,25 +697,29 @@ export class TableView {
         const api = new Game(host);
 
         // Set opening card parameters in parallel to other operations.
-        api.setTableParameters(this.tableId, !settings.autoHideCards());
-        startConnection().then(function() {
+        await api.setTableParameters(this.tableId, !settings.autoHideCards());
+        try {
+            this.connectingRequest = currentLoadingRequest;
+            await startConnection;
             if (wrapper.terminated) {
+                self.log(`Connection  ${hubId} appears to be terminated`);
                 return;
             }
 
             hubId = wrapper.connection.id;
             self.log("Attempting to connect to table and chat over connection " + hubId);
 
-            const joinTableRequest = self.joinTable(wrapper);
-            const joinChatRequest = self.joinChat(wrapper);
+            const joinTableRequest = this.joinTable(wrapper);
+            const joinChatRequest = this.joinChat(wrapper);
             const joinRequest = $.when(joinTableRequest, joinChatRequest);
             currentLoadingRequest.progress(function(command: string) {
                 self.log("Receiving request to cancel all joining operations");
                 joinTableRequest.notify(command);
                 joinChatRequest.notify(command);
             });
-            joinRequest.then(function() {
+            await joinRequest.then(function() {
                 if (wrapper.terminated) {
+                    console.log("Cancel terminated connection.");
                     currentLoadingRequest.reject("Cancelled");
                     return;
                 }
@@ -721,6 +728,7 @@ export class TableView {
                 currentLoadingRequest.resolve();
             }, function(result1, result2) {
                 if (wrapper.terminated) {
+                    self.log("Don't use terminated connection.");
                     return;
                 }
 
@@ -744,11 +752,10 @@ export class TableView {
                 self.log(message);
                 currentLoadingRequest.reject(message);
             });
-        }, function(message) {
+        } catch(message) {
             self.log("Table connection failed. Error: " + message);
             currentLoadingRequest.reject("Table connection failed. Error: " + message);
-        });
-        this.connectingRequest = currentLoadingRequest;
+        }
     }
     public cancelUpdateTableInformation() {
         if (this.connectingRequest !== null) {
@@ -775,7 +782,7 @@ export class TableView {
             result.reject("Cancelled", true);
         };
 
-        wrapper.buildStartConnection()().then(function() {
+        wrapper.buildStartConnectionAsync().then(function() {
             if (wrapper.terminated) {
                 cancelOperation();
                 return;

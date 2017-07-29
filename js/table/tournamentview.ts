@@ -128,10 +128,10 @@ export class TournamentView {
     public clearInformation() {
         // Do nothing.
     }
-    public updateTournamentInformation() {
-        /// <signature>
-        ///     <summary>Updates the information about the table from the server</summary>
-        /// </signature>
+    /**
+     * Updates information about tournament.
+     */
+    public async updateTournamentInformation() {
         const self = this;
         if (this.connectingRequest !== null && this.connectingRequest.state() === "pending") {
             // Re-schedule updating information.
@@ -151,7 +151,7 @@ export class TournamentView {
         const connectionInfo = "HID:" + hubId;
         this.log("Connecting to tournament " + this.tournamentId + " on connection " + connectionInfo);
         const startConnection = app.buildStartConnection();
-        startConnection().then(function() {
+        startConnection.then(function() {
             if (wrapper.terminated) {
                 return;
             }

@@ -256,7 +256,7 @@ export class App {
         app.receivedEvent("deviceready");
     }
     // Update DOM on a Received Event
-    public receivedEvent(id) {
+    public async receivedEvent(id) {
         const self = this;
         timeService.start();
         settings.soundEnabled.subscribe(function(value) {
@@ -363,8 +363,10 @@ export class App {
 
                 // tslint:disable-next-line:no-console
                 console.log("Authentication changed.");
-                self.terminateConnection();
-                self.loadTablesAndTournaments(newValue);
+                setTimeout(() => {
+                    self.terminateConnection();
+                    self.loadTablesAndTournaments(newValue);
+                }, 100);
             });
         });
 
@@ -393,7 +395,7 @@ export class App {
         }
     }
     public buildStartConnection() {
-        return connectionService.buildStartConnection();
+        return connectionService.buildStartConnectionAsync();
     }
     public showSubPage(pageName: string) {
         this.hideMoreBlock();
@@ -970,55 +972,55 @@ export class App {
                 self.updateMetadataOnResume(lastPage, pageBlockBeforeClosing, subPageBeforeClosing);
             });
         };
-        const successPath = async () => {
-            self.preloadTableImages();
+        if (!await this.versionCheck()) {
+            return;
+        }
+
+        this.preloadTableImages();
+        try {
+            await metadataManager.update();
+            tableManager.initialize();
             try {
-                await metadataManager.update();
-                tableManager.initialize();
-                try {
-                    await tableManager.getCurrentTablesAndTournaments();
-                    self.spinner.stop();
-                    self.establishConnection().then(function(wrapper) {
-                        if (wrapper.terminated) {
-                            return;
-                        }
-
-                        self.logEvent("Showing last page");
-                        if (lastPage != null) {
-                            if (!debugSettings.application.goToLobbyAfterPause) {
-                                uiManager.showPage(lastPage);
-                            } else {
-                                uiManager.showPage("main");
-                                if (lastPage === "table") {
-                                    uiManager.showPageBlock("lobby");
-                                    uiManager.showSubPage("lobby");
-                                }
-                            }
-                        } else {
-                            uiManager.showPage("main");
-                        }
-
-                        if (debugSettings.application.deactivateOnPause) {
-                            self.logEvent("Activating subpage");
-                            uiManager.activateSubPage(uiManager.currentPage);
-                        }
-
-                        if (self.savedPopup) {
-                            self.showPopup(self.savedPopup, true);
-                            self.savedPopup = null;
-                        }
-
-                        orientationService.setLastOrientation();
-                        reloadManager.execute();
-                    });
-                } catch (e) {
-                    failHandler();
+                await tableManager.getCurrentTablesAndTournaments();
+                this.spinner.stop();
+                const wrapper = await self.establishConnection();
+                if (wrapper.terminated) {
+                    return;
                 }
+
+                this.logEvent("Showing last page");
+                if (lastPage != null) {
+                    if (!debugSettings.application.goToLobbyAfterPause) {
+                        uiManager.showPage(lastPage);
+                    } else {
+                        uiManager.showPage("main");
+                        if (lastPage === "table") {
+                            uiManager.showPageBlock("lobby");
+                            uiManager.showSubPage("lobby");
+                        }
+                    }
+                } else {
+                    uiManager.showPage("main");
+                }
+
+                if (debugSettings.application.deactivateOnPause) {
+                    this.logEvent("Activating subpage");
+                    uiManager.activateSubPage(uiManager.currentPage);
+                }
+
+                if (this.savedPopup) {
+                    this.showPopup(this.savedPopup, true);
+                    this.savedPopup = null;
+                }
+
+                orientationService.setLastOrientation();
+                reloadManager.execute();
             } catch (e) {
                 failHandler();
             }
-        };
-        await this.versionCheck(successPath);
+        } catch (e) {
+            failHandler();
+        }
     }
     private async updateMetadataOnLaunch() {
         const self = this;
@@ -1027,44 +1029,44 @@ export class App {
         }
 
         console.log("Launch intialization of metadata first time");
-        const failHandler = function() {
+        const failHandler = function (e: Error) {
+            console.error(e);
             console.log("Failed updating metadata for first time, rescheduling attempt.");
             slowInternetService.setRetryHandler(() => {
                 self.updateMetadataOnLaunch();
             });
         };
-        const successPath = async () => {
-            self.preloadTableImages();
+        if (!await this.versionCheck()) {
+            return;
+        }
+
+        self.preloadTableImages();
+        try {
+            await metadataManager.update();
+            self.spinner.stop();
+            tableManager.initialize();
             try {
-                await metadataManager.update();
-                self.spinner.stop();
-                tableManager.initialize();
-                try {
-                    await tableManager.getCurrentTablesAndTournaments();
-                    self.establishConnection();
-                    self.fullyInitialized = true;
-                    metadataManager.setReady(null);
-                } catch (e) {
-                    failHandler();
-                }
+                await self.establishConnection();
+                await tableManager.getCurrentTablesAndTournaments();
+                self.fullyInitialized = true;
+                metadataManager.setReady(null);
             } catch (e) {
-                failHandler();
+                failHandler(e);
             }
-        };
-        await this.versionCheck(successPath);
+        } catch (e) {
+            failHandler(e);
+        }
     }
-    private async versionCheck(successPath: () => Promise<void>) {
+    private async versionCheck() {
         try {
             await metadataManager.versionCheck();
-
-            // Even if this is promise object, but we have to check that message box for update
-            // does not popup when not needed.
-            successPath();
+            return true;
         } catch (e) {
             // Display dialog which prompts for the update.
             app.promptEx(_("updater.title"), [_("updater.line1")], [_("updater.button")], [() => {
                 websiteService.navigateUpdateApk();
             }]);
+            return false;
         }
     }
     private setupTouchActivation() {
@@ -1076,10 +1078,10 @@ export class App {
         $("body").on("touchstart", ".button, .actionable", function(event) {
             $(this).addClass("pressed");
         }).on("touchend", ".button, .actionable", function(event) {
-                $(this).removeClass("pressed");
+            $(this).removeClass("pressed");
         }).on("touchcancel", ".button, .actionable", function(event) {
-                $(this).removeClass("pressed");
-            });
+            $(this).removeClass("pressed");
+        });
     }
     private setupMenu() {
         menu.initialize([
@@ -1173,48 +1175,47 @@ export class App {
         tableManager.stopConnectingToTables();
         connectionService.terminateConnection(forceDisconnect);
     }
-    private establishConnection(maxAttempts = 3) {
+    private async establishConnection(maxAttempts = 3) {
         const self = this;
         // This part should be moved up to the stack to remove dependency on other services
         // in the connection management.
         connectionService.initializeConnection();
-        return connectionService.establishConnection(maxAttempts).then(function(wrapper) {
-            if (wrapper.terminated) {
-                return wrapper;
-            }
-
-            self.logEvent("Setting up connection dependent services.");
-            slowInternetService.manualDisconnect = false;
-            tableManager.connectTables();
-            tableManager.connectTournaments();
-            const connection = wrapper.connection;
-            try {
-                self.logEvent("Joining lobby chat.");
-                connection.Chat.server.join(0);
-            } catch (error) {
-                console.log(error);
-                throw new Error("Could not join chat after establishingConnection");
-            }
-
-            self.logEvent("Listening lobby chat messages.");
-            const chatHub = connection.createHubProxy("chat");
-            chatHub.on("Message", function(...msg: any[]) {
-                const messageId = msg[0];
-                const tableId = msg[1];
-                const type = msg[2];
-                const sender = msg[3];
-                const message = msg[4];
-                if (tableId !== 0) {
-                    return;
-                }
-
-                if (type === "B") {
-                    broadcastService.displayMessage(message);
-                }
-            });
-
+        const wrapper = await connectionService.establishConnectionAsync(maxAttempts);
+        if (wrapper.terminated) {
             return wrapper;
+        }
+
+        self.logEvent("Setting up connection dependent services.");
+        slowInternetService.manualDisconnect = false;
+        tableManager.connectTables();
+        tableManager.connectTournaments();
+        const connection = wrapper.connection;
+        try {
+            self.logEvent("Joining lobby chat.");
+            connection.Chat.server.join(0);
+        } catch (error) {
+            console.log(error);
+            throw new Error("Could not join chat after establishingConnection");
+        }
+
+        self.logEvent("Listening lobby chat messages.");
+        const chatHub = connection.createHubProxy("chat");
+        chatHub.on("Message", function(...msg: any[]) {
+            const messageId = msg[0];
+            const tableId = msg[1];
+            const type = msg[2];
+            const sender = msg[3];
+            const message = msg[4];
+            if (tableId !== 0) {
+                return;
+            }
+
+            if (type === "B") {
+                broadcastService.displayMessage(message);
+            }
         });
+
+        return wrapper;
     }
     private hideMoreBlock() {
         app.morePopup.visible(false);

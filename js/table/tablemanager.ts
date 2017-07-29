@@ -15,6 +15,7 @@ import { settings } from "../settings";
 import * as timeService from "../timeservice";
 import { TableView } from "./tableview";
 import { TournamentView } from "./tournamentview";
+import { appConfig } from "../appconfig";
 
 declare var apiHost: string;
 declare var host: string;
@@ -118,35 +119,21 @@ class TableManager {
         this.connectTournaments();
     }
     public async getCurrentTables() {
-        const self = this;
         const api = new Game(host);
         const data = await api.getTables();
         const tablesData = data.Data as GameTableModel[];
-        const tableData = await api.getSitingTables();
-        const status = tableData.Status;
-        if (status === "Ok") {
-            const tables = tableData.Data;
-            if (tables != null) {
-                for (let i = 0; i < tables.length; i++) {
-                    const tableId = tables[i];
-                    let model: GameTableModel;
-                    for (let j = 0; j < tablesData.length; j++) {
-                        model = tablesData[j];
-                        if (model.TableId === tableId) {
-                            self.selectTable(model, false);
-                        }
-                    }
+        const sittingTables = !(appConfig.game.seatMode || appConfig.game.tablePreviewMode)
+            ? await this.getSittingTablesFromServer()
+            : await this.getSavedSittingTables();
+        for (const tableId of sittingTables) {
+            for (const model of tablesData) {
+                if (model.TableId === tableId) {
+                    this.selectTable(model, false);
                 }
             }
-
-            return tables;
-        } else {
-            if (status === "AuthorizationError") {
-                return [];
-            } else {
-                throw new Error("Could not get current tables");
-            }
         }
+
+        return sittingTables;
     }
     public async getCurrentTournaments() {
         const self = this;
@@ -297,17 +284,23 @@ class TableManager {
         append();
     }
     public selectTable(model: GameTableModel, update: boolean) {
-        const self = this;
         const tableId = model.TableId;
         let tableView = this.getTableById(tableId);
-        const append = function() {
+        const append = () => {
             if (tableView === null) {
-                tableView = self.addTable(tableId, model);
+                tableView = this.addTable(tableId, model);
             }
 
-            self.selectById(tableId);
-            if (update && connectionService.currentConnection !== null) {
-                tableView.updateTableInformation();
+            this.selectById(tableId);
+            if (update) {
+                if (connectionService.currentConnection !== null) {
+                    console.log("Update table information");
+                    tableView.updateTableInformation();
+                } else {
+                    console.log(`The table ${tableId} added to list of tables, but not updated since no active connection`);
+                }
+            } else {
+                console.log(`The table ${tableId} added to list of tables, but not updated`);
             }
         };
         if (tableView == null) {
@@ -472,6 +465,30 @@ class TableManager {
         }
 
         this.currentIndex(0);
+    }
+    private async getSittingTablesFromServer() {
+        const api = new Game(host);
+        const sittingTablesData = await api.getSitingTables();
+        const status = sittingTablesData.Status;
+        if (status === "Ok") {
+            const sittingTables = sittingTablesData.Data;
+            return sittingTables;
+        } else {
+            if (status === "AuthorizationError") {
+                return [];
+            } else {
+                throw new Error("Could not get current tables from server");
+            }
+        }
+    }
+    private async getSavedSittingTables() {
+        const tableIdString = localStorage.getItem("tableId");
+        if (tableIdString !== null) {
+            const tableId = parseInt(tableIdString, 10);
+            return [tableId];
+        }
+
+        return [];
     }
 
     private initializeChatHub(wrapper: ConnectionWrapper) {
