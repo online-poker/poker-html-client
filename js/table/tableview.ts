@@ -54,6 +54,11 @@ export class TableView {
     public smallBlind: KnockoutObservable<number>;
     public bigBlind: KnockoutObservable<number>;
     public ante: KnockoutObservable<number>;
+    public changeBetParametersNextGame = ko.observable(false);
+    public nextGameSmallBlind: KnockoutObservable<number> = ko.observable(0);
+    public nextGameBigBlind: KnockoutObservable<number> = ko.observable(0);
+    public nextGameAnte: KnockoutObservable<number> = ko.observable(0);
+    public nextGameInformation: KnockoutComputed<string>;
     /**
      * Minimal amount of money which currently authenticated player
      * could bring on the table if he stand up from the table lately.
@@ -548,6 +553,24 @@ export class TableView {
                 "cardsvariant-up": this.cardsVariantUp(),
                 "cardsvariant-down": this.cardsVariantDown(),
             };
+        });
+        this.nextGameInformation = ko.computed(() => {
+            if (!this.changeBetParametersNextGame()) {
+                return "";
+            }
+
+            if (!this.nextGameAnte()) {
+                return _("table.betLevelChangeNextGame", { 
+                    smallBlind: this.nextGameSmallBlind(),
+                    bigBlind: this.nextGameBigBlind(),
+                });
+            } else {                
+                return _("table.betLevelChangeNextGameWithAnte", {
+                    smallBlind: this.nextGameSmallBlind(),
+                    bigBlind: this.nextGameBigBlind(),
+                    ante: this.nextGameAnte(),
+                });
+            }
         });
         this.maximumRaiseAmount = ko.computed(function() {
             const currentPlayer = self.myPlayer();
@@ -1106,6 +1129,9 @@ export class TableView {
     }
     public onFinalTableCardsOpened(cards: number[]) {
         this.handHistory.onFinalTableCardsOpened(cards);
+    }
+    public onTableBetParametersChanged(smallBind: number, bigBlind: number, ante: number) {
+        this.setTableBetingParametersNextGame(smallBind, bigBlind, ante);
     }
 
     /**
@@ -2087,6 +2113,29 @@ export class TableView {
             self.reportApiError(data.Status);
         }
     }
+    /**
+     * Set new table betting parameters.
+     * @param smallBlind Small blind
+     * @param bigBlind Big blind
+     * @param ante Ante
+     */
+    public setTableBetingParameters(smallBlind: number, bigBlind: number, ante: number) {
+        this.bigBlind(bigBlind);
+        this.smallBlind(smallBlind);
+        this.ante(ante);
+    }
+    /**
+     * Set new table betting parameters.
+     * @param smallBlind Small blind
+     * @param bigBlind Big blind
+     * @param ante Ante
+     */
+    public setTableBetingParametersNextGame(smallBlind: number, bigBlind: number, ante: number) {
+        this.nextGameBigBlind(bigBlind);
+        this.nextGameSmallBlind(smallBlind);
+        this.nextGameAnte(ante);
+        this.changeBetParametersNextGame(true);
+    }
     public showPlayerParameters() {
         // tablePlayerParameterSelector.showPlayerParameters(this);
     }
@@ -2381,6 +2430,11 @@ export class TableView {
         this.actionBlock.showCardsEnabled(true);
         this.actionBlock.showHoleCard1Enabled(true);
         this.actionBlock.showHoleCard2Enabled(true);
+        if (this.changeBetParametersNextGame()) {
+            this.changeBetParametersNextGame(false);
+            this.setTableBetingParameters(this.nextGameSmallBlind(), this.nextGameBigBlind(), this.nextGameAnte());
+        }
+
         this.actionBlock.updateBounds();
         this.actionsCount(0);
         this.tableCards.clear();

@@ -301,6 +301,15 @@ interface GameHubClient {
     FinalTableCardsOpened: (tableId: number, cards: string) => void;
 
     /**
+     * Inform that table bet parameters changed.
+     * @param tableId Id of the table where bet paramters changed.
+     * @param smallBlind New value of small blind on the table
+     * @param bigBlind New value of big blind on the table
+     * @param ante New value of the ante on the table
+     */
+    TableBetParametersChanged: (tableId: number, smallBlind: number, bigBlind: number, ante: number) => void;
+
+    /**
      * Inform about table's tournament change.
      * @param tableId Id of the table which tournament changed.
      * @param tournamentId Id of the tournament to which table becomes belonging.

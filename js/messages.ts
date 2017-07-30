@@ -364,6 +364,8 @@ let messages: any = {
         standupSuccessTitle: "Операция выполнена успешно",
         standupSuccessMessage: "За выплатой обратитесь в кассу или к администратору",
         tableFreezed: "Стол поставлен на паузу администрацией",
+        betLevelChangeNextGame: "Ставки повысятся в следующей игре: МБ - ##smallBlind, ББ - ##bigBlind",
+        betLevelChangeNextGameWithAnte: "Ставки повысятся в следующей игре: МБ - ##smallBlind, ББ - ##bigBlind, Анте - ##ante",
     },
     tournament: {
         caption: 'Турнир',

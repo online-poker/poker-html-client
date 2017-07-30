@@ -915,6 +915,20 @@ class TableManager {
 
             tableView.onFinalTableCardsOpened(decodeCardsArray(cards));
         };
+
+        gameHub.client.TableBetParametersChanged = function(tableId, smallBind, bigBlind, ante) {
+            if (wrapper.terminated) {
+                return;
+            }
+
+            const tableView = tableManager.getTableById(tableId);
+            if (tableView == null) {
+                console.warn(`Receive unexpected TableBetParametersChanged(${tableId},${smallBind},${bigBlind},${ante}`);
+                return;
+            }
+
+            tableView.onTableBetParametersChanged(smallBind, bigBlind, ante);
+        };
         gameHub.client.TableTournamentChanged = function(tableId, tournamentId) {
             if (wrapper.terminated) {
                 return;
