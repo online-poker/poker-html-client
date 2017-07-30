@@ -134,7 +134,6 @@ interface GameTableModel {
     AveragePotSize: number;
     CurrencyId: number;
     HandsPerHour: number;
-    IsAuthorized: boolean;
     JoinedPlayers: number;
     MaxPlayers: number;
     PotLimitType: number;
@@ -409,10 +408,6 @@ interface LobbyTableItem {
      */
     TableName: string;
 
-    /**
-     * A value indicating whether player is authorized play games on this table.
-     */
-    IsAuthorized: boolean;
     SmallBlind: number;
     BigBlind: number;
     JoinedPlayers: number;

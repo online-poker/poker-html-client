@@ -41,7 +41,6 @@ export interface LobbyTournamentItem {
     TournamentId: number;
     Type: number;
     TournamentName: string;
-    IsAuthorized: boolean;
     IsRegistered: boolean;
     CurrencyId: number;
     RegistrationStartDate: string;
