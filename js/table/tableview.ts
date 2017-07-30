@@ -1853,6 +1853,12 @@ export class TableView {
             try {
                 const data = await gameApi.fold(this.tableId);
                 if (data.Status === "OperationNotValidAtThisTime") {
+                    self.turnRecovery();
+                    return;
+                }
+
+                if (data.Status === "OperationNotValidWhenTableFrozen") {
+                    self.turnRecovery("table.tableFreezed");
                     return;
                 }
 
@@ -1876,6 +1882,12 @@ export class TableView {
             try {
                 const data = await gameApi.checkOrCall(this.tableId);
                 if (data.Status === "OperationNotValidAtThisTime") {
+                    self.turnRecovery();
+                    return;
+                }
+
+                if (data.Status === "OperationNotValidWhenTableFrozen") {
+                    self.turnRecovery("table.tableFreezed");
                     return;
                 }
 
@@ -1900,6 +1912,12 @@ export class TableView {
             try {
                 const data = await gameApi.betOrRaise(this.tableId, amount);
                 if (data.Status === "OperationNotValidAtThisTime") {
+                    self.turnRecovery();
+                    return;
+                }
+
+                if (data.Status === "OperationNotValidWhenTableFrozen") {
+                    self.turnRecovery("table.tableFreezed");
                     return;
                 }
 
@@ -2905,10 +2923,11 @@ export class TableView {
 
     /**
      * Performs recovery from the network error during making turns
+     * @param messageCode Message to display during recovery.
      */
-    private turnRecovery() {
+    private turnRecovery(messageCode: string = "table.connectionError") {
         if (app.currentPopup !== SlowInternetService.popupName) {
-            SimplePopup.display(_("table.turn"), _("table.connectionError", { tableName: this.tableName() }));
+            SimplePopup.display(_("table.turn"), _(messageCode, { tableName: this.tableName() }));
         }
 
         this.actionBlock.buttonsEnabled(true);
