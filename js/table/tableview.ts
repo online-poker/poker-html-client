@@ -1701,46 +1701,37 @@ export class TableView {
         }
     }
 
-    public showStandupPrompt(): JQueryDeferred<void> {
-        /// <signature>
-        ///     <summary>Shows stand up prompt.</summary>
-        ///     <param name="seat" type="Number">Seat where player willing to join</param>
-        ///     <param name="tableView" type="TableView">Table view where to join</param>
-        /// </signature>
-        const self = this;
-        const result = $.Deferred<void>();
-        if (self.myPlayer() != null) {
-            const tournament = this.tournament();
-            let messages: string[];
-            let caption: string;
-            if (tournament == null) {
-                const hasWin = self.myPlayer().Money() > 0 || self.myPlayerInGame();
-                const promptMesssage = hasWin ? "table.standupPrompt" : "table.standupPromptWithoutWin";
-                caption = hasWin ? "table.standupPromptCaption" : "table.leave";
-                messages = [_(promptMesssage)];
-            } else {
-                if (tournament.finishedPlaying()) {
-                    result.resolve();
-                    return result;
-                }
-                caption = "table.leave";
-                messages = [_("table.standupTournamentPrompt")];
-            }
-
-            app.promptAsync(_(caption), messages).then(function() {
-                if (self.tournament() == null) {
-                    self.standup();
-                }
-
-                result.resolve();
-            }, function() {
-                result.reject();
-            });
-        } else {
-            result.resolve();
+    /**
+     * Shows stand up prompt
+     */
+    public async showStandupPrompt() {
+        if (this.myPlayer() == null) {
+            return;
         }
 
-        return result;
+        const tournament = this.tournament();
+        let messages: string[];
+        let caption: string;
+        if (tournament == null) {
+            const hasWin = this.myPlayer().Money() > 0 || this.myPlayerInGame();
+            const promptMesssage = hasWin ? "table.standupPrompt" : "table.standupPromptWithoutWin";
+            caption = hasWin ? "table.standupPromptCaption" : "table.leave";
+            messages = [_(promptMesssage)];
+        } else {
+            if (tournament.finishedPlaying()) {
+                return;
+            }
+
+            caption = "table.leave";
+            messages = [_("table.standupTournamentPrompt")];
+        }
+
+        const approved = await app.promptAsync(_(caption), messages);
+        if (approved) {
+            if (this.tournament() == null) {
+                this.standup();
+            }
+        }
     }
     public showStandupConfirm() {
         let messages: string[];
