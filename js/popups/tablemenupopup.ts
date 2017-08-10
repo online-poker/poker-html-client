@@ -22,6 +22,7 @@ export class TableMenuPopup {
     public addMoneyAvailable = ko.observable(false);
     public addMoneyAllowed: KnockoutObservable<boolean>;
     public handHistoryAllowed: KnockoutObservable<boolean>;
+    public leaveAllowed: KnockoutObservable<boolean>;
     public accountStatusAllowed: KnockoutObservable<boolean>;
     public tournamentInformationAllowed: KnockoutObservable<boolean>;
     public rebuyAllowed: KnockoutObservable<boolean>;
@@ -73,6 +74,7 @@ export class TableMenuPopup {
 
         this.addMoneyAllowed = ko.observable(false);
         this.handHistoryAllowed = ko.observable(false);
+        this.leaveAllowed = ko.observable(false);
         this.accountStatusAllowed = ko.observable(false);
         this.tournamentInformationAllowed = ko.observable(false);
         this.rebuyAllowed = ko.observable(false);
@@ -100,6 +102,7 @@ export class TableMenuPopup {
         this.addMoneyAvailable(currentTable.tournament() == null && currentTable.opened());
         this.addMoneyAllowed(currentTable.couldAddChips());
         this.handHistoryAllowed(playerIsInGame && currentTable.lastHandHistory() != null);
+        this.leaveAllowed(!currentTable.myPlayerInGame() && currentTable.myPlayer().IsSitoutStatus());
         this.accountStatusAllowed(authManager.authenticated());
 
         const tournamentView = currentTable.tournament();
@@ -230,9 +233,11 @@ export class TableMenuPopup {
         }
     }
     public leave() {
-        const index = tableManager.currentIndex();
-        const tableView = tableManager.tables()[index];
-        tableView.showStandupPrompt();
+        if (this.leaveAllowed()) {
+            const index = tableManager.currentIndex();
+            const tableView = tableManager.tables()[index];
+            tableView.showStandupPrompt();
+        }
     }
     private getCurrentMoney(tournament: TournamentView, personalAccount: PersonalAccountData) {
         return personalAccount.RealMoney;
