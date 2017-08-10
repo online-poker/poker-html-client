@@ -5,6 +5,7 @@ import * as ko from "knockout";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import { _ } from "../languagemanager";
+import { AccountManager } from "../services/accountManager";
 import { TableView } from "../table/tableview";
 import { SimplePopup } from "./simplepopup";
 
@@ -49,11 +50,11 @@ export class JoinTablePopup implements KnockoutValidationGroup {
     }
     public async shown() {
         const self = this;
-        const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
+        const manager = new AccountManager();
         self.loading(true);
         if (appConfig.joinTable.allowUsePersonalAccount) {
             try {
-                const data = await accountApi.GetPersonalAccount();
+                const data = await manager.getAccount();
                 self.loading(false);
                 if (data.Status === "Ok") {
                     const personalAccountData = data.Data;

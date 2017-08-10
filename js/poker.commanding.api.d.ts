@@ -57,71 +57,6 @@ interface SitResponse extends StatusResponse {
 /**
  * Response for the RegisterGuest API call.
  */
-interface AuthenticateResponse extends StatusResponse {
-    /**
-     * Id of the authorized user, or 0 otherwise.
-     */
-    Id: number;
-
-    /**
-     * A value indicating whether this user is guest or not.
-     */
-    IsGuest: boolean;
-
-    /**
-     * First name of the user.
-     */
-    FirstName: string;
-
-    /**
-     * Last name of the user.
-     */
-    LastName: string;
-
-    /**
-     * Patronymic name of the user.
-     */
-    PatronymicName: string;
-
-    /**
-     * Login of the user.
-     */
-    Login: string;
-
-    /**
-     * Money which player has in different currencies.
-     */
-    Money: number[];
-
-    /**
-     * Email of the user.
-     */
-    Email: string;
-
-    /**
-     * Country of the user.
-     */
-    Country: string;
-
-    /**
-     * City of the user
-     */
-    City: string;
-
-    /**
-     * Url of the image to display in the UI
-     */
-    ImageUrl: string;
-
-    /**
-     * Gets or sets additional properties for the player.
-     */
-    Properties: any;
-}
-
-/**
- * Response for the RegisterGuest API call.
- */
 interface RegisterGuestResponse extends StatusResponse {
     UserId: number;
     Login: string;
@@ -191,21 +126,6 @@ interface PlayerDefinition {
     Properties: PlayerDefinitionProperties;
 }
 
-interface PersonalAccountData {
-    RealMoney: number;
-    RealMoneyReserve: number;
-    GameMoney: number;
-    GameMoneyReserve: number;
-
-    /**
-     * Amount of points
-     */
-    Points: number;
-    LastIncomeDate: string;
-    LastIncomeAmount: number;
-    LastRequestNumber: number;
-}
-
 interface GameTableModel {
     TableId: number;
     TableName: string;
@@ -214,7 +134,6 @@ interface GameTableModel {
     AveragePotSize: number;
     CurrencyId: number;
     HandsPerHour: number;
-    IsAuthorized: boolean;
     JoinedPlayers: number;
     MaxPlayers: number;
     PotLimitType: number;
@@ -382,6 +301,15 @@ interface GameHubClient {
     FinalTableCardsOpened: (tableId: number, cards: string) => void;
 
     /**
+     * Inform that table bet parameters changed.
+     * @param tableId Id of the table where bet paramters changed.
+     * @param smallBlind New value of small blind on the table
+     * @param bigBlind New value of big blind on the table
+     * @param ante New value of the ante on the table
+     */
+    TableBetParametersChanged: (tableId: number, smallBlind: number, bigBlind: number, ante: number) => void;
+
+    /**
      * Inform about table's tournament change.
      * @param tableId Id of the table which tournament changed.
      * @param tournamentId Id of the tournament to which table becomes belonging.
@@ -475,17 +403,6 @@ interface ChatHubClient {
     MessageChanged: (messageId: number, tableId: number, type: string, sender: string, message: string) => void;
 }
 
-interface TournamentPrizeStructure {
-    MaxPlayer: number;
-    PrizeLevel: number[];
-}
-interface TournamentBetStructure {
-    Level: number;
-    SmallBlind: number;
-    BigBlind: number;
-    Ante: number;
-}
-
 /**
  * Table information in the lobby.
  */
@@ -500,10 +417,6 @@ interface LobbyTableItem {
      */
     TableName: string;
 
-    /**
-     * A value indicating whether player is authorized play games on this table.
-     */
-    IsAuthorized: boolean;
     SmallBlind: number;
     BigBlind: number;
     JoinedPlayers: number;
@@ -513,134 +426,6 @@ interface LobbyTableItem {
     HandsPerHour: number;
     CurrencyId: number;
     SeatMask: number;
-}
-
-interface LobbyTournamentItem {
-    TournamentId: number;
-    Type: number;
-    TournamentName: string;
-    IsAuthorized: boolean;
-    IsRegistered: boolean;
-    CurrencyId: number;
-    RegistrationStartDate: string;
-    RegistrationEndDate: string;
-    StartDate: string;
-    EndDate: string;
-    FinishDate: string;
-    JoinedPlayers: number;
-    MinPlayers: number;
-    MaxPlayers: number;
-    PrizeAmount: number;
-    Status: TournamentStatus;
-    PrizeCurrencyId: number;
-    BuyInAmount: number;
-    EntryMoneyAmount: number;
-    IsPaused: boolean;
-}
-
-interface TournamentDefinition {
-    TournamentId: number;
-    TournamentName: string;
-    Description: string;
-    Type: number;
-    CurrencyId: number;
-    PrizeCurrencyId: number;
-    RegistrationStartDate: string;
-    RegistrationEndDate: string;
-    StartDate: string;
-    EndDate: string;
-    FinishDate: string;
-    JoinedPlayers: number;
-    TournamentTables: TournamentTableDefinition[];
-    TournamentPlayers: TournamentPlayerDefinition[];
-    BetLevel: number;
-    PrizeAmount: number;
-    CollectedPrizeAmount: number;
-    JoinFee: number;
-    BuyIn: number;
-    StartingChipsAmount: number;
-    WellKnownBetStructure: number;
-    WellKnownPrizeStructure: number;
-    BlindUpdateTime: number;
-    IsRebuyAllowed: boolean;
-    RebuyPrice: number;
-    RebuyFee: number;
-    RebuyPeriodTime: number;
-    IsAddonAllowed: boolean;
-    AddonPrice: number;
-    AddonFee: number;
-    AddonPeriodTime: number;
-    PauseTimeout: number;
-    Options: TournamentOptionsEnum;
-    MaximumAmountForRebuy: number;
-    IsRegistered: boolean;
-    ChipsAddedAtReBuy: number;
-    ChipsAddedAtDoubleReBuy: number;
-    Status: TournamentStatus;
-    IsPaused: boolean;
-    MinPlayers: number;
-    MaxPlayers: number;
-}
-
-/**
- * DTO for the tournament player information.
- */
-interface TournamentTablePlayerDefinition {
-    /**
-     * Gets or sets Id of the player
-     */
-    PlayerId: number;
-
-    /**
-     * Gets or sets name of the player.
-     */
-    PlayerName: string;
-
-    /**
-     * Gets or sets amount of money which player currently has.
-     */
-    PlayerMoney: number;
-}
-
-/**
- * DTO for the tournament table information.
- */
-interface TournamentTableDefinition {
-    /**
-     * Gets or sets unique id of the table.
-     */
-    TableId: number;
-
-    /**
-     * Gets or sets name of the table.
-     */
-    TableName: string;
-
-    /**
-     * Gets or sets number of players which joins the game.
-     */
-    JoinedPlayers: number;
-
-    /**
-     * Gets or sets a value indicating whether table is closed.
-     */
-    IsClosed: boolean;
-
-    /**
-     * Gets or sets list of the players which is sitting on the table now.
-     */
-    Players: TournamentTablePlayerDefinition[];
-}
-
-interface TournamentPlayerDefinition {
-    TournamentId: number;
-    TournamentName: string;
-    PlayerId: number;
-    PlayerName: string;
-    TableId: number;
-    Status: TournamentPlayerStatus;
-    Prize: number;
-    Stack: number;
 }
 
 interface BaseRequest<T> {
@@ -655,35 +440,4 @@ interface OperationData {
     Comments: number;
     BookingOffice: string;
     Status: string;
-}
-
-interface TableReloadInformation {
-    reloadRequired: boolean;
-
-    /**
-     * Gets or sets a value indicating whether table was reloaded.
-     */
-    tableReloaded: boolean;
-
-    seat1Reloaded: boolean;
-
-    seat2Reloaded: boolean;
-
-    seat3Reloaded: boolean;
-
-    seat4Reloaded: boolean;
-
-    seat5Reloaded: boolean;
-
-    seat6Reloaded: boolean;
-
-    seat7Reloaded: boolean;
-
-    seat8Reloaded: boolean;
-
-    seat9Reloaded: boolean;
-
-    seat10Reloaded: boolean;
-
-    emergencyReload: boolean;
 }

@@ -7,6 +7,7 @@ import { App } from "../app";
 import { appConfig } from "../appconfig";
 import { _ } from "../languagemanager";
 import { SimplePopup } from "../popups/simplepopup";
+import { AccountManager } from "../services/accountManager";
 import { TableView } from "../table/tableview";
 import { PopupBase } from "../ui/popupbase";
 
@@ -49,12 +50,12 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
     }
     public async shown() {
         const self = this;
-        const accountApi = new OnlinePoker.Commanding.API.Account(apiHost);
+        const accountManager = new AccountManager();
         self.loading(true);
         self.processing(false);
         if (appConfig.joinTable.allowUsePersonalAccount) {
             try {
-                const data = await accountApi.GetPersonalAccount();
+                const data = await accountManager.getAccount();
                 self.loading(false);
                 if (data.Status === "Ok") {
                     const personalAccountData = data.Data;

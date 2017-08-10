@@ -363,6 +363,9 @@ let messages: any = {
         },
         standupSuccessTitle: "Операция выполнена успешно",
         standupSuccessMessage: "За выплатой обратитесь в кассу или к администратору",
+        tableFreezed: "Стол поставлен на паузу администрацией",
+        betLevelChangeNextGame: "Ставки повысятся в следующей игре: МБ - ##smallBlind, ББ - ##bigBlind",
+        betLevelChangeNextGameWithAnte: "Ставки повысятся в следующей игре: МБ - ##smallBlind, ББ - ##bigBlind, Анте - ##ante",
     },
     tournament: {
         caption: 'Турнир',
@@ -655,5 +658,7 @@ let messages: any = {
         RequiredParameterIsMissing: "Обязательный параметр не указан",
         InvalidTicket: "Неправильный номер билета",
         TicketAlreadyUsed: "Билет уже использован",
+        InsufficientTables: "Недочтаточно столов",
+        OperationNotValidWhenTableFrozen: "Операция недоступна когда стол поставлен на паузу",
     },
 };

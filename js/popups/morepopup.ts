@@ -6,6 +6,7 @@ import * as ko from "knockout";
 import { App } from "../app";
 import * as authManager from "../authmanager";
 import { websiteService } from "../services";
+import { AccountManager } from "../services/accountManager";
 import { settings } from "../settings";
 
 declare var app: App;
@@ -45,7 +46,7 @@ export class MorePopup {
         const self = this;
         this.loading(true);
         try {
-            await Promise.all([this.updateAccountData(), this.updateMessagesStatus()]);
+            await this.updateAccountData();
             self.loading(false);
         } catch (e) {
             self.update();
@@ -53,14 +54,6 @@ export class MorePopup {
     }
     public showAccount() {
         app.executeCommand("pageblock.cashier");
-    }
-    public showRating() {
-        app.executeCommand("pageblock.other");
-        app.otherPageBlock.showSecondary("rating");
-    }
-    public showChat() {
-        app.executeCommand("pageblock.other");
-        app.otherPageBlock.showSecondary("chat");
     }
     public showMessages() {
         websiteService.messages();
@@ -85,8 +78,8 @@ export class MorePopup {
      */
     private async updateAccountData() {
         const self = this;
-        const api = new OnlinePoker.Commanding.API.Account(apiHost);
-        const data = await api.GetPlayerDefinition();
+        const manager = new AccountManager();
+        const data = await manager.getAccount();
         if (data.Status === "Ok") {
             const personalAccountData = data.Data;
             const total = settings.isGuest() ? personalAccountData.GameMoney : personalAccountData.RealMoney;
@@ -94,26 +87,6 @@ export class MorePopup {
             self.points(personalAccountData.Points);
         } else {
             console.error("Error during making call to Account.GetPlayerDefinition in MorePopup");
-        }
-
-        return data;
-    }
-
-    /**
-     * Starts requesting message status
-     */
-    private async updateMessagesStatus() {
-        const self = this;
-        const mapi = new OnlinePoker.Commanding.API.Message(apiHost);
-        const data = await mapi.GetInboxMessages(0, 20, 1 /* Unread */, false);
-        if (data.Status === "Ok") {
-            if (data.Data.Messages.length > 0) {
-                self.hasMessages(true);
-            } else {
-                self.hasMessages(false);
-            }
-        } else {
-            console.error("Error during making call to Message.GetInboxMessages in MorePopup");
         }
 
         return data;

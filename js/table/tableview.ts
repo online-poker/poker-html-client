@@ -2,6 +2,8 @@
 
 import * as ko from "knockout";
 import * as moment from "moment";
+import { Chat } from "../api/chat";
+import { Tournament } from "../api/tournament";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
@@ -24,8 +26,10 @@ import { TableCardsPlace } from "./tableCardsPlace";
 import { TablePlaces } from "./tableplaces";
 import { TablePlaceModel } from "./tabpleplacemodel";
 import { TournamentView } from "./tournamentview";
+import { Game } from "../api/game";
 
 declare let apiHost: string;
+declare let host: string;
 declare let app: App;
 
 export class TableView {
@@ -50,6 +54,11 @@ export class TableView {
     public smallBlind: KnockoutObservable<number>;
     public bigBlind: KnockoutObservable<number>;
     public ante: KnockoutObservable<number>;
+    public changeBetParametersNextGame = ko.observable(false);
+    public nextGameSmallBlind: KnockoutObservable<number> = ko.observable(0);
+    public nextGameBigBlind: KnockoutObservable<number> = ko.observable(0);
+    public nextGameAnte: KnockoutObservable<number> = ko.observable(0);
+    public nextGameInformation: KnockoutComputed<string>;
     /**
      * Minimal amount of money which currently authenticated player
      * could bring on the table if he stand up from the table lately.
@@ -545,6 +554,24 @@ export class TableView {
                 "cardsvariant-down": this.cardsVariantDown(),
             };
         });
+        this.nextGameInformation = ko.computed(() => {
+            if (!this.changeBetParametersNextGame()) {
+                return "";
+            }
+
+            if (!this.nextGameAnte()) {
+                return _("table.betLevelChangeNextGame", { 
+                    smallBlind: this.nextGameSmallBlind(),
+                    bigBlind: this.nextGameBigBlind(),
+                });
+            } else {                
+                return _("table.betLevelChangeNextGameWithAnte", {
+                    smallBlind: this.nextGameSmallBlind(),
+                    bigBlind: this.nextGameBigBlind(),
+                    ante: this.nextGameAnte(),
+                });
+            }
+        });
         this.maximumRaiseAmount = ko.computed(function() {
             const currentPlayer = self.myPlayer();
             if (currentPlayer === null) {
@@ -663,19 +690,22 @@ export class TableView {
     public clearInformation() {
         this.messages([]);
     }
-    public updateTableInformation() {
-        /// <signature>
-        ///     <summary>Updates the information about the table from the server</summary>
-        /// </signature>
+    /**
+     * Updates information about the table from the server.
+     */
+    public async updateTableInformation() {
         const self = this;
         if (this.connectingRequest !== null && this.connectingRequest.state() === "pending") {
+            this.log("Cancelling the connection request process");
+            this.cancelUpdateTableInformation();
             // Re-schedule updating information.
-            this.connectingRequest.then(null, function() {
-                self.log("Rescheduling the updating information.");
-                self.updateTableInformation();
-            });
-            self.log("Cancelling the connection request process");
-            self.cancelUpdateTableInformation();
+            try {
+                await this.connectingRequest;
+            } catch (e) {
+                this.log("Rescheduling the updating information.");
+                await this.updateTableInformation();
+            }
+
             return;
         }
 
@@ -687,28 +717,32 @@ export class TableView {
         const connectionInfo = "HID:" + hubId;
         this.log("Connecting to table " + this.tableId + " on connection " + connectionInfo);
         const startConnection = app.buildStartConnection();
-        const api = new OnlinePoker.Commanding.API.Game(apiHost);
+        const api = new Game(host);
 
         // Set opening card parameters in parallel to other operations.
-        api.SetOpenCardsParameters(this.tableId, !settings.autoHideCards());
-        startConnection().then(function() {
+        await api.setTableParameters(this.tableId, !settings.autoHideCards());
+        try {
+            this.connectingRequest = currentLoadingRequest;
+            await startConnection;
             if (wrapper.terminated) {
+                self.log(`Connection  ${hubId} appears to be terminated`);
                 return;
             }
 
             hubId = wrapper.connection.id;
             self.log("Attempting to connect to table and chat over connection " + hubId);
 
-            const joinTableRequest = self.joinTable(wrapper);
-            const joinChatRequest = self.joinChat(wrapper);
+            const joinTableRequest = this.joinTable(wrapper);
+            const joinChatRequest = this.joinChat(wrapper);
             const joinRequest = $.when(joinTableRequest, joinChatRequest);
             currentLoadingRequest.progress(function(command: string) {
                 self.log("Receiving request to cancel all joining operations");
                 joinTableRequest.notify(command);
                 joinChatRequest.notify(command);
             });
-            joinRequest.then(function() {
+            await joinRequest.then(function() {
                 if (wrapper.terminated) {
+                    console.log("Cancel terminated connection.");
                     currentLoadingRequest.reject("Cancelled");
                     return;
                 }
@@ -717,6 +751,7 @@ export class TableView {
                 currentLoadingRequest.resolve();
             }, function(result1, result2) {
                 if (wrapper.terminated) {
+                    self.log("Don't use terminated connection.");
                     return;
                 }
 
@@ -740,11 +775,10 @@ export class TableView {
                 self.log(message);
                 currentLoadingRequest.reject(message);
             });
-        }, function(message) {
+        } catch(message) {
             self.log("Table connection failed. Error: " + message);
             currentLoadingRequest.reject("Table connection failed. Error: " + message);
-        });
-        this.connectingRequest = currentLoadingRequest;
+        }
     }
     public cancelUpdateTableInformation() {
         if (this.connectingRequest !== null) {
@@ -771,7 +805,7 @@ export class TableView {
             result.reject("Cancelled", true);
         };
 
-        wrapper.buildStartConnection()().then(function() {
+        wrapper.buildStartConnectionAsync().then(function() {
             if (wrapper.terminated) {
                 cancelOperation();
                 return;
@@ -1026,8 +1060,8 @@ export class TableView {
         this.actionBlock.updateNeedBB();
         this.actionBlock.updateBlocks();
         if (playerName === this.currentLogin()) {
-            const api = new OnlinePoker.Commanding.API.Game(apiHost);
-            await api.SetOpenCardsParameters(this.tableId, !settings.autoHideCards());
+            const api = new Game(host);
+            await api.setTableParameters(this.tableId, !settings.autoHideCards());
         }
     }
     public onStandup(playerId) {
@@ -1095,6 +1129,9 @@ export class TableView {
     }
     public onFinalTableCardsOpened(cards: number[]) {
         this.handHistory.onFinalTableCardsOpened(cards);
+    }
+    public onTableBetParametersChanged(smallBind: number, bigBlind: number, ante: number) {
+        this.setTableBetingParametersNextGame(smallBind, bigBlind, ante);
     }
 
     /**
@@ -1569,11 +1606,12 @@ export class TableView {
             self.sitting = false;
         });
     }
-    public rebuy() {
+    public async rebuy() {
         const self = this;
         const tournamentView = this.tournament();
-        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-        tapi.Rebuy(tournamentView.tournamentId, false).then((data) => {
+        const tapi = new Tournament(host);
+        try {
+            const data = await tapi.rebuy(tournamentView.tournamentId, false);
             if (data.Status === "Ok") {
                 self.hasPendingMoney(true);
                 if (!self.hasPlayersWithoutMoney()) {
@@ -1584,15 +1622,16 @@ export class TableView {
             } else {
                 SimplePopup.display(_("tableMenu.rebuy"), _("errors." + data.Status));
             }
-        }, function() {
+        } catch (e) {
             SimplePopup.display(_("tableMenu.rebuy"), _("tableMenu.rebuyError"));
-        });
+        }
     }
-    public doubleRebuy() {
+    public async doubleRebuy() {
         const self = this;
         const tournamentView = this.tournament();
-        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-        tapi.Rebuy(tournamentView.tournamentId, true).then((data) => {
+        const tapi = new Tournament(host);
+        try {
+            const data = await tapi.rebuy(tournamentView.tournamentId, true);
             if (data.Status === "Ok") {
                 self.hasPendingMoney(true);
                 if (!self.hasPlayersWithoutMoney()) {
@@ -1603,15 +1642,16 @@ export class TableView {
             } else {
                 SimplePopup.display(_("tableMenu.doublerebuy"), _("errors." + data.Status));
             }
-        }, function() {
+        } catch (e) {
             SimplePopup.display(_("tableMenu.doublerebuy"), _("tableMenu.doublerebuyError"));
-        });
+        }
     }
-    public addon() {
+    public async addon() {
         const self = this;
         const tournamentView = this.tournament();
-        const tapi = new OnlinePoker.Commanding.API.Tournament(apiHost);
-        tapi.Addon(tournamentView.tournamentId).then((data) => {
+        const tapi = new Tournament(host);
+        try {
+            const data = await tapi.addon(tournamentView.tournamentId);
             if (data.Status === "Ok") {
                 self.hasPendingMoney(true);
                 if (!self.hasPlayersWithoutMoney()) {
@@ -1623,9 +1663,9 @@ export class TableView {
             } else {
                 SimplePopup.display(_("tableMenu.addon"), _("errors." + data.Status));
             }
-        }, function() {
+        } catch (e) {
             SimplePopup.display(_("tableMenu.addon"), _("tableMenu.addonError"));
-        });
+        }
     }
     public showRebuyPrompt() {
         const self = this;
@@ -1653,9 +1693,9 @@ export class TableView {
     }
     public async sit(seat: number, amount: number, ticketCode: string) {
         const self = this;
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const gameApi = new Game(host);
         try {
-            const data = await gameApi.Sit(self.tableId, seat, amount, ticketCode);
+            const data = await gameApi.sit(self.tableId, seat, amount, ticketCode);
             // report on successfull seating.
             if (data.Status === "OperationNotValidAtThisTime") {
                 return {
@@ -1687,46 +1727,37 @@ export class TableView {
         }
     }
 
-    public showStandupPrompt(): JQueryDeferred<void> {
-        /// <signature>
-        ///     <summary>Shows stand up prompt.</summary>
-        ///     <param name="seat" type="Number">Seat where player willing to join</param>
-        ///     <param name="tableView" type="TableView">Table view where to join</param>
-        /// </signature>
-        const self = this;
-        const result = $.Deferred<void>();
-        if (self.myPlayer() != null) {
-            const tournament = this.tournament();
-            let messages: string[];
-            let caption: string;
-            if (tournament == null) {
-                const hasWin = self.myPlayer().Money() > 0 || self.myPlayerInGame();
-                const promptMesssage = hasWin ? "table.standupPrompt" : "table.standupPromptWithoutWin";
-                caption = hasWin ? "table.standupPromptCaption" : "table.leave";
-                messages = [_(promptMesssage)];
-            } else {
-                if (tournament.finishedPlaying()) {
-                    result.resolve();
-                    return result;
-                }
-                caption = "table.leave";
-                messages = [_("table.standupTournamentPrompt")];
-            }
-
-            app.promptAsync(_(caption), messages).then(function() {
-                if (self.tournament() == null) {
-                    self.standup();
-                }
-
-                result.resolve();
-            }, function() {
-                result.reject();
-            });
-        } else {
-            result.resolve();
+    /**
+     * Shows stand up prompt
+     */
+    public async showStandupPrompt() {
+        if (this.myPlayer() == null) {
+            return;
         }
 
-        return result;
+        const tournament = this.tournament();
+        let messages: string[];
+        let caption: string;
+        if (tournament == null) {
+            const hasWin = this.myPlayer().Money() > 0 || this.myPlayerInGame();
+            const promptMesssage = hasWin ? "table.standupPrompt" : "table.standupPromptWithoutWin";
+            caption = hasWin ? "table.standupPromptCaption" : "table.leave";
+            messages = [_(promptMesssage)];
+        } else {
+            if (tournament.finishedPlaying()) {
+                return;
+            }
+
+            caption = "table.leave";
+            messages = [_("table.standupTournamentPrompt")];
+        }
+
+        const approved = await app.promptAsync(_(caption), messages);
+        if (approved) {
+            if (this.tournament() == null) {
+                this.standup();
+            }
+        }
     }
     public showStandupConfirm() {
         let messages: string[];
@@ -1736,8 +1767,8 @@ export class TableView {
     }
     public async standup() {
         const self = this;
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        const data = await gameApi.Standup(this.tableId);
+        const gameApi = new Game(host);
+        const data = await gameApi.standup(this.tableId);
         // report on successfull seating.
         if (data.Status === "AuthorizationError") {
             self.reportApiError("Ошибка авторизации");
@@ -1764,9 +1795,9 @@ export class TableView {
     public async addBalance(amount: number, ticketCode: string) {
         const places = this.places();
         const targetPlayer = this.myPlayer();
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const gameApi = new Game(host);
         try {
-            const data = await gameApi.AddBalance(this.tableId, amount, ticketCode);
+            const data = await gameApi.addBalance(this.tableId, amount, ticketCode);
             // report on successfull seating.
             if (data.Status !== "Ok") {
                 throw new Error(data.Status);
@@ -1832,22 +1863,28 @@ export class TableView {
      * Sends mesage to the table chat.
      */
     public async sendMessage() {
-        const chatApi = new OnlinePoker.Commanding.API.Chat(apiHost);
-        const data = await chatApi.SendAsync(this.tableId, this.chatMessage());
+        const chatApi = new Chat(host);
+        const data = await chatApi.send(this.tableId, this.chatMessage());
         this.chatMessage("");
     }
 
     public async fold() {
         const self = this;
         this.actionBlock.buttonsEnabled(false);
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const gameApi = new Game(host);
         if (appConfig.game.useSignalR) {
             // TODO: We should provide notification, which will return any error from the server.
             connectionService.currentConnection.connection.Game.server.fold(this.tableId);
         } else {
             try {
-                const data = await gameApi.Fold(this.tableId);
+                const data = await gameApi.fold(this.tableId);
                 if (data.Status === "OperationNotValidAtThisTime") {
+                    self.turnRecovery();
+                    return;
+                }
+
+                if (data.Status === "OperationNotValidWhenTableFrozen") {
+                    self.turnRecovery("table.tableFreezed");
                     return;
                 }
 
@@ -1863,14 +1900,20 @@ export class TableView {
     public async checkOrCall() {
         const self = this;
         this.actionBlock.buttonsEnabled(false);
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const gameApi = new Game(host);
         if (appConfig.game.useSignalR) {
             // TODO: We should provide notification, which will return any error from the server.
             connectionService.currentConnection.connection.Game.server.checkOrCall(this.tableId);
         } else {
             try {
-                const data = await gameApi.CheckOrCall(this.tableId);
+                const data = await gameApi.checkOrCall(this.tableId);
                 if (data.Status === "OperationNotValidAtThisTime") {
+                    self.turnRecovery();
+                    return;
+                }
+
+                if (data.Status === "OperationNotValidWhenTableFrozen") {
+                    self.turnRecovery("table.tableFreezed");
                     return;
                 }
 
@@ -1886,15 +1929,21 @@ export class TableView {
     public async betOrRaise() {
         const self = this;
         this.actionBlock.buttonsEnabled(false);
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const gameApi = new Game(host);
         const amount: number = this.currentRaise() - this.currentBet();
         if (appConfig.game.useSignalR) {
             // TODO: We should provide notification, which will return any error from the server.
             connectionService.currentConnection.connection.Game.server.betOrRaise(this.tableId, amount);
         } else {
             try {
-                const data = await gameApi.BetOrRaise(this.tableId, amount);
+                const data = await gameApi.betOrRaise(this.tableId, amount);
                 if (data.Status === "OperationNotValidAtThisTime") {
+                    self.turnRecovery();
+                    return;
+                }
+
+                if (data.Status === "OperationNotValidWhenTableFrozen") {
+                    self.turnRecovery("table.tableFreezed");
                     return;
                 }
 
@@ -1912,9 +1961,9 @@ export class TableView {
      */
     public async showCards() {
         this.actionBlock.showCardsEnabled(false);
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const gameApi = new Game(host);
         try {
-            const data = await gameApi.ShowCards(this.tableId);
+            const data = await gameApi.showCards(this.tableId);
             if (data.Status !== "Ok") {
                 this.reportApiError(data.Status);
             }
@@ -1932,9 +1981,9 @@ export class TableView {
      */
     public async muckCards() {
         this.actionBlock.showCardsEnabled(false);
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const gameApi = new Game(host);
         try {
-            const data = await gameApi.Muck(this.tableId);
+            const data = await gameApi.muck(this.tableId);
             if (data.Status !== "Ok") {
                 this.reportApiError(data.Status);
             }
@@ -1968,9 +2017,9 @@ export class TableView {
             ? this.actionBlock.showHoleCard1Enabled
             : this.actionBlock.showHoleCard2Enabled;
         showCardVariable(false);
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const gameApi = new Game(host);
         try {
-            const data = await gameApi.ShowHoleCards(this.tableId, cardPosition);
+            const data = await gameApi.showHoleCard(this.tableId, cardPosition);
             if (data.Status !== "Ok") {
                 this.reportApiError(data.Status);
             }
@@ -2041,8 +2090,8 @@ export class TableView {
 
     public async comeBack() {
         const self = this;
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        const data = await gameApi.ComeBack(this.tableId);
+        const gameApi = new Game(host);
+        const data = await gameApi.comeBack(this.tableId);
         if (data.Status === "OperationNotValidAtThisTime") {
             return;
         }
@@ -2054,8 +2103,8 @@ export class TableView {
 
     public async sitOut() {
         const self = this;
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
-        const data = await gameApi.SitOut(this.tableId);
+        const gameApi = new Game(host);
+        const data = await gameApi.sitOut(this.tableId);
         if (data.Status === "OperationNotValidAtThisTime") {
             return;
         }
@@ -2063,6 +2112,29 @@ export class TableView {
         if (data.Status !== "Ok") {
             self.reportApiError(data.Status);
         }
+    }
+    /**
+     * Set new table betting parameters.
+     * @param smallBlind Small blind
+     * @param bigBlind Big blind
+     * @param ante Ante
+     */
+    public setTableBetingParameters(smallBlind: number, bigBlind: number, ante: number) {
+        this.bigBlind(bigBlind);
+        this.smallBlind(smallBlind);
+        this.ante(ante);
+    }
+    /**
+     * Set new table betting parameters.
+     * @param smallBlind Small blind
+     * @param bigBlind Big blind
+     * @param ante Ante
+     */
+    public setTableBetingParametersNextGame(smallBlind: number, bigBlind: number, ante: number) {
+        this.nextGameBigBlind(bigBlind);
+        this.nextGameSmallBlind(smallBlind);
+        this.nextGameAnte(ante);
+        this.changeBetParametersNextGame(true);
     }
     public showPlayerParameters() {
         // tablePlayerParameterSelector.showPlayerParameters(this);
@@ -2358,6 +2430,11 @@ export class TableView {
         this.actionBlock.showCardsEnabled(true);
         this.actionBlock.showHoleCard1Enabled(true);
         this.actionBlock.showHoleCard2Enabled(true);
+        if (this.changeBetParametersNextGame()) {
+            this.changeBetParametersNextGame(false);
+            this.setTableBetingParameters(this.nextGameSmallBlind(), this.nextGameBigBlind(), this.nextGameAnte());
+        }
+
         this.actionBlock.updateBounds();
         this.actionsCount(0);
         this.tableCards.clear();
@@ -2900,10 +2977,11 @@ export class TableView {
 
     /**
      * Performs recovery from the network error during making turns
+     * @param messageCode Message to display during recovery.
      */
-    private turnRecovery() {
+    private turnRecovery(messageCode: string = "table.connectionError") {
         if (app.currentPopup !== SlowInternetService.popupName) {
-            SimplePopup.display(_("table.turn"), _("table.connectionError", { tableName: this.tableName() }));
+            SimplePopup.display(_("table.turn"), _(messageCode, { tableName: this.tableName() }));
         }
 
         this.actionBlock.buttonsEnabled(true);

@@ -1,9 +1,12 @@
 ﻿/* tslint:disable:no-bitwise */
 
 declare var apiHost: string;
+declare var host: string;
 
 import * as ko from "knockout";
 import * as moment from "moment";
+import { Game } from "../api/game";
+import { LobbyTournamentItem, Tournament } from "../api/tournament";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
@@ -280,7 +283,7 @@ export class LobbyPage extends PageBase {
     }
     public async refreshTables() {
         const self = this;
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const gameApi = new Game(host);
         const privateTables = 0;
         const fullTables = null;
 
@@ -289,7 +292,7 @@ export class LobbyPage extends PageBase {
         const betLevels = options.bets();
         const moneyType = options.currency();
         const limitType = options.limits();
-        const data = await gameApi.GetTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType);
+        const data = await gameApi.getTables();
         if (!self.visible()) {
             return;
         }
@@ -309,7 +312,7 @@ export class LobbyPage extends PageBase {
                 const tableIdString = localStorage.getItem("tableId");
                 if (tableIdString !== null) {
                     const tableIdInt = parseInt(tableIdString, 10);
-                    const tableData = await gameApi.GetTable(tableIdInt);
+                    const tableData = await gameApi.getTableById(tableIdInt);
                     self.selectTable(tableData.Data);
                 }
             }
@@ -318,7 +321,7 @@ export class LobbyPage extends PageBase {
 
     public async refreshTournaments(tournamentType) {
         const self = this;
-        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        const tournamentApi = new Tournament(host);
 
         const options = tournamentType === 2 ? this.tournamentOptions : this.sngOptions;
         const prizeCurrency = options.currency();
@@ -326,7 +329,7 @@ export class LobbyPage extends PageBase {
         const speed = options.speed() === 0 ? 0 : 1 << options.speed();
         const buyin = options.buyin();
         const maxPlayers = options.maxPlayers() === 0 ? 0 : 1 << (options.maxPlayers() - 1);
-        const data = await tournamentApi.GetTournaments(prizeCurrency, tournamentTypeMask, speed, buyin, maxPlayers);
+        const data = await tournamentApi.getTournaments(prizeCurrency, tournamentTypeMask, speed, buyin, maxPlayers);
         if (!self.visible()) {
             return;
         }

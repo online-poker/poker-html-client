@@ -1,5 +1,7 @@
 declare var apiHost: string;
+declare var host: string;
 
+import { Information } from "../api/information";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
@@ -55,9 +57,6 @@ export class HomePage extends PageBase {
         this.authenticatedUser = ko.computed(function () {
             return authManager.login();
         }, this);
-        authManager.authenticated.subscribe((value) => {
-            this.banners(metadataManager.smallBanners);
-        });
     }
     public deactivate(pageName?: string) {
         super.deactivate(pageName);
@@ -82,16 +81,8 @@ export class HomePage extends PageBase {
     }
     public async update() {
         this.logNews("Updating home page");
-        const metadataApi = new OnlinePoker.Commanding.API.Metadata(apiHost);
-        metadataManager.updateOnline();
-        const data = await metadataApi.GetNews();
-        if (data.Status === "Ok") {
-            this.news(data.Data);
-            const i = 0;
-            if (data.Data.length > 0 && i < data.Data.length) {
-                this.currentNews(data.Data[i]);
-            }
-        }
+        const metadataApi = new Information(host);
+        await metadataManager.updateOnline();
     }
     public showGames() {
         app.showPageBlock("lobby");
@@ -144,24 +135,6 @@ export class HomePage extends PageBase {
     }
     public showAuthPopup() {
         app.showPopup("auth");
-    }
-    /**
-     * Performs one click authorization as a guest.
-     */
-    public loginAsGuest() {
-        app.processing(true);
-        authManager.loginAsGuest().then((status) => {
-            app.processing(false);
-            if (!status) {
-                this.errorMessage(_("auth.unspecifiedError"));
-            } else {
-                if (status !== "Ok") {
-                    this.errorMessage(_("errors." + status));
-                } else {
-                    app.lobbyPageBlock.showLobby();
-                }
-            }
-        });
     }
     public openBanner() {
         window.open(this.currentBanner().Link, "_system", "location=yes");

@@ -1,5 +1,6 @@
 /// <reference path="../poker.commanding.api.ts" />
 
+import { Game } from "../api/game";
 import { App } from "../app";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
@@ -8,6 +9,7 @@ import { tableManager } from "../table/tablemanager";
 import { PageBase } from "../ui/pagebase";
 
 declare var apiHost: string;
+declare var host: string;
 declare var app: App;
 
 export class TablesListPage extends PageBase {
@@ -44,7 +46,7 @@ export class TablesListPage extends PageBase {
 
         this.loading(true);
         const self = this;
-        const gameApi = new OnlinePoker.Commanding.API.Game(apiHost);
+        const gameApi = new Game(host);
         const privateTables = 0;
         const fullTables = null;
 
@@ -55,7 +57,7 @@ export class TablesListPage extends PageBase {
         /* tslint:enable:no-bitwise */
         const moneyType = lobbyPage.cashOptions.currency();
         const limitType = lobbyPage.cashOptions.limits();
-        const data = await gameApi.GetTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType);
+        const data = await gameApi.getTables();
         self.loading(false);
         if (!self.visible()) {
             return;

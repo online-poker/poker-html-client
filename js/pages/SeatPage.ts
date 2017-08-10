@@ -18,6 +18,7 @@ import { tableManager } from "../table/tablemanager";
 import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";
+import { version } from "../version";
 
 declare var app: App;
 
@@ -34,10 +35,12 @@ export class SeatPage extends PageBase {
     public reconnectedHandler: SignalBinding;
     public disconnectedHandler: SignalBinding;
     public isConnectionSlow: KnockoutObservable<boolean>;
-    public libraryVersion: KnockoutComputed<string>;
+    public libraryVersion: KnockoutComputed<string> = ko.computed(() => "Библиотека: " + version);
     public lastConnecton: string;
     public frozen: KnockoutComputed<boolean>;
     public opened: KnockoutComputed<boolean>;
+    public changeBetParametersNextGame: KnockoutComputed<boolean>;
+    public nextGameInformation: KnockoutComputed<string>;
     public splashShown = ko.observable(false);
     public tablesShown = ko.observable(true);
     constructor() {
@@ -104,6 +107,22 @@ export class SeatPage extends PageBase {
             }
 
             return ct.opened();
+        }, this);
+        this.nextGameInformation = ko.computed(() => {
+            const ct = this.currentTable();
+            if (ct === null) {
+                return null;
+            }
+
+            return ct.nextGameInformation();
+        }, this);
+        this.changeBetParametersNextGame = ko.computed(() => {
+            const ct = this.currentTable();
+            if (ct === null) {
+                return null;
+            }
+
+            return ct.changeBetParametersNextGame();
         }, this);
         this.currentTable.subscribe(function(value: TableView) {
             tableManager.tables().forEach((_) => {

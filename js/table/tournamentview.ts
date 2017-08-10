@@ -1,4 +1,6 @@
 ﻿import * as ko from "knockout";
+import { TournamentPrizeStructure } from "../api/information";
+import { Tournament, TournamentDefinition, TournamentPlayerStatus } from "../api/tournament";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
@@ -10,8 +12,10 @@ import { connectionService, slowInternetService } from "../services";
 import { ConnectionWrapper } from "../services/connectionwrapper";
 import * as timeService from "../timeservice";
 import { tableManager } from "./tablemanager";
+import { Game } from "../api/game";
 
 declare var apiHost: string;
+declare var host: string;
 declare var app: App;
 
 export class TournamentView {
@@ -108,9 +112,9 @@ export class TournamentView {
         }
 
         const self = this;
-        const tournamentApi = new OnlinePoker.Commanding.API.Tournament(apiHost);
+        const tournamentApi = new Tournament(host);
         this.loading(true);
-        const data = await tournamentApi.GetTournament(this.tournamentId);
+        const data = await tournamentApi.getTournament(this.tournamentId);
         if (data.Status === "Ok") {
             const tournamentData: TournamentDefinition = data.Data;
             self.log("Informaton about tournament " + self.tournamentId + " received: ", data.Data);
@@ -124,10 +128,10 @@ export class TournamentView {
     public clearInformation() {
         // Do nothing.
     }
-    public updateTournamentInformation() {
-        /// <signature>
-        ///     <summary>Updates the information about the table from the server</summary>
-        /// </signature>
+    /**
+     * Updates information about tournament.
+     */
+    public async updateTournamentInformation() {
         const self = this;
         if (this.connectingRequest !== null && this.connectingRequest.state() === "pending") {
             // Re-schedule updating information.
@@ -147,7 +151,7 @@ export class TournamentView {
         const connectionInfo = "HID:" + hubId;
         this.log("Connecting to tournament " + this.tournamentId + " on connection " + connectionInfo);
         const startConnection = app.buildStartConnection();
-        startConnection().then(function() {
+        startConnection.then(function() {
             if (wrapper.terminated) {
                 return;
             }
@@ -591,8 +595,8 @@ export class TournamentView {
 
     private async openTournamentTable(tableId: number) {
         const self = this;
-        const api = new OnlinePoker.Commanding.API.Game(apiHost);
-        const data = await api.GetTable(tableId);
+        const api = new Game(host);
+        const data = await api.getTableById(tableId);
         tableManager.selectTable(data.Data, true);
         const currentTable = tableManager.getTableById(tableId);
         currentTable.tournament(self);

@@ -166,6 +166,12 @@ export class ConnectionWrapper {
                     }
 
                     if (this.connection.state === 1) {
+                        if (this.terminated) {
+                            const hubId = this.connection.id;
+                            const connectionInfo = "HID:" + hubId;
+                            console.warn(`Attempt connect to terminated connection ${connectionInfo}`);
+                        }
+
                         fixup.resolve();
                         return;
                     }
@@ -199,20 +205,19 @@ export class ConnectionWrapper {
             this.logEvent("Select default connection protocols.");
         }
 
-        const buildMainPromise = async () => {
+        const tryConnection = async (attemptsLeft: number) => {
+            this.logEvent(`Attempt to establish connection. Attempts left ${attemptsLeft}.`);
             if (supportedTransports === null) {
-                return this.connection.start();
+                await this.connection.start();
             } else {
-                return this.connection.start({ transport: supportedTransports });
+                await this.connection.start({ transport: supportedTransports });
             }
-        };
 
-        const tryConnection = async (attemptsLeft) => {
-            await buildMainPromise();
             if (this.terminated) {
                 throw new Error("SignalR connection was terminated.");
             }
 
+            this.logEvent(`Connection started with state ${this.connection.state}.`);
             if (this.connection.state === 1) {
                 return;
             }
