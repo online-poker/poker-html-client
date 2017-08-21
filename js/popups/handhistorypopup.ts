@@ -24,6 +24,7 @@ export class HandHistoryPopup extends PopupBase {
     public showHistoryModeSelector = ko.observable(true);
     public isShortMode: KnockoutComputed<boolean>;
     public isDetailedMode: KnockoutComputed<boolean>;
+    public lastHandTitle: KnockoutObservable<string>;
 
     constructor() {
         super();
@@ -44,6 +45,7 @@ export class HandHistoryPopup extends PopupBase {
         });
 
         this.cards = ko.observableArray<string>([]);
+        this.lastHandTitle = ko.observable<string>("");
         this.playersData = ko.observableArray<PlayerWinInformation>([]);
         this.displayLoginSeparately = false;
     }
@@ -56,6 +58,7 @@ export class HandHistoryPopup extends PopupBase {
         this.detailedOperations(lastHand.detailedOperations());
         this.shortOperations(lastHand.shortOperations());
         this.cards(lastHand.cards());
+        this.lastHandTitle("История раздачи №" + lastHand.id);
         this.playersData(lastHand.playersData());
         GameActionsQueue.waitDisabled = true;
         app.tablesPage.tablesShown(false);
