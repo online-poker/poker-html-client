@@ -1,4 +1,5 @@
 ﻿import * as ko from "knockout";
+import { Game } from "../api/game";
 import { TournamentPrizeStructure } from "../api/information";
 import { Tournament, TournamentDefinition, TournamentPlayerStatus } from "../api/tournament";
 import { App } from "../app";
@@ -12,7 +13,6 @@ import { connectionService, slowInternetService } from "../services";
 import { ConnectionWrapper } from "../services/connectionwrapper";
 import * as timeService from "../timeservice";
 import { tableManager } from "./tablemanager";
-import { Game } from "../api/game";
 
 declare var apiHost: string;
 declare var host: string;
