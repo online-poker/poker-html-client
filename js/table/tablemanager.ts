@@ -1,8 +1,8 @@
 ﻿/* tslint:disable:no-bitwise no-use-before-declare */
-
 import * as ko from "knockout";
 import { Game } from "../api/game";
 import { Tournament, TournamentDefinition, TournamentPlayerStatus } from "../api/tournament";
+import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
 import * as commandManager from "../commandmanager";
 import { debugSettings } from "../debugsettings";
@@ -15,7 +15,6 @@ import { settings } from "../settings";
 import * as timeService from "../timeservice";
 import { TableView } from "./tableview";
 import { TournamentView } from "./tournamentview";
-import { appConfig } from "../appconfig";
 
 declare var apiHost: string;
 declare var host: string;
