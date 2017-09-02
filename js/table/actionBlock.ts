@@ -763,7 +763,7 @@ export class ActionBlock {
         }
     }
     public updateAdditionalButtons() {
-        const threebbAmountOriginal = this.callAmount() + (3 * this.tableView.model.BigBlind);
+        const threebbAmountOriginal = this.callAmount() + (3 * this.tableView.bigBlind());
         const threebbAmount = this.tableSlider.withinRange(threebbAmountOriginal);
 
         let potAmountOriginal = this.tableView.pots().reduce(function(pv, v) {
