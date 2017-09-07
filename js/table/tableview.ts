@@ -941,6 +941,15 @@ export class TableView {
             this.setSmallBlind(smallBlindSeat);
             this.setBigBlind(bigBlindSeat);
         }
+
+        const playersInGame = this.places().filter((value) => value.WasInGame() && value.IsInGameStatus()).length;
+        if (playersInGame === 2) {
+            const bigBlindSeat = this.getNextPlayerSeat(dealerSeat);
+
+            this.setDealer(dealerSeat);
+            this.setSmallBlind(dealerSeat);
+            this.setBigBlind(bigBlindSeat);
+        }
     }
     public setDealer(dealerSeat: number) {
         const players = this.places();
