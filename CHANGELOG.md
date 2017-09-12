@@ -1,6 +1,10 @@
 Poker HTML client changelog
 ================================
 
+# v0.2.0
+- Add controller method for reloading console from table menu
+- [BUG] Fix displaying dealer/small blind/big blind marker during heads-up game
+
 # v0.1.3
 - Added binding for double tap
 - Added check action
