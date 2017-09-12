@@ -232,6 +232,12 @@ export class TableMenuPopup {
             app.executeCommand("popup.rules");
         }
     }
+    /**
+     * Reload console window.
+     */
+    public reload(): void {
+        window.location.reload();
+    }
     public leave() {
         if (this.leaveAllowed()) {
             const index = tableManager.currentIndex();
