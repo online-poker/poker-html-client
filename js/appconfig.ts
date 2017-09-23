@@ -30,6 +30,7 @@ class AppConfig {
         autoFoldAsFoldOnRaise: true,
         useSignalR: false,
         noTableMoneyLimit: true,
+        showTournamentTables: true,
     };
     public tournament = {
         enabled: false,
