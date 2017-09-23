@@ -282,7 +282,6 @@ export class LobbyPage extends PageBase {
         }
     }
     public async refreshTables() {
-        const self = this;
         const gameApi = new Game(host);
         const privateTables = 0;
         const fullTables = null;
@@ -292,18 +291,18 @@ export class LobbyPage extends PageBase {
         const betLevels = options.bets();
         const moneyType = options.currency();
         const limitType = options.limits();
-        const data = await gameApi.getTables();
-        if (!self.visible()) {
+        const data = await gameApi.getTables(appConfig.game.showTournamentTables);
+        if (!this.visible()) {
             return;
         }
 
         if (data.Status === "Ok") {
-            self.log("Informaton about tables received: ", data.Data);
+            this.log("Informaton about tables received: ", data.Data);
             const tables = data.Data as any[];
             tables.forEach(function (item) {
                 item.IsOpened = tableManager.isOpened(item.TableId);
             });
-            self.tables(tables);
+            this.tables(tables);
             if (appConfig.auth.automaticTableSelection && tables.length === 1) {
                 this.selectTable(tables[0]);
             }
@@ -313,7 +312,9 @@ export class LobbyPage extends PageBase {
                 if (tableIdString !== null) {
                     const tableIdInt = parseInt(tableIdString, 10);
                     const tableData = await gameApi.getTableById(tableIdInt);
-                    self.selectTable(tableData.Data);
+                    if (tableData.Data) {
+                        this.selectTable(tableData.Data);
+                    }
                 }
             }
         }

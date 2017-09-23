@@ -8,9 +8,9 @@ export class Game {
     constructor(public host: string) {
     }
 
-    public async getTables() {
+    public async getTables(showTournamentTables: boolean) {
         const data = {};
-        const response = await fetch(this.host + "/api/tables");
+        const response = await fetch(this.host + "/api/tables?showTournamentTables=" + showTournamentTables);
         const jsonData = await response.json() as ApiResult<LobbyTableItem[]>;
         return jsonData;
     }

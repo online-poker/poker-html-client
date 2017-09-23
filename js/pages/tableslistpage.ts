@@ -2,6 +2,7 @@
 
 import { Game } from "../api/game";
 import { App } from "../app";
+import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
 import { reloadManager } from "../services";
@@ -57,7 +58,7 @@ export class TablesListPage extends PageBase {
         /* tslint:enable:no-bitwise */
         const moneyType = lobbyPage.cashOptions.currency();
         const limitType = lobbyPage.cashOptions.limits();
-        const data = await gameApi.getTables();
+        const data = await gameApi.getTables(appConfig.game.showTournamentTables);
         self.loading(false);
         if (!self.visible()) {
             return;
