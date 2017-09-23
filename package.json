@@ -7,6 +7,7 @@
     "compile": "tsc",
     "lint": "tslint --project tsconfig.json",
     "tslint": "tslint",
+    "configure-ci": "node build/configure-ci.js",
     "build": "npm run compile && npm run lint",
     "test": "npm run compile && npm run lint"
   },
