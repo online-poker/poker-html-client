@@ -310,6 +310,12 @@ export class SeatPage extends PageBase {
         });
         finishedTournamentTables.forEach((_) => tableManager.remove(_));
     }
+    /**
+     * Reload console window.
+     */
+    public reload(): void {
+        window.location.reload();
+    }
     private onConnectionSlow() {
         const self = this;
         this.isConnectionSlow(true);
