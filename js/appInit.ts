@@ -61,13 +61,14 @@ function bootstrap() {
     window["_"] = _;
     // tslint:enable:no-string-literal
     window.onerror = function (message, url, lineNumber, colno, error) {
-        console.log("Error: " + message + " in " + url + " at line " + lineNumber);
+        const errorMessage = "Error: " + message + " in " + url + " at line " + lineNumber;
+        console.log(errorMessage);
         if (error != null) {
             console.log(error);
         }
 
-        if (window.location.search.indexOf('debug') != -1) {
-            alert("Error: " + message + " in " + url + " at line " + lineNumber)
+        if (window.location.search.indexOf("debug") !== -1) {
+            alert(errorMessage);
         }
 
         // tslint:disable-next-line:no-string-literal
