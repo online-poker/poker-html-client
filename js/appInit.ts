@@ -66,6 +66,10 @@ function bootstrap() {
             console.log(error);
         }
 
+        if (window.location.search.indexOf('debug') != -1) {
+            alert("Error: " + message + " in " + url + " at line " + lineNumber)
+        }
+
         // tslint:disable-next-line:no-string-literal
         window["appInsights"].trackException(error, "window.onerror");
     };
