@@ -6,6 +6,7 @@ import { Game } from "../api/game";
 import { TournamentBetStructure, TournamentPrizeStructure } from "../api/information";
 import { Tournament, TournamentDefinition, TournamentPlayerDefinition, TournamentPlayerStatus, TournamentTableDefinition } from "../api/tournament";
 import { App } from "../app";
+import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
@@ -660,7 +661,11 @@ export class TournamentLobbyPage extends PageBase {
                             const currentTable = tableManager.getTableById(tableId);
                             if (currentTable != null) {
                                 currentTable.tournament(tableManager.getTournamentById(tdata.TournamentId));
-                                app.showSubPage("tables");
+                                if (appConfig.game.seatMode) {
+                                    app.executeCommand("page.seats");
+                                } else {
+                                    app.executeCommand("page.tables");
+                                }
                             }
                         } else {
                             self.loading(false);
@@ -682,7 +687,11 @@ export class TournamentLobbyPage extends PageBase {
             }
         } else {
             tableManager.selectById(tableId);
-            app.showSubPage("tables");
+            if (appConfig.game.seatMode) {
+                app.executeCommand("page.seats");
+            } else {
+                app.executeCommand("page.tables");
+            }
         }
     }
     private async promptRegister(currentBalance: number) {

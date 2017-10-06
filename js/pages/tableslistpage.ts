@@ -86,7 +86,11 @@ export class TablesListPage extends PageBase {
     }
     public selectTable(table: GameTableModel) {
         app.executeCommand("app.selectTable", [table]);
-        app.executeCommand("page.tables");
+        if (appConfig.game.seatMode) {
+            app.executeCommand("page.seats");
+        } else {
+            app.executeCommand("page.tables");
+        }
     }
     private log(message: string, ...params: any[]) {
         if (debugSettings.lobby.trace) {
