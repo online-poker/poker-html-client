@@ -495,7 +495,11 @@ export class TournamentView {
             if (appConfig.tournament.openTableAutomatically) {
                 await this.openTournamentTable(this.currentTableId);
                 self.log("Opening table for tournament " + self.tournamentId + "");
-                app.showSubPage("tables");
+                if (appConfig.game.seatMode) {
+                    app.executeCommand("page.seats");
+                } else {
+                    app.executeCommand("page.tables");
+                }
             }
         }
     }
