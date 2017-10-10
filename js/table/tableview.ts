@@ -214,6 +214,11 @@ export class TableView {
     private notificationHandleInterval: number = null;
     private displayingRebuyAddonNotification = false;
 
+    /**
+     * Indicates that Ante detected during current game.
+     */
+    private anteDetected = false;
+
     private enableInjectPlayerCards = false;
 
     constructor(public tableId: number, public model: GameTableModel) {
@@ -1286,7 +1291,7 @@ export class TableView {
         const self = this;
         this.queue.wait(this.animationSettings.finishGamePrePause);
         if (this.pots().length === 0 && winners.length > 0) {
-            this.onMoveMoneyToPot(winners.map((winner) => winner.Amount));
+            this.executeMoveMoneyToPot(winners.map((winner) => winner.Amount));
         }
 
         if (debugSettings.game.singleSidePots) {
@@ -1485,6 +1490,26 @@ export class TableView {
         });
     }
     public onMoveMoneyToPot(amount: number[]) {
+        // do nothing
+        this.queue.pushCallback(() => {
+            // if detected any ante then collect pots
+            if (this.anteDetected) {
+                this.logGameEvent("Updating pots");
+                this.setPots(amount);
+
+                this.logGameEvent("Clearing bets");
+                const places = this.places();
+                places.forEach(function (value) {
+                    value.collectBet();
+                });
+                this.refreshPlaces();
+
+                // Clear ante detection flag for current game
+                this.anteDetected = false;
+            }
+        });
+    }
+    public executeMoveMoneyToPot(amount: number[]) {
         // Trigger animation.
         const self = this;
         this.actionBlock.buttonsEnabled(false);
@@ -2341,6 +2366,11 @@ export class TableView {
             return;
         }
 
+        if (type === 1) {
+            // If bet is Ante, then set ante detection flag.
+            this.anteDetected = true;
+        }
+
         this.updateBetsAndMoney(currentPlayer, type, amount);
 
         const isMyTurn = myself !== null && nextPlayerId === myself.PlayerId();
@@ -2593,6 +2623,7 @@ export class TableView {
     }
     private cleanTableAfterGameFinish() {
         if (this.gameFinished()) {
+            this.anteDetected = false;
             this.prizesDistributed(true);
             this.tableCards.CardsHightlighted(false);
             this.setCards([]);
