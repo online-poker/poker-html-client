@@ -647,7 +647,7 @@ class TableManager {
                 return;
             }
 
-            tableView.onMoveMoneyToPot(pots);
+            tableView.executeMoveMoneyToPot(pots);
             tableView.onOpenCards(decodeCardsArray(cards));
             let typeString: string;
             switch (type) {
@@ -745,7 +745,7 @@ class TableManager {
                 return;
             }
 
-            // tableView.onMoveMoneyToPot(amount);
+            tableView.onMoveMoneyToPot(amount);
         };
         gameHub.client.GameFinished = function(tableId, gameId, winners, rake) {
             if (wrapper.terminated) {
