@@ -555,7 +555,7 @@ class TableManager {
         gameHub.client.TableStatusInfo = function(
             tableId, players, pots, cards, dealerSeat, buyIn,
             baseBuyIn, leaveTime, timePass, currentPlayerId, lastRaise, gameId, authenticated,
-            actionsCount, frozen, opened, pauseDate, lastMessageId) {
+            actionsCount, frozen, opened, pauseDate, lastMessageId, gameType) {
             if (wrapper.terminated) {
                 return;
             }
@@ -565,12 +565,14 @@ class TableManager {
                 return;
             }
 
+            // Make sure that for old servers we will fallback to correct game type.
+            gameType = gameType || 1;
             tableView.onTableStatusInfo(players, pots, cards, dealerSeat, buyIn, baseBuyIn, leaveTime,
                 timePass, currentPlayerId, lastRaise, gameId, authenticated, actionsCount, frozen, opened,
-                pauseDate, lastMessageId);
+                pauseDate, lastMessageId, gameType);
 
             const cardsArr = cards == null ? allNoneClasses : cardsArray(cards);
-            self.logDataEvent("Table status info: TableId - ", tableId, " Players - ", players, players.length,
+            self.logDataEvent(`Table status info: TableId - ${tableId}, Game type: ${gameType} Players - `, players, players.length,
                 " Pots - ", pots, " Cards - ", cardsArr.join(" "));
         };
         gameHub.client.GameStarted = function(tableId, gameId, players, actions, dealerSeat) {

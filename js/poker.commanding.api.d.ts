@@ -210,10 +210,12 @@ interface GameHubClient {
      * @param opened A value indicating whether the table is opened or not.
      * @param pauseData Unix time when game was paused. If game not paused, then null.
      * @param lastMessageId Last id of the message.
+     * @param gameType Type of the game which is start playing on the table.
      */
     TableStatusInfo: (tableId: number, players: PlayerStatusInfo[], pots: number[], cards, dealerSeat,
         buyIn, baseBuyIn, leaveTime, timePass, currentPlayerId, lastRaise, gameId, authenticated,
-        actionsCount: number, frozen: boolean, opened: boolean, pauseDate: number, lastMessageId: number) => void;
+        actionsCount: number, frozen: boolean, opened: boolean, pauseDate: number, lastMessageId: number,
+        gameType: number | undefined) => void;
 
     GameStarted: (tableId: number, gameId: number, players: GamePlayerStartInformation[],
         actions: GameActionStartInformation[], dealerSeat: number) => void;
