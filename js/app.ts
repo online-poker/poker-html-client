@@ -1030,7 +1030,12 @@ export class App {
 
         console.log("Launch intialization of metadata first time");
         const failHandler = function (e: Error) {
-            console.error(e);
+            if (e) {
+                console.error(e);
+            } else {
+                console.error("Unknown error happens during updateMetadataOnLaunch. See log messages above to diagnose what happens.");
+            }
+
             console.log("Failed updating metadata for first time, rescheduling attempt.");
             slowInternetService.setRetryHandler(() => {
                 self.updateMetadataOnLaunch();
@@ -1051,9 +1056,11 @@ export class App {
                 self.fullyInitialized = true;
                 metadataManager.setReady(null);
             } catch (e) {
+                console.log("Failed to initialize connection and get current tables and tournaments");
                 failHandler(e);
             }
         } catch (e) {
+            console.log("Failed to initialize tables.");
             failHandler(e);
         }
     }
