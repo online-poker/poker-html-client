@@ -1176,12 +1176,13 @@ export class TableView {
      * @param opened A value indicating whether the table is opened or not.
      * @param pauseData Unix time when game was paused. If game not paused, then null.
      * @param lastMessageId Last id of the message.
+     * @param gameType Type of the game which starts on the table.
      */
     public onTableStatusInfo(
         players: PlayerStatusInfo[], pots: number[], cards: string, dealerSeat: number, buyIn: number,
         baseBuyIn: number, leaveTime, timePass: number, currentPlayerId: number, lastRaise: number, gameId: number,
         authenticated: boolean, actionsCount: number, frozen: boolean, opened: boolean, pauseDate: number,
-        lastMessageId: number) {
+        lastMessageId: number, gameType: number) {
         const tablePlayers = [] as TablePlayer[];
         for (let i = 0; i < players.length; i++) {
             const p = (players[i] as any) as TablePlayer;
