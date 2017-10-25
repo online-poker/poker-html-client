@@ -1,5 +1,7 @@
 ﻿const allBacks = "/v4=";
 const allNone = "//8=";
+const allBacksFourCards = "WzI1NF1bMjU0XVsyNTRdWzI1NF0=";
+const allNoneFourCards = "WzI1NV1bMjU1XVsyNTVdWzI1NV0=";
 
 let allBacksClasses = ["cards back", "cards back"];
 let allNoneClasses = ["cards back", "cards back"];
@@ -116,11 +118,7 @@ function cardValue(card: number) {
  * @param cardsData Cards data encoded as string.
  */
 // tslint:disable-next-line:no-unused-variable
-function decodeCardsArray(cardsData: string, gameType?: number): number[] {
-    if (gameType && gameType === 2) {
-        allBacksClasses = ["cards back", "cards back", "cards back", "cards back"];
-        allNoneClasses = ["cards back", "cards back", "cards back", "cards back"];
-    }
+function decodeCardsArray(cardsData: string): number[] {
     if (cardsData === null || cardsData === null) {
         return null;
     }
@@ -131,22 +129,26 @@ function decodeCardsArray(cardsData: string, gameType?: number): number[] {
         console.log(cardsData[1]);
         // tslint:enable:no-console
         cardsData = "//8=";
+        if (cardsData.length === 4) {
+            cardsData = "WzI1NV1bMjU1XVsyNTVdWzI1NV0=";
+        }
     }
 
     if (cardsData === allBacks) {
-        if (gameType && gameType === 2) {
-            return [254, 254, 254, 254];
-        }
         return [254, 254];
     }
 
     if (cardsData === "//8=") {
-        if (gameType && gameType === 2) {
-            return [255, 255, 255, 255];
-        }
         return [255, 255];
     }
 
+    if (cardsData === allBacksFourCards) {
+        return [254, 254, 254, 254];
+    }
+
+    if (cardsData === "WzI1NV1bMjU1XVsyNTVdWzI1NV0=") {
+        return [255, 255, 255, 255];
+    }
     const cardsString = window.atob(cardsData);
     const cards: number[] = [];
     for (let i = 0; i < cardsString.length; i++) {
@@ -166,15 +168,12 @@ function convertToCards(data: number[]): string[] {
     });
 }
 // tslint:disable-next-line:no-unused-variable
-function cardsArray(cardsData: string, gameType?: number): string[] {
+function cardsArray(cardsData: string): string[] {
     /// <signature>
     ///   <summary>Get card string</summary>
     ///   <param name="cards" type="Array">Array of the cards.</param>
     /// </signature>
     if (cardsData === null) {
-        if (gameType && gameType === 2) {
-            return ["cards none", "cards none", "cards none", "cards none"];
-        }
         return ["cards none", "cards none"];
     }
 
@@ -187,17 +186,19 @@ function cardsArray(cardsData: string, gameType?: number): string[] {
     }
 
     if (cardsData === allBacks) {
-        if (gameType && gameType === 2) {
-            return ["cards back", "cards back", "cards back", "cards back"];
-        }
         return ["cards back", "cards back"];
     }
 
     if (cardsData === allNone) {
-        if (gameType && gameType === 2) {
-            return ["cards none", "cards none", "cards none", "cards none"];
-        }
         return ["cards none", "cards none"];
+    }
+
+    if (cardsData === allBacksFourCards) {
+        return ["cards back", "cards back", "cards back", "cards back"];
+    }
+
+    if (cardsData === allNoneFourCards) {
+        return ["cards none", "cards none", "cards none", "cards none"];
     }
 
     const cardsString = window.atob(cardsData);
