@@ -126,10 +126,11 @@ export class TableView {
     public containerCss: KnockoutObservable<any>;
 
     /**
-    * Indicate game type
-    */
-    public isTexasHoldemType: KnockoutObservable<boolean>;
-    public isOmahaType: KnockoutObservable<boolean>;
+     * Indicate game type
+     */
+    public gameType: KnockoutObservable<number>;
+    public has2Cards: KnockoutComputed<boolean>;
+    public has4Cards: KnockoutComputed<boolean>;
 
     public timeLeft: KnockoutComputed<number>;
     public timerInterval: number;
@@ -266,8 +267,10 @@ export class TableView {
         this.queue = new GameActionsQueue();
         this.cardsVariantUp = ko.observable<boolean>(false);
         this.cardsVariantDown = ko.observable<boolean>(true);
-        this.isOmahaType = ko.observable(false);
-        this.isTexasHoldemType = ko.observable(true);
+
+        this.gameType = ko.observable(1);
+        this.has2Cards = ko.computed(() => this.gameType() !== 2);
+        this.has4Cards = ko.computed(() => this.gameType() === 2);
 
         this.places = ko.computed(function () {
             return self.tablePlaces.places();
@@ -1197,10 +1200,9 @@ export class TableView {
             tablePlayers.push(p);
         }
 
-        if (gameType === 2) {
-            this.isTexasHoldemType = ko.observable(false);
-            this.isOmahaType = ko.observable(true);
-        }
+        this.gameType = ko.observable(gameType);
+        this.has2Cards = ko.computed(() => this.gameType() !== 2);
+        this.has4Cards = ko.computed(() => this.gameType() === 2);
 
         this.lastMessageId = lastMessageId;
         this.frozen(frozen);
