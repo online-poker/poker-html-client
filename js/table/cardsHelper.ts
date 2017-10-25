@@ -1,8 +1,8 @@
 ﻿const allBacks = "/v4=";
 const allNone = "//8=";
 
-const allBacksClasses = ["cards back", "cards back"];
-const allNoneClasses = ["cards back", "cards back"];
+let allBacksClasses = ["cards back", "cards back"];
+let allNoneClasses = ["cards back", "cards back"];
 
 // tslint:disable-next-line:no-unused-variable
 function exposeCardsConstants() {
@@ -116,7 +116,11 @@ function cardValue(card: number) {
  * @param cardsData Cards data encoded as string.
  */
 // tslint:disable-next-line:no-unused-variable
-function decodeCardsArray(cardsData: string): number[] {
+function decodeCardsArray(cardsData: string, gameType?: number): number[] {
+    if (gameType && gameType === 2) {
+        allBacksClasses = ["cards back", "cards back", "cards back", "cards back"];
+        allNoneClasses = ["cards back", "cards back", "cards back", "cards back"];
+    }
     if (cardsData === null || cardsData === null) {
         return null;
     }
@@ -130,10 +134,16 @@ function decodeCardsArray(cardsData: string): number[] {
     }
 
     if (cardsData === allBacks) {
+        if (gameType && gameType === 2) {
+            return [254, 254, 254, 254];
+        }
         return [254, 254];
     }
 
     if (cardsData === "//8=") {
+        if (gameType && gameType === 2) {
+            return [255, 255, 255, 255];
+        }
         return [255, 255];
     }
 
@@ -156,12 +166,15 @@ function convertToCards(data: number[]): string[] {
     });
 }
 // tslint:disable-next-line:no-unused-variable
-function cardsArray(cardsData: string): string[] {
+function cardsArray(cardsData: string, gameType?: number): string[] {
     /// <signature>
     ///   <summary>Get card string</summary>
     ///   <param name="cards" type="Array">Array of the cards.</param>
     /// </signature>
     if (cardsData === null) {
+        if (gameType && gameType === 2) {
+            return ["cards none", "cards none", "cards none", "cards none"];
+        }
         return ["cards none", "cards none"];
     }
 
@@ -174,10 +187,16 @@ function cardsArray(cardsData: string): string[] {
     }
 
     if (cardsData === allBacks) {
+        if (gameType && gameType === 2) {
+            return ["cards back", "cards back", "cards back", "cards back"];
+        }
         return ["cards back", "cards back"];
     }
 
     if (cardsData === allNone) {
+        if (gameType && gameType === 2) {
+            return ["cards none", "cards none", "cards none", "cards none"];
+        }
         return ["cards none", "cards none"];
     }
 

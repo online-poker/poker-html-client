@@ -32,6 +32,7 @@ class TableManager {
 
     private duplicators: DuplicateFinder[];
     private reserveTablesForTournaments = false;
+    private gameType = 1;
 
     constructor() {
         const self = this;
@@ -565,13 +566,14 @@ class TableManager {
                 return;
             }
 
+            self.gameType = gameType;
             // Make sure that for old servers we will fallback to correct game type.
             gameType = gameType || 1;
             tableView.onTableStatusInfo(players, pots, cards, dealerSeat, buyIn, baseBuyIn, leaveTime,
                 timePass, currentPlayerId, lastRaise, gameId, authenticated, actionsCount, frozen, opened,
                 pauseDate, lastMessageId, gameType);
 
-            const cardsArr = cards == null ? allNoneClasses : cardsArray(cards);
+            const cardsArr = cards == null ? allNoneClasses : cardsArray(cards, self.gameType);
             self.logDataEvent(`Table status info: TableId - ${tableId}, Game type: ${gameType} Players - `, players, players.length,
                 " Pots - ", pots, " Cards - ", cardsArr.join(" "));
         };
@@ -650,7 +652,7 @@ class TableManager {
             }
 
             tableView.executeMoveMoneyToPot(pots);
-            tableView.onOpenCards(decodeCardsArray(cards));
+            tableView.onOpenCards(decodeCardsArray(cards, self.gameType));
             let typeString: string;
             switch (type) {
                 case 0:
@@ -667,7 +669,7 @@ class TableManager {
                     break;
             }
 
-            const cardsStrings = cardsArray(cards).join(" ");
+            const cardsStrings = cardsArray(cards, self.gameType).join(" ");
             self.logDataEvent(`Open cards: TableId - ${tableId} Type - ${typeString} Cards - ${cardsStrings}`);
         };
         gameHub.client.MoneyAdded = function(tableId, playerId, amount) {
@@ -706,8 +708,8 @@ class TableManager {
                 return;
             }
 
-            tableView.onPlayerCards(playerId, decodeCardsArray(cards));
-            const cardsString = cardsArray(cards).join(" ");
+            tableView.onPlayerCards(playerId, decodeCardsArray(cards, self.gameType));
+            const cardsString = cardsArray(cards, self.gameType).join(" ");
             self.logDataEvent("Player cards: TableId - ", tableId, " PlayerId - ", playerId, " Cards - ", cardsString);
         };
         gameHub.client.PlayerCardOpened = (tableId, playerId, cardPosition, cardValue) => {
@@ -914,7 +916,7 @@ class TableManager {
                 return;
             }
 
-            tableView.onFinalTableCardsOpened(decodeCardsArray(cards));
+            tableView.onFinalTableCardsOpened(decodeCardsArray(cards, self.gameType));
         };
 
         gameHub.client.TableBetParametersChanged = function(tableId, smallBind, bigBlind, ante) {

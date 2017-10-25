@@ -1223,7 +1223,7 @@ export class TableView {
                 this.gameFinished(true);
             }
 
-            const cardsArr = decodeCardsArray(cards);
+            const cardsArr = decodeCardsArray(cards, gameType);
             this.setCards(cardsArr);
             this.setButtons(dealerSeat);
 
