@@ -8,7 +8,7 @@ let allNoneClasses = [];
 const allBacksClassesFourCards = ["cards back", "cards back", "cards back", "cards back"];
 const allNoneClassesFourCards = ["cards none", "cards none", "cards none", "cards none"];
 const allBacksClassesTwoCards = ["cards back", "cards back"];
-const allNoneClassesTwoCards = ["cards back", "cards back"];
+const allNoneClassesTwoCards = ["cards none", "cards none"];
 
 // tslint:disable-next-line:no-unused-variable
 function exposeCardsConstants() {
@@ -150,7 +150,7 @@ function decodeCardsArray(cardsData: string): number[] {
         return [254, 254];
     }
 
-    if (cardsData === "//8=") {
+    if (cardsData === allNone) {
         return [255, 255];
     }
 
@@ -186,7 +186,7 @@ function cardsArray(cardsData: string): string[] {
     ///   <param name="cards" type="Array">Array of the cards.</param>
     /// </signature>
     if (cardsData === null) {
-        return ["cards none", "cards none"];
+        return allNoneClassesTwoCards;
     }
 
     if (typeof cardsData === "object") {
@@ -194,23 +194,23 @@ function cardsArray(cardsData: string): string[] {
         console.log(cardsData[0]);
         console.log(cardsData[1]);
         // tslint:enable:no-console
-        cardsData = "//8=";
+        cardsData = allNone;
     }
 
     if (cardsData === allBacks) {
-        return ["cards back", "cards back"];
+        return allBacksClassesTwoCards;
     }
 
     if (cardsData === allNone) {
-        return ["cards none", "cards none"];
+        return allNoneClassesTwoCards;
     }
 
     if (cardsData === allBacksFourCards) {
-        return ["cards back", "cards back", "cards back", "cards back"];
+        return allBacksClassesFourCards;
     }
 
     if (cardsData === allNoneFourCards) {
-        return ["cards none", "cards none", "cards none", "cards none"];
+        return allNoneClassesFourCards;
     }
 
     const cardsString = window.atob(cardsData);
