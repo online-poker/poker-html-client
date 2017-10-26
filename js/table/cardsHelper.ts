@@ -3,8 +3,8 @@ const allNone = "//8=";
 const allBacksFourCards = "WzI1NF1bMjU0XVsyNTRdWzI1NF0=";
 const allNoneFourCards = "WzI1NV1bMjU1XVsyNTVdWzI1NV0=";
 
-let allBacksClasses = ["cards back", "cards back"];
-let allNoneClasses = ["cards back", "cards back"];
+const allBacksClasses = ["cards back", "cards back"];
+const allNoneClasses = ["cards back", "cards back"];
 
 // tslint:disable-next-line:no-unused-variable
 function exposeCardsConstants() {
@@ -130,7 +130,7 @@ function decodeCardsArray(cardsData: string): number[] {
         // tslint:enable:no-console
         cardsData = "//8=";
         if (cardsData.length === 4) {
-            cardsData = "WzI1NV1bMjU1XVsyNTVdWzI1NV0=";
+            cardsData = allNoneFourCards;
         }
     }
 
@@ -146,7 +146,7 @@ function decodeCardsArray(cardsData: string): number[] {
         return [254, 254, 254, 254];
     }
 
-    if (cardsData === "WzI1NV1bMjU1XVsyNTVdWzI1NV0=") {
+    if (cardsData === allNoneFourCards) {
         return [255, 255, 255, 255];
     }
     const cardsString = window.atob(cardsData);
