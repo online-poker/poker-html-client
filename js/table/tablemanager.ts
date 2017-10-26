@@ -570,8 +570,9 @@ class TableManager {
             tableView.onTableStatusInfo(players, pots, cards, dealerSeat, buyIn, baseBuyIn, leaveTime,
                 timePass, currentPlayerId, lastRaise, gameId, authenticated, actionsCount, frozen, opened,
                 pauseDate, lastMessageId, gameType);
-            allNoneClasses = gameType === 1 ? allNoneClasses : ["cards back", "cards back", "cards back", "cards back"];
-            allBacksClasses = gameType === 1 ? allBacksClasses : ["cards back", "cards back", "cards back", "cards back"];
+
+            allNoneClasses = gameType === 1 ? allNoneClasses : allNoneClassesFourCards;
+            allBacksClasses = gameType === 1 ? allBacksClasses : allBacksClassesFourCards;
             const cardsArr = cards == null ? allNoneClasses : cardsArray(cards);
             self.logDataEvent(`Table status info: TableId - ${tableId}, Game type: ${gameType} Players - `, players, players.length,
                 " Pots - ", pots, " Cards - ", cardsArr.join(" "));
