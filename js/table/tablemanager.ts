@@ -32,7 +32,6 @@ class TableManager {
 
     private duplicators: DuplicateFinder[];
     private reserveTablesForTournaments = false;
-    private gameType = 1;
 
     constructor() {
         const self = this;
@@ -566,7 +565,6 @@ class TableManager {
                 return;
             }
 
-            self.gameType = gameType;
             // Make sure that for old servers we will fallback to correct game type.
             gameType = gameType || 1;
             tableView.onTableStatusInfo(players, pots, cards, dealerSeat, buyIn, baseBuyIn, leaveTime,
