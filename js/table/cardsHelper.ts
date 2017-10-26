@@ -3,10 +3,12 @@ const allNone = "//8=";
 const allBacksFourCards = "WzI1NF1bMjU0XVsyNTRdWzI1NF0=";
 const allNoneFourCards = "WzI1NV1bMjU1XVsyNTVdWzI1NV0=";
 
-let allBacksClasses = ["cards back", "cards back"];
-let allNoneClasses = ["cards back", "cards back"];
-let allBacksClassesFourCards = ["cards back", "cards back", "cards back", "cards back"];
-let allNoneClassesFourCards = ["cards none", "cards none", "cards none", "cards none"];
+let allBacksClasses = [];
+let allNoneClasses = [];
+const allBacksClassesFourCards = ["cards back", "cards back", "cards back", "cards back"];
+const allNoneClassesFourCards = ["cards none", "cards none", "cards none", "cards none"];
+const allBacksClassesTwoCards = ["cards back", "cards back"];
+const allNoneClassesTwoCards = ["cards back", "cards back"];
 
 // tslint:disable-next-line:no-unused-variable
 function exposeCardsConstants() {
@@ -22,6 +24,10 @@ function exposeCardsConstants() {
     window["allBacksClassesFourCards"] = allBacksClassesFourCards;
     // tslint:disable-next-line:no-string-literal
     window["allNoneClassesFourCards"] = allNoneClassesFourCards;
+    // tslint:disable-next-line:no-string-literal
+    window["allBacksClassesTwoCards"] = allBacksClassesTwoCards;
+    // tslint:disable-next-line:no-string-literal
+    window["allNoneClassesTwoCards"] = allNoneClassesTwoCards;
 }
 
 function cardValue(card: number) {
