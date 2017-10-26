@@ -1,8 +1,14 @@
 ﻿const allBacks = "/v4=";
 const allNone = "//8=";
+const allBacksFourCards = "WzI1NF1bMjU0XVsyNTRdWzI1NF0=";
+const allNoneFourCards = "WzI1NV1bMjU1XVsyNTVdWzI1NV0=";
 
-const allBacksClasses = ["cards back", "cards back"];
-const allNoneClasses = ["cards back", "cards back"];
+let allBacksClasses = [];
+let allNoneClasses = [];
+const allBacksClassesFourCards = ["cards back", "cards back", "cards back", "cards back"];
+const allNoneClassesFourCards = ["cards none", "cards none", "cards none", "cards none"];
+const allBacksClassesTwoCards = ["cards back", "cards back"];
+const allNoneClassesTwoCards = ["cards none", "cards none"];
 
 // tslint:disable-next-line:no-unused-variable
 function exposeCardsConstants() {
@@ -14,6 +20,14 @@ function exposeCardsConstants() {
     window["allBacksClasses"] = allBacksClasses;
     // tslint:disable-next-line:no-string-literal
     window["allNoneClasses"] = allNoneClasses;
+    // tslint:disable-next-line:no-string-literal
+    window["allBacksClassesFourCards"] = allBacksClassesFourCards;
+    // tslint:disable-next-line:no-string-literal
+    window["allNoneClassesFourCards"] = allNoneClassesFourCards;
+    // tslint:disable-next-line:no-string-literal
+    window["allBacksClassesTwoCards"] = allBacksClassesTwoCards;
+    // tslint:disable-next-line:no-string-literal
+    window["allNoneClassesTwoCards"] = allNoneClassesTwoCards;
 }
 
 function cardValue(card: number) {
@@ -127,16 +141,26 @@ function decodeCardsArray(cardsData: string): number[] {
         console.log(cardsData[1]);
         // tslint:enable:no-console
         cardsData = "//8=";
+        if (cardsData.length === 4) {
+            cardsData = allNoneFourCards;
+        }
     }
 
     if (cardsData === allBacks) {
         return [254, 254];
     }
 
-    if (cardsData === "//8=") {
+    if (cardsData === allNone) {
         return [255, 255];
     }
 
+    if (cardsData === allBacksFourCards) {
+        return [254, 254, 254, 254];
+    }
+
+    if (cardsData === allNoneFourCards) {
+        return [255, 255, 255, 255];
+    }
     const cardsString = window.atob(cardsData);
     const cards: number[] = [];
     for (let i = 0; i < cardsString.length; i++) {
@@ -162,7 +186,7 @@ function cardsArray(cardsData: string): string[] {
     ///   <param name="cards" type="Array">Array of the cards.</param>
     /// </signature>
     if (cardsData === null) {
-        return ["cards none", "cards none"];
+        return allNoneClassesTwoCards;
     }
 
     if (typeof cardsData === "object") {
@@ -170,15 +194,23 @@ function cardsArray(cardsData: string): string[] {
         console.log(cardsData[0]);
         console.log(cardsData[1]);
         // tslint:enable:no-console
-        cardsData = "//8=";
+        cardsData = allNone;
     }
 
     if (cardsData === allBacks) {
-        return ["cards back", "cards back"];
+        return allBacksClassesTwoCards;
     }
 
     if (cardsData === allNone) {
-        return ["cards none", "cards none"];
+        return allNoneClassesTwoCards;
+    }
+
+    if (cardsData === allBacksFourCards) {
+        return allBacksClassesFourCards;
+    }
+
+    if (cardsData === allNoneFourCards) {
+        return allNoneClassesFourCards;
     }
 
     const cardsString = window.atob(cardsData);

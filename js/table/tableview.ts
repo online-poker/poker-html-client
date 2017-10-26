@@ -125,6 +125,13 @@ export class TableView {
      */
     public containerCss: KnockoutObservable<any>;
 
+    /**
+     * Indicate game type
+     */
+    public gameType: KnockoutObservable<number>;
+    public has2Cards: KnockoutComputed<boolean>;
+    public has4Cards: KnockoutComputed<boolean>;
+
     public timeLeft: KnockoutComputed<number>;
     public timerInterval: number;
     public chipWidth: number;
@@ -260,6 +267,10 @@ export class TableView {
         this.queue = new GameActionsQueue();
         this.cardsVariantUp = ko.observable<boolean>(false);
         this.cardsVariantDown = ko.observable<boolean>(true);
+
+        this.gameType = ko.observable(1);
+        this.has2Cards = ko.computed(() => this.gameType() !== 2);
+        this.has4Cards = ko.computed(() => this.gameType() === 2);
 
         this.places = ko.computed(function () {
             return self.tablePlaces.places();
@@ -1188,6 +1199,10 @@ export class TableView {
             const p = (players[i] as any) as TablePlayer;
             tablePlayers.push(p);
         }
+
+        this.gameType = ko.observable(gameType);
+        this.has2Cards = ko.computed(() => this.gameType() !== 2);
+        this.has4Cards = ko.computed(() => this.gameType() === 2);
 
         this.lastMessageId = lastMessageId;
         this.frozen(frozen);

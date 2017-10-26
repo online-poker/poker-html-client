@@ -571,6 +571,8 @@ class TableManager {
                 timePass, currentPlayerId, lastRaise, gameId, authenticated, actionsCount, frozen, opened,
                 pauseDate, lastMessageId, gameType);
 
+            allNoneClasses = gameType === 1 ? allNoneClassesTwoCards : allNoneClassesFourCards;
+            allBacksClasses = gameType === 1 ? allBacksClassesTwoCards : allBacksClassesFourCards;
             const cardsArr = cards == null ? allNoneClasses : cardsArray(cards);
             self.logDataEvent(`Table status info: TableId - ${tableId}, Game type: ${gameType} Players - `, players, players.length,
                 " Pots - ", pots, " Cards - ", cardsArr.join(" "));
