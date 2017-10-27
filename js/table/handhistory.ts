@@ -99,13 +99,13 @@ export class HandHistory extends TableMonitor {
             });
             let cards: string[];
             if (currentPlayer.length === 0) {
-                cards = ["cards back", "cards back"];
+                cards = allBacksClasses;
             } else {
                 cards = currentPlayer[0].Cards();
                 if (cards === null) {
                     cards = currentPlayer[0].HandCards();
                     if (cards == null || cards.length === 0) {
-                        cards = ["cards back", "cards back"];
+                        cards = allBacksClasses;
                     }
                 } else {
                     const rawCards = currentPlayer[0].RawCards();
