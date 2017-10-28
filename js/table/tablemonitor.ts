@@ -15,7 +15,8 @@ export class TableMonitor {
         gameId: number,
         players: GamePlayerStartInformation[],
         actions: GameActionStartInformation[],
-        dealerSeat: number) {
+        dealerSeat: number,
+        gameType: number) {
     }
     public onGameFinished(gameId: number, winners: GameWinnerModel[], rake: number) {
     }
