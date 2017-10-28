@@ -81,6 +81,8 @@ export class TablePlaceModel {
     public IsCardsFolded: KnockoutObservable<boolean>;
     public Card1Hightlighted: KnockoutObservable<boolean>;
     public Card2Hightlighted: KnockoutObservable<boolean>;
+    public Card3Hightlighted: KnockoutObservable<boolean>;
+    public Card4Hightlighted: KnockoutObservable<boolean>;
     public CardsHightlighted: KnockoutObservable<boolean>;
     public IsCardsOpened = ko.observable(false);
 
@@ -178,6 +180,8 @@ export class TablePlaceModel {
         this.IsCardsFolded = ko.observable(false);
         this.Card1Hightlighted = ko.observable(false);
         this.Card2Hightlighted = ko.observable(false);
+        this.Card3Hightlighted = ko.observable(false);
+        this.Card4Hightlighted = ko.observable(false);
         this.CardsHightlighted = ko.observable(false);
         this.CurrentAction = ko.observable<string>();
 
@@ -255,6 +259,8 @@ export class TablePlaceModel {
 
         this.Card1Hightlighted(false);
         this.Card2Hightlighted(false);
+        this.Card3Hightlighted(false);
+        this.Card4Hightlighted(false);
         this.CardsHightlighted(false);
         this.markCardsHidden();
         this.WinnerCombination(null);
