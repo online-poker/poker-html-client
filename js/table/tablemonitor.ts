@@ -16,7 +16,7 @@ export class TableMonitor {
         players: GamePlayerStartInformation[],
         actions: GameActionStartInformation[],
         dealerSeat: number,
-        gameType: KnockoutObservable<number>) {
+        gameType: number) {
     }
     public onGameFinished(gameId: number, winners: GameWinnerModel[], rake: number) {
     }

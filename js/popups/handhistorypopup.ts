@@ -25,8 +25,8 @@ export class HandHistoryPopup extends PopupBase {
     public isShortMode: KnockoutComputed<boolean>;
     public isDetailedMode: KnockoutComputed<boolean>;
     public lastHandTitle: KnockoutObservable<string>;
-    public has2Cards: KnockoutObservable<boolean>;;
-    public has4Cards: KnockoutObservable<boolean>;;
+    public has2Cards: KnockoutObservable<boolean>;
+    public has4Cards: KnockoutObservable<boolean>;
 
     constructor() {
         super();
