@@ -1288,7 +1288,7 @@ export class TableView {
         dealerSeat: number) {
         this.queue.pushCallback(() => {
             this.onGameStartedCore(gameId, players, actions, dealerSeat);
-            this.handHistory.onGameStarted(gameId, players, actions, dealerSeat);
+            this.handHistory.onGameStarted(gameId, players, actions, dealerSeat, this.gameType);
         });
         const isInGame = players.some((player) => player.PlayerId === authManager.loginId());
         if (!isInGame) {

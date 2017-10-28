@@ -24,6 +24,7 @@ export class HandHistory extends TableMonitor {
     public potentialCards: number[] = [];
     public playersData: KnockoutObservableArray<PlayerWinInformation>;
     public valid = true;
+    public gameType: KnockoutObservable<number>;
 
     constructor(tableView: TableView) {
         super(tableView);
@@ -32,15 +33,18 @@ export class HandHistory extends TableMonitor {
         this.cards = ko.observableArray<string>([]);
         this.playersData = ko.observableArray<PlayerWinInformation>([]);
         this.players = [];
+        this.gameType = ko.observable<number>(1);
     }
     public onGameStarted(
         gameId: number,
         players: GamePlayerStartInformation[],
         actions: GameActionStartInformation[],
-        dealerSeat: number) {
+        dealerSeat: number,
+        gameType: KnockoutObservable<number>) {
         this.detailedOperations([]);
         this.playersData([]);
         this.id = gameId;
+        this.gameType = gameType;
         this.addDetailedOperation(_("handhistory.gamesstarted", { gameId }));
         this.players = [];
         for (let i = 0; i < players.length; i++) {
@@ -86,7 +90,7 @@ export class HandHistory extends TableMonitor {
 
             const playerId = parseInt(pid, 10);
             const playerName = this.players[pid];
-            const winAmount = winners.reduce<number>(function(prev, item) {
+            const winAmount = winners.reduce<number>(function (prev, item) {
                 if (item.PlayerId !== playerId) {
                     return prev;
                 }
@@ -99,13 +103,13 @@ export class HandHistory extends TableMonitor {
             });
             let cards: string[];
             if (currentPlayer.length === 0) {
-                cards = allBacksClasses;
+                cards = this.gameType() === 1 ? allBacksClassesTwoCards : allBacksClassesFourCards;
             } else {
                 cards = currentPlayer[0].Cards();
                 if (cards === null) {
                     cards = currentPlayer[0].HandCards();
                     if (cards == null || cards.length === 0) {
-                        cards = allBacksClasses;
+                        cards = this.gameType() === 1 ? allBacksClassesTwoCards : allBacksClassesFourCards;
                     }
                 } else {
                     const rawCards = currentPlayer[0].RawCards();
