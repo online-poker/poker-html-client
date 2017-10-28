@@ -25,6 +25,8 @@ export class HandHistoryPopup extends PopupBase {
     public isShortMode: KnockoutComputed<boolean>;
     public isDetailedMode: KnockoutComputed<boolean>;
     public lastHandTitle: KnockoutObservable<string>;
+    public has2Cards: KnockoutObservable<boolean>;;
+    public has4Cards: KnockoutObservable<boolean>;;
 
     constructor() {
         super();
@@ -48,6 +50,8 @@ export class HandHistoryPopup extends PopupBase {
         this.lastHandTitle = ko.observable<string>("");
         this.playersData = ko.observableArray<PlayerWinInformation>([]);
         this.displayLoginSeparately = false;
+        this.has2Cards = ko.observable<boolean>(true);
+        this.has4Cards = ko.observable<boolean>(false);
     }
     public shown(): void {
         super.shown();
@@ -55,6 +59,8 @@ export class HandHistoryPopup extends PopupBase {
         this.showHistoryModeSelector(handHistoryConfig.showPictureHistory && handHistoryConfig.showTextHistory);
         const view = this.tableView();
         const lastHand = view.lastHandHistory();
+        this.has2Cards = ko.observable<boolean>(lastHand.gameType() === 1 ? true : false);
+        this.has4Cards = ko.observable<boolean>(lastHand.gameType() === 1 ? false : true);
         this.detailedOperations(lastHand.detailedOperations());
         this.shortOperations(lastHand.shortOperations());
         this.cards(lastHand.cards());
