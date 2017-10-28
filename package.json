@@ -9,7 +9,9 @@
     "tslint": "tslint",
     "configure-ci": "node build/configure-ci.js",
     "build": "npm run compile && npm run lint",
-    "test": "npm run compile && npm run lint"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:prod": "npm run lint && npm run test -- --coverage --no-cache"
   },
   "repository": {
     "type": "git",
@@ -25,25 +27,54 @@
   "bugs": {
     "url": "https://github.com/online-poker/poker-html-client/issues"
   },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 95,
+        "lines": 95,
+        "statements": 95
+      }
+    },
+    "collectCoverage": true,
+    "mapCoverage": true
+  },
   "homepage": "https://github.com/online-poker/poker-html-client#readme",
   "devDependencies": {
-    "@types/applicationinsights": "^0.15.33",
+    "@types/applicationinsights": "^0.15.34",
     "@types/cordova": "^0.0.34",
-    "@types/cordova-plugin-camera": "0.0.2",
-    "@types/cordova-plugin-device": "0.0.2",
+    "@types/cordova-plugin-camera": "^0.0.2",
+    "@types/cordova-plugin-device": "^0.0.2",
     "@types/cordova-plugin-keyboard": "^0.1.2",
-    "@types/cordova-plugin-media": "0.0.2",
-    "@types/cordova-plugin-network-information": "0.0.2",
-    "@types/cordova-plugin-splashscreen": "0.0.2",
-    "@types/cordova-plugin-statusbar": "0.0.2",
-    "@types/jasmine": "^2.2.33",
-    "@types/knockout": "^3.4.37",
-    "@types/knockout.validation": "0.0.31",
+    "@types/cordova-plugin-media": "^0.0.2",
+    "@types/cordova-plugin-network-information": "^0.0.2",
+    "@types/cordova-plugin-splashscreen": "^0.0.2",
+    "@types/cordova-plugin-statusbar": "^0.0.2",
+    "@types/jasmine": "^2.6.2",
+    "@types/knockout": "^3.4.46",
+    "@types/knockout.validation": "^0.0.31",
     "@types/moment": "^2.13.0",
-    "@types/requirejs": "^2.1.26",
-    "@types/signalr": "^2.2.31",
+    "@types/requirejs": "^2.1.31",
+    "@types/signalr": "^2.2.35",
     "poker-server-api": "0.0.2",
-    "tslint": "^5.5.0",
-    "typescript": "^2.4.1"
+    "tslint": "^5.8.0",
+    "typescript": "^2.5.3"
+  },
+  "dependencies": {
+    "jest": "^21.2.1",
+    "ts-jest": "^21.1.4"
   }
 }
