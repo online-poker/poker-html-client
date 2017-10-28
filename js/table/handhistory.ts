@@ -44,7 +44,7 @@ export class HandHistory extends TableMonitor {
         this.detailedOperations([]);
         this.playersData([]);
         this.id = gameId;
-        this.gameType = ko.observable(gameType);
+        this.gameType(gameType);
         this.addDetailedOperation(_("handhistory.gamesstarted", { gameId }));
         this.players = [];
         for (let i = 0; i < players.length; i++) {
