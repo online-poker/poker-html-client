@@ -3,7 +3,6 @@
 /* tslint:disable:no-bitwise */
 
 // tslint:disable-next-line:no-namespace
-namespace HoldemHand {
     export interface HandRepresentation {
         Cards: number[];
         Suits: number[];
@@ -251,7 +250,7 @@ namespace HoldemHand {
         };
     }
 
-    export function getCombinations(k: number, n: number) {
+    function getCombinations(k: number, n: number) {
         /// <signature>
         ///    <summary>
         ///    Generates all possible unordered permutations
@@ -296,18 +295,6 @@ namespace HoldemHand {
         return result;
     }
 
-    export function decodeScore(score: number) {
-        const result = [];
-        result.push((score & 15));
-        score = score >> 4;
-        result.push((score & 15));
-        score = score >> 4;
-        result.push((score & 15));
-        score = score >> 4;
-        result.push((score & 15));
-        return result;
-    }
-
     export function getPokerScore(cards: number[]) {
         const tempCards = cards.slice(0);
         const cardsCount = {};
@@ -340,7 +327,11 @@ namespace HoldemHand {
         /// <param name="str" type="String">String representation of the hand which should be converted.</param>
         /// <returns>Parsing result of internal conversion.</returns>
 
-        if (str.match(/((?:\s*)(10|[2-9]|[J|Q|K|A])[♠|♣|♥|♦](?:\s*)){1,7}/g) === null) {
+        if (str === null || str === undefined || str.trim() === "") {
+            return { Status: HandParseResultStatus.InvalidHand };
+        }
+
+        if (str.match(/^((?:\s*)(10|[2-9]|[J|Q|K|A])?[♠|♣|♥|♦]?(?:\s*)){1,9}$/g) === null) {
             return { Status: HandParseResultStatus.InvalidHand };
         }
 
@@ -348,15 +339,15 @@ namespace HoldemHand {
             .replace(/J/g, "11").replace(/♠|♣|♥|♦/g, ",");
         const cards = cardStr.replace(/\s/g, "").slice(0, -1).split(",") as any[];
         const suits = str.match(/♠|♣|♥|♦/g) as any[];
-        if (cards === null) {
+        if (cards === null || cards.filter((_) => _).length === 0) {
             return { Status: HandParseResultStatus.CardsMissing };
         }
 
-        if (suits === null) {
+        if (suits === null || suits.length === 0) {
             return { Status: HandParseResultStatus.SuitsMissing };
         }
 
-        if (cards.length !== suits.length) {
+        if (cards.filter((_) => _).length !== suits.filter((_) => _).length) {
             return { Status: HandParseResultStatus.AllCardsShouldHaveOneSuit };
         }
 
@@ -402,12 +393,12 @@ namespace HoldemHand {
     }
 
     /**
-     * Get universal hand strength
+     * Get hand strength for Texas Holdem
      * @param hand Hand representation for which strength should be converted.
      * @return Rank of the card across all possible hands.
      * @description This function could accept hands from 5 to 7 cards.
      */
-    export function getCardRank(hand: HandRepresentation): CardRank {
+    export function getHoldemCardRank(hand: HandRepresentation): CardRank {
         const totalCardsCount = hand.Cards.length;
         const permutations = getCombinations(5, totalCardsCount);
         let maxRank = 0;
@@ -453,4 +444,30 @@ namespace HoldemHand {
             WinnerCardsSet: wci,
         };
     }
-}
+
+    /**
+     * Get hand strength for Omaha
+     * @param hand Hand representation for which strength should be converted.
+     * @return Rank of the card across all possible hands.
+     * @description This function could accept hands from 5 to 7 cards.
+     */
+    export function getOmahaCardRank(hand: HandRepresentation): CardRank {
+        return getHoldemCardRank({
+            Cards: hand.Cards.slice(0, 7),
+            Suits: hand.Suits.slice(0, 7),
+        });
+    }
+
+    /**
+     * Get universal hand strength
+     * @param hand Hand representation for which strength should be converted.
+     * @return Rank of the card across all possible hands.
+     * @description This function could accept hands from 5 to 7 cards.
+     */
+    export function getCardRank(hand: HandRepresentation): CardRank {
+        if (hand.Cards.length <= 7) {
+            return getHoldemCardRank(hand);
+        }
+
+        return getOmahaCardRank(hand);
+    }

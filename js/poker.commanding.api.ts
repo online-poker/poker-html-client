@@ -56,9 +56,8 @@ namespace OnlinePoker {
                         data: JSON.stringify(parameters),
                         success: (data, textStatus, jqXHR) => {
                             const dataString = data != null ? JSON.stringify(data) : "NULL";
-                            textStatus = textStatus != null ? textStatus : "NULL";
 
-                            const logMessage = "Method " + methodName + " finished. Status: " + textStatus + ". Results: " + dataString;
+                            const logMessage = "Method " + methodName + " finished. Status: " + (textStatus || "NULL") + ". Results: " + dataString;
                             self.Log(self.baseName, logMessage);
                             if (successCallback != null) {
                                 successCallback(data, textStatus, jqXHR);

@@ -18,6 +18,7 @@ import { settings } from "../settings";
 import * as timeService from "../timeservice";
 import { ActionBlock } from "./actionBlock";
 import { GameActionsQueue } from "./gameactionsqueue";
+import * as HoldemHand from "./hand";
 import { HandHistory } from "./handhistory";
 import { PlayerMessage } from "./playerMessage";
 import * as runtimeSettings from "./runtimesettings";
@@ -2594,35 +2595,7 @@ export class TableView {
                     });
                     if (winnerCards.length === 7 && needHightlightCards) {
                         const rank = HoldemHand.getCardRank(handRepresentation);
-                        rank.WinnerCardsSet.forEach((cardIndex) => {
-                            if (cardIndex === 5) {
-                                currentPlayer.Card1Hightlighted(true);
-                            }
-
-                            if (cardIndex === 6) {
-                                currentPlayer.Card2Hightlighted(true);
-                            }
-
-                            if (cardIndex === 0) {
-                                this.tableCards.Card1Hightlighted(true);
-                            }
-
-                            if (cardIndex === 1) {
-                                this.tableCards.Card2Hightlighted(true);
-                            }
-
-                            if (cardIndex === 2) {
-                                this.tableCards.Card3Hightlighted(true);
-                            }
-
-                            if (cardIndex === 3) {
-                                this.tableCards.Card4Hightlighted(true);
-                            }
-
-                            if (cardIndex === 4) {
-                                this.tableCards.Card5Hightlighted(true);
-                            }
-                        });
+                        this.highlightCards(currentPlayer, rank.WinnerCardsSet);
                     }
 
                     currentPlayer.Money(currentPlayer.Money() + currentWinner.Amount);
@@ -2636,6 +2609,50 @@ export class TableView {
         }
 
         return c;
+    }
+    /**
+     * Hightlight cards on the table
+     * @param currentPlayer Current player for which cards should be highlighted.
+     * @param winnerCardsSet Set of winning cards.
+     */
+    private highlightCards(currentPlayer: TablePlaceModel, winnerCardsSet: number[]) {
+        winnerCardsSet.forEach((cardIndex) => {
+            if (cardIndex === 5) {
+                currentPlayer.Card1Hightlighted(true);
+            }
+
+            if (cardIndex === 6) {
+                currentPlayer.Card2Hightlighted(true);
+            }
+
+            if (cardIndex === 7) {
+                currentPlayer.Card3Hightlighted(true);
+            }
+
+            if (cardIndex === 8) {
+                currentPlayer.Card4Hightlighted(true);
+            }
+
+            if (cardIndex === 0) {
+                this.tableCards.Card1Hightlighted(true);
+            }
+
+            if (cardIndex === 1) {
+                this.tableCards.Card2Hightlighted(true);
+            }
+
+            if (cardIndex === 2) {
+                this.tableCards.Card3Hightlighted(true);
+            }
+
+            if (cardIndex === 3) {
+                this.tableCards.Card4Hightlighted(true);
+            }
+
+            if (cardIndex === 4) {
+                this.tableCards.Card5Hightlighted(true);
+            }
+        });
     }
     private cleanTableAfterGameFinish() {
         if (this.gameFinished()) {
