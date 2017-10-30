@@ -93,6 +93,10 @@
     }
 
     export function getHandTypeEx(hand: HandRepresentation) {
+        if (hand.Suits.length !== 5 || hand.Cards.length !== 5) {
+            throw new Error("Should be passed 5 cards for extended interpretation.");
+        }
+
         // tslint:disable-next-line:max-line-length
         const isSameSuit = hand.Suits[0] === (hand.Suits[0] | hand.Suits[1] | hand.Suits[2] | hand.Suits[3] | hand.Suits[4]);
         let sortedCards = hand.Cards.slice(0);
