@@ -1,10 +1,10 @@
 import {
     cardValue,
     getCardRank,
+    getHandTypeEx,
     HandParseResultStatus,
     handTypeNames,
     parseHand,
-    getHandTypeEx,
 } from "../../js/table/hand";
 
 describe("Parse Hand", () => {
@@ -129,14 +129,23 @@ describe("Get card rank", () => {
             expect(handTypeNames[cardRank.HandType]).toBe("Flush");
             expect(cardRank.WinnerCardsSet).toEqual([ 0, 2, 3, 4, 6 ]);
         });
-        xit("Only two cards taken from hand", () => {
+        it("Only two cards taken from hand", () => {
             const poket = "J♦ K♣ Q♣ A♥";
             const tableCards = "A♠ 10♣ 8♣ 7♠ 2♠";
             const hand = parseHand(tableCards + " " + poket);
             expect(hand.Status).toBe(HandParseResultStatus.Ok);
             const cardRank = getCardRank(hand.Hand);
             expect(handTypeNames[cardRank.HandType]).toBe("1 Pair");
-            expect(cardRank.WinnerCardsSet).toEqual([ 0, 2, 3, 4, 6 ]);
+            expect(cardRank.WinnerCardsSet).toEqual([ 0, 1, 2, 6, 8 ]);
+        });
+        it("Only two cards taken from hand - variant 2", () => {
+            const poket = "J♣ K♣ Q♣ A♣";
+            const tableCards = "A♠ 10♣ 8♣ 7♠ 2♠";
+            const hand = parseHand(tableCards + " " + poket);
+            expect(hand.Status).toBe(HandParseResultStatus.Ok);
+            const cardRank = getCardRank(hand.Hand);
+            expect(handTypeNames[cardRank.HandType]).toBe("1 Pair");
+            expect(cardRank.WinnerCardsSet).toEqual([ 0, 1, 2, 6, 8 ]);
         });
     });
 });

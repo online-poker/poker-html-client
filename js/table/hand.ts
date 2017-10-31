@@ -404,40 +404,55 @@
      */
     export function getHoldemCardRank(hand: HandRepresentation): CardRank {
         const totalCardsCount = hand.Cards.length;
-        const permutations = getCombinations(5, totalCardsCount);
+        const permutations = getCombinations(5, Math.min(7, totalCardsCount));
         let maxRank = 0;
         let winIndex = 10;
         let winningScore = -1;
         let wci: number[];
 
-        // Generate permuted version of the original array.
-        const applyPermutation5 = function (source: number[], permutation: number[]) {
-            return [
-                source[permutation[0]],
-                source[permutation[1]],
-                source[permutation[2]],
-                source[permutation[3]],
-                source[permutation[4]],
-            ];
-        };
+        // Generate permutations for each combination of two hands in the hole.
+        const holeCardPermutations = getCombinations(2, Math.max(2, totalCardsCount - 5));
+        for (const holeCardPermutationSet of holeCardPermutations) {
+            const applyHoleCardPermutations = (value: number) => {
+                // Leave table cards unchanged.
+                if (value < 5) {
+                    return value;
+                }
 
-        for (let i = 0; i < permutations.length; i++) {
-            const currentPermutation = permutations[i];
-            const cs = applyPermutation5(hand.Cards, currentPermutation);
-            const ss = applyPermutation5(hand.Suits, currentPermutation);
+                const holeCardIndex = value - 5;
+                return holeCardPermutationSet[holeCardIndex] + 5;
+            };
 
-            const index = getHandType({ Cards: cs, Suits: ss });
+            // Generate permuted version of the original array.
+            const applyPermutation5 = function (source: number[], permutation: number[]) {
+                return [
+                    source[permutation[0]],
+                    source[permutation[1]],
+                    source[permutation[2]],
+                    source[permutation[3]],
+                    source[permutation[4]],
+                ];
+            };
 
-            if (handTypeRanks[index] > maxRank) {
-                maxRank = handTypeRanks[index];
-                winIndex = index;
-                wci = currentPermutation.slice(0);
-                winningScore = getPokerScore(cs);
-            } else if (handTypeRanks[index] === maxRank) {
-                // If by chance we have a tie, find the best one
-                const score1 = getPokerScore(cs);
-                if (score1 > winningScore) {
+            for (let i = 0; i < permutations.length; i++) {
+                const currentPermutation = permutations[i].map(applyHoleCardPermutations);
+                const cs = applyPermutation5(hand.Cards, currentPermutation);
+                const ss = applyPermutation5(hand.Suits, currentPermutation);
+
+                const index = getHandType({ Cards: cs, Suits: ss });
+
+                if (handTypeRanks[index] > maxRank) {
+                    maxRank = handTypeRanks[index];
+                    winIndex = index;
                     wci = currentPermutation.slice(0);
+                    winningScore = getPokerScore(cs);
+                } else if (handTypeRanks[index] === maxRank) {
+                    // If by chance we have a tie, find the best one
+                    const score1 = getPokerScore(cs);
+                    if (score1 > winningScore) {
+                        wci = currentPermutation.slice(0);
+                        winningScore = score1;
+                    }
                 }
             }
         }
@@ -456,10 +471,7 @@
      * @description This function could accept hands from 5 to 7 cards.
      */
     export function getOmahaCardRank(hand: HandRepresentation): CardRank {
-        return getHoldemCardRank({
-            Cards: hand.Cards.slice(0, 7),
-            Suits: hand.Suits.slice(0, 7),
-        });
+        return getHoldemCardRank(hand);
     }
 
     /**
