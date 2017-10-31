@@ -932,6 +932,19 @@ class TableManager {
 
             tableView.onTableBetParametersChanged(smallBind, bigBlind, ante);
         };
+        gameHub.client.TableGameTypeChanged = function (tableId, gameType) {
+            if (wrapper.terminated) {
+                return;
+            }
+
+            const tableView = tableManager.getTableById(tableId);
+            if (tableView == null) {
+                console.warn(`Receive unexpected TableGameTypeChanged(${tableId},${gameType}`);
+                return;
+            }
+
+            tableView.onTableGameTypeChanged(gameType);
+        };
         gameHub.client.TableTournamentChanged = function(tableId, tournamentId) {
             if (wrapper.terminated) {
                 return;

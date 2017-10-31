@@ -312,6 +312,13 @@ interface GameHubClient {
     TableBetParametersChanged: (tableId: number, smallBlind: number, bigBlind: number, ante: number) => void;
 
     /**
+    * Inform that table game type changed.
+    * @param tableId Id of the table where bet paramters changed.
+    * @param gameType New value of the gametype on the table
+    */
+    TableGameTypeChanged: (tableId: number, gameType: number) => void;
+
+    /**
      * Inform about table's tournament change.
      * @param tableId Id of the table which tournament changed.
      * @param tournamentId Id of the tournament to which table becomes belonging.
