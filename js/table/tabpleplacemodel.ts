@@ -4,6 +4,7 @@ import * as ko from "knockout";
 import { withCommas } from "../helpers";
 import { _ } from "../languagemanager";
 import * as timeService from "../timeservice";
+import * as HoldemHand from "./hand";
 import { TableView } from "./tableview";
 
 export class TablePlaceModel {

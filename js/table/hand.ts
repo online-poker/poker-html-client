@@ -3,7 +3,6 @@
 /* tslint:disable:no-bitwise */
 
 // tslint:disable-next-line:no-namespace
-namespace HoldemHand {
     export interface HandRepresentation {
         Cards: number[];
         Suits: number[];
@@ -94,6 +93,10 @@ namespace HoldemHand {
     }
 
     export function getHandTypeEx(hand: HandRepresentation) {
+        if (hand.Suits.length !== 5 || hand.Cards.length !== 5) {
+            throw new Error("Should be passed 5 cards for extended interpretation.");
+        }
+
         // tslint:disable-next-line:max-line-length
         const isSameSuit = hand.Suits[0] === (hand.Suits[0] | hand.Suits[1] | hand.Suits[2] | hand.Suits[3] | hand.Suits[4]);
         let sortedCards = hand.Cards.slice(0);
@@ -251,7 +254,7 @@ namespace HoldemHand {
         };
     }
 
-    export function getCombinations(k: number, n: number) {
+    function getCombinations(k: number, n: number) {
         /// <signature>
         ///    <summary>
         ///    Generates all possible unordered permutations
@@ -296,18 +299,6 @@ namespace HoldemHand {
         return result;
     }
 
-    export function decodeScore(score: number) {
-        const result = [];
-        result.push((score & 15));
-        score = score >> 4;
-        result.push((score & 15));
-        score = score >> 4;
-        result.push((score & 15));
-        score = score >> 4;
-        result.push((score & 15));
-        return result;
-    }
-
     export function getPokerScore(cards: number[]) {
         const tempCards = cards.slice(0);
         const cardsCount = {};
@@ -340,7 +331,11 @@ namespace HoldemHand {
         /// <param name="str" type="String">String representation of the hand which should be converted.</param>
         /// <returns>Parsing result of internal conversion.</returns>
 
-        if (str.match(/((?:\s*)(10|[2-9]|[J|Q|K|A])[♠|♣|♥|♦](?:\s*)){1,7}/g) === null) {
+        if (str === null || str === undefined || str.trim() === "") {
+            return { Status: HandParseResultStatus.InvalidHand };
+        }
+
+        if (str.match(/^((?:\s*)(10|[2-9]|[J|Q|K|A])?[♠|♣|♥|♦]?(?:\s*)){1,9}$/g) === null) {
             return { Status: HandParseResultStatus.InvalidHand };
         }
 
@@ -348,15 +343,15 @@ namespace HoldemHand {
             .replace(/J/g, "11").replace(/♠|♣|♥|♦/g, ",");
         const cards = cardStr.replace(/\s/g, "").slice(0, -1).split(",") as any[];
         const suits = str.match(/♠|♣|♥|♦/g) as any[];
-        if (cards === null) {
+        if (cards === null || cards.filter((_) => _).length === 0) {
             return { Status: HandParseResultStatus.CardsMissing };
         }
 
-        if (suits === null) {
+        if (suits === null || suits.length === 0) {
             return { Status: HandParseResultStatus.SuitsMissing };
         }
 
-        if (cards.length !== suits.length) {
+        if (cards.filter((_) => _).length !== suits.filter((_) => _).length) {
             return { Status: HandParseResultStatus.AllCardsShouldHaveOneSuit };
         }
 
@@ -402,47 +397,62 @@ namespace HoldemHand {
     }
 
     /**
-     * Get universal hand strength
+     * Get hand strength for Texas Holdem
      * @param hand Hand representation for which strength should be converted.
      * @return Rank of the card across all possible hands.
      * @description This function could accept hands from 5 to 7 cards.
      */
-    export function getCardRank(hand: HandRepresentation): CardRank {
+    export function getHoldemCardRank(hand: HandRepresentation): CardRank {
         const totalCardsCount = hand.Cards.length;
-        const permutations = getCombinations(5, totalCardsCount);
+        const permutations = getCombinations(5, Math.min(7, totalCardsCount));
         let maxRank = 0;
         let winIndex = 10;
         let winningScore = -1;
         let wci: number[];
 
-        // Generate permuted version of the original array.
-        const applyPermutation5 = function (source: number[], permutation: number[]) {
-            return [
-                source[permutation[0]],
-                source[permutation[1]],
-                source[permutation[2]],
-                source[permutation[3]],
-                source[permutation[4]],
-            ];
-        };
+        // Generate permutations for each combination of two hands in the hole.
+        const holeCardPermutations = getCombinations(2, Math.max(2, totalCardsCount - 5));
+        for (const holeCardPermutationSet of holeCardPermutations) {
+            const applyHoleCardPermutations = (value: number) => {
+                // Leave table cards unchanged.
+                if (value < 5) {
+                    return value;
+                }
 
-        for (let i = 0; i < permutations.length; i++) {
-            const currentPermutation = permutations[i];
-            const cs = applyPermutation5(hand.Cards, currentPermutation);
-            const ss = applyPermutation5(hand.Suits, currentPermutation);
+                const holeCardIndex = value - 5;
+                return holeCardPermutationSet[holeCardIndex] + 5;
+            };
 
-            const index = getHandType({ Cards: cs, Suits: ss });
+            // Generate permuted version of the original array.
+            const applyPermutation5 = function (source: number[], permutation: number[]) {
+                return [
+                    source[permutation[0]],
+                    source[permutation[1]],
+                    source[permutation[2]],
+                    source[permutation[3]],
+                    source[permutation[4]],
+                ];
+            };
 
-            if (handTypeRanks[index] > maxRank) {
-                maxRank = handTypeRanks[index];
-                winIndex = index;
-                wci = currentPermutation.slice(0);
-                winningScore = getPokerScore(cs);
-            } else if (handTypeRanks[index] === maxRank) {
-                // If by chance we have a tie, find the best one
-                const score1 = getPokerScore(cs);
-                if (score1 > winningScore) {
+            for (let i = 0; i < permutations.length; i++) {
+                const currentPermutation = permutations[i].map(applyHoleCardPermutations);
+                const cs = applyPermutation5(hand.Cards, currentPermutation);
+                const ss = applyPermutation5(hand.Suits, currentPermutation);
+
+                const index = getHandType({ Cards: cs, Suits: ss });
+
+                if (handTypeRanks[index] > maxRank) {
+                    maxRank = handTypeRanks[index];
+                    winIndex = index;
                     wci = currentPermutation.slice(0);
+                    winningScore = getPokerScore(cs);
+                } else if (handTypeRanks[index] === maxRank) {
+                    // If by chance we have a tie, find the best one
+                    const score1 = getPokerScore(cs);
+                    if (score1 > winningScore) {
+                        wci = currentPermutation.slice(0);
+                        winningScore = score1;
+                    }
                 }
             }
         }
@@ -453,4 +463,27 @@ namespace HoldemHand {
             WinnerCardsSet: wci,
         };
     }
-}
+
+    /**
+     * Get hand strength for Omaha
+     * @param hand Hand representation for which strength should be converted.
+     * @return Rank of the card across all possible hands.
+     * @description This function could accept hands from 5 to 7 cards.
+     */
+    export function getOmahaCardRank(hand: HandRepresentation): CardRank {
+        return getHoldemCardRank(hand);
+    }
+
+    /**
+     * Get universal hand strength
+     * @param hand Hand representation for which strength should be converted.
+     * @return Rank of the card across all possible hands.
+     * @description This function could accept hands from 5 to 7 cards.
+     */
+    export function getCardRank(hand: HandRepresentation): CardRank {
+        if (hand.Cards.length <= 7) {
+            return getHoldemCardRank(hand);
+        }
+
+        return getOmahaCardRank(hand);
+    }
