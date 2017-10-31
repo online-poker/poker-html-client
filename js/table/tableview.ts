@@ -2593,7 +2593,7 @@ export class TableView {
                         handRepresentation.Cards.push((card % 13) + 2);
                         handRepresentation.Suits.push(1 << (card / 13));
                     });
-                    if (winnerCards.length === 7 && needHightlightCards) {
+                    if (winnerCards.length >= 7 && needHightlightCards) {
                         const rank = HoldemHand.getCardRank(handRepresentation);
                         this.highlightCards(currentPlayer, rank.WinnerCardsSet);
                     }
