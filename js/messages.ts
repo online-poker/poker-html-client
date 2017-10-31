@@ -366,9 +366,7 @@ let messages: any = {
         tableFreezed: "Стол поставлен на паузу администрацией",
         betLevelChangeNextGame: "Ставки повысятся в следующей игре: МБ - ##smallBlind, ББ - ##bigBlind",
         betLevelChangeNextGameWithAnte: "Ставки повысятся в следующей игре: МБ - ##smallBlind, ББ - ##bigBlind, Анте - ##ante",
-        betLevelChangeNextGameWithGameType: "Ставки повысятся в следующей игре: МБ - ##smallBlind, ББ - ##bigBlind, Тип Игры - ##gameType",
-        betLevelChangeNextGameWithAnteAndGameType: "Ставки повысятся в следующей игре: МБ - ##smallBlind, ББ - ##bigBlind, Анте - ##ante, Тип Игры - ##gameType",
-        gameTypeChangeNextGame : "Тип игры изменится на - ##gameType",
+        gameTypeChangeNextGame: "Тип игры изменится на - ##gameType",
     },
     tournament: {
         caption: 'Турнир',

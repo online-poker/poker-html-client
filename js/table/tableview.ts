@@ -58,9 +58,9 @@ export class TableView {
     public nextGameSmallBlind: KnockoutObservable<number> = ko.observable(0);
     public nextGameBigBlind: KnockoutObservable<number> = ko.observable(0);
     public nextGameType: KnockoutObservable<number> = ko.observable(0);
-    public nextGameTypeName: KnockoutComputed<string>;
     public nextGameAnte: KnockoutObservable<number> = ko.observable(0);
     public nextGameInformation: KnockoutComputed<string>;
+    public nextGameTypeInformation: KnockoutComputed<string>;
     /**
      * Minimal amount of money which currently authenticated player
      * could bring on the table if he stand up from the table lately.
@@ -572,40 +572,32 @@ export class TableView {
                 "cardsvariant-down": this.cardsVariantDown(),
             };
         });
-        this.nextGameTypeName = ko.computed(() => this.nextGameType() === 1 ? "Техас Холдем" : "Омаха");
-        this.nextGameInformation = ko.computed(() => {
-            if (!this.changeBetParametersNextGame() && !this.changeGameTypeNextGame()) {
+        this.nextGameTypeInformation = ko.computed(() => {
+            if (!this.changeGameTypeNextGame()) {
                 return "";
             }
 
-            if (!this.nextGameAnte() && !this.nextGameType()) {
+            var gameTypeName = this.nextGameType() === 1 ? "Техас Холдем" : "Омаха";
+            return _("table.gameTypeChangeNextGame", {
+                gameType: gameTypeName,
+            });
+        })
+        this.nextGameInformation = ko.computed(() => {
+            if (!this.changeBetParametersNextGame()) {
+                return "";
+            }
+
+            if (!this.nextGameAnte()) {
                 return _("table.betLevelChangeNextGame",
                     {
                         smallBlind: this.nextGameSmallBlind(),
                         bigBlind: this.nextGameBigBlind(),
                     });
-            } else if (this.nextGameAnte() && !this.nextGameType()) {
+            } else {
                 return _("table.betLevelChangeNextGameWithAnte", {
                     smallBlind: this.nextGameSmallBlind(),
                     bigBlind: this.nextGameBigBlind(),
                     ante: this.nextGameAnte(),
-                });
-            } else if (!this.nextGameAnte() && this.nextGameType()) {
-                return _("table.betLevelChangeNextGameWithGameType", {
-                    smallBlind: this.nextGameSmallBlind(),
-                    bigBlind: this.nextGameBigBlind(),
-                    gameType: this.nextGameTypeName(),
-                });
-            } else if (this.nextGameType() && !this.nextGameAnte() && !this.nextGameBigBlind() && !this.nextGameSmallBlind()) {
-                return _("table.gameTypeChangeNextGame", {
-                    gameType: this.nextGameTypeName(),
-                });
-            } else {
-                return _("table.betLevelChangeNextGameWithAnteAndGameType", {
-                    smallBlind: this.nextGameSmallBlind(),
-                    bigBlind: this.nextGameBigBlind(),
-                    ante: this.nextGameAnte(),
-                    gameType: this.nextGameTypeName(),
                 });
             }
         });
