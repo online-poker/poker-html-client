@@ -17,6 +17,7 @@
  "compileOnSave": false,
  "exclude": [
      "js/messages.ts",
-     "node_modules"
+     "node_modules",
+     "tests"
  ]
 }
