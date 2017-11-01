@@ -578,11 +578,11 @@ export class TableView {
                 return "";
             }
 
-            var gameTypeName = this.nextGameType() === 1 ? "Техас Холдем" : "Омаха";
+            const gameTypeName = this.nextGameType() === 1 ? "Техас Холдем" : "Омаха";
             return _("table.gameTypeChangeNextGame", {
                 gameType: gameTypeName,
             });
-        })
+        });
         this.nextGameInformation = ko.computed(() => {
             if (!this.changeBetParametersNextGame()) {
                 return "";
