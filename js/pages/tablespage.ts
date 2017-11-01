@@ -38,7 +38,9 @@ export class TablesPage extends PageBase {
     public frozen: KnockoutComputed<boolean>;
     public opened: KnockoutComputed<boolean>;
     public changeBetParametersNextGame: KnockoutComputed<boolean>;
+    public changeGameTypeNextGame: KnockoutComputed<boolean>;
     public nextGameInformation: KnockoutComputed<string>;
+    public nextGameTypeInformation: KnockoutComputed<string>;
     public splashShown = ko.observable(false);
     public tablesShown = ko.observable(true);
     constructor() {
@@ -114,6 +116,14 @@ export class TablesPage extends PageBase {
 
             return ct.nextGameInformation();
         }, this);
+        this.nextGameTypeInformation = ko.computed(() => {
+            const ct = this.currentTable();
+            if (ct === null) {
+                return null;
+            }
+
+            return ct.nextGameTypeInformation();
+        }, this);
         this.changeBetParametersNextGame = ko.computed(() => {
             const ct = this.currentTable();
             if (ct === null) {
@@ -121,6 +131,14 @@ export class TablesPage extends PageBase {
             }
 
             return ct.changeBetParametersNextGame();
+        }, this);
+        this.changeGameTypeNextGame = ko.computed(() => {
+            const ct = this.currentTable();
+            if (ct === null) {
+                return null;
+            }
+
+            return ct.changeGameTypeNextGame();
         }, this);
         this.currentTable.subscribe((value: TableView) => {
             tableManager.tables().forEach((_) => {
