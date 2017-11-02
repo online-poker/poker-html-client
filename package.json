@@ -72,7 +72,9 @@
     "@types/signalr": "^2.2.35",
     "poker-server-api": "0.0.2",
     "tslint": "^5.8.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.5.3",
+    "knockout": "^3.4.2",
+    "signals": "^1.0.0"
   },
   "dependencies": {
     "jest": "^21.2.1",

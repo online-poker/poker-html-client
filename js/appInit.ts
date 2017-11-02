@@ -6,6 +6,7 @@ import { debugSettings } from "./debugsettings";
 import { registerExtenders } from "./extenders";
 import { _ } from "./languagemanager";
 import { ActionBlock } from "./table/actionBlock";
+import { exposeCardsConstants } from "./table/cardsHelper";
 import { TableView } from "./table/tableview";
 import { updateDefaultMessages } from "./validationConfiguration";
 // import { ChipItem } from "./table/chipItem";

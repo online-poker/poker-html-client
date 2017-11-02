@@ -4,6 +4,7 @@ import * as ko from "knockout";
 import { withCommas } from "../helpers";
 import { _ } from "../languagemanager";
 import * as timeService from "../timeservice";
+import { convertToCards, decodeCardsArray } from "./cardsHelper";
 import * as HoldemHand from "./hand";
 import { TableView } from "./tableview";
 
@@ -35,6 +36,11 @@ export class TablePlaceModel {
      * Cards which player has as displayed in the UI
      */
     public Cards: KnockoutObservableArray<string>;
+
+    /**
+     * Cards which would be displayed as currenly back cards
+     */
+    public BackCards: KnockoutObservableArray<string>;
 
     /*
      * Actual hand cards which player has in this game.
@@ -273,7 +279,7 @@ export class TablePlaceModel {
         this.cardsOverlayVisible(true);
     }
     public startDealCards() {
-        this.Cards(allBacksClasses);
+        this.Cards(this.BackCards());
         this.IsDealCards(true);
     }
     public setCards(cards: number[]) {
@@ -360,7 +366,7 @@ export class TablePlaceModel {
     }
     public startFoldAnimation() {
         this.IsFoldCards(true);
-        this.Cards(allBacksClasses);
+        this.Cards(this.BackCards());
     }
     public finishFoldAnimation() {
         this.Cards(null);

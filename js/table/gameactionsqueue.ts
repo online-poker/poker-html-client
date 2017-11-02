@@ -28,6 +28,13 @@ export class GameActionsQueue {
         this.tasks = [];
         this.counter = 0;
     }
+
+    /**
+     * Gets count of outstanding tasks.
+     */
+    public size() {
+        return this.tasks.length;
+    }
     /**
      * Inject worker to the beginning of tasks stack
      * @param worker QueueWorker The function which generated promise.

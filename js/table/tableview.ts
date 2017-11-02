@@ -1,6 +1,7 @@
 /* tslint:disable:no-bitwise */
 import * as ko from "knockout";
 import * as moment from "moment";
+import * as signals from "signals";
 import { Chat } from "../api/chat";
 import { Game } from "../api/game";
 import { Tournament } from "../api/tournament";
@@ -17,6 +18,8 @@ import { SlowInternetService } from "../services/slowinternetservice";
 import { settings } from "../settings";
 import * as timeService from "../timeservice";
 import { ActionBlock } from "./actionBlock";
+import { AnimationSettings } from "./animationsettings";
+import { allBacksClassesFourCards, allBacksClassesTwoCards, convertToCards, decodeCardsArray } from "./cardsHelper";
 import { GameActionsQueue } from "./gameactionsqueue";
 import * as HoldemHand from "./hand";
 import { HandHistory } from "./handhistory";
@@ -214,10 +217,10 @@ export class TableView {
     /* If of the last message Id starting from which messages could be displayed */
     public lastMessageId = 0;
 
+    public queue: GameActionsQueue;
     private animationSettings = AnimationSettings.getSettings();
     private sitting = false;
     private cardsReceived: boolean;
-    private queue: GameActionsQueue;
     private handHistory: HandHistory;
     private pauseDescription = ko.observable("");
     private pauseDescriptionHandle: number = null;
@@ -272,13 +275,20 @@ export class TableView {
         this.cardsVariantUp = ko.observable<boolean>(false);
         this.cardsVariantDown = ko.observable<boolean>(true);
 
-        this.gameType = ko.observable(1);
+        this.gameType = ko.observable();
         this.has2Cards = ko.computed(() => this.gameType() === 1);
         this.has4Cards = ko.computed(() => this.gameType() === 2);
 
         this.places = ko.computed(function () {
             return self.tablePlaces.places();
         }, this);
+        this.gameType.subscribe((gameType) => {
+            this.places().forEach((place) => {
+                place.BackCards(gameType === 1 ? allBacksClassesTwoCards : allBacksClassesFourCards);
+            });
+        });
+        // Trigger repopulation of Back cards on the places.
+        this.gameType(1);
 
         if (typeof window !== "undefined") {
             if (window.innerWidth >= 1024 || window.innerHeight >= 1024) {
@@ -520,6 +530,12 @@ export class TableView {
 
                 // No more then current money
                 basicRaise = Math.min(basicRaise, currentPlayer.Money() + currentPlayer.Bet());
+                const isPotLimitGame = self.gameType() === 2;
+                if (isPotLimitGame) {
+                    // No more then pot limit.
+                    const potLimit = 100;
+                    basicRaise = Math.min(basicRaise, potLimit);
+                }
 
                 // No more then money which other players has.
                 const maxAmountOfMoneyForOtherActivePlayers = self.maxAmountOfMoneyForOtherActivePlayers();

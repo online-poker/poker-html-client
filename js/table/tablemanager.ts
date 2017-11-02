@@ -1,5 +1,6 @@
 ﻿/* tslint:disable:no-bitwise no-use-before-declare */
 import * as ko from "knockout";
+import * as signals from "signals";
 import { Game } from "../api/game";
 import { Tournament, TournamentDefinition, TournamentPlayerStatus } from "../api/tournament";
 import { appConfig } from "../appconfig";
@@ -13,6 +14,7 @@ import * as broadcastService from "../services/broadcastservice";
 import { ConnectionWrapper } from "../services/connectionwrapper";
 import { settings } from "../settings";
 import * as timeService from "../timeservice";
+import { allNoneClassesFourCards, allNoneClassesTwoCards, cardsArray, decodeCardsArray } from "./cardsHelper";
 import { TableView } from "./tableview";
 import { TournamentView } from "./tournamentview";
 
@@ -571,8 +573,7 @@ class TableManager {
                 timePass, currentPlayerId, lastRaise, gameId, authenticated, actionsCount, frozen, opened,
                 pauseDate, lastMessageId, gameType);
 
-            allNoneClasses = gameType === 1 ? allNoneClassesTwoCards : allNoneClassesFourCards;
-            allBacksClasses = gameType === 1 ? allBacksClassesTwoCards : allBacksClassesFourCards;
+            const allNoneClasses = gameType === 1 ? allNoneClassesTwoCards : allNoneClassesFourCards;
             const cardsArr = cards == null ? allNoneClasses : cardsArray(cards);
             self.logDataEvent(`Table status info: TableId - ${tableId}, Game type: ${gameType} Players - `, players, players.length,
                 " Pots - ", pots, " Cards - ", cardsArr.join(" "));

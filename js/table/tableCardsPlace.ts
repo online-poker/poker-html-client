@@ -1,4 +1,5 @@
 ﻿import * as ko from "knockout";
+import { convertToCards } from "./cardsHelper";
 import * as runtimeSettings from "./runtimesettings";
 
 export class TableCardsPlace {

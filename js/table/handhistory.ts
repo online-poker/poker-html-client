@@ -1,4 +1,10 @@
-﻿import { _ } from "../languagemanager";
+﻿import * as ko from "knockout";
+import { _ } from "../languagemanager";
+import {
+    allBacksClassesFourCards,
+    allBacksClassesTwoCards,
+    cardValue as getCardValue,
+} from "./cardsHelper";
 import { TableMonitor } from "./tablemonitor";
 import { TableView } from "./tableview";
 
@@ -198,7 +204,7 @@ export class HandHistory extends TableMonitor {
     }
     public onOpenCards(cards: number[]) {
         this.rawCards = cards || null;
-        this.cards(cards.map((item) => cardValue(item)));
+        this.cards(cards.map((item) => getCardValue(item)));
     }
     public onFlop(card1: number, card2: number, card3: number) {
         const c1 = this.getCard(card1);
@@ -266,7 +272,7 @@ export class HandHistory extends TableMonitor {
     public onFinalTableCardsOpened(cards: number[]) {
         this.potentialCards = cards;
         const restCardsRaw = cards.slice(this.rawCards.length);
-        const restCards = restCardsRaw.map((item) => cardValue(item) + " hidden-card");
+        const restCards = restCardsRaw.map((item) => getCardValue(item) + " hidden-card");
         this.cards(this.cards().concat(restCards));
     }
     private getPlayer(playerId: number) {

@@ -1,6 +1,7 @@
 ﻿/// <reference path="../typings/signalr.d.ts" />
 
 import * as ko from "knockout";
+import * as signals from "signals";
 import { Game } from "../api/game";
 import { App } from "../app";
 import { appConfig } from "../appconfig";

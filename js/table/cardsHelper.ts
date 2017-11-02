@@ -3,23 +3,17 @@ const allNone = "//8=";
 const allBacksFourCards = "WzI1NF1bMjU0XVsyNTRdWzI1NF0=";
 const allNoneFourCards = "WzI1NV1bMjU1XVsyNTVdWzI1NV0=";
 
-let allBacksClasses = [];
-let allNoneClasses = [];
-const allBacksClassesFourCards = ["cards back", "cards back", "cards back", "cards back"];
-const allNoneClassesFourCards = ["cards none", "cards none", "cards none", "cards none"];
-const allBacksClassesTwoCards = ["cards back", "cards back"];
-const allNoneClassesTwoCards = ["cards none", "cards none"];
+export const allBacksClassesFourCards = ["cards back", "cards back", "cards back", "cards back"];
+export const allNoneClassesFourCards = ["cards none", "cards none", "cards none", "cards none"];
+export const allBacksClassesTwoCards = ["cards back", "cards back"];
+export const allNoneClassesTwoCards = ["cards none", "cards none"];
 
 // tslint:disable-next-line:no-unused-variable
-function exposeCardsConstants() {
+export function exposeCardsConstants() {
     // tslint:disable-next-line:no-string-literal
     window["allBacks"] = allBacks;
     // tslint:disable-next-line:no-string-literal
     window["allNone"] = allNone;
-    // tslint:disable-next-line:no-string-literal
-    window["allBacksClasses"] = allBacksClasses;
-    // tslint:disable-next-line:no-string-literal
-    window["allNoneClasses"] = allNoneClasses;
     // tslint:disable-next-line:no-string-literal
     window["allBacksClassesFourCards"] = allBacksClassesFourCards;
     // tslint:disable-next-line:no-string-literal
@@ -30,7 +24,7 @@ function exposeCardsConstants() {
     window["allNoneClassesTwoCards"] = allNoneClassesTwoCards;
 }
 
-function cardValue(card: number) {
+export function cardValue(card: number) {
     /// <signature>
     ///   <summary>Get card string</summary>
     ///   <param name="card" type="Number">A byte value of the card.</param>
@@ -129,8 +123,7 @@ function cardValue(card: number) {
  * Decode cards array from the base64 representation.
  * @param cardsData Cards data encoded as string.
  */
-// tslint:disable-next-line:no-unused-variable
-function decodeCardsArray(cardsData: string): number[] {
+export function decodeCardsArray(cardsData: string): number[] {
     if (cardsData === null || cardsData === null) {
         return null;
     }
@@ -169,8 +162,8 @@ function decodeCardsArray(cardsData: string): number[] {
 
     return cards;
 }
-// tslint:disable-next-line:no-unused-variable
-function convertToCards(data: number[]): string[] {
+
+export function convertToCards(data: number[]): string[] {
     if (data == null) {
         return null;
     }
@@ -179,8 +172,8 @@ function convertToCards(data: number[]): string[] {
         return cardValue(n);
     });
 }
-// tslint:disable-next-line:no-unused-variable
-function cardsArray(cardsData: string): string[] {
+
+export function cardsArray(cardsData: string): string[] {
     /// <signature>
     ///   <summary>Get card string</summary>
     ///   <param name="cards" type="Array">Array of the cards.</param>
