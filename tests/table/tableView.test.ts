@@ -10,6 +10,18 @@ import {
 
 declare var global: any;
 
+/**
+ * Drain all pending execution tasks in the queue.
+ * @param queue Queue which tasks should be drained.
+ */
+async function drainQueue(queue: GameActionsQueue) {
+    await queue.waitCurrentTask();
+    while (queue.size() > 0) {
+        await queue.execute();
+        await queue.waitCurrentTask();
+    }
+}
+
 function getSeatPlayer(seat: number, initialAmount: number): PlayerStatusInfo {
     return {
         Seat: seat,
@@ -64,8 +76,11 @@ describe("Table view", () => {
                 Money: 10000,
             }];
             const actions: GameActionStartInformation[] = [];
-            login("player1");
-            loginId(1);
+
+            // This use should be same for which test final assertion
+            // othervise max raise amount would be calculated incorectly.
+            login("player3");
+            loginId(3);
             const tableSatusPlayers = [
                 getSeatPlayer(1, 10000),
                 getSeatPlayer(2, 10000),
@@ -80,11 +95,7 @@ describe("Table view", () => {
             tableView.onPlayerCards(2, [1, 2]);
             tableView.onPlayerCards(3, [1, 2]);
             tableView.onPlayerCards(4, [1, 2]);
-            await tableView.queue.waitCurrentTask();
-            while (tableView.queue.size() > 0) {
-                await tableView.queue.execute();
-                await tableView.queue.waitCurrentTask();
-            }
+            await drainQueue(tableView.queue);
 
             const currentPlayer = tableView.currentPlayer();
             expect(currentPlayer).not.toBeNull();
