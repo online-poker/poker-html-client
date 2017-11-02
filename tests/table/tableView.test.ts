@@ -6,7 +6,7 @@ import {
 import { GameActionsQueue } from "../../js/table/gameactionsqueue";
 import {
     TableView,
-} from "../../js/table/tableView";
+} from "../../js/table/tableview";
 
 declare var global: any;
 
