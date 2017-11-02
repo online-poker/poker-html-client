@@ -22,18 +22,22 @@ function getSeatPlayer(seat: number, initialAmount: number): PlayerStatusInfo {
         Points: 0,
         Stars: 0,
         Status: 0,
-    }
+    };
 }
 
 describe("Table view", () => {
     describe("Pot limit", () => {
         beforeAll(() => {
             GameActionsQueue.waitDisabled = true;
+            GameActionsQueue.drainQueuePause = 0;
+            GameActionsQueue.logging = true;
         });
         afterAll(() => {
             GameActionsQueue.waitDisabled = false;
+            GameActionsQueue.drainQueuePause = 100;
+            GameActionsQueue.logging = false;
         });
-        it("Pot limit on preflop", () => {
+        it("Pot limit on preflop", async () => {
             global.messages = {
             };
             const tableView = new TableView(1, {
@@ -69,16 +73,24 @@ describe("Table view", () => {
                 getSeatPlayer(2, 10000),
                 getSeatPlayer(3, 10000),
                 getSeatPlayer(4, 10000),
-            ]
+            ];
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, null, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
             tableView.onBet(1, 2, 100, 2);
             tableView.onBet(2, 2, 200, 3);
-            tableView.queue.execute();
-            console.log(tableView.queue);
-            expect(tableView.queue.size()).toBe(0);
-            console.log(ko.toJSON(tableView.tablePlaces));
-            expect(tableView.currentPlayer()).not.toBeNull();
+            tableView.onPlayerCards(1, [1, 2]);
+            tableView.onPlayerCards(2, [1, 2]);
+            tableView.onPlayerCards(3, [1, 2]);
+            tableView.onPlayerCards(4, [1, 2]);
+            await tableView.queue.waitCurrentTask();
+            while (tableView.queue.size() > 0) {
+                await tableView.queue.execute();
+                await tableView.queue.waitCurrentTask();
+            }
+
+            const currentPlayer = tableView.currentPlayer();
+            expect(currentPlayer).not.toBeNull();
+            expect(currentPlayer.PlayerId()).toBe(3);
             expect(tableView.maximumRaiseAmount()).toBe(400);
         });
     });
