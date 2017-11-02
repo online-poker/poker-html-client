@@ -1,4 +1,6 @@
-﻿interface ChipStack {
+﻿import * as ko from "knockout";
+
+interface ChipStack {
     type: number;
     amount: number;
 }
@@ -9,7 +11,7 @@ interface ChipStackCalcIntermediate {
     index: number;
 }
 
-class ChipItem {
+export class ChipItem {
     public baseAmount: KnockoutObservable<number>;
     private maxStackCount = 5;
 
