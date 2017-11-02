@@ -1,3 +1,4 @@
+import * as signals from "signals";
 import * as authManager from "./authmanager";
 import * as commandManager from "./commandmanager";
 import { debugSettings } from "./debugsettings";
