@@ -397,14 +397,17 @@
     }
 
     /**
-     * Get hand strength for Texas Holdem
+     * Get hand strength for poker games
+     * @param cardsFromTable Cards take from table into combination
      * @param hand Hand representation for which strength should be converted.
      * @return Rank of the card across all possible hands.
      * @description This function could accept hands from 5 to 7 cards.
      */
-    export function getHoldemCardRank(hand: HandRepresentation): CardRank {
+    function getPokerCardRank(cardsFromTable: number, hand: HandRepresentation): CardRank {
         const totalCardsCount = hand.Cards.length;
-        const permutations = getCombinations(5, Math.min(7, totalCardsCount));
+        const permutations = cardsFromTable === 5
+            ? getCombinations(5, Math.min(7, totalCardsCount))
+            : getCombinations(3, 5);
         let maxRank = 0;
         let winIndex = 10;
         let winningScore = -1;
@@ -435,7 +438,14 @@
             };
 
             for (let i = 0; i < permutations.length; i++) {
-                const currentPermutation = permutations[i].map(applyHoleCardPermutations);
+                let currentPermutation = permutations[i].map(applyHoleCardPermutations);
+                if (cardsFromTable !== 5) {
+                    currentPermutation = currentPermutation.concat([
+                        holeCardPermutationSet[0] + 5,
+                        holeCardPermutationSet[1] + 5,
+                    ]);
+                }
+
                 const cs = applyPermutation5(hand.Cards, currentPermutation);
                 const ss = applyPermutation5(hand.Suits, currentPermutation);
 
@@ -465,13 +475,23 @@
     }
 
     /**
+     * Get hand strength for Texas Holdem
+     * @param hand Hand representation for which strength should be converted.
+     * @return Rank of the card across all possible hands.
+     * @description This function could accept hands from 5 to 7 cards.
+     */
+    export function getHoldemCardRank(hand: HandRepresentation): CardRank {
+        return getPokerCardRank(5, hand);
+    }
+
+    /**
      * Get hand strength for Omaha
      * @param hand Hand representation for which strength should be converted.
      * @return Rank of the card across all possible hands.
      * @description This function could accept hands from 5 to 7 cards.
      */
     export function getOmahaCardRank(hand: HandRepresentation): CardRank {
-        return getHoldemCardRank(hand);
+        return getPokerCardRank(3, hand);
     }
 
     /**
