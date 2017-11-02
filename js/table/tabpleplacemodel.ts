@@ -170,6 +170,7 @@ export class TablePlaceModel {
         const cardClasses = convertToCards(cards);
         this.RawCards = ko.observableArray(cards);
         this.Cards = ko.observableArray(cardClasses);
+        this.BackCards = ko.observableArray(null);
         this.HandCards = ko.observableArray(cardClasses);
         this.FoldedCards = ko.observableArray<string>(null);
         this.Stars = ko.observable(data.Stars);
