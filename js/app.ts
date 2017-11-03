@@ -1,3 +1,4 @@
+import * as signals from "signals";
 import * as authManager from "./authmanager";
 import * as commandManager from "./commandmanager";
 import { debugSettings } from "./debugsettings";
@@ -43,6 +44,7 @@ import * as broadcastService from "./services/broadcastservice";
 import { uiManager, UIManager } from "./services/uimanager";
 import { settings } from "./settings";
 import { TabBar } from "./tabbar";
+import { AnimationSettings } from "./table/animationsettings";
 import * as runtimeSettings from "./table/runtimesettings";
 import { tableManager } from "./table/tablemanager";
 import * as timeService from "./timeservice";

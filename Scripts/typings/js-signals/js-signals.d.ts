@@ -3,7 +3,10 @@
 // Definitions by: Diullei Gomes <https://github.com/diullei>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
-declare var signals: SignalWrapper;
+declare module "signals" {
+    var signals: SignalWrapper;    
+    export = signals;
+}
 
 interface SignalWrapper {
     Signal: Signal

@@ -1,6 +1,7 @@
 /* tslint:disable:no-bitwise */
 import * as ko from "knockout";
 import * as moment from "moment";
+import * as signals from "signals";
 import { Chat } from "../api/chat";
 import { Game } from "../api/game";
 import { Tournament } from "../api/tournament";
@@ -17,6 +18,8 @@ import { SlowInternetService } from "../services/slowinternetservice";
 import { settings } from "../settings";
 import * as timeService from "../timeservice";
 import { ActionBlock } from "./actionBlock";
+import { AnimationSettings } from "./animationsettings";
+import { allBacksClassesFourCards, allBacksClassesTwoCards, convertToCards, decodeCardsArray } from "./cardsHelper";
 import { GameActionsQueue } from "./gameactionsqueue";
 import * as HoldemHand from "./hand";
 import { HandHistory } from "./handhistory";
@@ -31,6 +34,10 @@ import { TournamentView } from "./tournamentview";
 declare let apiHost: string;
 declare let host: string;
 declare let app: App;
+
+function getBackCardsFromGameType(gameType: number) {
+    return gameType === 1 ? allBacksClassesTwoCards : allBacksClassesFourCards;
+}
 
 export class TableView {
     public tableName: KnockoutObservable<string>;
@@ -214,10 +221,10 @@ export class TableView {
     /* If of the last message Id starting from which messages could be displayed */
     public lastMessageId = 0;
 
+    public queue: GameActionsQueue;
     private animationSettings = AnimationSettings.getSettings();
     private sitting = false;
     private cardsReceived: boolean;
-    private queue: GameActionsQueue;
     private handHistory: HandHistory;
     private pauseDescription = ko.observable("");
     private pauseDescriptionHandle: number = null;
@@ -272,13 +279,20 @@ export class TableView {
         this.cardsVariantUp = ko.observable<boolean>(false);
         this.cardsVariantDown = ko.observable<boolean>(true);
 
-        this.gameType = ko.observable(1);
+        this.gameType = ko.observable();
         this.has2Cards = ko.computed(() => this.gameType() === 1);
         this.has4Cards = ko.computed(() => this.gameType() === 2);
 
         this.places = ko.computed(function () {
             return self.tablePlaces.places();
         }, this);
+        this.gameType.subscribe((gameType) => {
+            this.places().forEach((place) => {
+                place.BackCards(getBackCardsFromGameType(gameType));
+            });
+        });
+        // Trigger repopulation of Back cards on the places.
+        this.gameType(1);
 
         if (typeof window !== "undefined") {
             if (window.innerWidth >= 1024 || window.innerHeight >= 1024) {
@@ -520,6 +534,12 @@ export class TableView {
 
                 // No more then current money
                 basicRaise = Math.min(basicRaise, currentPlayer.Money() + currentPlayer.Bet());
+                const isPotLimitGame = self.gameType() === 2;
+                if (isPotLimitGame) {
+                    // No more then pot limit.
+                    const potLimit = 100;
+                    basicRaise = Math.min(basicRaise, potLimit);
+                }
 
                 // No more then money which other players has.
                 const maxAmountOfMoneyForOtherActivePlayers = self.maxAmountOfMoneyForOtherActivePlayers();
@@ -602,13 +622,17 @@ export class TableView {
                 });
             }
         });
-        this.maximumRaiseAmount = ko.computed(function () {
-            const currentPlayer = self.myPlayer();
+        this.maximumRaiseAmount = ko.computed(() => {
+            const currentPlayer = this.myPlayer();
             if (currentPlayer === null) {
                 return null;
             }
 
-            const max = self.maxAmountOfMoneyForOtherActivePlayers();
+            let max = self.maxAmountOfMoneyForOtherActivePlayers();
+            if (this.gameType() === 2) {
+                max = Math.min(max, this.actionBlock.getPot());
+            }
+
             const bet = currentPlayer.Bet();
             const money = currentPlayer.Money();
             return Math.min(money + bet, max) - bet;
@@ -1094,6 +1118,7 @@ export class TableView {
             Stars: stars,
             Status: initialStatus,
         });
+        playerModel.BackCards(getBackCardsFromGameType(this.gameType()));
         this.tablePlaces.sit(seat, playerModel);
         this.refreshPlaces();
         this.actionBlock.updateNeedBB();
@@ -1208,7 +1233,7 @@ export class TableView {
      * @param gameType Type of the game which starts on the table.
      */
     public onTableStatusInfo(
-        players: PlayerStatusInfo[], pots: number[], cards: string, dealerSeat: number, buyIn: number,
+        players: PlayerStatusInfo[], pots: number[] | null, cards: string, dealerSeat: number, buyIn: number,
         baseBuyIn: number, leaveTime, timePass: number, currentPlayerId: number, lastRaise: number, gameId: number,
         authenticated: boolean, actionsCount: number, frozen: boolean, opened: boolean, pauseDate: number,
         lastMessageId: number, gameType: number) {
@@ -1235,6 +1260,11 @@ export class TableView {
             this.gameStarted(!gameFinished);
             this.prizesDistributed(this.gameFinished());
             this.tablePlaces.setPlayers(players);
+            this.tablePlaces.places().forEach((place) => {
+                if (place) {
+                    place.BackCards(getBackCardsFromGameType(gameType));
+                }
+            });
             if (this.activePlayersCount() <= 1) {
                 this.gameFinished(true);
             }
@@ -1254,7 +1284,7 @@ export class TableView {
             this.setCurrent(currentPlayerId);
             this.minimalPlayerBuyIn(buyIn);
             this.minimalBuyIn(baseBuyIn);
-            this.pots(pots);
+            this.pots(pots || []);
             this.refreshPlaces();
             this.clearTimer();
             this.startTimer(timePass);

@@ -1,4 +1,4 @@
-﻿class AnimationSettings {
+﻿export class AnimationSettings {
 
     public static platform = "default";
 

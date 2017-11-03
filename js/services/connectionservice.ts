@@ -1,5 +1,6 @@
 ﻿declare var baseUrl: string;
 
+import * as signals from "signals";
 import { debugSettings } from "../debugsettings";
 import { CancelToken } from "./cancelToken";
 import { ConnectionWrapper } from "./connectionwrapper";

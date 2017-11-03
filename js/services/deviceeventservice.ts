@@ -1,4 +1,5 @@
-﻿import { debugSettings } from "../debugsettings";
+﻿import * as signals from "signals";
+import { debugSettings } from "../debugsettings";
 
 /**
  * Service which provides ability to subscribe on the

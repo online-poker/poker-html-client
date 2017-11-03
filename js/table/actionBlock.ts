@@ -1,6 +1,7 @@
 ﻿/// <reference path="../typings/signalr.d.ts" />
 
 import * as ko from "knockout";
+import * as signals from "signals";
 import { Game } from "../api/game";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
@@ -618,7 +619,8 @@ export class ActionBlock {
         }
     }
     public updateBounds() {
-        if ($(".slider-line").length > 0) {
+        // tslint:disable-next-line:no-string-literal
+        if (window["$"] && $(".slider-line").length > 0) {
             const lineWidth = $(".slider-line").width();
             const handleWidth = $(".slider-handle").width();
             const adj = -5;
@@ -762,10 +764,7 @@ export class ActionBlock {
             this.amountSupported(-1);
         }
     }
-    public updateAdditionalButtons() {
-        const threebbAmountOriginal = this.callAmount() + (3 * this.tableView.bigBlind());
-        const threebbAmount = this.tableSlider.withinRange(threebbAmountOriginal);
-
+    public getPot(): number {
         let potAmountOriginal = this.tableView.pots().reduce(function(pv, v) {
             return pv + v;
         }, 0); // + this.checkOrCallAmount();
@@ -781,6 +780,13 @@ export class ActionBlock {
         // Since we calculate pot amount in the last calculations
         // we have to add current max bet.
         potAmountOriginal += this.tableView.maximumBet();
+        return potAmountOriginal;
+    }
+    public updateAdditionalButtons() {
+        const threebbAmountOriginal = this.callAmount() + (3 * this.tableView.bigBlind());
+        const threebbAmount = this.tableSlider.withinRange(threebbAmountOriginal);
+
+        const potAmountOriginal = this.getPot();
         const potAmount = this.tableSlider.withinRange(potAmountOriginal);
 
         const maxMoneyAmount = this.tableSlider.maximum();

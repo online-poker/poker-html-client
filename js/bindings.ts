@@ -6,6 +6,7 @@ import { App } from "./app";
 import { debugSettings } from "./debugsettings";
 import { withCommas } from "./helpers";
 import { _ } from "./languagemanager";
+import { ChipItem } from "./table/chipitem";
 import * as timeService from "./timeservice";
 
 declare var app: App;

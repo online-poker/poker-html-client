@@ -5,6 +5,7 @@ type QueueWorker = () => Promise<any>;
 export class GameActionsQueue {
     public static logging: boolean = false;
     public static waitDisabled = false;
+    public static drainQueuePause = 100;
 
     /**
      * List of pending tasks
@@ -19,7 +20,9 @@ export class GameActionsQueue {
     /**
      * Executing flag.
      */
-    private isExecuting: boolean;
+    private isExecuting: boolean = false;
+
+    private executingTask: Promise<any>;
 
     /**
      * Initializes a new instance of the GameActionsQueue class.
@@ -27,6 +30,13 @@ export class GameActionsQueue {
     constructor() {
         this.tasks = [];
         this.counter = 0;
+    }
+
+    /**
+     * Gets count of outstanding tasks.
+     */
+    public size() {
+        return this.tasks.length;
     }
     /**
      * Inject worker to the beginning of tasks stack
@@ -108,7 +118,13 @@ export class GameActionsQueue {
      */
     public injectCallback(callback: () => void) {
         this.inject(() => {
-            return Promise.resolve().then(() => callback());
+            return Promise.resolve().then(() => {
+                try {
+                    callback();
+                } catch {
+                    console.error("Failed to executed callback");
+                }
+            });
         });
     }
 
@@ -130,6 +146,15 @@ export class GameActionsQueue {
     }
 
     /**
+     * Wait for current task completition if any is running.
+     */
+    public async waitCurrentTask() {
+        if (this.executingTask) {
+            await this.executingTask;
+        }
+    }
+
+    /**
      * Starts execution chain.
      */
     public async execute() {
@@ -147,22 +172,29 @@ export class GameActionsQueue {
         const worker = this.tasks.shift();
         if (worker === null) {
             this.error("Worker is null");
+            return;
         }
 
         this.counter++;
         this.isExecuting = true;
-        const task = worker();
-        if (task === null) {
+        this.executingTask = worker();
+        if (this.executingTask === null || this.executingTask === undefined) {
             this.error("Task is null");
+        } else {
+            this.log("Executing task with id: " + this.counter.toString());
+            await this.executingTask;
+            this.executingTask = null;
         }
 
-        this.log("Executing task with id: " + this.counter.toString());
-        await task;
-        self.isExecuting = false;
-        self.log("Finished task with id: " + self.counter.toString());
-        setTimeout(function () {
-            self.execute();
-        }, 100);
+        this.isExecuting = false;
+        this.log("Finished task with id: " + this.counter.toString());
+        if (GameActionsQueue.drainQueuePause > 0) {
+            setTimeout(() => {
+                this.execute();
+            }, GameActionsQueue.drainQueuePause);
+        } else {
+            await this.execute();
+        }
     }
 
     private log(message?: any, ...optionalParams: any[]) {
