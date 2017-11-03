@@ -3,6 +3,7 @@ import {
     login,
     loginId,
 } from "../../js/authmanager";
+import { allBacksClassesFourCards } from "../../js/table/cardsHelper";
 import { GameActionsQueue } from "../../js/table/gameactionsqueue";
 import {
     TableView,
@@ -352,7 +353,35 @@ describe("Table view", () => {
             expect(currentPlayer.Bet()).toBe(200);
             expect(tableView.maximumRaiseAmount()).toBe(2800);
         });
-        it("Pot limit calculation when open table without game", async () => {
+        it("Cards shown in the game", async () => {
+            global.messages = {
+            };
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            });
+            login("player1");
+            loginId(1);
+            tableView.onTableStatusInfo([], null, null, 4, 100, 10, null, null, null, null, null, true, 0, false, true, null, 0, 2);
+            tableView.onSit(1, 1, "player1", 10000, "", 1, 1);
+
+            await tableView.queue.waitCurrentTask();
+            while (tableView.queue.size() > 0) {
+                await tableView.queue.execute();
+                await tableView.queue.waitCurrentTask();
+            }
+
+            expect(tableView.tablePlaces.place1().BackCards()).toEqual(allBacksClassesFourCards);
+        });
+        it("Cards shown after save", async () => {
             global.messages = {
             };
             const tableView = new TableView(1, {
@@ -382,6 +411,8 @@ describe("Table view", () => {
                 await tableView.queue.execute();
                 await tableView.queue.waitCurrentTask();
             }
+
+            expect(tableView.tablePlaces.place1().BackCards()).toEqual(allBacksClassesFourCards);
         });
     });
 });

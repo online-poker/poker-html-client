@@ -35,6 +35,10 @@ declare let apiHost: string;
 declare let host: string;
 declare let app: App;
 
+function getBackCardsFromGameType(gameType: number) {
+    return gameType === 1 ? allBacksClassesTwoCards : allBacksClassesFourCards;
+}
+
 export class TableView {
     public tableName: KnockoutObservable<string>;
 
@@ -284,7 +288,7 @@ export class TableView {
         }, this);
         this.gameType.subscribe((gameType) => {
             this.places().forEach((place) => {
-                place.BackCards(gameType === 1 ? allBacksClassesTwoCards : allBacksClassesFourCards);
+                place.BackCards(getBackCardsFromGameType(gameType));
             });
         });
         // Trigger repopulation of Back cards on the places.
@@ -1114,6 +1118,7 @@ export class TableView {
             Stars: stars,
             Status: initialStatus,
         });
+        playerModel.BackCards(getBackCardsFromGameType(this.gameType()));
         this.tablePlaces.sit(seat, playerModel);
         this.refreshPlaces();
         this.actionBlock.updateNeedBB();
@@ -1255,6 +1260,11 @@ export class TableView {
             this.gameStarted(!gameFinished);
             this.prizesDistributed(this.gameFinished());
             this.tablePlaces.setPlayers(players);
+            this.tablePlaces.places().forEach((place) => {
+                if (place) {
+                    place.BackCards(getBackCardsFromGameType(gameType));
+                }
+            });
             if (this.activePlayersCount() <= 1) {
                 this.gameFinished(true);
             }
