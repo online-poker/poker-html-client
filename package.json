@@ -33,6 +33,9 @@
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "setupFiles": [
+      "./tests/jest-setup.js"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -70,11 +73,12 @@
     "@types/moment": "^2.13.0",
     "@types/requirejs": "^2.1.31",
     "@types/signalr": "^2.2.35",
-    "poker-server-api": "0.0.2",
-    "tslint": "^5.8.0",
-    "typescript": "^2.5.3",
+    "isomorphic-fetch": "^2.2.1",
     "knockout": "^3.4.2",
-    "signals": "^1.0.0"
+    "poker-server-api": "0.0.2",
+    "signals": "^1.0.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.1"
   },
   "dependencies": {
     "jest": "^21.2.1",

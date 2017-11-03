@@ -1,18 +1,18 @@
+
 export function getRequestInit(): RequestInit {
+    const defaultHeaders = new Headers();
+    defaultHeaders.append("Content-Type", "application/json");
+
     if (authToken) {
+        defaultHeaders.append("X-AuthToken", authToken);
         return {
             credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                "X-AuthToken": authToken,
-            },
+            headers: defaultHeaders,
         };
     }
 
     return {
-        headers: {
-            "Content-Type": "application/json",
-        },
+        headers: defaultHeaders,
     };
 }
 

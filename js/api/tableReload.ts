@@ -32,24 +32,20 @@ interface TableReloadInformation {
     emergencyReload: boolean;
 }
 
-const get = {
-    headers: {
-        "Content-Type": "application/json",
-    },
+const defaultHeaders = new Headers();
+defaultHeaders.append("Content-Type", "application/json");
+const get: RequestInit = {
+    headers: defaultHeaders,
 };
 
 const put = {
     method: "PUT",
-    headers: {
-        "Content-Type": "application/json",
-    },
+    headers: defaultHeaders,
 };
 
 const del = {
     method: "DELETE",
-    headers: {
-        "Content-Type": "application/json",
-    },
+    headers: defaultHeaders,
 };
 
 export class TableReload {
