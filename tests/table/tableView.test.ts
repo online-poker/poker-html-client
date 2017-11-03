@@ -352,5 +352,36 @@ describe("Table view", () => {
             expect(currentPlayer.Bet()).toBe(200);
             expect(tableView.maximumRaiseAmount()).toBe(2800);
         });
+        it("Pot limit calculation when open table without game", async () => {
+            global.messages = {
+            };
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            });
+            login("player1");
+            loginId(1);
+            const tableSatusPlayers = [
+                getSeatPlayer(1, 10000),
+                getSeatPlayer(2, 10000),
+                getSeatPlayer(3, 10000),
+                getSeatPlayer(4, 10000),
+            ];
+            tableView.onTableStatusInfo(tableSatusPlayers, null, null, 4, 100, 10, null, null, null, null, null, true, 0, false, true, null, 0, 2);
+
+            await tableView.queue.waitCurrentTask();
+            while (tableView.queue.size() > 0) {
+                await tableView.queue.execute();
+                await tableView.queue.waitCurrentTask();
+            }
+        });
     });
 });

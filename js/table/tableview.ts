@@ -1228,7 +1228,7 @@ export class TableView {
      * @param gameType Type of the game which starts on the table.
      */
     public onTableStatusInfo(
-        players: PlayerStatusInfo[], pots: number[], cards: string, dealerSeat: number, buyIn: number,
+        players: PlayerStatusInfo[], pots: number[] | null, cards: string, dealerSeat: number, buyIn: number,
         baseBuyIn: number, leaveTime, timePass: number, currentPlayerId: number, lastRaise: number, gameId: number,
         authenticated: boolean, actionsCount: number, frozen: boolean, opened: boolean, pauseDate: number,
         lastMessageId: number, gameType: number) {
@@ -1274,7 +1274,7 @@ export class TableView {
             this.setCurrent(currentPlayerId);
             this.minimalPlayerBuyIn(buyIn);
             this.minimalBuyIn(baseBuyIn);
-            this.pots(pots);
+            this.pots(pots || []);
             this.refreshPlaces();
             this.clearTimer();
             this.startTimer(timePass);
