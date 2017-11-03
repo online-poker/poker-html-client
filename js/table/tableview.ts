@@ -618,13 +618,17 @@ export class TableView {
                 });
             }
         });
-        this.maximumRaiseAmount = ko.computed(function () {
-            const currentPlayer = self.myPlayer();
+        this.maximumRaiseAmount = ko.computed(() => {
+            const currentPlayer = this.myPlayer();
             if (currentPlayer === null) {
                 return null;
             }
 
-            const max = self.maxAmountOfMoneyForOtherActivePlayers();
+            let max = self.maxAmountOfMoneyForOtherActivePlayers();
+            if (this.gameType() === 2) {
+                max = Math.min(max, this.actionBlock.getPot());
+            }
+
             const bet = currentPlayer.Bet();
             const money = currentPlayer.Money();
             return Math.min(money + bet, max) - bet;

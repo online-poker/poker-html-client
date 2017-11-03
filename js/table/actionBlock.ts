@@ -764,10 +764,7 @@ export class ActionBlock {
             this.amountSupported(-1);
         }
     }
-    public updateAdditionalButtons() {
-        const threebbAmountOriginal = this.callAmount() + (3 * this.tableView.bigBlind());
-        const threebbAmount = this.tableSlider.withinRange(threebbAmountOriginal);
-
+    public getPot(): number {
         let potAmountOriginal = this.tableView.pots().reduce(function(pv, v) {
             return pv + v;
         }, 0); // + this.checkOrCallAmount();
@@ -783,6 +780,13 @@ export class ActionBlock {
         // Since we calculate pot amount in the last calculations
         // we have to add current max bet.
         potAmountOriginal += this.tableView.maximumBet();
+        return potAmountOriginal;
+    }
+    public updateAdditionalButtons() {
+        const threebbAmountOriginal = this.callAmount() + (3 * this.tableView.bigBlind());
+        const threebbAmount = this.tableSlider.withinRange(threebbAmountOriginal);
+
+        const potAmountOriginal = this.getPot();
         const potAmount = this.tableSlider.withinRange(potAmountOriginal);
 
         const maxMoneyAmount = this.tableSlider.maximum();
