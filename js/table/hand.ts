@@ -299,7 +299,7 @@
         return result;
     }
 
-    export function getPokerScore(cards: number[]) {
+    function getPokerScore(cards: number[], isStraight: boolean) {
         const tempCards = cards.slice(0);
         const cardsCount = {};
         for (let i = 0; i < 5; i++) {
@@ -318,6 +318,15 @@
 
             return right - left;
         });
+
+        // If this is lower straight with aces.
+        if (isStraight && tempCards[0] === 14 && tempCards[1] !== 13) {
+            return tempCards [1] << 16
+                | tempCards[2] << 12
+                | tempCards[3] << 8
+                | tempCards[4] << 4
+                | tempCards[0];
+        }
 
         return tempCards[0] << 16
             | tempCards[1] << 12
@@ -450,15 +459,15 @@
                 const ss = applyPermutation5(hand.Suits, currentPermutation);
 
                 const index = getHandType({ Cards: cs, Suits: ss });
-
+                const isStraight = index === 1 || index === 2;
                 if (handTypeRanks[index] > maxRank) {
                     maxRank = handTypeRanks[index];
                     winIndex = index;
                     wci = currentPermutation.slice(0);
-                    winningScore = getPokerScore(cs);
+                    winningScore = getPokerScore(cs, isStraight);
                 } else if (handTypeRanks[index] === maxRank) {
                     // If by chance we have a tie, find the best one
-                    const score1 = getPokerScore(cs);
+                    const score1 = getPokerScore(cs, isStraight);
                     if (score1 > winningScore) {
                         wci = currentPermutation.slice(0);
                         winningScore = score1;

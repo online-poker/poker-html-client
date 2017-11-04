@@ -117,6 +117,15 @@ describe("Get card rank", () => {
             expect(handTypeNames[cardRank.HandType]).toBe("High Card");
             expect(cardRank.WinnerCardsSet).toEqual([ 0, 1, 3, 5, 6 ]);
         });
+        it("Straight lower and high", () => {
+            const poket = "A♠ 5♠";
+            const tableCards = "3♣ 4♣ 7♣ 6♣ 2♦";
+            const hand = parseHand(tableCards + " " + poket);
+            expect(hand.Status).toBe(HandParseResultStatus.Ok);
+            const cardRank = getCardRank(hand.Hand);
+            expect(handTypeNames[cardRank.HandType]).toBe("Straight");
+            expect(cardRank.WinnerCardsSet).toEqual([ 0, 1, 2, 3, 6 ]);
+        });
     });
 
     describe("Omaha", () => {
@@ -155,6 +164,15 @@ describe("Get card rank", () => {
             const cardRank = getCardRank(hand.Hand);
             expect(handTypeNames[cardRank.HandType]).toBe("2 Pair");
             expect(cardRank.WinnerCardsSet).toEqual([ 2, 3, 4, 7, 8 ]);
+        });
+        it("Streight low and high at same hand", () => {
+            const poket = "5♦ A♠ 5♠ 6♠";
+            const tableCards = "3♣ 4♣ 7♣ 8♣ 2♦";
+            const hand = parseHand(tableCards + " " + poket);
+            expect(hand.Status).toBe(HandParseResultStatus.Ok);
+            const cardRank = getCardRank(hand.Hand);
+            expect(handTypeNames[cardRank.HandType]).toBe("Straight");
+            expect(cardRank.WinnerCardsSet).toEqual([ 1, 2, 3, 5, 8 ]);
         });
     });
 });
