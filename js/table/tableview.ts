@@ -290,6 +290,7 @@ export class TableView {
             this.places().forEach((place) => {
                 place.BackCards(getBackCardsFromGameType(gameType));
             });
+            this.actionBlock.isPotLimitGame(gameType !== 1);
         });
         // Trigger repopulation of Back cards on the places.
         this.gameType(1);

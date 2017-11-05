@@ -186,6 +186,11 @@ export class ActionBlock {
     public raiseBlockVisible: KnockoutComputed<boolean>;
 
     /**
+     * Indicate whether this action block in pot-limit mode.
+     */
+    public isPotLimitGame = ko.observable(false);
+
+    /**
      * Value indicating where game is closed.
      */
     public gameClosed = ko.observable(false);
@@ -789,13 +794,18 @@ export class ActionBlock {
         const potAmountOriginal = this.getPot();
         const potAmount = this.tableSlider.withinRange(potAmountOriginal);
 
+        const halfpotAmountOriginal = Math.round(this.getPot() / 2);
+        const halfpotAmount = this.tableSlider.withinRange(halfpotAmountOriginal);
+
         const maxMoneyAmount = this.tableSlider.maximum();
 
-        this.button1Amount(threebbAmount);
+        const button1Value = this.isPotLimitGame() ? halfpotAmount : threebbAmount;
+        this.button1Amount(button1Value);
         this.button2Amount(potAmount);
         this.button3Amount(maxMoneyAmount);
 
-        this.button1Caption(_("table.halfpot").replace("#amount", withCommas(this.button1Amount().toFixed(), ",")));
+        const button1Template = this.isPotLimitGame() ? "table.halfpot" : "table.threebb";
+        this.button1Caption(_(button1Template).replace("#amount", withCommas(this.button1Amount().toFixed(), ",")));
         this.button2Caption(_("table.pot").replace("#amount", withCommas(this.button2Amount().toFixed(), ",")));
         const player = this.myPlayer();
         let playerMoney = this.playerMoney();
@@ -809,9 +819,10 @@ export class ActionBlock {
             this.button3Caption(_("table.raise").replace("#amount", withCommas(this.button3Amount().toFixed(), ",")));
         }
 
-        this.button1Visible(this.tableSlider.isWithinRange(threebbAmountOriginal));
+        const button1ValueOriginal = this.isPotLimitGame() ? halfpotAmountOriginal : threebbAmountOriginal;
+        this.button1Visible(this.tableSlider.isWithinRange(button1ValueOriginal));
         this.button2Visible(this.tableSlider.isWithinRange(potAmountOriginal));
-        this.button3Visible(true);
+        this.button3Visible(!this.isPotLimitGame());
     }
     /**
      * Updates block visibility.
