@@ -1,8 +1,10 @@
+/** global process */
 import * as ko from "knockout";
 import {
     login,
     loginId,
 } from "../../js/authmanager";
+import { debugSettings } from "../../js/debugsettings";
 import { allBacksClassesFourCards } from "../../js/table/cardsHelper";
 import { GameActionsQueue } from "../../js/table/gameactionsqueue";
 import {
@@ -32,10 +34,12 @@ describe("Table view", () => {
         beforeAll(() => {
             GameActionsQueue.waitDisabled = true;
             GameActionsQueue.drainQueuePause = 0;
+            debugSettings.tableView.trace = false;
         });
         afterAll(() => {
             GameActionsQueue.waitDisabled = false;
             GameActionsQueue.drainQueuePause = 100;
+            debugSettings.tableView.trace = false;
         });
         it("Pot limit on preflop", async () => {
             global.messages = {
@@ -98,6 +102,7 @@ describe("Table view", () => {
         beforeAll(() => {
             GameActionsQueue.waitDisabled = true;
             GameActionsQueue.drainQueuePause = 0;
+            debugSettings.tableView.trace = false;
         });
         afterAll(() => {
             GameActionsQueue.waitDisabled = false;

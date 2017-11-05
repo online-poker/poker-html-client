@@ -799,18 +799,36 @@ export class ActionBlock {
 
         const maxMoneyAmount = this.tableSlider.maximum();
 
+        const button1ValueOriginal = this.isPotLimitGame() ? halfpotAmountOriginal : threebbAmountOriginal;
         const button1Value = this.isPotLimitGame() ? halfpotAmount : threebbAmount;
         this.button1Amount(button1Value);
         this.button2Amount(potAmount);
-        this.button3Amount(maxMoneyAmount);
+        this.button3Amount(this.tableSlider.withinRange(maxMoneyAmount));
 
-        const button1Template = this.isPotLimitGame() ? "table.halfpot" : "table.threebb";
-        this.button1Caption(_(button1Template).replace("#amount", withCommas(this.button1Amount().toFixed(), ",")));
-        this.button2Caption(_("table.pot").replace("#amount", withCommas(this.button2Amount().toFixed(), ",")));
         const player = this.myPlayer();
         let playerMoney = this.playerMoney();
         if (player != null) {
             playerMoney += player.Bet();
+        }
+
+        let allInRequired = !this.isPotLimitGame();
+        const button1HasAllIn = playerMoney <= button1Value;
+        if (button1HasAllIn) {
+            allInRequired = true;
+            this.button1Caption(_("table.allin").replace("#amount", withCommas(playerMoney.toFixed(), ",")));
+        } else {
+            const button1Template = this.isPotLimitGame()
+                ? "table.halfpot"
+                : "table.threebb";
+            this.button1Caption(_(button1Template).replace("#amount", withCommas(this.button1Amount().toFixed(), ",")));
+        }
+
+        const button2HasAllIn = playerMoney <= potAmount;
+        if (button2HasAllIn) {
+            allInRequired = true;
+            this.button2Caption(_("table.allin").replace("#amount", withCommas(playerMoney.toFixed(), ",")));
+        } else {
+            this.button2Caption(_("table.pot").replace("#amount", withCommas(this.button2Amount().toFixed(), ",")));
         }
 
         if (playerMoney <= this.maxAmountOfMoneyForOtherActivePlayers()) {
@@ -819,10 +837,19 @@ export class ActionBlock {
             this.button3Caption(_("table.raise").replace("#amount", withCommas(this.button3Amount().toFixed(), ",")));
         }
 
-        const button1ValueOriginal = this.isPotLimitGame() ? halfpotAmountOriginal : threebbAmountOriginal;
-        this.button1Visible(this.tableSlider.isWithinRange(button1ValueOriginal));
-        this.button2Visible(this.tableSlider.isWithinRange(potAmountOriginal));
-        this.button3Visible(!this.isPotLimitGame());
+        const button1EnoughMoney = this.tableSlider.isWithinRange(button1ValueOriginal);
+        this.button1Visible(button1EnoughMoney);
+        const button2EnoughMoney = this.tableSlider.isWithinRange(potAmountOriginal);
+        this.button2Visible(button2EnoughMoney);
+        if (button1HasAllIn || button2HasAllIn) {
+            if (button1ValueOriginal < potAmountOriginal) {
+                this.button3Visible(!button1EnoughMoney && !button2EnoughMoney);
+            } else {
+                this.button3Visible(!button2EnoughMoney);
+            }
+        } else {
+            this.button3Visible(!this.isPotLimitGame());
+        }
     }
     /**
      * Updates block visibility.
