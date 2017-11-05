@@ -158,6 +158,7 @@ describe("Table view", () => {
             const currentPlayer = tableView.currentPlayer();
             expect(currentPlayer).not.toBeNull();
             expect(currentPlayer.PlayerId()).toBe(4);
+            expect(tableView.minimumRaiseAmount()).toBe(400);
             expect(tableView.maximumRaiseAmount()).toBe(900);
         });
         it("Pot limit after raise", async () => {
@@ -215,6 +216,7 @@ describe("Table view", () => {
             const currentPlayer = tableView.currentPlayer();
             expect(currentPlayer).not.toBeNull();
             expect(currentPlayer.PlayerId()).toBe(4);
+            expect(tableView.minimumRaiseAmount()).toBe(600);
             expect(tableView.maximumRaiseAmount()).toBe(1200);
         });
         it("Pot limit after raise and call", async () => {
@@ -278,6 +280,7 @@ describe("Table view", () => {
             // not take into acount current bet which added to that value later.
             // Thus in this test value reduced by current player bet.
             expect(currentPlayer.Bet()).toBe(100);
+            expect(tableView.minimumRaiseAmount()).toBe(1200);
             expect(tableView.maximumRaiseAmount()).toBe(2500);
         });
         it("Pot limit after flop", async () => {
@@ -351,6 +354,7 @@ describe("Table view", () => {
             // not take into acount current bet which added to that value later.
             // Thus in this test value reduced by current player bet.
             expect(currentPlayer.Bet()).toBe(200);
+            expect(tableView.minimumRaiseAmount()).toBe(1000);
             expect(tableView.maximumRaiseAmount()).toBe(2800);
         });
         it("Cards shown in the game", async () => {
