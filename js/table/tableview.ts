@@ -534,12 +534,6 @@ export class TableView {
 
                 // No more then current money
                 basicRaise = Math.min(basicRaise, currentPlayer.Money() + currentPlayer.Bet());
-                const isPotLimitGame = self.gameType() === 2;
-                if (isPotLimitGame) {
-                    // No more then pot limit.
-                    const potLimit = 100;
-                    basicRaise = Math.min(basicRaise, potLimit);
-                }
 
                 // No more then money which other players has.
                 const maxAmountOfMoneyForOtherActivePlayers = self.maxAmountOfMoneyForOtherActivePlayers();
