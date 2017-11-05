@@ -28,6 +28,7 @@ describe("gameplay", function () {
     beforeEach(function () {
         GameActionsQueue.waitDisabled = true;
         logEnabled = false;
+        debugSettings.tableView.trace = false;
         global.messages = {
         };
     });
