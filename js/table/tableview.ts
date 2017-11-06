@@ -1365,6 +1365,10 @@ export class TableView {
                 const activePlayersCount = this.activePlayersCount();
                 this.logGameEvent("Active players count", activePlayersCount);
                 needHightlightCards = activePlayersCount > 1;
+                if (this.gameType() === 2) {
+                    needHightlightCards = true;
+                }
+
                 if (needHightlightCards) {
                     self.tableCards.CardsHightlighted(true);
                 }
@@ -1419,7 +1423,11 @@ export class TableView {
             this.queue.pushCallback(() => {
                 const places = self.places();
                 const activePlayersCount = this.activePlayersCount();
-                const needHightlightCards = activePlayersCount > 1;
+                var needHightlightCards = activePlayersCount > 1;
+                if (this.gameType() === 2) {
+                    needHightlightCards = true;
+                }
+
                 this.logGameEvent("Distribute pots: ", this.pots().slice());
                 const potsCount = winners.reduce((prev, current) => Math.max(prev, current.Pot), 0);
                 for (let potNumber = 1; potNumber <= potsCount; potNumber++) {
