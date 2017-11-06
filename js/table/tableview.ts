@@ -1423,7 +1423,7 @@ export class TableView {
             this.queue.pushCallback(() => {
                 const places = self.places();
                 const activePlayersCount = this.activePlayersCount();
-                var needHightlightCards = activePlayersCount > 1;
+                let needHightlightCards = activePlayersCount > 1;
                 if (this.gameType() === 2) {
                     needHightlightCards = true;
                 }
