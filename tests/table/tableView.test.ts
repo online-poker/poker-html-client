@@ -474,21 +474,26 @@ describe("Table view", () => {
             tableView.onGameStarted(1, players, actions, 4);
             tableView.onBet(2, 0, 100, 1);
             tableView.onBet(1, 0, 200, 2);
-            tableView.onPlayerCards(1, [1, 2]);
-            tableView.onPlayerCards(2, [2, 3]);
+            tableView.onPlayerCards(1, [1, 2, 3, 4]);
+            tableView.onPlayerCards(2, [1, 2, 3, 4]);
             tableView.onBet(2, 2, 50, 1);
             tableView.onBet(1, 2, 50, 1);
+            tableView.onOpenCards([5, 6, 7]);
             //Flop
             tableView.onBet(1, 2, 0, 2);
             tableView.onBet(2, 2, 0, 1);
+            tableView.onOpenCards([5,6,7,8]);
+
             // Tern
             tableView.onBet(1, 2, 0, 2);
             tableView.onBet(2, 2, 0, 1);
+            tableView.onOpenCards([5,6,7,8,9]);
+
             // River 
             tableView.onBet(1, 2, 0, 2);
             tableView.onBet(2, 2, 0, 1);
+            tableView.executeMoveMoneyToPot([100]);
 
-            tableView.onGameFinished(1, winner, 10);
             await tableView.queue.waitCurrentTask();
             while (tableView.queue.size() > 0) {
                 await tableView.queue.execute();
