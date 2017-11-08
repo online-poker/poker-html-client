@@ -323,17 +323,27 @@ class TableManager {
         const table = new TableView(tableId, model);
         this.tables.push(table);
         table.onMyTurn.add(this.onMyTurn, this);
+        table.onGamefinished.add(this.onGameFinished, this);
         return table;
     }
 
     public remove(table: TableView) {
-        const tables = this.tables().filter(function(value: TableView) {
+        const tables = this.tables().filter(function (value: TableView) {
             return value !== table;
         });
         this.tables(tables);
         table.onMyTurn.remove(this.onMyTurn, this);
-
+        table.onGamefinished.remove(this.onGameFinished, this);
         return table;
+    }
+    public onGameFinished(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        tableView.proposeRebuyOrAddon();
+        tableView.clearTable();
+        tableView.displayRebuyOrAddonTime();
     }
 
     public removeTableById(tableId: number) {

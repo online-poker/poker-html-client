@@ -181,6 +181,7 @@ export class TableView {
     public currentCombination = ko.observable("");
     public actionBlock: ActionBlock;
     public onMyTurn: Signal;
+    public onGamefinished: Signal;
     public tablePlaces: TablePlaces;
     public lastHandHistory: KnockoutObservable<HandHistory>;
     public hasPreviousHand: KnockoutComputed<boolean>;
@@ -275,6 +276,7 @@ export class TableView {
         this.chipWidth = 30;
         this.cardsReceived = false;
         this.onMyTurn = new signals.Signal();
+        this.onGamefinished = new signals.Signal();
         this.queue = new GameActionsQueue();
         this.cardsVariantUp = ko.observable<boolean>(false);
         this.cardsVariantDown = ko.observable<boolean>(true);
@@ -1365,6 +1367,9 @@ export class TableView {
                 const activePlayersCount = this.activePlayersCount();
                 this.logGameEvent("Active players count", activePlayersCount);
                 needHightlightCards = activePlayersCount > 1;
+                if (this.gameType() === 2) {
+                    needHightlightCards = true;
+                }
                 if (needHightlightCards) {
                     self.tableCards.CardsHightlighted(true);
                 }
@@ -1404,7 +1409,11 @@ export class TableView {
 
                 const activePlayersCount = this.activePlayersCount();
                 this.logGameEvent("Active players count", activePlayersCount);
-                const needHightlightCards = activePlayersCount > 1;
+                let needHightlightCards = activePlayersCount > 1;
+                if (this.gameType() === 2) {
+                    needHightlightCards = true;
+                }
+
                 if (needHightlightCards) {
                     self.tableCards.CardsHightlighted(true);
                 }
@@ -1419,7 +1428,10 @@ export class TableView {
             this.queue.pushCallback(() => {
                 const places = self.places();
                 const activePlayersCount = this.activePlayersCount();
-                const needHightlightCards = activePlayersCount > 1;
+                let needHightlightCards = activePlayersCount > 1;
+                if (this.gameType() === 2) {
+                    needHightlightCards = true;
+                }
                 this.logGameEvent("Distribute pots: ", this.pots().slice());
                 const potsCount = winners.reduce((prev, current) => Math.max(prev, current.Pot), 0);
                 for (let potNumber = 1; potNumber <= potsCount; potNumber++) {
@@ -1471,9 +1483,7 @@ export class TableView {
 
         this.queue.pushCallback(() => {
             this.enableInjectPlayerCards = false;
-            self.cleanTableAfterGameFinish();
-            self.proposeRebuyOrAddon();
-            self.displayRebuyOrAddonTime();
+            this.onGamefinished.dispatch(this.tableId);
         });
     }
     public onPlayerStatus(playerId: number, status: number) {
@@ -2315,11 +2325,23 @@ export class TableView {
         this.queue.pushCallback(callback);
     }
 
+    public clearTable() {
+        this.anteDetected = false;
+        this.prizesDistributed(true);
+        this.tableCards.CardsHightlighted(false);
+        this.setCards([]);
+        this.pots([]);
+        const places = this.places();
+        places.forEach(function (item) {
+            item.prepareForNewGame();
+        });
+    }
+
     /*
      * Display counter which indicates how much time left to buy addon or rebuy
      * if player lose game.
      */
-    private displayRebuyOrAddonTime() {
+    public displayRebuyOrAddonTime() {
         const self = this;
         const tournamentView = this.tournament();
 
