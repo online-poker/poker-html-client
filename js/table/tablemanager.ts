@@ -324,6 +324,10 @@ class TableManager {
         this.tables.push(table);
         table.onMyTurn.add(this.onMyTurn, this);
         table.onGamefinished.add(this.onGameFinished, this);
+        table.onPlayerCardsDealed.add(this.onPlayerCardsDealed, this);
+        table.onFlopDealed.add(this.onFlopDealed, this);
+        table.onTurnDealed.add(this.onTurnDealed, this);
+        table.onRiverDealed.add(this.onRiverDealed, this);
         return table;
     }
 
@@ -344,6 +348,38 @@ class TableManager {
         tableView.proposeRebuyOrAddon();
         tableView.clearTable();
         tableView.displayRebuyOrAddonTime();
+    }
+
+    public onPlayerCardsDealed(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        tableView.SetRoundNotificationCaption(0);
+    }
+
+    public onFlopDealed(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        tableView.SetRoundNotificationCaption(1);
+    }
+
+    public onTurnDealed(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        tableView.SetRoundNotificationCaption(2);
+    }
+
+    public onRiverDealed(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        tableView.SetRoundNotificationCaption(3);
     }
 
     public removeTableById(tableId: number) {

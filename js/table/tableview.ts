@@ -188,6 +188,13 @@ export class TableView {
     public tableBetsCaption: KnockoutComputed<string>;
     public currentHandCaption: KnockoutComputed<string>;
     public previousHandCaption: KnockoutComputed<string>;
+
+    public roundNotification: KnockoutObservable<string>;
+    public roundNotificationCaption: KnockoutComputed<string>;
+    public onPlayerCardsDealed: Signal;
+    public onFlopDealed: Signal;
+    public onTurnDealed: Signal;
+    public onRiverDealed: Signal;
     /**
      * Indicates that animation is suppressed from playing.
      */
@@ -280,6 +287,13 @@ export class TableView {
         this.queue = new GameActionsQueue();
         this.cardsVariantUp = ko.observable<boolean>(false);
         this.cardsVariantDown = ko.observable<boolean>(true);
+
+        this.roundNotification = ko.observable("");
+        this.roundNotificationCaption = ko.computed(() => this.roundNotification() === "" ? "" : this.roundNotification() );
+        this.onPlayerCardsDealed = new signals.Signal();
+        this.onFlopDealed = new signals.Signal();
+        this.onTurnDealed = new signals.Signal();
+        this.onRiverDealed = new signals.Signal();
 
         this.gameType = ko.observable();
         this.has2Cards = ko.computed(() => this.gameType() === 1);
@@ -1336,6 +1350,9 @@ export class TableView {
         const isInGame = players.some((player) => player.PlayerId === authManager.loginId());
         if (!isInGame) {
             this.startDealCards();
+            if (appConfig.game.isRoundNotificationEnabled) {
+                this.onPlayerCardsDealed.dispatch(this.tableId);
+            }
         }
     }
     public onGameFinished(gameId: number, winners: GameWinnerModel[], rake: number) {
@@ -1485,6 +1502,31 @@ export class TableView {
             this.enableInjectPlayerCards = false;
             this.onGamefinished.dispatch(this.tableId);
         });
+    }
+    public SetRoundNotificationCaption(round: number) {
+        console.log("SetRoundNotificationCaption " + round);
+        let caption = "";
+        switch (round) {
+            case 0: {
+                caption = _("rounds.preFlop");
+                break;
+            }
+            case 1: {
+                caption = _("rounds.flop");
+                break;
+            }
+            case 2: {
+                caption = _("rounds.tern");
+                break;
+            }
+            case 3: {
+                caption = _("rounds.river");
+                break;
+            }
+            default:
+                caption = ""
+        }
+        this.roundNotification(caption);
     }
     public onPlayerStatus(playerId: number, status: number) {
         this.queue.pushCallback(() => {
@@ -2153,16 +2195,25 @@ export class TableView {
                 self.handHistory.onFlop(cards[0], cards[1], cards[2]);
                 self.actionBlock.dealsAllowed(true);
                 soundManager.playFlopCards();
+                if (appConfig.game.isRoundNotificationEnabled) {
+                    self.onFlopDealed.dispatch(this.tableId);
+                }
             }
             if (currentCardsOpened === 3 && cards.length === 4) {
                 self.handHistory.onTurn(cards[3]);
                 self.actionBlock.dealsAllowed(true);
                 soundManager.playTurn();
+                if (appConfig.game.isRoundNotificationEnabled) {
+                    self.onTurnDealed.dispatch(this.tableId);
+                }
             }
             if (currentCardsOpened === 4 && cards.length === 5) {
                 self.handHistory.onRiver(cards[4]);
                 self.actionBlock.dealsAllowed(true);
                 soundManager.playRiver();
+                if (appConfig.game.isRoundNotificationEnabled) {
+                    self.onRiverDealed.dispatch(this.tableId);
+                }
             }
             if (currentCardsOpened === 3 && cards.length === 5) {
                 self.handHistory.onTurn(cards[3]);
