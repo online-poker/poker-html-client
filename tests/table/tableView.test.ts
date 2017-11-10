@@ -511,4 +511,265 @@ describe("Table view", () => {
             expect(tableView.tablePlaces.place1().Card4Hightlighted()).toEqual(true);
         });
     });
+    describe("Verify game event notifications", () => {
+        beforeAll(() => {
+            GameActionsQueue.waitDisabled = true;
+            GameActionsQueue.drainQueuePause = 0;
+            debugSettings.tableView.trace = false;
+        });
+        afterAll(() => {
+            GameActionsQueue.waitDisabled = false;
+            GameActionsQueue.drainQueuePause = 100;
+        });
+        it("Verify preflop", async () => {
+            const winner: GameWinnerModel[] = [
+                {
+                    Amount: 100,
+                    Pot: 1,
+                    CardsDescription: "",
+                    PlayerId: 1
+                }
+            ]
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            });
+            const players: GamePlayerStartInformation[] = [{
+                PlayerId: 1,
+                Money: 10000,
+            }, {
+                PlayerId: 2,
+                Money: 10000,
+            }];
+            const actions: GameActionStartInformation[] = [];
+            login("player1");
+            loginId(1);
+            const tableSatusPlayers = [
+                getSeatPlayer(1, 10000),
+                getSeatPlayer(2, 10000),
+            ];
+            let counter = 0;
+            tableView.onPlayerCardsDealed.add(() => { counter = counter + 1 }, this);
+            tableView.onFlopDealed.add(() => { counter = counter + 1 }, this);
+            tableView.onTurnDealed.add(() => { counter = counter + 1 }, this);
+            tableView.onRiverDealed.add(() => { counter = counter + 1 }, this);
+            tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
+            tableView.onGameStarted(1, players, actions, 4);
+            tableView.onBet(2, 0, 100, 1);
+            tableView.onBet(1, 0, 200, 2);
+            tableView.onPlayerCards(1, [15, 5, 41, 18]);
+            tableView.onPlayerCards(2, [1, 2, 3, 4]);
+            tableView.onBet(2, 2, 50, 1);
+            tableView.onBet(1, 2, 50, 1);
+            await tableView.queue.waitCurrentTask();
+            while (tableView.queue.size() > 0) {
+                await tableView.queue.execute();
+                await tableView.queue.waitCurrentTask();
+            }
+            expect(counter).toEqual(1);
+        });
+        it("Verify flop", async () => {
+            const winner: GameWinnerModel[] = [
+                {
+                    Amount: 100,
+                    Pot: 1,
+                    CardsDescription: "",
+                    PlayerId: 1
+                }
+            ]
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            });
+            const players: GamePlayerStartInformation[] = [{
+                PlayerId: 1,
+                Money: 10000,
+            }, {
+                PlayerId: 2,
+                Money: 10000,
+            }];
+            const actions: GameActionStartInformation[] = [];
+            login("player1");
+            loginId(1);
+            const tableSatusPlayers = [
+                getSeatPlayer(1, 10000),
+                getSeatPlayer(2, 10000),
+            ];
+            let counter = 0;
+            tableView.onPlayerCardsDealed.add(() => { counter = counter + 1 }, this)
+            tableView.onFlopDealed.add(() => { counter = counter + 1 }, this)
+            tableView.onTurnDealed.add(() => { counter = counter + 1 }, this)
+            tableView.onRiverDealed.add(() => { counter = counter + 1 }, this)
+            tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
+            tableView.onGameStarted(1, players, actions, 4);
+            tableView.onBet(2, 0, 100, 1);
+            tableView.onBet(1, 0, 200, 2);
+            tableView.onPlayerCards(1, [15, 5, 41, 18]);
+            tableView.onPlayerCards(2, [1, 2, 3, 4]);
+            tableView.onBet(2, 2, 50, 1);
+            tableView.onBet(1, 2, 50, 1);
+
+            tableView.executeMoveMoneyToPot([100]);
+            tableView.onOpenCards([19, 21, 22]);
+            tableView.onBet(1, 2, 0, 2);
+            tableView.onBet(2, 2, 0, 1);
+            await tableView.queue.waitCurrentTask();
+            while (tableView.queue.size() > 0) {
+                await tableView.queue.execute();
+                await tableView.queue.waitCurrentTask();
+            }
+            expect(counter).toEqual(2);
+        });
+        it("Verify tern", async () => {
+            const winner: GameWinnerModel[] = [
+                {
+                    Amount: 100,
+                    Pot: 1,
+                    CardsDescription: "",
+                    PlayerId: 1
+                }
+            ]
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            });
+            const players: GamePlayerStartInformation[] = [{
+                PlayerId: 1,
+                Money: 10000,
+            }, {
+                PlayerId: 2,
+                Money: 10000,
+            }];
+            const actions: GameActionStartInformation[] = [];
+            login("player1");
+            loginId(1);
+            const tableSatusPlayers = [
+                getSeatPlayer(1, 10000),
+                getSeatPlayer(2, 10000),
+            ];
+            let counter = 0;
+            tableView.onPlayerCardsDealed.add(() => { counter = counter + 1 }, this)
+            tableView.onFlopDealed.add(() => { counter = counter + 1 }, this)
+            tableView.onTurnDealed.add(() => { counter = counter + 1 }, this)
+            tableView.onRiverDealed.add(() => { counter = counter + 1 }, this)
+            tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
+            tableView.onGameStarted(1, players, actions, 4);
+            tableView.onBet(2, 0, 100, 1);
+            tableView.onBet(1, 0, 200, 2);
+            tableView.onPlayerCards(1, [15, 5, 41, 18]);
+            tableView.onPlayerCards(2, [1, 2, 3, 4]);
+            tableView.onBet(2, 2, 50, 1);
+            tableView.onBet(1, 2, 50, 1);
+
+            tableView.executeMoveMoneyToPot([100]);
+            tableView.onOpenCards([19, 21, 22]);
+            tableView.onBet(1, 2, 0, 2);
+            tableView.onBet(2, 2, 0, 1);
+
+            // Tern
+            tableView.executeMoveMoneyToPot([0]);
+            tableView.onOpenCards([19, 21, 22, 25]);
+            tableView.onBet(1, 2, 0, 2);
+            tableView.onBet(2, 2, 0, 1);
+            await tableView.queue.waitCurrentTask();
+            while (tableView.queue.size() > 0) {
+                await tableView.queue.execute();
+                await tableView.queue.waitCurrentTask();
+            }
+            expect(counter).toEqual(3);
+        });
+        it("Verify river", async () => {
+            const winner: GameWinnerModel[] = [
+                {
+                    Amount: 100,
+                    Pot: 1,
+                    CardsDescription: "",
+                    PlayerId: 1
+                }
+            ]
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            });
+            const players: GamePlayerStartInformation[] = [{
+                PlayerId: 1,
+                Money: 10000,
+            }, {
+                PlayerId: 2,
+                Money: 10000,
+            }];
+            const actions: GameActionStartInformation[] = [];
+            login("player1");
+            loginId(1);
+            const tableSatusPlayers = [
+                getSeatPlayer(1, 10000),
+                getSeatPlayer(2, 10000),
+            ];
+            let counter = 0;
+            tableView.onPlayerCardsDealed.add(() => { counter = counter + 1 }, this)
+            tableView.onFlopDealed.add(() => { counter = counter + 1 }, this)
+            tableView.onTurnDealed.add(() => { counter = counter + 1 }, this)
+            tableView.onRiverDealed.add(() => { counter = counter + 1 }, this)
+            tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
+            tableView.onGameStarted(1, players, actions, 4);
+            tableView.onBet(2, 0, 100, 1);
+            tableView.onBet(1, 0, 200, 2);
+            tableView.onPlayerCards(1, [15, 5, 41, 18]);
+            tableView.onPlayerCards(2, [1, 2, 3, 4]);
+            tableView.onBet(2, 2, 50, 1);
+            tableView.onBet(1, 2, 50, 1);
+
+            tableView.executeMoveMoneyToPot([100]);
+            tableView.onOpenCards([19, 21, 22]);
+            tableView.onBet(1, 2, 0, 2);
+            tableView.onBet(2, 2, 0, 1);
+
+            // Tern
+            tableView.executeMoveMoneyToPot([0]);
+            tableView.onOpenCards([19, 21, 22, 25]);
+            tableView.onBet(1, 2, 0, 2);
+            tableView.onBet(2, 2, 0, 1);
+            // River 
+            tableView.executeMoveMoneyToPot([0]);
+            tableView.onOpenCards([19, 21, 22, 25, 7]);
+            await tableView.queue.waitCurrentTask();
+            while (tableView.queue.size() > 0) {
+                await tableView.queue.execute();
+                await tableView.queue.waitCurrentTask();
+            }
+            expect(counter).toEqual(4);
+        });
+    });
 });
