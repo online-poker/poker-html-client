@@ -291,7 +291,7 @@ export class TableView {
         this.cardsVariantDown = ko.observable<boolean>(true);
 
         this.roundNotification = ko.observable("");
-        this.roundNotificationTimer = ko.observable(1);
+        this.roundNotificationTimer = ko.observable(0);
         this.roundNotificationCaption = ko.computed(() => this.roundNotification() === "" ? "" : this.roundNotification());
         this.isRoundNotificationShown = ko.computed(() => appConfig.game.isRoundNotificationEnabled && this.roundNotificationTimer() > 0);
         this.onPlayerCardsDealed = new signals.Signal();
@@ -1354,8 +1354,6 @@ export class TableView {
         const isInGame = players.some((player) => player.PlayerId === authManager.loginId());
         if (!isInGame) {
             this.startDealCards();
-            this.onPlayerCardsDealed.dispatch(this.tableId);
-            this.updateRoundNotificationTimer();
         }
     }
     public onGameFinished(gameId: number, winners: GameWinnerModel[], rake: number) {
@@ -1539,18 +1537,7 @@ export class TableView {
         }
         this.roundNotification(caption);
     }
-    /**
-     * Update round notification timer
-     */
-    public updateRoundNotificationTimer() {
-        this.roundNotificationTimer(2);
-        timeService.setInterval(() => {
-            this.roundNotificationTimer(this.roundNotificationTimer() - 1);
-        }, 1000);
-        if (this.roundNotificationTimer() < 1) {
-            timeService.clearInterval(this.roundNotificationTimer());
-        }
-    }
+
     public onPlayerStatus(playerId: number, status: number) {
         this.queue.pushCallback(() => {
             this.onPlayerStatusCore(playerId, status);
@@ -2219,21 +2206,18 @@ export class TableView {
                 self.actionBlock.dealsAllowed(true);
                 soundManager.playFlopCards();
                 self.onFlopDealed.dispatch(this.tableId);
-                this.updateRoundNotificationTimer();
             }
             if (currentCardsOpened === 3 && cards.length === 4) {
                 self.handHistory.onTurn(cards[3]);
                 self.actionBlock.dealsAllowed(true);
                 soundManager.playTurn();
                 self.onTurnDealed.dispatch(this.tableId);
-                this.updateRoundNotificationTimer();
             }
             if (currentCardsOpened === 4 && cards.length === 5) {
                 self.handHistory.onRiver(cards[4]);
                 self.actionBlock.dealsAllowed(true);
                 soundManager.playRiver();
                 self.onRiverDealed.dispatch(this.tableId);
-                this.updateRoundNotificationTimer();
             }
             if (currentCardsOpened === 3 && cards.length === 5) {
                 self.handHistory.onTurn(cards[3]);
@@ -2708,6 +2692,7 @@ export class TableView {
             });
             self.clearTimer();
             self.startTimer();
+            this.onPlayerCardsDealed.dispatch(this.tableId);
         });
     }
     private calculateWinnerAmount(places: TablePlaceModel[], winners: GameWinnerModel[], needHightlightCards: boolean) {

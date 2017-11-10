@@ -356,6 +356,7 @@ class TableManager {
             return;
         }
         tableView.setRoundNotificationCaption(0);
+        this.updateRoundNotificationTimer(tableId);
     }
 
     public onFlopDealed(tableId: number) {
@@ -364,6 +365,7 @@ class TableManager {
             return;
         }
         tableView.setRoundNotificationCaption(1);
+        this.updateRoundNotificationTimer(tableId);
     }
 
     public onTurnDealed(tableId: number) {
@@ -372,6 +374,7 @@ class TableManager {
             return;
         }
         tableView.setRoundNotificationCaption(2);
+        this.updateRoundNotificationTimer(tableId);
     }
 
     public onRiverDealed(tableId: number) {
@@ -380,6 +383,20 @@ class TableManager {
             return;
         }
         tableView.setRoundNotificationCaption(3);
+        this.updateRoundNotificationTimer(tableId);
+    }
+    public updateRoundNotificationTimer(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        tableView.roundNotificationTimer(4);
+       var timer = timeService.setInterval(() => {
+           tableView.roundNotificationTimer(tableView.roundNotificationTimer() - 1);
+        }, 1000);
+       if (timer < 1) {
+            timeService.clearInterval(tableView.roundNotificationTimer());
+        }
     }
 
     public removeTableById(tableId: number) {
