@@ -355,7 +355,7 @@ class TableManager {
         if (!tableView) {
             return;
         }
-        tableView.SetRoundNotificationCaption(0);
+        tableView.setRoundNotificationCaption(0);
     }
 
     public onFlopDealed(tableId: number) {
@@ -363,7 +363,7 @@ class TableManager {
         if (!tableView) {
             return;
         }
-        tableView.SetRoundNotificationCaption(1);
+        tableView.setRoundNotificationCaption(1);
     }
 
     public onTurnDealed(tableId: number) {
@@ -371,7 +371,7 @@ class TableManager {
         if (!tableView) {
             return;
         }
-        tableView.SetRoundNotificationCaption(2);
+        tableView.setRoundNotificationCaption(2);
     }
 
     public onRiverDealed(tableId: number) {
@@ -379,7 +379,7 @@ class TableManager {
         if (!tableView) {
             return;
         }
-        tableView.SetRoundNotificationCaption(3);
+        tableView.setRoundNotificationCaption(3);
     }
 
     public removeTableById(tableId: number) {
