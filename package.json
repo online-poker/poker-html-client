@@ -1,6 +1,6 @@
 {
   "name": "poker-html-client",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "HTML client for online poker",
   "main": "js/application.js",
   "scripts": {
