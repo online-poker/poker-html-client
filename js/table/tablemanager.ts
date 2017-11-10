@@ -390,13 +390,10 @@ class TableManager {
         if (!tableView) {
             return;
         }
-        tableView.roundNotificationTimer(4);
-       var timer = timeService.setInterval(() => {
-           tableView.roundNotificationTimer(tableView.roundNotificationTimer() - 1);
-        }, 1000);
-       if (timer < 1) {
-            timeService.clearInterval(tableView.roundNotificationTimer());
-        }
+        tableView.roundNotificationTimer(3);
+        timeService.setTimeout(() => {
+            tableView.roundNotificationTimer(0);
+        }, 3000);
     }
 
     public removeTableById(tableId: number) {
