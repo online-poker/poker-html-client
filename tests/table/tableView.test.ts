@@ -556,11 +556,16 @@ describe("Table view", () => {
                 getSeatPlayer(1, 10000),
                 getSeatPlayer(2, 10000),
             ];
-            let counter = 0;
-            tableView.onPlayerCardsDealed.add(() => { counter = counter + 1 }, this);
-            tableView.onFlopDealed.add(() => { counter = counter + 1 }, this);
-            tableView.onTurnDealed.add(() => { counter = counter + 1 }, this);
-            tableView.onRiverDealed.add(() => { counter = counter + 1 }, this);
+            let preflopCounter = 0;
+            let flopCounter = 0;
+            let turnCounter = 0;
+            let riverCounter = 0;
+
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1 }, this);
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1 }, this);
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1 }, this);
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1 }, this);
+
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
             tableView.onBet(2, 0, 100, 1);
@@ -574,7 +579,10 @@ describe("Table view", () => {
                 await tableView.queue.execute();
                 await tableView.queue.waitCurrentTask();
             }
-            expect(counter).toEqual(1);
+            expect(preflopCounter).toEqual(1);
+            expect(flopCounter).toEqual(0);
+            expect(turnCounter).toEqual(0);
+            expect(riverCounter).toEqual(0);
         });
         it("Verify flop", async () => {
             const winner: GameWinnerModel[] = [
@@ -611,11 +619,17 @@ describe("Table view", () => {
                 getSeatPlayer(1, 10000),
                 getSeatPlayer(2, 10000),
             ];
-            let counter = 0;
-            tableView.onPlayerCardsDealed.add(() => { counter = counter + 1 }, this)
-            tableView.onFlopDealed.add(() => { counter = counter + 1 }, this)
-            tableView.onTurnDealed.add(() => { counter = counter + 1 }, this)
-            tableView.onRiverDealed.add(() => { counter = counter + 1 }, this)
+
+            let preflopCounter = 0;
+            let flopCounter = 0;
+            let turnCounter = 0;
+            let riverCounter = 0;
+
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1 }, this);
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1 }, this);
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1 }, this);
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1 }, this);
+
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
             tableView.onBet(2, 0, 100, 1);
@@ -634,7 +648,10 @@ describe("Table view", () => {
                 await tableView.queue.execute();
                 await tableView.queue.waitCurrentTask();
             }
-            expect(counter).toEqual(2);
+            expect(preflopCounter).toEqual(1);
+            expect(flopCounter).toEqual(1);
+            expect(turnCounter).toEqual(0);
+            expect(riverCounter).toEqual(0);
         });
         it("Verify tern", async () => {
             const winner: GameWinnerModel[] = [
@@ -671,11 +688,16 @@ describe("Table view", () => {
                 getSeatPlayer(1, 10000),
                 getSeatPlayer(2, 10000),
             ];
-            let counter = 0;
-            tableView.onPlayerCardsDealed.add(() => { counter = counter + 1 }, this)
-            tableView.onFlopDealed.add(() => { counter = counter + 1 }, this)
-            tableView.onTurnDealed.add(() => { counter = counter + 1 }, this)
-            tableView.onRiverDealed.add(() => { counter = counter + 1 }, this)
+            let preflopCounter = 0;
+            let flopCounter = 0;
+            let turnCounter = 0;
+            let riverCounter = 0;
+
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1 }, this);
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1 }, this);
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1 }, this);
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1 }, this);
+
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
             tableView.onBet(2, 0, 100, 1);
@@ -700,7 +722,10 @@ describe("Table view", () => {
                 await tableView.queue.execute();
                 await tableView.queue.waitCurrentTask();
             }
-            expect(counter).toEqual(3);
+            expect(preflopCounter).toEqual(1);
+            expect(flopCounter).toEqual(1);
+            expect(turnCounter).toEqual(1);
+            expect(riverCounter).toEqual(0);
         });
         it("Verify river", async () => {
             const winner: GameWinnerModel[] = [
@@ -737,11 +762,16 @@ describe("Table view", () => {
                 getSeatPlayer(1, 10000),
                 getSeatPlayer(2, 10000),
             ];
-            let counter = 0;
-            tableView.onPlayerCardsDealed.add(() => { counter = counter + 1 }, this)
-            tableView.onFlopDealed.add(() => { counter = counter + 1 }, this)
-            tableView.onTurnDealed.add(() => { counter = counter + 1 }, this)
-            tableView.onRiverDealed.add(() => { counter = counter + 1 }, this)
+            let preflopCounter = 0;
+            let flopCounter = 0;
+            let turnCounter = 0;
+            let riverCounter = 0;
+
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1 }, this);
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1 }, this);
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1 }, this);
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1 }, this);
+
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
             tableView.onBet(2, 0, 100, 1);
@@ -769,7 +799,10 @@ describe("Table view", () => {
                 await tableView.queue.execute();
                 await tableView.queue.waitCurrentTask();
             }
-            expect(counter).toEqual(4);
+            expect(preflopCounter).toEqual(1);
+            expect(flopCounter).toEqual(1);
+            expect(turnCounter).toEqual(1);
+            expect(riverCounter).toEqual(1);
         });
     });
 });
