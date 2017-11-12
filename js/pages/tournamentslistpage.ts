@@ -9,6 +9,7 @@ import { LobbyTournamentItem, Tournament } from "../api/tournament";
 import { App } from "../app";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
+import { PageBlock } from "../pageblock";
 import { reloadManager } from "../services";
 import { PageBase } from "../ui/pagebase";
 import { TournamentOptions } from "./lobbypage";

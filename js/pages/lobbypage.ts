@@ -12,6 +12,7 @@ import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";
+import { PageBlock } from "../pageblock";
 import { reloadManager } from "../services";
 import { tableManager } from "../table/tablemanager";
 import * as timeService from "../timeservice";

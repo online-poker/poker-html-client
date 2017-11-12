@@ -4,6 +4,7 @@ import * as commandManager from "./commandmanager";
 import { debugSettings } from "./debugsettings";
 import { _ } from "./languagemanager";
 import * as metadataManager from "./metadatamanager";
+import { PageBlock } from "./pageblock";
 import {
     HomePage,
     InfoPageBlock,

@@ -11,6 +11,7 @@ import * as authManager from "../authmanager";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";
+import { PageBlock } from "../pageblock";
 import { SimplePopup } from "../popups/simplepopup";
 import { reloadManager } from "../services";
 import { AccountManager } from "../services/accountManager";

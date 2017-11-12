@@ -1,4 +1,5 @@
 ﻿import { App } from "../app";
+import { PageBlock } from "../pageblock";
 import { keyboardActivationService } from "../services";
 import { PageBase } from "../ui/pagebase";
 

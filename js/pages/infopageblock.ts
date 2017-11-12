@@ -1,5 +1,4 @@
-﻿/// <reference path="../pageblock.ts" />
-
+﻿import { PageBlock } from "../pageblock";
 import { InfoPage } from "./infopage";
 
 export class InfoPageBlock extends PageBlock {

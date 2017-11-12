@@ -1,9 +1,8 @@
-﻿/// <reference types="jquery" />
-/// <reference path="../pageblock.ts" />
-
+﻿import * as $ from "jquery";
 import * as signals from "signals";
 import { App } from "../app";
 import { debugSettings } from "../debugsettings";
+import { PageBlock } from "../pageblock";
 
 declare var app: App;
 
