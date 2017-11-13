@@ -82,6 +82,7 @@
   },
   "dependencies": {
     "jest": "^21.2.1",
+    "jquery": "^3.2.1",
     "ts-jest": "^21.1.4"
   }
 }
