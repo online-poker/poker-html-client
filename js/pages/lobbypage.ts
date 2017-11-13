@@ -14,6 +14,7 @@ import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";
 import { PageBlock } from "../pageblock";
 import { reloadManager } from "../services";
+import { Slider } from "../slider";
 import { tableManager } from "../table/tablemanager";
 import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";

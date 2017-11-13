@@ -1,7 +1,6 @@
-﻿/// <reference path="../../slider.ts" />
-
-import ko = require("knockout");
+﻿import ko = require("knockout");
 import { _ } from "../../languagemanager";
+import { Slider } from "../../slider";
 
 /**
  * Parameters for the timeblock component

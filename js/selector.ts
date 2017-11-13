@@ -1,12 +1,12 @@
-﻿/// <reference types="knockout" />
+﻿import * as ko from "knockout";
 
-interface SelectorItem {
+export interface SelectorItem {
     text: string;
     value: any;
     selected: boolean;
 }
 
-class Selector {
+export class Selector {
     public caption: KnockoutObservable<string>;
     public items: KnockoutObservableArray<SelectorItem>;
     public selected: (item: SelectorItem) => void;

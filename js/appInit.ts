@@ -1,3 +1,4 @@
+import * as $ from "jquery";
 import ko = require("knockout");
 import { App } from "./app";
 import { registerBindings } from "./bindings";

@@ -1,3 +1,4 @@
+import * as $ from "jquery";
 import * as signals from "signals";
 import * as authManager from "./authmanager";
 import * as commandManager from "./commandmanager";
@@ -29,6 +30,7 @@ import {
     TableMenuPopup,
 } from "./popups";
 import { SimplePopup } from "./popups/simplepopup";
+import { Selector, SelectorItem } from "./selector";
 import {
     connectionService,
     deviceEvents,

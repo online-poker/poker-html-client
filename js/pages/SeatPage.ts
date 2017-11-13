@@ -1,5 +1,6 @@
 ﻿declare var apiHost: string;
 
+import * as $ from "jquery";
 import * as ko from "knockout";
 import { App } from "../app";
 import { appConfig } from "../appconfig";

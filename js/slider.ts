@@ -1,4 +1,4 @@
-﻿/// <reference types="knockout" />
+﻿import * as ko from "knockout";
 
 class SliderItem {
     public caption: string;
@@ -6,7 +6,7 @@ class SliderItem {
     public action: () => void;
 }
 
-class Slider {
+export class Slider {
     public currentIndex: KnockoutObservable<number>;
     public currentIndex1: KnockoutComputed<number>;
     public items: SliderItem[];
