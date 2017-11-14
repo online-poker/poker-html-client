@@ -21,6 +21,13 @@ import { TournamentView } from "./tournamentview";
 declare var apiHost: string;
 declare var host: string;
 
+export enum CardsDealedCodes {
+    PlayerCardsDealed = 0,
+    FlopDealed = 1,
+    TurnDealed = 2,
+    RiverDealed = 3,
+}
+
 class TableManager {
     public tables: KnockoutObservableArray<TableView>;
     public currentIndex: KnockoutObservable<number>;
@@ -324,6 +331,10 @@ class TableManager {
         this.tables.push(table);
         table.onMyTurn.add(this.onMyTurn, this);
         table.onGamefinished.add(this.onGameFinished, this);
+        table.onPlayerCardsDealed.add(this.onPlayerCardsDealed, this);
+        table.onFlopDealed.add(this.onFlopDealed, this);
+        table.onTurnDealed.add(this.onTurnDealed, this);
+        table.onRiverDealed.add(this.onRiverDealed, this);
         return table;
     }
 
@@ -345,7 +356,6 @@ class TableManager {
         tableView.clearTable();
         tableView.displayRebuyOrAddonTime();
     }
-
     public removeTableById(tableId: number) {
         const view = this.getTableById(tableId);
         if (view === null) {
@@ -476,6 +486,78 @@ class TableManager {
         }
 
         this.currentIndex(0);
+    }
+    private onPlayerCardsDealed(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        this.setRoundNotificationCaption(CardsDealedCodes.PlayerCardsDealed, tableView);
+        this.clearRoundNotification(tableView);
+    }
+
+    private onFlopDealed(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        this.setRoundNotificationCaption(CardsDealedCodes.FlopDealed, tableView);
+        this.clearRoundNotification(tableView);
+    }
+
+    private onTurnDealed(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        this.setRoundNotificationCaption(CardsDealedCodes.TurnDealed, tableView);
+        this.clearRoundNotification(tableView);
+    }
+
+    private onRiverDealed(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        this.setRoundNotificationCaption(CardsDealedCodes.RiverDealed, tableView);
+        this.clearRoundNotification(tableView);
+    }
+    /**
+     * Sets round notification caption
+     * @param round
+     * 0 - preflop
+     * 1 - flop
+     * 2 - turn
+     * 3 - river
+     */
+    private setRoundNotificationCaption(round: number, tableView: TableView) {
+        let caption = "";
+        switch (round) {
+            case CardsDealedCodes.PlayerCardsDealed: {
+                caption = _("rounds.preFlop");
+                break;
+            }
+            case CardsDealedCodes.FlopDealed: {
+                caption = _("rounds.flop");
+                break;
+            }
+            case CardsDealedCodes.TurnDealed: {
+                caption = _("rounds.turn");
+                break;
+            }
+            case CardsDealedCodes.RiverDealed: {
+                caption = _("rounds.river");
+                break;
+            }
+            default:
+                caption = "";
+        }
+        tableView.roundNotification(caption);
+    }
+    private clearRoundNotification(tableView: TableView) {
+        timeService.setTimeout(() => {
+            tableView.roundNotification("");
+        }, 3000);
     }
     private async getSittingTablesFromServer() {
         const api = new Game(host);

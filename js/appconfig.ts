@@ -31,6 +31,7 @@ class AppConfig {
         useSignalR: false,
         noTableMoneyLimit: true,
         showTournamentTables: true,
+        isRoundNotificationEnabled: true,
     };
     public tournament = {
         enabled: false,
