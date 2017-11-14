@@ -191,7 +191,6 @@ export class TableView {
 
     public roundNotification: KnockoutObservable<string>;
     public roundNotificationCaption: KnockoutComputed<string>;
-    public roundNotificationTimer: KnockoutObservable<number>;
     public isRoundNotificationShown: KnockoutComputed<boolean>;
     public onPlayerCardsDealed: Signal;
     public onFlopDealed: Signal;
@@ -291,9 +290,8 @@ export class TableView {
         this.cardsVariantDown = ko.observable<boolean>(true);
 
         this.roundNotification = ko.observable("");
-        this.roundNotificationTimer = ko.observable(0);
-        this.roundNotificationCaption = ko.computed(() => this.roundNotification() === "" ? "" : this.roundNotification());
-        this.isRoundNotificationShown = ko.computed(() => appConfig.game.isRoundNotificationEnabled && this.roundNotificationTimer() > 0);
+        this.roundNotificationCaption = ko.computed(() => this.roundNotification());
+        this.isRoundNotificationShown = ko.computed(() => appConfig.game.isRoundNotificationEnabled && this.roundNotification() !== "");
         this.onPlayerCardsDealed = new signals.Signal();
         this.onFlopDealed = new signals.Signal();
         this.onTurnDealed = new signals.Signal();
@@ -1504,40 +1502,6 @@ export class TableView {
             this.onGamefinished.dispatch(this.tableId);
         });
     }
-    /**
-     * Sets round notification caption
-     * @param round
-     * 0 - preflop
-     * 1 - flop
-     * 2 - tern
-     * 3 - river
-     */
-    public setRoundNotificationCaption(round: number) {
-        this.log("Set round Notification with type " + round);
-        let caption = "";
-        switch (round) {
-            case 0: {
-                caption = _("rounds.preFlop");
-                break;
-            }
-            case 1: {
-                caption = _("rounds.flop");
-                break;
-            }
-            case 2: {
-                caption = _("rounds.tern");
-                break;
-            }
-            case 3: {
-                caption = _("rounds.river");
-                break;
-            }
-            default:
-                caption = "";
-        }
-        this.roundNotification(caption);
-    }
-
     public onPlayerStatus(playerId: number, status: number) {
         this.queue.pushCallback(() => {
             this.onPlayerStatusCore(playerId, status);
