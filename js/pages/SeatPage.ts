@@ -43,7 +43,6 @@ export class SeatPage extends PageBase {
     public changeGameTypeNextGame: KnockoutComputed<boolean>;
     public nextGameInformation: KnockoutComputed<string>;
     public nextGameTypeInformation: KnockoutComputed<string>;
-    public roundNotificationCaption: KnockoutComputed<string>;
     public isRoundNotificationShown: KnockoutComputed<boolean>;
     public splashShown = ko.observable(false);
     public tablesShown = ko.observable(true);
@@ -127,14 +126,6 @@ export class SeatPage extends PageBase {
             }
 
             return ct.nextGameTypeInformation();
-        }, this);
-        this.roundNotificationCaption = ko.computed(() => {
-            const ct = this.currentTable();
-            if (ct === null) {
-                return null;
-            }
-
-            return ct.roundNotificationCaption();
         }, this);
         this.isRoundNotificationShown = ko.computed(() => {
             const ct = this.currentTable();
