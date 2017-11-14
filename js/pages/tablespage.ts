@@ -41,7 +41,6 @@ export class TablesPage extends PageBase {
     public changeGameTypeNextGame: KnockoutComputed<boolean>;
     public nextGameInformation: KnockoutComputed<string>;
     public nextGameTypeInformation: KnockoutComputed<string>;
-    public isRoundNotificationShown: KnockoutComputed<boolean>;
     public splashShown = ko.observable(false);
     public tablesShown = ko.observable(true);
     constructor() {
@@ -124,14 +123,6 @@ export class TablesPage extends PageBase {
             }
 
             return ct.nextGameTypeInformation();
-        }, this);
-        this.isRoundNotificationShown = ko.computed(() => {
-            const ct = this.currentTable();
-            if (ct === null) {
-                return false;
-            }
-
-            return ct.isRoundNotificationShown();
         }, this);
         this.changeBetParametersNextGame = ko.computed(() => {
             const ct = this.currentTable();
