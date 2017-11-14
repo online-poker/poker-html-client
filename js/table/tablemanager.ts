@@ -356,80 +356,6 @@ class TableManager {
         tableView.clearTable();
         tableView.displayRebuyOrAddonTime();
     }
-
-    private onPlayerCardsDealed(tableId: number) {
-        const tableView = this.getTableById(tableId);
-        if (!tableView) {
-            return;
-        }
-        this.setRoundNotificationCaption(CardsDealedCodes.PlayerCardsDealed, tableView);
-        this.clearRoundNotification(tableView);
-    }
-
-    private onFlopDealed(tableId: number) {
-        const tableView = this.getTableById(tableId);
-        if (!tableView) {
-            return;
-        }
-        this.setRoundNotificationCaption(CardsDealedCodes.FlopDealed, tableView);
-        this.clearRoundNotification(tableView);
-    }
-
-    private onTurnDealed(tableId: number) {
-        const tableView = this.getTableById(tableId);
-        if (!tableView) {
-            return;
-        }
-        this.setRoundNotificationCaption(CardsDealedCodes.TurnDealed, tableView);
-        this.clearRoundNotification(tableView);
-    }
-
-    private onRiverDealed(tableId: number) {
-        const tableView = this.getTableById(tableId);
-        if (!tableView) {
-            return;
-        }
-        this.setRoundNotificationCaption(CardsDealedCodes.RiverDealed, tableView);
-        this.clearRoundNotification(tableView);
-    }
-    /**
-     * Sets round notification caption
-     * @param round
-     * 0 - preflop
-     * 1 - flop
-     * 2 - tern
-     * 3 - river
-     */
-    public setRoundNotificationCaption(round: number, tableView: TableView) {
-        let caption = "";
-        switch (round) {
-            case 0: {
-                caption = _("rounds.preFlop");
-                break;
-            }
-            case 1: {
-                caption = _("rounds.flop");
-                break;
-            }
-            case 2: {
-                caption = _("rounds.tern");
-                break;
-            }
-            case 3: {
-                caption = _("rounds.river");
-                break;
-            }
-            default:
-                caption = "";
-        }
-        tableView.roundNotification(caption);
-    }
-    private clearRoundNotification(tableView: TableView) {
-        timeService.setTimeout(() => {
-            tableView.roundNotification("");
-        }, 3000);
-    }
-
     public removeTableById(tableId: number) {
         const view = this.getTableById(tableId);
         if (view === null) {
@@ -560,6 +486,78 @@ class TableManager {
         }
 
         this.currentIndex(0);
+    }
+    private onPlayerCardsDealed(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        this.setRoundNotificationCaption(CardsDealedCodes.PlayerCardsDealed, tableView);
+        this.clearRoundNotification(tableView);
+    }
+
+    private onFlopDealed(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        this.setRoundNotificationCaption(CardsDealedCodes.FlopDealed, tableView);
+        this.clearRoundNotification(tableView);
+    }
+
+    private onTurnDealed(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        this.setRoundNotificationCaption(CardsDealedCodes.TurnDealed, tableView);
+        this.clearRoundNotification(tableView);
+    }
+
+    private onRiverDealed(tableId: number) {
+        const tableView = this.getTableById(tableId);
+        if (!tableView) {
+            return;
+        }
+        this.setRoundNotificationCaption(CardsDealedCodes.RiverDealed, tableView);
+        this.clearRoundNotification(tableView);
+    }
+    /**
+     * Sets round notification caption
+     * @param round
+     * 0 - preflop
+     * 1 - flop
+     * 2 - tern
+     * 3 - river
+     */
+    private setRoundNotificationCaption(round: number, tableView: TableView) {
+        let caption = "";
+        switch (round) {
+            case CardsDealedCodes.PlayerCardsDealed: {
+                caption = _("rounds.preFlop");
+                break;
+            }
+            case CardsDealedCodes.FlopDealed: {
+                caption = _("rounds.flop");
+                break;
+            }
+            case CardsDealedCodes.TurnDealed: {
+                caption = _("rounds.tern");
+                break;
+            }
+            case CardsDealedCodes.RiverDealed: {
+                caption = _("rounds.river");
+                break;
+            }
+            default:
+                caption = "";
+        }
+        tableView.roundNotification(caption);
+    }
+    private clearRoundNotification(tableView: TableView) {
+        timeService.setTimeout(() => {
+            tableView.roundNotification("");
+        }, 3000);
     }
     private async getSittingTablesFromServer() {
         const api = new Game(host);
