@@ -527,7 +527,7 @@ class TableManager {
      * @param round
      * 0 - preflop
      * 1 - flop
-     * 2 - tern
+     * 2 - turn
      * 3 - river
      */
     private setRoundNotificationCaption(round: number, tableView: TableView) {
@@ -542,7 +542,7 @@ class TableManager {
                 break;
             }
             case CardsDealedCodes.TurnDealed: {
-                caption = _("rounds.tern");
+                caption = _("rounds.turn");
                 break;
             }
             case CardsDealedCodes.RiverDealed: {

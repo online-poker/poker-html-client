@@ -484,7 +484,7 @@ describe("Table view", () => {
             tableView.onBet(1, 2, 0, 2);
             tableView.onBet(2, 2, 0, 1);
 
-            // Tern
+            // Turn
             tableView.executeMoveMoneyToPot([0]);
             tableView.onOpenCards([19, 21, 22, 25]);
             tableView.onBet(1, 2, 0, 2);
@@ -653,7 +653,7 @@ describe("Table view", () => {
             expect(turnCounter).toEqual(0);
             expect(riverCounter).toEqual(0);
         });
-        it("Verify tern", async () => {
+        it("Verify turn", async () => {
             const winner: GameWinnerModel[] = [
                 {
                     Amount: 100,
@@ -712,7 +712,7 @@ describe("Table view", () => {
             tableView.onBet(1, 2, 0, 2);
             tableView.onBet(2, 2, 0, 1);
 
-            // Tern
+            // Turn
             tableView.executeMoveMoneyToPot([0]);
             tableView.onOpenCards([19, 21, 22, 25]);
             tableView.onBet(1, 2, 0, 2);
@@ -786,7 +786,7 @@ describe("Table view", () => {
             tableView.onBet(1, 2, 0, 2);
             tableView.onBet(2, 2, 0, 1);
 
-            // Tern
+            // Turn
             tableView.executeMoveMoneyToPot([0]);
             tableView.onOpenCards([19, 21, 22, 25]);
             tableView.onBet(1, 2, 0, 2);
