@@ -7,6 +7,8 @@ import { Information, TournamentBetStructure, TournamentPrizeStructure } from ".
 import { debugSettings } from "./debugsettings";
 import { imagePreloadService } from "./services";
 
+const exectedVersion = 1;
+
 class MetadataManager {
     public online = ko.observable("-");
     public registered = ko.observable("-");
@@ -67,8 +69,8 @@ class MetadataManager {
     public async versionCheck() {
         const metadataApi = new Information(host);
         const serverInformation = await metadataApi.getVersion();
-        if (serverInformation.ServerApiVersion > OnlinePoker.Commanding.API.version) {
-            if (serverInformation.MinimumClientApiVersion <= OnlinePoker.Commanding.API.version) {
+        if (serverInformation.ServerApiVersion > exectedVersion) {
+            if (serverInformation.MinimumClientApiVersion <= exectedVersion) {
                 // Could work.
                 return;
             } else {

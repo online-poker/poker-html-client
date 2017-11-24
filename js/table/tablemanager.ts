@@ -2,7 +2,7 @@
 import * as ko from "knockout";
 import * as signals from "signals";
 import { Game } from "../api/game";
-import { Tournament, TournamentDefinition, TournamentPlayerStatus } from "../api/tournament";
+import { Tournament, TournamentDefinition, TournamentPlayerStatus, TournamentStatus } from "../api/tournament";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
 import * as commandManager from "../commandmanager";
@@ -1062,7 +1062,7 @@ class TableManager {
                 return;
             }
 
-            tournamentView.onTournamentStatusChanged(status);
+            tournamentView.onTournamentStatusChanged(status as any);
         };
         gameHub.client.TournamentTableChanged = function(tournamentId, tableId) {
             if (wrapper.terminated) {

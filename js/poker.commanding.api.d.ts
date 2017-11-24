@@ -90,6 +90,18 @@ interface PlayerStatusInfo {
     Stars: number;
 }
 
+declare enum TournamentStatus {
+    Pending,
+    RegistrationStarted,
+    RegistrationCancelled,
+    SettingUp,
+    WaitingTournamentStart,
+    Started,
+    Completed,
+    Cancelled,
+    LateRegistration,
+}
+
 interface TournamentPlayerStateDefinition {
     TournamentId: number;
     TableId: number;

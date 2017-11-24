@@ -1,5 +1,7 @@
+/// <reference path="poker.commanding.api.ts" />
 import * as $ from "jquery";
 import ko = require("knockout");
+import * as moment from "moment";
 import { App } from "./app";
 import { registerBindings } from "./bindings";
 import { registerComponents } from "./components/registration";
@@ -25,7 +27,16 @@ function isRunningStandalone() {
         || ("standalone" in window.navigator && window.navigator["standalone"] === true));
 }
 
-function bootstrap() {
+export function bootstrap() {// tslint:disable:no-string-literal
+    window["ko"] = ko;
+    window["TableView"] = TableView;
+    window["ActionBlock"] = ActionBlock;
+    // tslint:enable:no-string-literal
+    registerBindings();
+    registerExtenders();
+    registerComponents();
+    updateDefaultMessages();
+
     if (typeof host === "undefined") {
         // tslint:disable-next-line:no-console
         console.error("File environment.js is missing");
@@ -38,14 +49,12 @@ function bootstrap() {
 
     $.connection.hub.url = baseUrl + "/signalr";
     $.connection.hub.logging = false;
-    OnlinePoker.Commanding.API.logging = false;
     // GameActionsQueue.waitDisabled = true;
     // tslint:disable-next-line:no-string-literal
     const numericTextHandler: any = ko.bindingHandlers["numericText"];
     numericTextHandler.defaultPositions = 0;
     numericTextHandler.separator = ",";
-    // tslint:disable-next-line:no-string-literal
-    window["moment"].locale("ru");
+    moment.locale("ru");
 
     // This function prevents the rotation from
     function shouldRotateToOrientation(interfaceOrientation) {
@@ -61,6 +70,7 @@ function bootstrap() {
     window["baseUrl"] = baseUrl;
     window["debugSettings"] = debugSettings;
     window["_"] = _;
+    window["moment"] = moment;
     // tslint:enable:no-string-literal
     window.onerror = function (message, url, lineNumber, colno, error) {
         const errorMessage = "Error: " + message + " in " + url + " at line " + lineNumber;
@@ -96,13 +106,4 @@ function bootstrap() {
     }
 }
 
-// tslint:disable:no-string-literal
-window["ko"] = ko;
-window["TableView"] = TableView;
-window["ActionBlock"] = ActionBlock;
-// tslint:enable:no-string-literal
-registerBindings();
-registerExtenders();
-registerComponents();
-updateDefaultMessages();
-bootstrap();
+// bootstrap();

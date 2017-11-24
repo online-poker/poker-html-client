@@ -1,4 +1,5 @@
 import * as $ from "jquery";
+import "signalr";
 import * as signals from "signals";
 import * as authManager from "./authmanager";
 import * as commandManager from "./commandmanager";
