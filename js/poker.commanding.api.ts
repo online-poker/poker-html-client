@@ -1,7 +1,6 @@
 ﻿/* tslint:disable:quotemark */
 declare var authToken: string;
 
-
 namespace OnlinePoker {
     export namespace Commanding {
         // tslint:disable-next-line:no-namespace
