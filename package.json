@@ -8,7 +8,8 @@
     "lint": "tslint --project tsconfig.json",
     "tslint": "tslint",
     "configure-ci": "node build/configure-ci.js",
-    "build": "npm run compile && npm run lint",
+    "build": "npm run compile && npm run webpack && npm run lint",
+    "webpack": "npm run webpack",
     "test": "jest",
     "test:watch": "jest --watch",
     "prepack": "npm run build",
@@ -56,6 +57,13 @@
     "collectCoverage": true,
     "mapCoverage": true
   },
+  "files": [
+    "js/application.js",
+    "dist/main.js",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE"
+  ],
   "homepage": "https://github.com/online-poker/poker-html-client#readme",
   "devDependencies": {
     "@types/applicationinsights": "^0.15.34",
