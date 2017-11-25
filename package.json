@@ -9,7 +9,7 @@
     "tslint": "tslint",
     "configure-ci": "node build/configure-ci.js",
     "build": "npm run compile && npm run webpack && npm run lint",
-    "webpack": "npm run webpack",
+    "webpack": "webpack",
     "test": "jest",
     "test:watch": "jest --watch",
     "prepack": "npm run build",
