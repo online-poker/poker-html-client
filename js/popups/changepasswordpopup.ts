@@ -11,20 +11,21 @@ import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 
-export class ChangePasswordPopup extends PopupBase implements KnockoutValidationGroup {
+export class ChangePasswordPopup extends PopupBase {
     public oldPassword = ko.observable<string>().extend({ required: true });
     public password: KnockoutObservable<string>;
     public confirmPassword: KnockoutObservable<string>;
     public errorMessage: KnockoutObservable<string>;
     public errors: KnockoutValidationErrors;
-    public isValid: () => boolean;
     public loading: KnockoutObservable<boolean>;
+    private validationModel: KnockoutObservable<ChangePasswordPopup>;
 
     constructor() {
         super();
         this.password = ko.observable<string>().extend({ required: true });
         this.confirmPassword = ko.observable<string>().extend({ required: true });
         this.errors = ko.validation.group(this);
+        this.validationModel = ko.validatedObservable(this);
         this.errorMessage = ko.observable<string>();
         this.loading = ko.observable(false);
     }
@@ -37,7 +38,7 @@ export class ChangePasswordPopup extends PopupBase implements KnockoutValidation
     }
     public async confirm() {
         const self = this;
-        const isValid = this.isValid();
+        const isValid = this.validationModel.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;

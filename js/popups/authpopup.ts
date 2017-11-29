@@ -11,7 +11,7 @@ import { PopupBase } from "../ui/popupbase";
 declare var apiHost: string;
 declare var app: App;
 
-export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
+export class AuthPopup extends PopupBase {
     public login: KnockoutObservable<string>;
     public password: KnockoutObservable<string>;
     public validationLogin = ko.observable<string>().extend({ required: true, maxLength: 12 });
@@ -19,8 +19,8 @@ export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
     public errorMessage: KnockoutObservable<string>;
     public rememberMe: KnockoutObservable<boolean>;
     public errors: KnockoutValidationErrors;
-    public isValid: () => boolean;
     public loading: KnockoutObservable<boolean>;
+    private validationModel: KnockoutObservable<AuthPopup>;
 
     constructor() {
         super();
@@ -28,6 +28,7 @@ export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
         this.password = ko.observable<string>();
         this.rememberMe = ko.observable(false);
         this.errors = ko.validation.group(this);
+        this.validationModel = ko.validatedObservable(this);
         this.errorMessage = ko.observable<string>();
         this.loading = ko.observable(false);
     }
@@ -46,7 +47,7 @@ export class AuthPopup extends PopupBase implements KnockoutValidationGroup {
 
         this.validationLogin(this.login());
         this.validationPassword(this.password());
-        const isValid = this.isValid();
+        const isValid = this.validationModel.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;

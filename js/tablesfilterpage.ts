@@ -6,7 +6,7 @@ export class TablesFilterPage extends PageBase {
     public password: KnockoutObservable<string>;
     public confirmpassword: KnockoutObservable<string>;
     public errors: KnockoutValidationErrors;
-    public isValid: () => boolean;
+    private validationModel: KnockoutObservable<TablesFilterPage>;
 
     constructor() {
         super();
@@ -15,5 +15,6 @@ export class TablesFilterPage extends PageBase {
         this.confirmpassword = ko.observable<string>().extend({ required: true });
 
         this.errors = ko.validation.group(this);
+        this.validationModel = ko.validatedObservable(this);
     }
 }

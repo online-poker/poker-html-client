@@ -92,13 +92,25 @@ export function bootstrap() {// tslint:disable:no-string-literal
         window["appInsights"].trackException(error, "window.onerror");
     };
     window.addEventListener("unhandledrejection", function (event: any) {
-        // tslint:disable-next-line:no-string-literal
-        window["appInsights"].trackException(event.reason, "Promise");
+        console.log("Unhandled promise rejection");
+        if (event) {
+            console.error(event);
+            // tslint:disable-next-line:no-string-literal
+            window["appInsights"].trackException(event.reason, "Promise");
+        } else {
+            console.log("No promise rejection reason specified.");
+        }
     });
 
     ko.onError = function (error) {
-        // tslint:disable-next-line:no-string-literal
-        window["appInsights"].trackException(error, "Knockout");
+        console.log("Unhandled KO exception");
+        if (error) {
+            console.error(error);
+            // tslint:disable-next-line:no-string-literal
+            window["appInsights"].trackException(error, "Knockout");
+        } else {
+            console.log("No KO error specified.");
+        }
     };
     app.bindEvents();
     // tslint:disable-next-line:no-string-literal
