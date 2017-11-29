@@ -2,13 +2,14 @@
   "name": "poker-html-client",
   "version": "0.3.0",
   "description": "HTML client for online poker",
-  "main": "js/application.js",
+  "main": "dist/main.js",
   "scripts": {
     "compile": "tsc",
     "lint": "tslint --project tsconfig.json",
     "tslint": "tslint",
     "configure-ci": "node build/configure-ci.js",
-    "build": "npm run compile && npm run lint",
+    "build": "npm run compile && npm run webpack && npm run lint",
+    "webpack": "webpack",
     "test": "jest",
     "test:watch": "jest --watch",
     "prepack": "npm run build",
@@ -56,6 +57,13 @@
     "collectCoverage": true,
     "mapCoverage": true
   },
+  "files": [
+    "js/application.js",
+    "dist/main.js",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE"
+  ],
   "homepage": "https://github.com/online-poker/poker-html-client#readme",
   "devDependencies": {
     "@types/applicationinsights": "^0.15.34",
@@ -73,15 +81,26 @@
     "@types/moment": "^2.13.0",
     "@types/requirejs": "^2.1.31",
     "@types/signalr": "^2.2.35",
-    "isomorphic-fetch": "^2.2.1",
-    "knockout": "^3.4.2",
-    "poker-server-api": "0.0.2",
-    "signals": "^1.0.0",
+    "awesome-typescript-loader": "^3.2.3",
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.1",
+    "file-loader": "^1.1.5",
+    "jest": "^21.2.1",
+    "json-loader": "^0.5.7",
+    "style-loader": "^0.19.0",
+    "ts-jest": "^21.1.4",
     "tslint": "^5.8.0",
-    "typescript": "^2.6.1"
+    "typescript": "^2.6.1",
+    "url-loader": "^0.6.2",
+    "webpack": "^3.8.1"
   },
   "dependencies": {
-    "jest": "^21.2.1",
-    "ts-jest": "^21.1.4"
+    "isomorphic-fetch": "^2.2.1",
+    "jquery": "^3.2.1",
+    "knockout": "^3.4.2",
+    "knockout.validation": "^2.0.3",
+    "poker-server-api": "0.0.2",
+    "signalr": "^2.2.2",
+    "signals": "^1.0.0"
   }
 }

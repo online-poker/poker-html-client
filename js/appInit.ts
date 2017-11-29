@@ -1,4 +1,7 @@
+/// <reference path="poker.commanding.api.ts" />
+import * as $ from "jquery";
 import ko = require("knockout");
+import * as moment from "moment";
 import { App } from "./app";
 import { registerBindings } from "./bindings";
 import { registerComponents } from "./components/registration";
@@ -24,7 +27,20 @@ function isRunningStandalone() {
         || ("standalone" in window.navigator && window.navigator["standalone"] === true));
 }
 
-function bootstrap() {
+export function bootstrap() {// tslint:disable:no-string-literal
+    window["ko"] = ko;
+    window["TableView"] = TableView;
+    window["ActionBlock"] = ActionBlock;
+
+    // Enable hammer events on whole document
+    Hammer(document);
+
+    // tslint:enable:no-string-literal
+    registerBindings();
+    registerExtenders();
+    registerComponents();
+    updateDefaultMessages();
+
     if (typeof host === "undefined") {
         // tslint:disable-next-line:no-console
         console.error("File environment.js is missing");
@@ -34,17 +50,16 @@ function bootstrap() {
     const baseUrl = host;
     const apiHost = baseUrl + "/api/rest/v1";
     const app = new App();
+    app.bindPages();
 
     $.connection.hub.url = baseUrl + "/signalr";
     $.connection.hub.logging = false;
-    OnlinePoker.Commanding.API.logging = false;
     // GameActionsQueue.waitDisabled = true;
     // tslint:disable-next-line:no-string-literal
     const numericTextHandler: any = ko.bindingHandlers["numericText"];
     numericTextHandler.defaultPositions = 0;
     numericTextHandler.separator = ",";
-    // tslint:disable-next-line:no-string-literal
-    window["moment"].locale("ru");
+    moment.locale("ru");
 
     // This function prevents the rotation from
     function shouldRotateToOrientation(interfaceOrientation) {
@@ -60,6 +75,7 @@ function bootstrap() {
     window["baseUrl"] = baseUrl;
     window["debugSettings"] = debugSettings;
     window["_"] = _;
+    window["moment"] = moment;
     // tslint:enable:no-string-literal
     window.onerror = function (message, url, lineNumber, colno, error) {
         const errorMessage = "Error: " + message + " in " + url + " at line " + lineNumber;
@@ -76,13 +92,25 @@ function bootstrap() {
         window["appInsights"].trackException(error, "window.onerror");
     };
     window.addEventListener("unhandledrejection", function (event: any) {
-        // tslint:disable-next-line:no-string-literal
-        window["appInsights"].trackException(event.reason, "Promise");
+        console.log("Unhandled promise rejection");
+        if (event) {
+            console.error(event);
+            // tslint:disable-next-line:no-string-literal
+            window["appInsights"].trackException(event.reason, "Promise");
+        } else {
+            console.log("No promise rejection reason specified.");
+        }
     });
 
     ko.onError = function (error) {
-        // tslint:disable-next-line:no-string-literal
-        window["appInsights"].trackException(error, "Knockout");
+        console.log("Unhandled KO exception");
+        if (error) {
+            console.error(error);
+            // tslint:disable-next-line:no-string-literal
+            window["appInsights"].trackException(error, "Knockout");
+        } else {
+            console.log("No KO error specified.");
+        }
     };
     app.bindEvents();
     // tslint:disable-next-line:no-string-literal
@@ -95,13 +123,4 @@ function bootstrap() {
     }
 }
 
-// tslint:disable:no-string-literal
-window["ko"] = ko;
-window["TableView"] = TableView;
-window["ActionBlock"] = ActionBlock;
-// tslint:enable:no-string-literal
-registerBindings();
-registerExtenders();
-registerComponents();
-updateDefaultMessages();
-bootstrap();
+// bootstrap();

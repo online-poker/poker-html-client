@@ -13,7 +13,7 @@ import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 
-export class AddMoneyPopup implements KnockoutValidationGroup {
+export class AddMoneyPopup {
     public buyin: KnockoutObservable<number>;
     public minBuyin: KnockoutObservable<number>;
     public maxBuyin: KnockoutObservable<number>;
@@ -22,7 +22,6 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
     public accountTotal: KnockoutObservable<number>;
     public tableName: KnockoutObservable<string>;
     public errors: KnockoutValidationErrors;
-    public isValid: () => boolean;
     public errorMessage: KnockoutObservable<string>;
     public tableView: KnockoutObservable<TableView>;
     public loading: KnockoutObservable<boolean>;
@@ -30,6 +29,7 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
     public ticketCode: KnockoutObservable<string>;
     public allowUsePersonalAccount: KnockoutObservable<boolean>;
     public allowTickets: KnockoutObservable<boolean>;
+    private validationModel: KnockoutObservable<AddMoneyPopup>;
 
     constructor() {
         this.buyin = ko.observable<number>().extend({ required: appConfig.tournament.enabled, validatable: true });
@@ -43,6 +43,7 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
         this.minBet = ko.observable<number>(0);
         this.maxBet = ko.observable<number>(0);
         this.errors = ko.validation.group(this);
+        this.validationModel = ko.validatedObservable(this);
         this.errorMessage = ko.observable<string>();
         this.processing = ko.observable(false);
         this.allowUsePersonalAccount = ko.observable(appConfig.joinTable.allowUsePersonalAccount);
@@ -93,17 +94,17 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
         }
     }
     public async confirm() {
-        const self = this;
-        const isValid = this.isValid();
+        const isValid = this.validationModel.isValid();
         const ticketCode = this.ticketCode();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;
         }
 
-        if (self.processing()) {
+        if (this.processing()) {
             return;
         }
+
         if (appConfig.joinTable.allowUsePersonalAccount) {
             if (this.buyin() < this.minBuyin()) {
                 this.buyin.setError(_("addMoney.putMoreMoney"));
@@ -133,20 +134,20 @@ export class AddMoneyPopup implements KnockoutValidationGroup {
             }
         }
         const amount = this.buyin();
-        self.processing(true);
+        this.processing(true);
         this.loading(true);
         try {
             await this.tableView().addBalance(amount, ticketCode);
-            self.processing(false);
-            self.loading(false);
+            this.processing(false);
+            this.loading(false);
             app.closePopup("ok");
             SimplePopup.display(_("addMoney.caption"), _("addMoney.success"));
-            self.ticketCode(null);
+            this.ticketCode(null);
         } catch (e) {
-            self.processing(false);
-            self.loading(false);
+            this.processing(false);
+            this.loading(false);
             SimplePopup.display(_("addMoney.caption"), _("errors." + e.message));
-            self.ticketCode(null);
+            this.ticketCode(null);
         }
     }
 }

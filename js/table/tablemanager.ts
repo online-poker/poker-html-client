@@ -2,7 +2,7 @@
 import * as ko from "knockout";
 import * as signals from "signals";
 import { Game } from "../api/game";
-import { Tournament, TournamentDefinition, TournamentPlayerStatus } from "../api/tournament";
+import { Tournament, TournamentDefinition, TournamentPlayerStatus, TournamentStatus } from "../api/tournament";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
 import * as commandManager from "../commandmanager";
@@ -12,6 +12,7 @@ import { SimplePopup } from "../popups/simplepopup";
 import { appReloadService, connectionService, slowInternetService } from "../services";
 import * as broadcastService from "../services/broadcastservice";
 import { ConnectionWrapper } from "../services/connectionwrapper";
+import { DuplicateFinder } from "../services/duplicatefinder";
 import { settings } from "../settings";
 import * as timeService from "../timeservice";
 import { allNoneClassesFourCards, allNoneClassesTwoCards, cardsArray, decodeCardsArray } from "./cardsHelper";
@@ -28,7 +29,7 @@ export enum CardsDealedCodes {
     RiverDealed = 3,
 }
 
-class TableManager {
+export class TableManager {
     public tables: KnockoutObservableArray<TableView>;
     public currentIndex: KnockoutObservable<number>;
     public hasTurn: KnockoutComputed<boolean>;
@@ -559,6 +560,15 @@ class TableManager {
             tableView.roundNotification("");
         }, 3000);
     }
+    public registerEvent(tableId: number, data: any[]) {
+        const finder = this.getDuplicator(tableId);
+
+        finder.registerEvent(data);
+        if (finder.validateDuplicateEvents()) {
+            finder.printDebug();
+            slowInternetService.showDuplicatedConnectionPopup();
+        }
+    }
     private async getSittingTablesFromServer() {
         const api = new Game(host);
         const sittingTablesData = await api.getSitingTables();
@@ -1062,7 +1072,7 @@ class TableManager {
                 return;
             }
 
-            tournamentView.onTournamentStatusChanged(status);
+            tournamentView.onTournamentStatusChanged(status as any);
         };
         gameHub.client.TournamentTableChanged = function(tournamentId, tableId) {
             if (wrapper.terminated) {
@@ -1265,16 +1275,6 @@ class TableManager {
         }
 
         this.removeTableById(tableId);
-    }
-
-    private registerEvent(tableId: number, data: any[]) {
-        const finder = this.getDuplicator(tableId);
-
-        finder.registerEvent(data);
-        if (finder.validateDuplicateEvents()) {
-            finder.printDebug();
-            slowInternetService.showDuplicatedConnectionPopup();
-        }
     }
 
     private clearBetEvents(tableId: number) {

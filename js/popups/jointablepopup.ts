@@ -11,7 +11,7 @@ import { SimplePopup } from "./simplepopup";
 
 declare var app: App;
 
-export class JoinTablePopup implements KnockoutValidationGroup {
+export class JoinTablePopup {
     public buyin: KnockoutObservable<number>;
     public ticketCode: KnockoutObservable<string>;
     public minBuyin: KnockoutObservable<number>;
@@ -21,13 +21,13 @@ export class JoinTablePopup implements KnockoutValidationGroup {
     public accountTotal: KnockoutObservable<number>;
     public tableName: KnockoutObservable<string>;
     public errors: KnockoutValidationErrors;
-    public isValid: () => boolean;
     public errorMessage: KnockoutObservable<string>;
     public seatNumber: KnockoutObservable<number>;
     public tableView: KnockoutObservable<TableView>;
     public loading: KnockoutObservable<boolean>;
     public allowUsePersonalAccount: KnockoutObservable<boolean>;
     public allowTickets: KnockoutObservable<boolean>;
+    private validationModel: KnockoutObservable<JoinTablePopup>;
 
     public constructor() {
         this.buyin = ko.observable<number>()
@@ -44,6 +44,7 @@ export class JoinTablePopup implements KnockoutValidationGroup {
         this.minBet = ko.observable<number>(0);
         this.maxBet = ko.observable<number>(0);
         this.errors = ko.validation.group(this);
+        this.validationModel = ko.validatedObservable(this);
         this.errorMessage = ko.observable<string>();
         this.allowUsePersonalAccount = ko.observable<boolean>(appConfig.joinTable.allowUsePersonalAccount);
         this.allowTickets = ko.observable<boolean>(appConfig.joinTable.allowTickets);
@@ -88,7 +89,7 @@ export class JoinTablePopup implements KnockoutValidationGroup {
     }
     public async confirm() {
         const self = this;
-        const isValid = this.isValid();
+        const isValid = this.validationModel.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;

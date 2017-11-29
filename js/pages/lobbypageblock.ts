@@ -1,6 +1,5 @@
-﻿/// <reference path="../pageblock.ts" />
-
-import { App } from "../app";
+﻿import { App } from "../app";
+import { PageBlock } from "../pageblock";
 import { LobbyPage } from "./lobbypage";
 import { TablesListPage } from "./tableslistpage";
 import { TournamentLobbyPage } from "./tournamentlobbypage";

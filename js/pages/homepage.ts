@@ -8,6 +8,7 @@ import * as authManager from "../authmanager";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";
+import { PageBlock } from "../pageblock";
 import { keyboardActivationService } from "../services";
 import { settings } from "../settings";
 import * as timeService from "../timeservice";

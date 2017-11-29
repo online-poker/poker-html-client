@@ -1,10 +1,12 @@
 ﻿declare var apiHost: string;
 
+import * as $ from "jquery";
 import * as ko from "knockout";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as commandManager from "../commandmanager";
 import { debugSettings } from "../debugsettings";
+import { PageBlock } from "../pageblock";
 import {
     connectionService,
     deviceEvents,

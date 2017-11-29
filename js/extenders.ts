@@ -1,6 +1,7 @@
 /* tslint:disable:no-string-literal */
 
 import * as ko from "knockout";
+import { SelectorItem } from "./selector";
 
 export function registerExtenders() {
     ko.extenders["options"] = (target, option: { caption: string; items: SelectorItem[]}) => {

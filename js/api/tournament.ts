@@ -164,6 +164,18 @@ export interface TournamentPlayerDefinition {
     Stack: number;
 }
 
+export enum TournamentStatus {
+    Pending,
+    RegistrationStarted,
+    RegistrationCancelled,
+    SettingUp,
+    WaitingTournamentStart,
+    Started,
+    Completed,
+    Cancelled,
+    LateRegistration,
+}
+
 export class Tournament {
     constructor(public host: string) {
     }

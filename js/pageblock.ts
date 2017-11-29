@@ -1,4 +1,7 @@
-﻿class PageBlock {
+﻿import * as $ from "jquery";
+import { Signal } from "signals";
+
+export class PageBlock {
     public static useDoubleView: boolean = false;
     public shown: Signal;
     public loadPromises: JQueryPromise<void>[];
