@@ -488,6 +488,15 @@ export class TableManager {
 
         this.currentIndex(0);
     }
+    public registerEvent(tableId: number, data: any[]) {
+        const finder = this.getDuplicator(tableId);
+
+        finder.registerEvent(data);
+        if (finder.validateDuplicateEvents()) {
+            finder.printDebug();
+            slowInternetService.showDuplicatedConnectionPopup();
+        }
+    }
     private onPlayerCardsDealed(tableId: number) {
         const tableView = this.getTableById(tableId);
         if (!tableView) {
@@ -559,15 +568,6 @@ export class TableManager {
         timeService.setTimeout(() => {
             tableView.roundNotification("");
         }, 3000);
-    }
-    public registerEvent(tableId: number, data: any[]) {
-        const finder = this.getDuplicator(tableId);
-
-        finder.registerEvent(data);
-        if (finder.validateDuplicateEvents()) {
-            finder.printDebug();
-            slowInternetService.showDuplicatedConnectionPopup();
-        }
     }
     private async getSittingTablesFromServer() {
         const api = new Game(host);
