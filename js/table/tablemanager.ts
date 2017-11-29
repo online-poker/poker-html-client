@@ -12,6 +12,7 @@ import { SimplePopup } from "../popups/simplepopup";
 import { appReloadService, connectionService, slowInternetService } from "../services";
 import * as broadcastService from "../services/broadcastservice";
 import { ConnectionWrapper } from "../services/connectionwrapper";
+import { DuplicateFinder } from "../services/duplicatefinder";
 import { settings } from "../settings";
 import * as timeService from "../timeservice";
 import { allNoneClassesFourCards, allNoneClassesTwoCards, cardsArray, decodeCardsArray } from "./cardsHelper";
@@ -28,7 +29,7 @@ export enum CardsDealedCodes {
     RiverDealed = 3,
 }
 
-class TableManager {
+export class TableManager {
     public tables: KnockoutObservableArray<TableView>;
     public currentIndex: KnockoutObservable<number>;
     public hasTurn: KnockoutComputed<boolean>;
@@ -558,6 +559,15 @@ class TableManager {
         timeService.setTimeout(() => {
             tableView.roundNotification("");
         }, 3000);
+    }
+    public registerEvent(tableId: number, data: any[]) {
+        const finder = this.getDuplicator(tableId);
+
+        finder.registerEvent(data);
+        if (finder.validateDuplicateEvents()) {
+            finder.printDebug();
+            slowInternetService.showDuplicatedConnectionPopup();
+        }
     }
     private async getSittingTablesFromServer() {
         const api = new Game(host);
@@ -1265,16 +1275,6 @@ class TableManager {
         }
 
         this.removeTableById(tableId);
-    }
-
-    private registerEvent(tableId: number, data: any[]) {
-        const finder = this.getDuplicator(tableId);
-
-        finder.registerEvent(data);
-        if (finder.validateDuplicateEvents()) {
-            finder.printDebug();
-            slowInternetService.showDuplicatedConnectionPopup();
-        }
     }
 
     private clearBetEvents(tableId: number) {

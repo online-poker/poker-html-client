@@ -125,30 +125,30 @@ export class App {
 
         this.processing = ko.observable(false);
 
-        this.bindSubPage("home", self.homePage);
-        this.bindSubPage("tables", self.tablesPage);
-        this.bindSubPage("seats", self.seatsPage);
+        this.popupClosed = new signals.Signal();
+    }
 
-        this.bindPopup("auth", self.authPopup);
-        this.bindPopup("changePassword", self.changePasswordPopup);
-        this.bindPopup("simple", self.simplePopup);
-        this.bindPopup("okcancel", self.okcancelPopup);
-        this.bindPopup("custom", self.customPopup);
-        this.bindPopup("joinTable", self.joinTablePopup);
-        this.bindPopup("settings", self.settingsPopup);
-        this.bindPopup("rules", self.rulesPopup);
-        this.bindPopup("tableMenu", self.tableMenuPopup);
-        this.bindPopup("addMoney", self.addMoneyPopup);
-        this.bindPopup("slowConnection", self.slowConnectionPopup);
-        this.bindPopup("tableChat", self.tableChatPopup);
-        this.bindPopup("handHistory", self.handHistoryPopup);
-        this.bindPopup("accountStatus", self.accountStatusPopup);
-
+    public bindPages() {
+        this.bindSubPage("home", this.homePage);
+        this.bindSubPage("tables", this.tablesPage);
+        this.bindSubPage("seats", this.seatsPage);
+        this.bindPopup("auth", this.authPopup);
+        this.bindPopup("changePassword", this.changePasswordPopup);
+        this.bindPopup("simple", this.simplePopup);
+        this.bindPopup("okcancel", this.okcancelPopup);
+        this.bindPopup("custom", this.customPopup);
+        this.bindPopup("joinTable", this.joinTablePopup);
+        this.bindPopup("settings", this.settingsPopup);
+        this.bindPopup("rules", this.rulesPopup);
+        this.bindPopup("tableMenu", this.tableMenuPopup);
+        this.bindPopup("addMoney", this.addMoneyPopup);
+        this.bindPopup("slowConnection", this.slowConnectionPopup);
+        this.bindPopup("tableChat", this.tableChatPopup);
+        this.bindPopup("handHistory", this.handHistoryPopup);
+        this.bindPopup("accountStatus", this.accountStatusPopup);
         this.bindPageBlock("lobby", this.lobbyPageBlock);
         this.bindPageBlock("info", this.infoPageBlock);
-
         this.bindUIElement(".more-block", this.morePopup);
-
         this.mainSelector = new Selector();
         if (typeof window !== "undefined") {
             const mainSelectorElement = $(".page.main .sub-page.selector")[0];
@@ -156,43 +156,40 @@ export class App {
                 ko.applyBindings(this.mainSelector, mainSelectorElement);
             }
         }
-
         this.initializeTabbar();
         this.initializeConnection();
-
         // var progressBackgroundElement = $(".progress-background")[0];
         // ko.applyBindings(this, progressBackgroundElement);
         if (typeof window !== "undefined") {
-            this.processing.subscribe(function(newValue) {
+            this.processing.subscribe(function (newValue) {
                 if (newValue) {
                     $(".progress-background").show();
-                } else {
+                }
+                else {
                     $(".progress-background").hide();
                 }
             });
         }
-
         // show startup page
         uiManager.showPage("initialization");
-
         if (typeof window !== "undefined") {
             const opts = {
-                lines: 13, // The number of lines to draw
-                length: 4, // The length of each line
-                width: 2, // The line thickness
-                radius: 6, // The radius of the inner circle
-                corners: 1, // Corner roundness (0..1)
-                rotate: 0, // The rotation offset
-                direction: 1, // 1: clockwise, -1: counterclockwise
-                color: "#fff", // #rgb or #rrggbb or array of colors
-                speed: 1, // Rounds per second
-                trail: 60, // Afterglow percentage
-                shadow: false, // Whether to render a shadow
-                hwaccel: false, // Whether to use hardware acceleration
-                className: "spinner", // The CSS class to assign to the spinner
-                zIndex: 2e9, // The z-index (defaults to 2000000000)
-                top: "auto", // Top position relative to parent in px
-                left: "auto", // Left position relative to parent in px
+                lines: 13,
+                length: 4,
+                width: 2,
+                radius: 6,
+                corners: 1,
+                rotate: 0,
+                direction: 1,
+                color: "#fff",
+                speed: 1,
+                trail: 60,
+                shadow: false,
+                hwaccel: false,
+                className: "spinner",
+                zIndex: 2e9,
+                top: "auto",
+                left: "auto",
             };
             this.spinner = new Spinner(opts);
             const target = document.getElementById("spinner");
@@ -200,9 +197,8 @@ export class App {
             const progressTarget = document.getElementById("progress-spinner");
             this.progressSpinner = new Spinner(opts).spin(progressTarget);
         }
-
-        this.popupClosed = new signals.Signal();
     }
+
     // Bind Event Listeners
     //
     // Bind any events that are required on startup. Common events are:

@@ -130,6 +130,11 @@ export class SlowInternetService {
     public showDuplicatedConnectionPopup() {
         this.log("Duplicate connection detected");
         this.fatalError = true;
+        if (typeof app === "undefined") {
+            // We are in test mode, so return. This branch should be removed.
+            return;
+        }
+
         if (app.currentPopup !== SlowInternetService.popupName) {
             app.showPopup(SlowInternetService.popupName);
         }

@@ -50,6 +50,7 @@ export function bootstrap() {// tslint:disable:no-string-literal
     const baseUrl = host;
     const apiHost = baseUrl + "/api/rest/v1";
     const app = new App();
+    app.bindPages();
 
     $.connection.hub.url = baseUrl + "/signalr";
     $.connection.hub.logging = false;
