@@ -865,7 +865,7 @@ export class TableView {
         const hubId = connectionService.currentConnection.connection.id;
         const connectionInfo = "HID:" + hubId;
         this.log("Joining table on connection " + connectionInfo);
-        const cancelled = false;
+        let cancelled = false;
         let subsequentDeferred: JQueryDeferred<any> = null;
         const cancelOperation = function () {
             self.log("Cancelling join table request");
@@ -911,7 +911,7 @@ export class TableView {
                 });
 
             result.progress(function (command: string) {
-                this.cancelled = true;
+                cancelled = true;
                 result.reject("Cancelled");
                 if (subsequentDeferred !== null) {
                     subsequentDeferred.notify("cancel");
@@ -932,7 +932,7 @@ export class TableView {
             return result;
         }
 
-        const cancelled = false;
+        let cancelled = false;
         let subsequentDeferred: JQueryDeferred<any> = null;
         const cancelOperation = function () {
             self.log("Cancelling join table request");
@@ -971,7 +971,7 @@ export class TableView {
                 });
 
             result.progress(function (command: string) {
-                this.cancelled = true;
+                cancelled = true;
                 result.reject("Cancelled");
                 if (subsequentDeferred !== null) {
                     subsequentDeferred.notify("cancel");
