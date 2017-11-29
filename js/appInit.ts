@@ -31,6 +31,10 @@ export function bootstrap() {// tslint:disable:no-string-literal
     window["ko"] = ko;
     window["TableView"] = TableView;
     window["ActionBlock"] = ActionBlock;
+
+    // Enable hammer events on whole document
+    Hammer(document);
+
     // tslint:enable:no-string-literal
     registerBindings();
     registerExtenders();
