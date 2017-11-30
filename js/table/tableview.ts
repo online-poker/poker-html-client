@@ -1686,20 +1686,23 @@ export class TableView {
         this.tableCards.setCards(cards);
     }
 
+    public async showOfflineSitPrompt() {
+        const seatNumber = await this.getCurrentOfflineTableSeat();
+        this.showSitPrompt(seatNumber);
+    }
+
     /**
      * Gets current seat number for offline table
      */
-    public getCurrentOfflineTableSeat(): number {
+    public async getCurrentOfflineTableSeat(): Promise<number> {
         const self = this;
         let seatNumber = 0;
-        app.requireAuthentication().then(function (authenticated) {
-            if (authenticated) {
-                const currentPlayer = self.currentLogin();
-                seatNumber = parseInt(currentPlayer.replace("Игрок", ""), 10);
-                // tslint:disable-next-line:no-console
-                console.log("seat number " + seatNumber);
-            }
-        });
+        const authenticated = await app.requireAuthentication();
+        if (authenticated) {
+            const currentPlayer = self.currentLogin();
+            seatNumber = parseInt(currentPlayer.replace("Игрок", ""), 10);
+        }
+
         return seatNumber;
     }
 
