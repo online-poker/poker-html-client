@@ -1,6 +1,19 @@
 ﻿import * as ko from "knockout";
 import * as timeService from "../timeservice";
 
+interface TapGestureEvent {
+    gesture: {
+        center: {
+            pageX: number;
+        };
+    };
+}
+
+/** This is customization for tap event. */
+interface TapEvent {
+    originalEvent: Event & TapGestureEvent;
+}
+
 export class TableSlider {
     public current: KnockoutObservable<number>;
     public currentValue: KnockoutComputed<string>;
@@ -164,9 +177,18 @@ export class TableSlider {
             }, 10);
         }
     }
-    public selectManually(event: MouseEvent) {
-        const relativePosition = this.translator(event.pageX);
-        this.setPosition(relativePosition);
+    public selectManually(event: MouseEvent & TapEvent) {
+        if (event.pageX) {
+            const relativePosition = this.translator(event.pageX);
+            this.setPosition(relativePosition);
+        } else {
+            if (event.originalEvent.gesture) {
+                const relativePosition = this.translator(event.originalEvent.gesture.center.pageX);
+                this.setPosition(relativePosition);
+            } else {
+                console.error("Invalid Tap event.");
+            }
+        }
     }
     public setPosition(relativePosition: number) {
         relativePosition = Math.max(relativePosition, this.minRelative);
