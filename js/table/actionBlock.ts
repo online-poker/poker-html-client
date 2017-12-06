@@ -243,7 +243,7 @@ export class ActionBlock {
 
         this.expanded = ko.observable(false);
         this.waitbb = ko.observable(true);
-        this.skipDeals = ko.observable(false);
+        this.skipDeals = ko.observable(false).extend({ rateLimit: 500 });
         this.autoFoldOrCheck = ko.observable(false);
         this.allInCaption = ko.observable("");
         this.halfPotCaption = ko.observable("");
