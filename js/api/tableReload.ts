@@ -34,6 +34,8 @@ interface TableReloadInformation {
 
 const defaultHeaders = new Headers();
 defaultHeaders.append("Content-Type", "application/json");
+defaultHeaders.append("pragma", "no-cache");
+defaultHeaders.append("cache-control", "no-cache");
 const get: RequestInit = {
     headers: defaultHeaders,
 };
