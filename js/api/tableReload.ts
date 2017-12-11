@@ -59,8 +59,9 @@ export class TableReload {
         const event = "Get table reload";
         this.logStartReloadEvent(event);
         const response = await fetch(this.host + `/server/api/reload/${tableId}`, get);
+        this.log(`Finish ${event} with status ${response.status}`);
         const jsonData = await response.json() as TableReloadInformation;
-        this.log(`Finish ${event} with status ${response.status} returns data ${jsonData}`);
+        this.log(`Event ${event} returned ${JSON.stringify(jsonData)}`);
         return jsonData;
     }
 
