@@ -64,6 +64,10 @@ interface GameDebugSettings {
     singleSidePots: boolean;
 }
 
+interface ReloadDebugSettings {
+    traceReload: boolean;
+}
+
 class DebugSettings {
     public initialization: InitializationDebugSettings;
     public ios: IOSDebugSettings;
@@ -76,6 +80,7 @@ class DebugSettings {
     public connection: ConnectionDebugSettings;
     public application: ApplicationDebugSettings;
     public ui: UIDebugSettings;
+    public reload: ReloadDebugSettings;
 
     constructor() {
         this.initialization = {
@@ -132,6 +137,9 @@ class DebugSettings {
         this.ui = {
             tracePages: false,
             tracePopups: false,
+        };
+        this.reload = {
+            traceReload: false,
         };
     }
 }
