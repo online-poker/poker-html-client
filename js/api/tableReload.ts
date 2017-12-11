@@ -87,22 +87,18 @@ export class TableReload {
     }
 
     private logStartReloadEvent(event: string) {
-        if (!debugSettings.reload.traceReload) {
-            return;
-        }
-
         this.log(`Starting ${event}`);
     }
 
     private logFinishReloadEvent(event: string, status: any) {
-        if (!debugSettings.reload.traceReload) {
-            return;
-        }
-
         this.log(`Finish ${event} with status ${status}`);
     }
 
     private log(event: string) {
+        if (!debugSettings.reload.traceReload) {
+            return;
+        }
+
         console.log(event);
     }
 }
