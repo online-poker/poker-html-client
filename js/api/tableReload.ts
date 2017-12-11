@@ -1,5 +1,6 @@
 
 import { getDeleteRequestInit, getPutRequestInit, getRequestInit } from "./helper";
+import { debugSettings } from "../debugsettings";
 
 interface TableReloadInformation {
     reloadRequired: boolean;
@@ -55,20 +56,53 @@ export class TableReload {
     }
 
     public async getTableReload(tableId: number) {
+        const event = "Get table reload";
+        this.logStartReloadEvent(event);
         const response = await fetch(this.host + `/server/api/reload/${tableId}`, get);
         const jsonData = await response.json() as TableReloadInformation;
+        this.log(`Finish ${event} with status ${response.status} returns data ${jsonData}`);
         return jsonData;
     }
 
     public async confirmEmergencyReload(tableId: number) {
-        await fetch(this.host + `/server/api/reload/${tableId}/table/emergency`, del);
+        const event = "Confirm emergency reload";
+        this.logStartReloadEvent(event);
+        const response = await fetch(this.host + `/server/api/reload/${tableId}/table/emergency`, del);
+        this.logFinishReloadEvent(event, response.status);
     }
 
     public async confirmTableReload(tableId: number) {
-        await fetch(this.host + `/server/api/reload/${tableId}/table`, put);
+        const event = "Confirm table " + tableId + " reload";
+        this.logStartReloadEvent(event);
+        const response = await fetch(this.host + `/server/api/reload/${tableId}/table`, put);
+        this.logFinishReloadEvent(event, response.status);
+
     }
 
     public async confirmSeatReload(tableId: number, seatId: number) {
-        await fetch(this.host + `/server/api/reload/${tableId}/seats/${seatId}`, put);
+        const event = `Confirm seat ${seatId} on table ${tableId} + reload`;
+        this.logStartReloadEvent(event);
+        const response = await fetch(this.host + `/server/api/reload/${tableId}/seats/${seatId}`, put);
+        this.logFinishReloadEvent(event, response.status);
+    }
+
+    private logStartReloadEvent(event: string) {
+        if (!debugSettings.reload.traceReload) {
+            return;
+        }
+
+        this.log(`Starting ${event}`);
+    }
+
+    private logFinishReloadEvent(event: string, status: any) {
+        if (!debugSettings.reload.traceReload) {
+            return;
+        }
+
+        this.log(`Finish ${event} with status ${status}`);
+    }
+
+    private log(event: string) {
+        console.log(event);
     }
 }
