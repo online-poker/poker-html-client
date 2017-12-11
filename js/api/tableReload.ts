@@ -56,7 +56,7 @@ export class TableReload {
     }
 
     public async getTableReload(tableId: number) {
-        const event = "Get table reload";
+        const event = `Get table ${tableId} reload`;
         this.logStartReloadEvent(event);
         const response = await fetch(this.host + `/server/api/reload/${tableId}`, get);
         this.log(`Finish ${event} with status ${response.status}`);
@@ -77,11 +77,10 @@ export class TableReload {
         this.logStartReloadEvent(event);
         const response = await fetch(this.host + `/server/api/reload/${tableId}/table`, put);
         this.logFinishReloadEvent(event, response.status);
-
     }
 
     public async confirmSeatReload(tableId: number, seatId: number) {
-        const event = `Confirm seat ${seatId} on table ${tableId} + reload`;
+        const event = `Confirm seat ${seatId} on table ${tableId} reload`;
         this.logStartReloadEvent(event);
         const response = await fetch(this.host + `/server/api/reload/${tableId}/seats/${seatId}`, put);
         this.logFinishReloadEvent(event, response.status);
