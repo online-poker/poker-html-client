@@ -2,6 +2,8 @@
 export function getRequestInit(): RequestInit {
     const defaultHeaders = new Headers();
     defaultHeaders.append("Content-Type", "application/json");
+    defaultHeaders.append("pragma", "no-cache");
+    defaultHeaders.append("cache-control", "no-cache");
 
     if (authToken) {
         defaultHeaders.append("X-AuthToken", authToken);
