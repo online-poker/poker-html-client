@@ -1,6 +1,6 @@
 
-import { getDeleteRequestInit, getPutRequestInit, getRequestInit } from "./helper";
 import { debugSettings } from "../debugsettings";
+import { getDeleteRequestInit, getPutRequestInit, getRequestInit } from "./helper";
 
 interface TableReloadInformation {
     reloadRequired: boolean;

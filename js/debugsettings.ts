@@ -140,7 +140,7 @@ class DebugSettings {
         };
         this.reload = {
             traceReload: false,
-        }
+        };
     }
 }
 
