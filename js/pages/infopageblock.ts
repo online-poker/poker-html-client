@@ -1,5 +1,6 @@
 ﻿import { PageBlock } from "../pageblock";
 import { InfoPage } from "./infopage";
+import { SupportPage } from "./supportpage";
 
 export class InfoPageBlock extends PageBlock {
     constructor() {
@@ -10,6 +11,7 @@ export class InfoPageBlock extends PageBlock {
         this.addSecondary("accountBlock", new InfoPage());
         this.addSecondary("privacyPolicy", new InfoPage());
         this.addSecondary("support", new InfoPage());
+        this.addSecondary("contactUs", new SupportPage());
         this.addSecondary("howToPlay", new InfoPage());
         this.addSecondary("chatRules", new InfoPage());
         this.addSecondary("terminology", new InfoPage());

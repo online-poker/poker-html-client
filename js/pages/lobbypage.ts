@@ -293,7 +293,7 @@ export class LobbyPage extends PageBase {
         const betLevels = options.bets();
         const moneyType = options.currency();
         const limitType = options.limits();
-        const data = await gameApi.getTables(appConfig.game.showTournamentTables);
+        const data = await gameApi.getTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType, appConfig.game.showTournamentTables);
         if (!this.visible()) {
             return;
         }

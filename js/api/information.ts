@@ -52,4 +52,24 @@ export class Information {
         const jsonData = await response.json() as VersionCheckResponse;
         return jsonData;
     }
+    public async getServerLayout() {
+        const response = await fetch(this.host + "/api/information/servers");
+        const jsonData = await response.json() as AvatarsResponse;
+        return jsonData;
+    }
+    public async getDefaultAvatars(): Promise<AvatarsResponse> {
+        const response = await fetch(this.host + "/api/information/avatars/default");
+        const jsonData = await response.json() as AvatarsResponse;
+        return jsonData;
+    }
+    public async getNews(): Promise<ApiResult<string[]>> {
+        const response = await fetch(this.host + "/api/information/news");
+        const jsonData = await response.json() as ApiResult<string[]>;
+        return jsonData;
+    }
+    public async getBanners(format): Promise<ApiResult<BannerData[]>> {
+        const response = await fetch(this.host + `/api/information/banners/${format}`);
+        const jsonData = await response.json() as ApiResult<BannerData[]>;
+        return jsonData;
+    }
 }

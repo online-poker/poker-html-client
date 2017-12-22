@@ -1,5 +1,12 @@
 import { getDeleteRequestInit, getPostRequestInit, getPutRequestInit } from "./helper";
 
+function getQueryString(params) {
+    const esc = encodeURIComponent;
+    return Object.keys(params)
+      .map((k) => esc(k) + "=" + esc(params[k]))
+      .join("&");
+}
+
 interface AddBalanceResponse extends StatusResponse {
     Amount: number;
 }
@@ -8,9 +15,17 @@ export class Game {
     constructor(public host: string) {
     }
 
-    public async getTables(showTournamentTables: boolean) {
-        const data = {};
-        const response = await fetch(this.host + "/api/tables?showTournamentTables=" + showTournamentTables);
+    public async getTables(fullTables: boolean | null, privateTables, maxPlayers, betLevels, moneyType, limitType, showTournamentTables: boolean) {
+        const data = {
+            fullTables,
+            privateTables,
+            maxPlayers,
+            betLevels,
+            moneyType,
+            limitType,
+            showTournamentTables,
+        };
+        const response = await fetch(this.host + "/api/tables?" + getQueryString(data));
         const jsonData = await response.json() as ApiResult<LobbyTableItem[]>;
         return jsonData;
     }
