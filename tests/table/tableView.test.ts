@@ -441,9 +441,9 @@ describe("Table view", () => {
                     Amount: 100,
                     Pot: 1,
                     CardsDescription: "",
-                    PlayerId: 1
-                }
-            ]
+                    PlayerId: 1,
+                },
+            ];
             const tableView = new TableView(1, {
                 TableId: 1,
                 TableName: "",
@@ -478,7 +478,7 @@ describe("Table view", () => {
             tableView.onPlayerCards(2, [1, 2, 3, 4]);
             tableView.onBet(2, 2, 50, 1);
             tableView.onBet(1, 2, 50, 1);
-            //Flop
+            // Flop
             tableView.executeMoveMoneyToPot([100]);
             tableView.onOpenCards([19, 21, 22]);
             tableView.onBet(1, 2, 0, 2);
@@ -489,8 +489,8 @@ describe("Table view", () => {
             tableView.onOpenCards([19, 21, 22, 25]);
             tableView.onBet(1, 2, 0, 2);
             tableView.onBet(2, 2, 0, 1);
-            // River 
-            tableView.executeMoveMoneyToPot([0]); 
+            // River
+            tableView.executeMoveMoneyToPot([0]);
             tableView.onOpenCards([19, 21, 22, 25, 7]);
 
             tableView.onBet(1, 2, 0, 2);
@@ -527,9 +527,9 @@ describe("Table view", () => {
                     Amount: 100,
                     Pot: 1,
                     CardsDescription: "",
-                    PlayerId: 1
-                }
-            ]
+                    PlayerId: 1,
+                },
+            ];
             const tableView = new TableView(1, {
                 TableId: 1,
                 TableName: "",
@@ -561,10 +561,10 @@ describe("Table view", () => {
             let turnCounter = 0;
             let riverCounter = 0;
 
-            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1 }, this);
-            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1 }, this);
-            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1 }, this);
-            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1 }, this);
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; }, this);
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; }, this);
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; }, this);
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; }, this);
 
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
@@ -590,9 +590,9 @@ describe("Table view", () => {
                     Amount: 100,
                     Pot: 1,
                     CardsDescription: "",
-                    PlayerId: 1
-                }
-            ]
+                    PlayerId: 1,
+                },
+            ];
             const tableView = new TableView(1, {
                 TableId: 1,
                 TableName: "",
@@ -625,10 +625,10 @@ describe("Table view", () => {
             let turnCounter = 0;
             let riverCounter = 0;
 
-            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1 }, this);
-            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1 }, this);
-            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1 }, this);
-            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1 }, this);
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; }, this);
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; }, this);
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; }, this);
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; }, this);
 
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
@@ -659,9 +659,9 @@ describe("Table view", () => {
                     Amount: 100,
                     Pot: 1,
                     CardsDescription: "",
-                    PlayerId: 1
-                }
-            ]
+                    PlayerId: 1,
+                },
+            ];
             const tableView = new TableView(1, {
                 TableId: 1,
                 TableName: "",
@@ -693,10 +693,10 @@ describe("Table view", () => {
             let turnCounter = 0;
             let riverCounter = 0;
 
-            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1 }, this);
-            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1 }, this);
-            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1 }, this);
-            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1 }, this);
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; }, this);
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; }, this);
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; }, this);
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; }, this);
 
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
@@ -733,9 +733,9 @@ describe("Table view", () => {
                     Amount: 100,
                     Pot: 1,
                     CardsDescription: "",
-                    PlayerId: 1
-                }
-            ]
+                    PlayerId: 1,
+                },
+            ];
             const tableView = new TableView(1, {
                 TableId: 1,
                 TableName: "",
@@ -767,10 +767,10 @@ describe("Table view", () => {
             let turnCounter = 0;
             let riverCounter = 0;
 
-            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1 }, this);
-            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1 }, this);
-            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1 }, this);
-            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1 }, this);
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; }, this);
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; }, this);
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; }, this);
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; }, this);
 
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
@@ -791,7 +791,7 @@ describe("Table view", () => {
             tableView.onOpenCards([19, 21, 22, 25]);
             tableView.onBet(1, 2, 0, 2);
             tableView.onBet(2, 2, 0, 1);
-            // River 
+            // River
             tableView.executeMoveMoneyToPot([0]);
             tableView.onOpenCards([19, 21, 22, 25, 7]);
             await tableView.queue.waitCurrentTask();
@@ -810,9 +810,9 @@ describe("Table view", () => {
                     Amount: 100,
                     Pot: 1,
                     CardsDescription: "",
-                    PlayerId: 1
-                }
-            ]
+                    PlayerId: 1,
+                },
+            ];
             const tableView = new TableView(1, {
                 TableId: 1,
                 TableName: "",
@@ -844,10 +844,10 @@ describe("Table view", () => {
             let turnCounter = 0;
             let riverCounter = 0;
 
-            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1 }, this);
-            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1 }, this);
-            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1 }, this);
-            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1 }, this);
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; }, this);
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; }, this);
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; }, this);
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; }, this);
 
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
@@ -860,7 +860,7 @@ describe("Table view", () => {
 
             tableView.executeMoveMoneyToPot([100]);
             tableView.onOpenCards([19, 21, 22, 25, 7]);
-            
+
             await tableView.queue.waitCurrentTask();
             while (tableView.queue.size() > 0) {
                 await tableView.queue.execute();
@@ -870,6 +870,93 @@ describe("Table view", () => {
             expect(flopCounter).toEqual(0);
             expect(turnCounter).toEqual(0);
             expect(riverCounter).toEqual(0);
+        });
+    });
+    describe("Messages", () => {
+        it("Receive admin message", function() {
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            });
+            const d = new Date(2017, 12, 25, 21, 56, 10);
+            tableView.addMessage(1, d, "admin", "Test message");
+            expect(tableView.messages().length).toEqual(1);
+            expect(tableView.messages()[0].fullMessage()).toEqual("[21:56]admin - Test message");
+            expect(tableView.messages()[0].isAdmin).toEqual(true);
+        });
+        it("Receive regular message", function() {
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            });
+            const d = new Date(2017, 12, 25, 21, 56, 10);
+            tableView.addMessage(1, d, "Humpfy Dumpfy", "sat on a wall");
+            expect(tableView.messages().length).toEqual(1);
+            expect(tableView.messages()[0].fullMessage()).toEqual("[21:56]Humpfy Dumpfy - sat on a wall");
+            expect(tableView.messages()[0].isAdmin).toEqual(false);
+        });
+        it("Testing messages limit", function() {
+            TableView.MaxMessagesCount = 10;
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            });
+            const d = new Date(2017, 12, 25, 21, 56, 10);
+            tableView.addMessage(1, d, "admin", "Test message 1");
+            tableView.addMessage(2, d, "admin", "Test message 2");
+            tableView.addMessage(3, d, "admin", "Test message 3");
+            tableView.addMessage(4, d, "admin", "Test message 4");
+            tableView.addMessage(5, d, "admin", "Test message 5");
+            tableView.addMessage(6, d, "admin", "Test message 6");
+            tableView.addMessage(7, d, "admin", "Test message 7");
+            tableView.addMessage(8, d, "admin", "Test message 8");
+            tableView.addMessage(9, d, "admin", "Test message 9");
+            tableView.addMessage(10, d, "admin", "Test message 10");
+            tableView.addMessage(11, d, "admin", "Test message 11");
+            expect(tableView.messages().length).toEqual(10);
+            expect(tableView.messages()[0].fullMessage()).toEqual("[21:56]admin - Test message 11");
+        });
+        it("Receive system message", function() {
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            });
+            const d = new Date(2017, 12, 25, 21, 56, 10);
+            tableView.addSystemMessage(2, "Cover you bases!");
+            expect(tableView.systemMessages().length).toEqual(1);
+            expect(tableView.systemMessages()[0].message()).toEqual("Cover you bases!");
         });
     });
 });

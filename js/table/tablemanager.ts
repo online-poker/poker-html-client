@@ -622,7 +622,7 @@ export class TableManager {
             }
 
             if (type === "C") {
-                tableView.addMessage(messageId, sender, message);
+                tableView.addMessage(messageId, new Date(), sender, message);
             }
 
             if (type === "S") {

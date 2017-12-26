@@ -1,4 +1,4 @@
-import { getPostRequestInit, getRequestInit, getDeleteRequestInit } from "./helper";
+import { getDeleteRequestInit, getPostRequestInit, getRequestInit } from "./helper";
 
 /**
  * Response for the RegisterGuest API call.

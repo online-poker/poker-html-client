@@ -79,7 +79,7 @@ export class ChatPage implements Page {
         }
     }
     public addMessage(messageId: number, sender: string, message: string) {
-        const m = new PlayerMessage(messageId, sender, message);
+        const m = new PlayerMessage(messageId, new Date(), sender, message);
         if (this.messages().some((item) => item.messageId === messageId)) {
             // Skip adding message if it is already in the list.
             return;

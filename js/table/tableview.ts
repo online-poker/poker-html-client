@@ -40,6 +40,7 @@ function getBackCardsFromGameType(gameType: number) {
 }
 
 export class TableView {
+    public static MaxMessagesCount: number = 100;
     public tableName: KnockoutObservable<string>;
 
     /**
@@ -1935,12 +1936,12 @@ export class TableView {
         }
     }
 
-    public addMessage(messageId: number, sender: string, message: string) {
+    public addMessage(messageId: number, date: Date, sender: string, message: string) {
         const messageExists = this.messages().filter((m) => m.messageId === messageId).length > 0;
         if (!messageExists) {
-            const m = new PlayerMessage(messageId, sender, message);
+            const m = new PlayerMessage(messageId, date, sender, message);
             this.messages.unshift(m);
-            while (this.messages().length > 100) {
+            while (this.messages().length > TableView.MaxMessagesCount) {
                 this.messages.pop();
             }
 
@@ -1966,7 +1967,7 @@ export class TableView {
 
         const m = new SystemMessage(messageId, message);
         this.systemMessages.unshift(m);
-        while (this.systemMessages().length > 100) {
+        while (this.systemMessages().length > TableView.MaxMessagesCount) {
             this.systemMessages.pop();
         }
     }
