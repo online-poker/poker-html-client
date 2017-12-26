@@ -14,7 +14,7 @@ import { WebsiteService } from "./websiteService";
 export let keyboardActivationService = new KeyboardActivationService();
 export let slowInternetService = new SlowInternetService();
 export let connectionService = new ConnectionService();
-export let accountService = new AccountService();
+export let accountService = new AccountService(true, false);
 export let imagePreloadService = new ImagePreloadService();
 export let reloadManager = new ReloadManager();
 export let deviceEvents = new DeviceEventService();

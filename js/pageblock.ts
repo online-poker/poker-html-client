@@ -10,6 +10,7 @@ export class PageBlock {
     public currentSecondary: string;
     public secondaryViews: string[];
     public requireAuthentication: boolean = false;
+    public requireGuestAuthentication: boolean = false;
 
     constructor(public name: string, public primaryName: string, primaryModel: any) {
         this.loadPromises = [];

@@ -58,7 +58,7 @@ export class TablesListPage extends PageBase {
         /* tslint:enable:no-bitwise */
         const moneyType = lobbyPage.cashOptions.currency();
         const limitType = lobbyPage.cashOptions.limits();
-        const data = await gameApi.getTables(appConfig.game.showTournamentTables);
+        const data = await gameApi.getTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType, appConfig.game.showTournamentTables);
         self.loading(false);
         if (!self.visible()) {
             return;

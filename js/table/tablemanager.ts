@@ -129,7 +129,7 @@ export class TableManager {
     }
     public async getCurrentTables() {
         const api = new Game(host);
-        const data = await api.getTables(appConfig.game.showTournamentTables);
+        const data = await api.getTables(null, 0, 0, 0, 1, 0, appConfig.game.showTournamentTables);
         const tablesData = data.Data as GameTableModel[];
         const sittingTables = !(appConfig.game.seatMode || appConfig.game.tablePreviewMode)
             ? await this.getSittingTablesFromServer()
@@ -622,7 +622,7 @@ export class TableManager {
             }
 
             if (type === "C") {
-                tableView.addMessage(messageId, sender, message);
+                tableView.addMessage(messageId, new Date(), sender, message);
             }
 
             if (type === "S") {

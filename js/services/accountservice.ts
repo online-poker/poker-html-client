@@ -1,17 +1,20 @@
-declare var apiHost: string;
-
 import * as authManager from "../authmanager";
 import { AccountManager } from "./accountManager";
 
 export class AccountService {
+    private realMoneySupported: boolean;
+    private gameMoneySupported: boolean;
+
+    constructor(realMoneySupported: boolean, gameMoneySupported: boolean) {
+        this.realMoneySupported = realMoneySupported;
+        this.gameMoneySupported = gameMoneySupported;
+    }
     public async getAccount() {
-        const realMoneySupported = true;
-        const gameMoneySupported = false;
         const api = new AccountManager();
         const apiResult = await api.getAccount();
         const data = apiResult.Data;
         const accountsData = [] as AccountInformation[];
-        if (realMoneySupported) {
+        if (this.realMoneySupported) {
             accountsData.push({
                 available: data.RealMoney,
                 currencyName: "currency.realmoney",
@@ -20,7 +23,7 @@ export class AccountService {
             });
         }
 
-        if (gameMoneySupported) {
+        if (this.gameMoneySupported) {
             accountsData.push({
                 available: data.GameMoney,
                 currencyName: "currency.gamemoney",

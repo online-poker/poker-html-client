@@ -8,9 +8,11 @@ import { _ } from "./languagemanager";
 import * as metadataManager from "./metadatamanager";
 import { PageBlock } from "./pageblock";
 import {
+    CashierPageBlock,
     HomePage,
     InfoPageBlock,
     LobbyPageBlock,
+    OtherPageBlock,
     SeatPage,
     TablesPage,
 } from "./pages";
@@ -20,12 +22,17 @@ import {
     AuthPopup,
     ChangePasswordPopup,
     ChatPopup,
+    ContinueForgetPasswordPopup,
     CustomPopup,
+    ForgetPasswordPopup,
     HandHistoryPopup,
     JoinTablePopup,
     MorePopup,
+    NewsPopup,
     OkCancelPopup,
+    RegistrationPopup,
     RulesPopup,
+    SelectAvatarPopup,
     SettingsPopup,
     SlowConnectionPopup,
     TableMenuPopup,
@@ -63,11 +70,16 @@ export class App {
     public currentPopup: string = null;
     public homePage: HomePage;
     public lobbyPageBlock: LobbyPageBlock;
+    public cashierPageBlock: CashierPageBlock;
     public tablesPage: TablesPage;
     public seatsPage: SeatPage;
     public infoPageBlock: InfoPageBlock;
+    public otherPageBlock: OtherPageBlock;
     public authPopup: AuthPopup;
+    public forgetPasswordPopup: ForgetPasswordPopup;
+    public continueForgetPasswordPopup: ContinueForgetPasswordPopup;
     public changePasswordPopup: ChangePasswordPopup;
+    public registrationPopup: RegistrationPopup;
     public simplePopup: SimplePopup;
     public okcancelPopup: OkCancelPopup;
     public customPopup: CustomPopup;
@@ -80,6 +92,8 @@ export class App {
     public accountStatusPopup: AccountStatusPopup;
     public settingsPopup: SettingsPopup;
     public rulesPopup: RulesPopup;
+    public newsPopup = new NewsPopup();
+    public selectAvatarPopup = new SelectAvatarPopup();
 
     public morePopup: MorePopup;
     public tabBar: TabBar;
@@ -101,13 +115,18 @@ export class App {
         this.loadPromises = [];
         // register pages.
         this.homePage = new HomePage();
+        this.otherPageBlock = new OtherPageBlock();
         this.infoPageBlock = new InfoPageBlock();
         this.lobbyPageBlock = new LobbyPageBlock();
+        this.cashierPageBlock = new CashierPageBlock();
         this.tablesPage = new TablesPage();
         this.seatsPage = new SeatPage();
 
         this.authPopup = new AuthPopup();
+        this.forgetPasswordPopup = new ForgetPasswordPopup();
+        this.continueForgetPasswordPopup = new ContinueForgetPasswordPopup();
         this.changePasswordPopup = new ChangePasswordPopup();
+        this.registrationPopup = new RegistrationPopup();
         this.simplePopup = new SimplePopup();
         this.okcancelPopup = new OkCancelPopup();
         this.customPopup = new CustomPopup();
@@ -133,7 +152,10 @@ export class App {
         this.bindSubPage("tables", this.tablesPage);
         this.bindSubPage("seats", this.seatsPage);
         this.bindPopup("auth", this.authPopup);
+        this.bindPopup("forgetPassword", this.forgetPasswordPopup);
+        this.bindPopup("continueForgetPassword", this.continueForgetPasswordPopup);
         this.bindPopup("changePassword", this.changePasswordPopup);
+        this.bindPopup("registration", this.registrationPopup);
         this.bindPopup("simple", this.simplePopup);
         this.bindPopup("okcancel", this.okcancelPopup);
         this.bindPopup("custom", this.customPopup);
@@ -146,7 +168,11 @@ export class App {
         this.bindPopup("tableChat", this.tableChatPopup);
         this.bindPopup("handHistory", this.handHistoryPopup);
         this.bindPopup("accountStatus", this.accountStatusPopup);
+        this.bindPopup("news", this.newsPopup);
+        this.bindPopup("selectAvatar", this.selectAvatarPopup);
         this.bindPageBlock("lobby", this.lobbyPageBlock);
+        this.bindPageBlock("other", this.otherPageBlock);
+        this.bindPageBlock("cashier", this.cashierPageBlock);
         this.bindPageBlock("info", this.infoPageBlock);
         this.bindUIElement(".more-block", this.morePopup);
         this.mainSelector = new Selector();
@@ -359,6 +385,20 @@ export class App {
 
             tableManager.tables.subscribe(function(newValue) {
                 self.updateTabbar(authManager.authenticated(), newValue);
+                if (newValue && metadataManager.banners != null) {
+                    const filteredBanners = metadataManager.banners
+                        .filter((banner) => banner.Id > settings.lastBannerId())
+                        .sort((a, b) => a.Id - b.Id);
+                    if (filteredBanners.length > 0) {
+                        const currentBanner = filteredBanners[0];
+                        settings.lastBannerId(currentBanner.Id);
+                        settings.saveSettings();
+                        if (runtimeSettings.showNewsAfterLogin) {
+                            app.newsPopup.setData(currentBanner);
+                            app.showPopup("news");
+                        }
+                    }
+                }
             });
             authManager.authenticated.subscribe(function(newValue) {
                 self.updateTabbar(newValue, tableManager.tables());
@@ -428,7 +468,15 @@ export class App {
         commandManager.registerCommand("pageblock." + pageBlockName, function() {
             const requireAuthentication = viewModel.requireAuthentication;
             if (!requireAuthentication) {
-                self.showPageBlock(pageBlockName);
+                if (!viewModel.requireGuestAuthentication) {
+                    self.showPageBlock(pageBlockName);
+                } else {
+                    app.requireGuestAuthentication().then(function(value) {
+                        if (value) {
+                            self.showPageBlock(pageBlockName);
+                        }
+                    });
+                }
             } else {
                 app.requireAuthentication().then(function(value) {
                     if (value) {

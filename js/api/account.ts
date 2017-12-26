@@ -1,4 +1,4 @@
-import { getPostRequestInit, getRequestInit } from "./helper";
+import { getDeleteRequestInit, getPostRequestInit, getRequestInit } from "./helper";
 
 /**
  * Response for the RegisterGuest API call.
@@ -62,7 +62,7 @@ export interface AuthenticateResponse extends StatusResponse {
     /**
      * Gets or sets additional properties for the player.
      */
-    Properties: any;
+    Properties: Map<string, string>;
 }
 
 export interface PersonalAccountData {
@@ -99,6 +99,12 @@ export class Account {
         const jsonData = await response.json() as AuthenticateResponse;
         return jsonData;
     }
+    public activateAccount(login, token) {
+        throw new Error("Not implmented.");
+    }
+    public cancelAccountActivation(login, token) {
+        throw new Error("Not implmented.");
+    }
     public async changePassword(oldPassword: string, newPassword: string) {
         const data = { OldPassword: oldPassword, NewPassword: newPassword };
         const response = await fetch(this.host + `/api/account/my/password`, getPostRequestInit(data));
@@ -110,7 +116,86 @@ export class Account {
         const jsonData = await response.json() as ApiResult<PersonalAccountData>;
         return jsonData;
     }
-    public registerGuest(): Promise<RegisterGuestResponse> {
+    public async getPlayer(): Promise<ApiResult<PlayerDefinition>> {
+        const response = await fetch(this.host + `/api/account/my/detailed`, getRequestInit());
+        const jsonData = await response.json() as ApiResult<PlayerDefinition>;
+        return jsonData;
+    }
+    public async getAccountHistory(fromDate, toDate, fromAmount, toAmount, operationType): Promise<ApiResult<OperationData[]>> {
+        const response = await fetch(this.host + `/api/account/my/history?fromDate=${fromDate}&toDate=${toDate}&fromAmount=${fromAmount}&toAmount=${toAmount}&operationType=${operationType}`, getRequestInit());
+        const jsonData = await response.json() as ApiResult<OperationData[]>;
+        return jsonData;
+    }
+    public async registerGuest(): Promise<RegisterGuestResponse> {
+        const response = await fetch(this.host + `/api/registration/guests`, getPostRequestInit());
+        const jsonData = await response.json() as RegisterGuestResponse;
+        return jsonData;
+    }
+    public async register(
+        login: string,
+        email: string,
+        password: string,
+        firstName: string,
+        lastName: string,
+        patronymicName: string,
+        country: number,
+        city: string,
+        additionalProperties: any): Promise<StatusResponse> {
+        const data = {
+            login,
+            email,
+            password,
+            firstName,
+            lastName,
+            patronymicName,
+            country,
+            city,
+            additionalProperties,
+        };
+        const response = await fetch(this.host + `/api/registration`, getPostRequestInit(data));
+        const jsonData = await response.json() as StatusResponse;
+        return jsonData;
+    }
+    public async requestResetPassword(login, email): Promise<StatusResponse> {
+        const data = {
+            login,
+            email,
+        };
+        const response = await fetch(this.host + `/api/account/password-reset/requests`, getPostRequestInit(data));
+        const jsonData = await response.json() as StatusResponse;
+        return jsonData;
+    }
+    public async resetPassword(token, newPassword): Promise<StatusResponse> {
+        const data = {
+            password: newPassword,
+        };
+        const response = await fetch(this.host + `/api/account/password-resetrequests/${token}`, getPostRequestInit(data));
+        const jsonData = await response.json() as StatusResponse;
+        return jsonData;
+    }
+    public async resetAvatar() {
+        const response = await fetch(this.host + `/api/accont/avatar`, getDeleteRequestInit());
+        const jsonData = await response.json() as StatusResponse;
+        return jsonData;
+    }
+    public async setAvatarUrl(url) {
+        const data = { url };
+        const response = await fetch(this.host + `/api/accont/avatar/url`, getPostRequestInit(data));
+        const jsonData = await response.json() as StatusResponse;
+        return jsonData;
+    }
+    public async updatePlayerProfile(firstName, lastName, patronymicName, email, country, city) {
+        const data = { firstName, lastName, patronymicName, email, country, city };
+        const response = await fetch(this.host + `/api/accont/profile`, getPostRequestInit(data));
+        const jsonData = await response.json() as StatusResponse;
+        return jsonData;
+    }
+    public UploadAvatar(image) {
         throw new Error("Not implmented.");
+    }
+    public async getBestPlayers(): Promise<ApiResult<UserRating[]>> {
+        const response = await fetch(this.host + `/api/players/best`, getRequestInit());
+        const jsonData = await response.json() as ApiResult<UserRating[]>;
+        return jsonData;
     }
 }

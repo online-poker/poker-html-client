@@ -1,14 +1,12 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
-
-declare var apiHost: string;
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
+import { Message } from "../api/message";
 import { App } from "../app";
 import * as authManager from "../authmanager";
 import { websiteService } from "../services";
 import { AccountManager } from "../services/accountManager";
 import { settings } from "../settings";
 
+declare var apiHost: string;
 declare var app: App;
 
 export class MorePopup {
@@ -47,6 +45,7 @@ export class MorePopup {
         this.loading(true);
         try {
             await this.updateAccountData();
+            await this.updateMessagesStatus();
             self.loading(false);
         } catch (e) {
             self.update();
@@ -54,6 +53,14 @@ export class MorePopup {
     }
     public showAccount() {
         app.executeCommand("pageblock.cashier");
+    }
+    public showRating() {
+        app.executeCommand("pageblock.other");
+        app.otherPageBlock.showSecondary("rating");
+    }
+    public showChat() {
+        app.executeCommand("pageblock.other");
+        app.otherPageBlock.showSecondary("chat");
     }
     public showMessages() {
         websiteService.messages();
@@ -87,6 +94,26 @@ export class MorePopup {
             self.points(personalAccountData.Points);
         } else {
             console.error("Error during making call to Account.GetPlayerDefinition in MorePopup");
+        }
+
+        return data;
+    }
+
+    /**
+     * Starts requesting message status
+     */
+    private async updateMessagesStatus() {
+        const self = this;
+        const mapi = new Message(apiHost);
+        const data = await mapi.getInboxMessages(0, 20, 1 /* Unread */, false);
+        if (data.Status === "Ok") {
+            if (data.Data.Messages.length > 0) {
+                self.hasMessages(true);
+            } else {
+                self.hasMessages(false);
+            }
+        } else {
+            console.error("Error during making call to Message.GetInboxMessages in MorePopup");
         }
 
         return data;

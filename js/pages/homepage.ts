@@ -58,6 +58,9 @@ export class HomePage extends PageBase {
         this.authenticatedUser = ko.computed(function () {
             return authManager.login();
         }, this);
+        authManager.authenticated.subscribe((value) => {
+            this.banners(metadataManager.smallBanners);
+        });
     }
     public deactivate(pageName?: string) {
         super.deactivate(pageName);
@@ -84,6 +87,14 @@ export class HomePage extends PageBase {
         this.logNews("Updating home page");
         const metadataApi = new Information(host);
         await metadataManager.updateOnline();
+        const data = await metadataApi.getNews();
+        if (data.Status === "Ok") {
+            this.news(data.Data);
+            const i = 0;
+            if (data.Data.length > 0 && i < data.Data.length) {
+                this.currentNews(data.Data[i]);
+            }
+        }
     }
     public showGames() {
         app.showPageBlock("lobby");
@@ -136,6 +147,24 @@ export class HomePage extends PageBase {
     }
     public showAuthPopup() {
         app.showPopup("auth");
+    }
+    /**
+     * Performs one click authorization as a guest.
+     */
+    public loginAsGuest() {
+        app.processing(true);
+        authManager.loginAsGuest().then((status) => {
+            app.processing(false);
+            if (!status) {
+                this.errorMessage(_("auth.unspecifiedError"));
+            } else {
+                if (status !== "Ok") {
+                    this.errorMessage(_("errors." + status));
+                } else {
+                    app.lobbyPageBlock.showLobby();
+                }
+            }
+        });
     }
     public openBanner() {
         window.open(this.currentBanner().Link, "_system", "location=yes");

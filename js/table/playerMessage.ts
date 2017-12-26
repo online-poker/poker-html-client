@@ -10,7 +10,7 @@ export class PlayerMessage {
     public isMy: KnockoutObservable<boolean>;
     public isAdmin: boolean;
 
-    constructor(messageId: number, sender: string, message: string) {
+    constructor(messageId: number, date: Date, sender: string, message: string) {
         this.messageId = messageId;
         this.isAdmin = false;
         if (sender.toLowerCase() === "admin") {
@@ -24,8 +24,7 @@ export class PlayerMessage {
 
         this.sender = sender;
         this.message = ko.observable(message);
-        const d = new Date();
-        this.date = d.getHours() + ":" + d.getMinutes();
+        this.date = date.getHours() + ":" + date.getMinutes();
         this.fullMessage = ko.computed(() => {
             return "[" + this.date + "]" + this.sender + " - " + this.message();
         });
