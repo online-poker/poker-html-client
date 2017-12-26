@@ -4,7 +4,6 @@ import { Information } from "./api/information";
 import { debugSettings } from "./debugsettings";
 import * as runtimeSettings from "./table/runtimesettings";
 
-declare var apiHost: string;
 declare var host: string;
 
 class TimeService {
@@ -19,25 +18,32 @@ class TimeService {
         this.currentTime = ko.observable<string>();
     }
     public async start() {
-        const api = new Information(host);
         try {
-            const serverTime = await api.getDate();
+            await this.updateServerDriftTime(() => new Date());
             const currentDate = new Date();
-            this.timeDiff = serverTime - currentDate.valueOf();
+            this.updateCurrentTime(currentDate);
 
             // Wait until new minute starts.
-            const currentTime = this.getCurrentDateTime();
+            const currentTime = this.getCurrentDateTime(currentDate);
             const pauseBeforeStartLongInterval = TimeService.MillisecondsInMinutes - (currentTime.getSeconds() * 1000)
                 + currentTime.getMilliseconds();
-            this.updateCurrentTime();
             this.setTimeout(() => {
                 this.handle = this.setInterval(() => {
-                    this.updateCurrentTime();
+                    this.updateCurrentTime(new Date());
                 }, TimeService.MillisecondsInMinutes);
             }, pauseBeforeStartLongInterval);
         } catch (e) {
             this.start();
         }
+    }
+    /**
+     * Updates information about current server time and calculate server time drift.
+     */
+    public async updateServerDriftTime(currentTimeProvider: () => Date) {
+        const api = new Information(host);
+        const serverTime = await api.getDate();
+        const currentDate = currentTimeProvider();
+        this.timeDiff = serverTime - currentDate.valueOf();
     }
     public stop() {
         this.timeDiff = 0;
@@ -71,8 +77,12 @@ class TimeService {
                 + "Intervals running = " + this.intervals.length);
         }
     }
-    private updateCurrentTime() {
-        const d = this.getCurrentDateTime();
+    /**
+     * Updates information about current time on server, using calculated server drift time.
+     * @param currentDate Current date and time on the client.
+     */
+    public updateCurrentTime(currentDate: Date) {
+        const d = this.getCurrentDateTime(currentDate);
         let date = moment(d.valueOf());
         if (debugSettings.application.useUtcDates) {
             date = date.utc();
@@ -83,8 +93,7 @@ class TimeService {
             this.currentTime(t);
         }
     }
-    private getCurrentDateTime() {
-        const d = new Date();
+    private getCurrentDateTime(d: Date) {
         if (!this.timeDiff) {
             return d;
         }
