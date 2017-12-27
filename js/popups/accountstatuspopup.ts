@@ -7,7 +7,6 @@ import { _ } from "../languagemanager";
 import { accountService } from "../services";
 import { PopupBase } from "../ui/popupbase";
 
-declare var apiHost: string;
 declare var app: App;
 
 export class AccountStatusPopup extends PopupBase {

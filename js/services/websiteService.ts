@@ -5,7 +5,8 @@ import { l } from "../languagemanager";
  * Provides integration with the website.
  */
 export class WebsiteService {
-    public websiteRoot = "http://www.yourpoker.com/";
+    constructor(public websiteRoot: string) {
+    }
 
     /**
      * Navigates to the forget password page

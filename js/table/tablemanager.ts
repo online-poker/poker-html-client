@@ -19,7 +19,6 @@ import { allNoneClassesFourCards, allNoneClassesTwoCards, cardsArray, decodeCard
 import { TableView } from "./tableview";
 import { TournamentView } from "./tournamentview";
 
-declare var apiHost: string;
 declare var host: string;
 
 export enum CardsDealedCodes {

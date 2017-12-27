@@ -1,10 +1,10 @@
 import * as ko from "knockout";
 import { App } from "../app";
 import * as authManager from "../authmanager";
-import { accountService, reloadManager, websiteService } from "../services";
+import { accountService, reloadManager, WebsiteService } from "../services";
 import { PageBase } from "../ui/pagebase";
 
-declare var apiHost: string;
+declare var host: string;
 declare var app: App;
 
 class CashierPage extends PageBase {
@@ -60,15 +60,18 @@ class CashierPage extends PageBase {
         app.lobbyPageBlock.showLobby();
     }
     public withdrawal() {
+        const websiteService = new WebsiteService(host);
         websiteService.withdrawal();
     }
     public profile() {
+        const websiteService = new WebsiteService(host);
         websiteService.profile();
     }
     public showHistory() {
         app.cashierPageBlock.showSecondary("operationsHistory");
     }
     public deposit() {
+        const websiteService = new WebsiteService(host);
         websiteService.madeDeposit();
     }
 }

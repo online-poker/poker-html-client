@@ -9,7 +9,6 @@ import { reloadManager } from "../services";
 import { tableManager } from "../table/tablemanager";
 import { PageBase } from "../ui/pagebase";
 
-declare var apiHost: string;
 declare var host: string;
 declare var app: App;
 

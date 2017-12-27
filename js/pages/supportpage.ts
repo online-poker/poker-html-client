@@ -6,7 +6,7 @@ import { SimplePopup } from "../popups/simplepopup";
 import { keyboardActivationService } from "../services";
 import { PageBase } from "../ui/pagebase";
 
-declare var apiHost: string;
+declare var host: string;
 declare var app: App;
 
 export class SupportPage extends PageBase implements KnockoutValidationGroup {
@@ -69,7 +69,7 @@ export class SupportPage extends PageBase implements KnockoutValidationGroup {
         this.loading(true);
         this.errorMessage(null);
         this.errors.showAllMessages(false);
-        const api = new Support(apiHost);
+        const api = new Support(host);
         try {
             const data = await api.contactUs(this.fullName(), this.email(), this.subject(), this.body());
             self.loading(false);

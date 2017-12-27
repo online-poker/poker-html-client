@@ -48,7 +48,6 @@ export function bootstrap() {// tslint:disable:no-string-literal
     }
 
     const baseUrl = host;
-    const apiHost = baseUrl + "/api/rest/v1";
     const app = new App();
     app.bindPages();
 
@@ -71,7 +70,6 @@ export function bootstrap() {// tslint:disable:no-string-literal
     window["shouldRotateToOrientation"] = shouldRotateToOrientation;
     window["app"] = app;
     window["authToken"] = null;
-    window["apiHost"] = apiHost;
     window["baseUrl"] = baseUrl;
     window["debugSettings"] = debugSettings;
     window["_"] = _;

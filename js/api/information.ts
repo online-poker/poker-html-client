@@ -58,17 +58,17 @@ export class Information {
         return jsonData;
     }
     public async getDefaultAvatars(): Promise<AvatarsResponse> {
-        const response = await fetch(this.host + "/api/information/avatars/default");
+        const response = await fetch(this.host + "/api/avatars/default");
         const jsonData = await response.json() as AvatarsResponse;
         return jsonData;
     }
     public async getNews(): Promise<ApiResult<string[]>> {
-        const response = await fetch(this.host + "/api/information/news");
+        const response = await fetch(this.host + "/api/news");
         const jsonData = await response.json() as ApiResult<string[]>;
         return jsonData;
     }
     public async getBanners(format): Promise<ApiResult<BannerData[]>> {
-        const response = await fetch(this.host + `/api/information/banners/${format}`);
+        const response = await fetch(this.host + `/api/banners/${format}`);
         const jsonData = await response.json() as ApiResult<BannerData[]>;
         return jsonData;
     }

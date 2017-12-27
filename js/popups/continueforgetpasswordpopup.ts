@@ -1,11 +1,10 @@
 import * as ko from "knockout";
-import { Account } from "../api/account";
 import { App } from "../app";
 import { _ } from "../languagemanager";
 import { SimplePopup } from "../popups/simplepopup";
+import { AccountManager } from "../services/accountManager";
 import { PopupBase } from "../ui/popupbase";
 
-declare var apiHost: string;
 declare var app: App;
 
 export class ContinueForgetPasswordPopup extends PopupBase {
@@ -45,7 +44,7 @@ export class ContinueForgetPasswordPopup extends PopupBase {
         if (!this.loading()) {
             self.loading(true);
             self.errorMessage(null);
-            const accountApi = new Account(apiHost);
+            const accountApi = new AccountManager();
             const data = await accountApi.resetPassword(this.token(), this.password());
             if (data.Status === "Ok") {
                 self.token(null);

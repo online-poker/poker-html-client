@@ -19,7 +19,6 @@ import { tableManager } from "../table/tablemanager";
 import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";
 
-declare var apiHost: string;
 declare var host: string;
 declare var app: App;
 
