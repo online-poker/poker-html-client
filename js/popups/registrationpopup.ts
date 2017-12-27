@@ -24,9 +24,9 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
     public agreeEula: KnockoutObservable<boolean>;
     public imageUrl: KnockoutObservable<string>;
     public imageFile = ko.observable<string>();
-    public errors: KnockoutValidationErrors;
-    public isValid: () => boolean;
     public loading: KnockoutObservable<boolean>;
+    public errors: KnockoutValidationErrors;
+    private validationModel: KnockoutObservable<RegistrationPopup>;
 
     constructor() {
         super();
@@ -45,6 +45,7 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
         this.loading = ko.observable(false);
 
         this.errors = ko.validation.group(this);
+        this.validationModel = ko.validatedObservable(this);
     }
     public shown(args: any[]= []): void {
         if (args.length === 1 && args[0] === true) {
@@ -102,7 +103,7 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
     }
     public async confirm() {
         const self = this;
-        const isValid = this.isValid();
+        const isValid = this.validationModel.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             this.moveToError();
