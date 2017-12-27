@@ -8,14 +8,14 @@ import { PopupBase } from "../ui/popupbase";
 declare var apiHost: string;
 declare var app: App;
 
-export class ContinueForgetPasswordPopup extends PopupBase implements KnockoutValidationGroup {
+export class ContinueForgetPasswordPopup extends PopupBase {
     public token: KnockoutObservable<string>;
     public password: KnockoutObservable<string>;
     public confirmPassword: KnockoutObservable<string>;
     public errorMessage: KnockoutObservable<string>;
     public errors: KnockoutValidationErrors;
-    public isValid: () => boolean;
     public loading: KnockoutObservable<boolean>;
+    private validationModel: KnockoutObservable<ContinueForgetPasswordPopup>;
 
     constructor() {
         super();
@@ -23,6 +23,7 @@ export class ContinueForgetPasswordPopup extends PopupBase implements KnockoutVa
         this.password = ko.observable<string>().extend({ required: true });
         this.confirmPassword = ko.observable<string>().extend({ required: true });
         this.errors = ko.validation.group(this);
+        this.validationModel = ko.validatedObservable(this);
         this.errorMessage = ko.observable<string>();
         this.loading = ko.observable(false);
     }
@@ -35,7 +36,7 @@ export class ContinueForgetPasswordPopup extends PopupBase implements KnockoutVa
     }
     public async confirm() {
         const self = this;
-        const isValid = this.isValid();
+        const isValid = this.validationModel.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;

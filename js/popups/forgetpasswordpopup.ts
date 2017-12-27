@@ -6,24 +6,26 @@ import { PopupBase } from "../ui/popupbase";
 
 declare var apiHost: string;
 
-export class ForgetPasswordPopup extends PopupBase implements KnockoutValidationGroup {
+export class ForgetPasswordPopup extends PopupBase {
     public login: KnockoutObservable<string>;
     public email: KnockoutObservable<string>;
     public errors: KnockoutValidationErrors;
-    public isValid: () => boolean;
     public errorMessage: KnockoutObservable<string>;
     public loading: KnockoutObservable<boolean>;
+    private validationModel: KnockoutObservable<ForgetPasswordPopup>;
+
     constructor() {
         super();
         this.login = ko.observable<string>();
         this.email = ko.observable<string>();
         this.errors = ko.validation.group(this);
+        this.validationModel = ko.validatedObservable(this);
         this.errorMessage = ko.observable<string>();
         this.loading = ko.observable(false);
     }
     public async confirm() {
         const self = this;
-        const isValid = this.isValid();
+        const isValid = this.validationModel.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
             return;
