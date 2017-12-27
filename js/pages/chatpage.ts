@@ -7,7 +7,7 @@ import { connectionService, keyboardActivationService } from "../services";
 import { PlayerMessage } from "../table/playerMessage";
 import * as timeService from "../timeservice";
 
-declare var apiHost: string;
+declare var host: string;
 declare var app: App;
 
 export class ChatPage implements Page {
@@ -67,7 +67,7 @@ export class ChatPage implements Page {
             return;
         }
 
-        const api = new Chat(apiHost);
+        const api = new Chat(host);
         try {
             this.currentMessage("");
             const data = await api.send(0, message);

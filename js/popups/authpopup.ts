@@ -8,7 +8,6 @@ import { keyboardActivationService } from "../services";
 import { settings } from "../settings";
 import { PopupBase } from "../ui/popupbase";
 
-declare var apiHost: string;
 declare var app: App;
 
 export class AuthPopup extends PopupBase {

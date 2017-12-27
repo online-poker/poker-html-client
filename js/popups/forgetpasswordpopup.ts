@@ -1,10 +1,8 @@
 import * as ko from "knockout";
-import { Account } from "../api/account";
 import { _ } from "../languagemanager";
 import { SimplePopup } from "../popups/simplepopup";
+import { AccountManager } from "../services/accountManager";
 import { PopupBase } from "../ui/popupbase";
-
-declare var apiHost: string;
 
 export class ForgetPasswordPopup extends PopupBase {
     public login: KnockoutObservable<string>;
@@ -33,7 +31,7 @@ export class ForgetPasswordPopup extends PopupBase {
 
         if (!this.loading()) {
             self.loading(true);
-            const accountApi = new Account(apiHost);
+            const accountApi = new AccountManager();
             try {
                 const data = await accountApi.requestResetPassword(this.login(), this.email());
                 self.loading(false);

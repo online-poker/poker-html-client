@@ -14,7 +14,6 @@ import { ConnectionWrapper } from "../services/connectionwrapper";
 import * as timeService from "../timeservice";
 import { tableManager } from "./tablemanager";
 
-declare var apiHost: string;
 declare var host: string;
 declare var app: App;
 

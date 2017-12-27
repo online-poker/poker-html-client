@@ -1,11 +1,10 @@
 import * as ko from "knockout";
-import { Account } from "../api/account";
 import { App } from "../app";
 import * as authManager from "../authmanager";
+import { AccountManager } from "../services/accountManager";
 import { settings } from "../settings";
 import { PageBase } from "../ui/pagebase";
 
-declare var apiHost: string;
 declare var app: App;
 
 interface AccountPagePlayerAccountModel {
@@ -89,11 +88,10 @@ export class AccountPage extends PageBase {
 
     private async requestData(realMoneySupported: boolean, gameMoneySupported: boolean, pointsSupported: boolean) {
         const self = this;
-        const api = new Account(apiHost);
+        const api = new AccountManager();
         const data = await api.getPlayer();
         self.loading(false);
         const personalAccountData = data.Data;
-        console.log(personalAccountData);
         if (!self.visible()) {
             return;
         }

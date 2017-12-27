@@ -49,7 +49,7 @@ import {
     reloadManager,
     slowInternetService,
     soundManager,
-    websiteService,
+    WebsiteService,
 } from "./services";
 import * as broadcastService from "./services/broadcastservice";
 import { uiManager, UIManager } from "./services/uimanager";
@@ -61,6 +61,8 @@ import { tableManager } from "./table/tablemanager";
 import * as timeService from "./timeservice";
 
 type PromiseOrVoid = void | Promise<void>;
+
+declare const host: string;
 
 export class App {
     public static addTabBarItemMapping(tabBarItem: string, pageName: string) {
@@ -1121,6 +1123,7 @@ export class App {
         } catch (e) {
             // Display dialog which prompts for the update.
             app.promptEx(_("updater.title"), [_("updater.line1")], [_("updater.button")], [() => {
+                const websiteService = new WebsiteService(host);
                 websiteService.navigateUpdateApk();
             }]);
             return false;

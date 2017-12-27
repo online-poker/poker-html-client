@@ -2,11 +2,11 @@
 import { Message } from "../api/message";
 import { App } from "../app";
 import * as authManager from "../authmanager";
-import { websiteService } from "../services";
+import { WebsiteService } from "../services";
 import { AccountManager } from "../services/accountManager";
 import { settings } from "../settings";
 
-declare var apiHost: string;
+declare var host: string;
 declare var app: App;
 
 export class MorePopup {
@@ -63,6 +63,7 @@ export class MorePopup {
         app.otherPageBlock.showSecondary("chat");
     }
     public showMessages() {
+        const websiteService = new WebsiteService(host);
         websiteService.messages();
     }
     public showInformation() {
@@ -70,6 +71,7 @@ export class MorePopup {
         app.infoPageBlock.showPrimary();
     }
     public showProfile() {
+        const websiteService = new WebsiteService(host);
         websiteService.profile();
     }
     public showContactUs() {
@@ -104,7 +106,7 @@ export class MorePopup {
      */
     private async updateMessagesStatus() {
         const self = this;
-        const mapi = new Message(apiHost);
+        const mapi = new Message(host);
         const data = await mapi.getInboxMessages(0, 20, 1 /* Unread */, false);
         if (data.Status === "Ok") {
             if (data.Data.Messages.length > 0) {

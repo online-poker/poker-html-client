@@ -9,7 +9,7 @@ import { PushService } from "./pushservice";
 import { ReloadManager } from "./reloadmanager";
 import { SlowInternetService } from "./slowinternetservice";
 import { SoundManager } from "./soundmanager";
-import { WebsiteService } from "./websiteService";
+export { WebsiteService } from "./websiteService";
 
 export let keyboardActivationService = new KeyboardActivationService();
 export let slowInternetService = new SlowInternetService();
@@ -21,5 +21,4 @@ export let deviceEvents = new DeviceEventService();
 export let soundManager = new SoundManager();
 export let orientationService = new OrientationService();
 export let pushService = new PushService();
-export let websiteService = new WebsiteService();
 export const appReloadService = new AppReloadService();

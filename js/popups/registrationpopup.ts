@@ -1,16 +1,15 @@
 import * as ko from "knockout";
-import { Account } from "../api/account";
 import { App } from "../app";
 import * as authManager from "../authmanager";
 import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";
+import { AccountManager } from "../services/accountManager";
 import { PopupBase } from "../ui/popupbase";
 import { SimplePopup } from "./simplepopup";
 
-declare var apiHost: string;
 declare var app: App;
 
-export class RegistrationPopup extends PopupBase implements KnockoutValidationGroup {
+export class RegistrationPopup extends PopupBase {
     public login: KnockoutObservable<string>;
     public email: KnockoutObservable<string>;
     public firstName: KnockoutObservable<string>;
@@ -111,13 +110,13 @@ export class RegistrationPopup extends PopupBase implements KnockoutValidationGr
         }
 
         this.loading(true);
-        const accountApi = new Account(apiHost);
+        const accountManager = new AccountManager();
         const additionalProperties = {
             ImageDataBase64: this.imageFile(),
             ImageUrl: this.imageUrl(),
         };
         try {
-            const data = await accountApi.register(this.login(), this.email(), this.password(), this.firstName(), this.lastName(),
+            const data = await accountManager.register(this.login(), this.email(), this.password(), this.firstName(), this.lastName(),
                 this.patronymicName(), this.country(), this.city(), additionalProperties);
             if (data.Status === "Ok") {
                 self.close();

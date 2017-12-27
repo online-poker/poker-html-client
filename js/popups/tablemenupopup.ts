@@ -11,7 +11,6 @@ import { settings } from "../settings";
 import { tableManager } from "../table/tablemanager";
 import { TournamentView } from "../table/tournamentview";
 
-declare var apiHost: string;
 declare var app: App;
 
 export class TableMenuPopup {

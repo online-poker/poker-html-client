@@ -1,4 +1,3 @@
-declare var apiHost: string;
 declare var host: string;
 
 import { Information } from "../api/information";

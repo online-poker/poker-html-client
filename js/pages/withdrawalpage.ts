@@ -1,10 +1,9 @@
-import { Account } from "../api/account";
 import { App } from "../app";
 import * as authManager from "../authmanager";
 import { PageBlock } from "../pageblock";
+import { AccountManager } from "../services/accountManager";
 import { PageBase } from "../ui/pagebase";
 
-declare var apiHost: string;
 declare var app: App;
 
 export class WithdrawalPage extends PageBase {
@@ -28,7 +27,7 @@ export class WithdrawalPage extends PageBase {
         this.accountNumber = ko.observable(null);
         authManager.authenticated.subscribe(async (newValue) => {
             if (newValue) {
-                const api = new Account(apiHost);
+                const api = new AccountManager();
                 const data = await api.getAccount();
                 const personalAccountData = data.Data;
                 self.player({

@@ -1,6 +1,4 @@
 ﻿/* tslint:disable:no-bitwise */
-
-declare var apiHost: string;
 declare var host: string;
 
 import * as ko from "knockout";

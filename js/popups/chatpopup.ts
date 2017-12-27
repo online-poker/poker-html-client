@@ -8,7 +8,6 @@ import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
 import { ChatControl } from "../ui/chatcontrol";
 
-declare var apiHost: string;
 declare var app: App;
 
 export class ChatPopup {

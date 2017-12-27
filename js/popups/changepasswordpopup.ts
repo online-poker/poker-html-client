@@ -1,7 +1,5 @@
 ﻿/// <reference path="../poker.commanding.api.ts" />
 
-declare var apiHost: string;
-
 import * as ko from "knockout";
 import { App } from "../app";
 import { _ } from "../languagemanager";

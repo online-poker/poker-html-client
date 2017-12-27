@@ -31,7 +31,6 @@ import { TablePlaces } from "./tableplaces";
 import { TablePlaceModel } from "./tabpleplacemodel";
 import { TournamentView } from "./tournamentview";
 
-declare let apiHost: string;
 declare let host: string;
 declare let app: App;
 

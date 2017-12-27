@@ -2,7 +2,6 @@ import { App } from "../app";
 import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";
 
-declare var apiHost: string;
 declare var app: App;
 
 export class SettingsPage implements Page {

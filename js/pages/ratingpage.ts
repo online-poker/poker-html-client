@@ -1,7 +1,6 @@
-import { Account } from "../api/account";
 import { App } from "../app";
+import { AccountManager } from "../services/accountManager";
 
-declare var apiHost: string;
 declare var app: App;
 
 export class RatingPage implements Page {
@@ -17,7 +16,7 @@ export class RatingPage implements Page {
     public async activate() {
         const self = this;
         this.loading(true);
-        const api = new Account(apiHost);
+        const api = new AccountManager();
         try {
             const data = await api.getBestPlayers();
             self.loading(false);

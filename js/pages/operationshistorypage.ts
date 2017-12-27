@@ -1,11 +1,10 @@
 import * as ko from "knockout";
-import { Account } from "../api/account";
 import { App } from "../app";
 import { PageBlock } from "../pageblock";
 import { orientationService, reloadManager } from "../services";
+import { AccountManager } from "../services/accountManager";
 import { PageBase } from "../ui/pagebase";
 
-declare var apiHost: string;
 declare var app: App;
 
 export class OperationsHistoryPage extends PageBase implements KnockoutValidationGroup {
@@ -61,7 +60,7 @@ export class OperationsHistoryPage extends PageBase implements KnockoutValidatio
         }
 
         this.loading(true);
-        const api = new Account(apiHost);
+        const api = new AccountManager();
         const data = await api.getAccountHistory(this.from(), this.to(), null, null, null);
         this.loading(false);
         if (!this.visible()) {
