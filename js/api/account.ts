@@ -1,4 +1,4 @@
-import { getDeleteRequestInit, getPostRequestInit, getRequestInit } from "./helper";
+import { getDeleteRequestInit, getPostRequestInit, getPutRequestInit, getRequestInit } from "./helper";
 
 /**
  * Response for the RegisterGuest API call.
@@ -99,11 +99,17 @@ export class Account {
         const jsonData = await response.json() as AuthenticateResponse;
         return jsonData;
     }
-    public activateAccount(login, token) {
-        throw new Error("Not implmented.");
+    public async activateAccount(login: string, token: string) {
+        const data = { Token: token };
+        const response = await fetch(this.host + `/api/activations/${login}`, getPostRequestInit(data));
+        const jsonData = await response.json() as StatusResponse;
+        return jsonData;
     }
-    public cancelAccountActivation(login, token) {
-        throw new Error("Not implmented.");
+    public async cancelAccountActivation(login, token) {
+        const data = { Token: token };
+        const response = await fetch(this.host + `/api/activations/${login}`, getDeleteRequestInit(data));
+        const jsonData = await response.json() as StatusResponse;
+        return jsonData;
     }
     public async changePassword(oldPassword: string, newPassword: string) {
         const data = { OldPassword: oldPassword, NewPassword: newPassword };
@@ -156,6 +162,17 @@ export class Account {
         const jsonData = await response.json() as StatusResponse;
         return jsonData;
     }
+    public async registrationCheck(
+        login: string,
+        email: string): Promise<StatusResponse> {
+        const data = {
+            login,
+            email,
+        };
+        const response = await fetch(this.host + `/api/registration/check`, getPostRequestInit(data));
+        const jsonData = await response.json() as StatusResponse;
+        return jsonData;
+    }
     public async requestResetPassword(login, email): Promise<StatusResponse> {
         const data = {
             login,
@@ -169,7 +186,7 @@ export class Account {
         const data = {
             password: newPassword,
         };
-        const response = await fetch(this.host + `/api/account/password-resetrequests/${token}`, getPostRequestInit(data));
+        const response = await fetch(this.host + `/api/account/password-reset/requests/${token}`, getPostRequestInit(data));
         const jsonData = await response.json() as StatusResponse;
         return jsonData;
     }
@@ -180,7 +197,7 @@ export class Account {
     }
     public async setAvatarUrl(url) {
         const data = { url };
-        const response = await fetch(this.host + `/api/accont/avatar/url`, getPostRequestInit(data));
+        const response = await fetch(this.host + `/api/accont/avatar/url`, getPutRequestInit(data));
         const jsonData = await response.json() as StatusResponse;
         return jsonData;
     }
@@ -190,7 +207,7 @@ export class Account {
         const jsonData = await response.json() as StatusResponse;
         return jsonData;
     }
-    public UploadAvatar(image) {
+    public uploadAvatar(image) {
         throw new Error("Not implmented.");
     }
     public async getBestPlayers(): Promise<ApiResult<UserRating[]>> {
