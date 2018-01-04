@@ -32,6 +32,14 @@ interface CordovaScreenOrientation {
     shouldRotateToOrientation(orientation: any);
 }
 
+interface ScreenOrientation {
+    lock(orientation: string): Promise<any>;
+}
+
+interface Screen {
+    orientation: ScreenOrientation;
+}
+
 declare var menu: CordovaMenu;
 declare var ScreenOrientation: CordovaScreenOrientation;
 

@@ -6,7 +6,8 @@ export class OrientationService {
 
     public setOrientation(orientation: string) {
         if (this.isScreenOrientationSupported() && !this.disableRotation) {
-            ScreenOrientation.setOrientation(orientation);
+            // ScreenOrientation.setOrientation(orientation);
+            screen.orientation.lock(orientation);
         }
 
         this.lastOrientation = orientation;
@@ -22,13 +23,13 @@ export class OrientationService {
 
     public lock() {
         if (this.isScreenOrientationSupported() && !this.disableRotation) {
-            ScreenOrientation.lock();
+            // ScreenOrientation.lock();
         }
     }
 
     public unlock() {
         if (this.isScreenOrientationSupported() && !this.disableRotation) {
-            ScreenOrientation.unlock();
+            // ScreenOrientation.unlock();
         }
     }
 
@@ -38,7 +39,7 @@ export class OrientationService {
 
     private isScreenOrientationSupported() {
         /* tslint:disable:no-string-literal */
-        return window["ScreenOrientation"] && ScreenOrientation["setOrientation"];
+        return screen["orientation"];
         /* tslint:enable:no-string-literal */
     }
 }
