@@ -1,8 +1,8 @@
-/// <reference path="poker.commanding.api.ts" />
 import * as $ from "jquery";
 import ko = require("knockout");
 import * as moment from "moment";
 import { App } from "./app";
+import { AppConfig, overrideConfiguration } from "./appconfig";
 import { registerBindings } from "./bindings";
 import { registerComponents } from "./components/registration";
 import { debugSettings } from "./debugsettings";
@@ -12,7 +12,6 @@ import { ActionBlock } from "./table/actionBlock";
 import { exposeCardsConstants } from "./table/cardsHelper";
 import { TableView } from "./table/tableview";
 import { updateDefaultMessages } from "./validationConfiguration";
-// import { ChipItem } from "./table/chipItem";
 
 declare const host: string;
 declare const appInsights: Client;
@@ -27,15 +26,18 @@ function isRunningStandalone() {
         || ("standalone" in window.navigator && window.navigator["standalone"] === true));
 }
 
-export function bootstrap() {// tslint:disable:no-string-literal
+export function bootstrap(localConfiguration?: Partial<AppConfig>) {
+    overrideConfiguration(localConfiguration || {});
+
+    // tslint:disable:no-string-literal
     window["ko"] = ko;
     window["TableView"] = TableView;
     window["ActionBlock"] = ActionBlock;
+    // tslint:enable:no-string-literal
 
     // Enable hammer events on whole document
     Hammer(document);
 
-    // tslint:enable:no-string-literal
     registerBindings();
     registerExtenders();
     registerComponents();

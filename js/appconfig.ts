@@ -17,7 +17,7 @@ class GameActionBlock {
     public hasSecondaryPanel = true;
 }
 
-class AppConfig {
+export class AppConfig {
     public auth = {
         automaticLogin: true,
         automaticTableSelection: true,
@@ -43,4 +43,8 @@ class AppConfig {
     };
 }
 
-export const appConfig = new AppConfig();
+export function overrideConfiguration(localConfiguration: Partial<AppConfig>) {
+    appConfig = Object.assign(appConfig, localConfiguration);
+}
+
+export let appConfig = new AppConfig();
