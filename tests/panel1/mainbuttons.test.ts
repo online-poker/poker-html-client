@@ -11,8 +11,6 @@ import {
 } from "../../js/table/tableview";
 import { drainQueue, getTable, printTableView, simpleInitialization } from "../table/helper";
 
-declare var global: any;
-
 describe("main buttons", function () {
     let logEnabled = false;
     const log = function (message: string, ...params: any[]) {

@@ -18,8 +18,6 @@ import { drainQueue, getTable, printTableView, simpleInitialization } from "../t
 
 const app: App = null;
 
-declare var global: any;
-
 describe("gameplay", function () {
     const login1 = "Player1";
     const login2 = "Player2";

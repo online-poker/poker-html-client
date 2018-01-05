@@ -12,8 +12,6 @@ import {
 } from "../../js/table/tableview";
 import { drainQueue } from "./helper";
 
-declare var global: any;
-
 function getSeatPlayer(seat: number, initialAmount: number): PlayerStatusInfo {
     return {
         Seat: seat,
