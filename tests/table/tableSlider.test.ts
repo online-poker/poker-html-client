@@ -1,8 +1,6 @@
 import * as ko from "knockout";
 import { TableSlider } from "../../js/table/tableSlider";
 
-declare var global: any;
-
 describe("tableSlider", function () {
     let tableSlider;
     beforeEach(function () {

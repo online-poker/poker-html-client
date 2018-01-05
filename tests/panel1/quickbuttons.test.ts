@@ -11,8 +11,6 @@ import {
 } from "../../js/table/tableview";
 import { drainQueue, getTable, printTableView, simpleInitialization } from "../table/helper";
 
-declare var global: any;
-
 describe("quick buttons", function () {
     GameActionsQueue.waitDisabled = true;
     let logEnabled = false;

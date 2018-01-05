@@ -1,7 +1,5 @@
 import { _, l } from "../js/languagemanager";
 
-declare var global: any;
-
 describe("language manager", function () {
     global.messages = {
     };

@@ -30,6 +30,11 @@
     "url": "https://github.com/online-poker/poker-html-client/issues"
   },
   "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "test-tsconfig.json"
+      }
+    },
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
@@ -42,9 +47,12 @@
       "tsx",
       "js"
     ],
+    "moduleNameMapper": {
+      "poker/(.*)": "<rootDir>/js/$1"
+    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "/test/"
+      "/tests/"
     ],
     "coverageThreshold": {
       "global": {
@@ -75,7 +83,7 @@
     "@types/cordova-plugin-network-information": "^0.0.2",
     "@types/cordova-plugin-splashscreen": "^0.0.2",
     "@types/cordova-plugin-statusbar": "^0.0.2",
-    "@types/jasmine": "^2.6.2",
+    "@types/jest": "^22.0.1",
     "@types/knockout": "^3.4.46",
     "@types/knockout.validation": "^0.0.31",
     "@types/moment": "^2.13.0",
