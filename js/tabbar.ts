@@ -1,6 +1,5 @@
-﻿/// <reference types="knockout" />
-
-import { debugSettings } from "./debugsettings";
+﻿import * as ko from "knockout";
+import { debugSettings } from "poker/debugsettings";
 
 class TabBarItem {
     public name: string;

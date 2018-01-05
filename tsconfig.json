@@ -19,7 +19,12 @@
       "es2015.core"
     ],
   "out": "js/application.js",
-  "sourceRoot": "."
+  "sourceRoot": ".",
+  "baseUrl": ".",
+  "rootDir": ".",
+  "paths": {
+      "poker/*": ["js/*"]
+  }
  },
  "compileOnSave": false,
  "exclude": [
