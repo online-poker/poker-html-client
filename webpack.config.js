@@ -12,7 +12,7 @@ module.exports = (env) => {
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
             alias: {
-                "app": path.join(__dirname, "js"),
+                "poker": path.join(__dirname, "js"),
             }
         },
         externals: {
