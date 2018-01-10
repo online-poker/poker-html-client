@@ -1695,36 +1695,35 @@ export class TableView {
      * Gets current seat number for offline table
      */
     public async getCurrentOfflineTableSeat(): Promise<number> {
-        const self = this;
         let seatNumber = 0;
-        const authenticated = await app.requireAuthentication();
-        if (authenticated) {
-            const currentPlayer = self.currentLogin();
+        const value = await app.requireAuthentication();
+        if (value.authenticated) {
+            const currentPlayer = this.currentLogin();
             seatNumber = parseInt(currentPlayer.replace("Игрок", ""), 10);
         }
 
         return seatNumber;
     }
 
-    public showSitPrompt(seat: number) {
+    public async showSitPrompt(seat: number) {
         if (this.sitting) {
             return;
         }
 
         this.sitting = true;
-        const self = this;
-        app.requireAuthentication().then(function (authenticated) {
-            if (authenticated) {
-                const currentPlayer = self.myPlayer();
+        try {
+            const value = await app.requireAuthentication();
+            if (value.authenticated) {
+                const currentPlayer = this.myPlayer();
                 if (currentPlayer === null) {
-                    app.joinTablePopup.tableView(self);
+                    app.joinTablePopup.tableView(this);
                     app.joinTablePopup.seatNumber(seat);
                     app.executeCommand("popup.joinTable");
                 }
             }
-        }).always(() => {
-            self.sitting = false;
-        });
+        } finally {
+            this.sitting = false;
+        }
     }
     public async rebuy() {
         const self = this;

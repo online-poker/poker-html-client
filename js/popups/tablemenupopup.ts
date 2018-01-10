@@ -220,14 +220,14 @@ export class TableMenuPopup {
         currentTable.showAddonPrompt();
     }
     public async showSettingsPrompt() {
-        const authenticated = await app.requireAuthentication();
-        if (authenticated) {
+        const value = await app.requireAuthentication();
+        if (value.authenticated) {
             app.executeCommand("popup.settings");
         }
     }
     public async showRules() {
-        const authenticated = await app.requireAuthentication();
-        if (authenticated) {
+        const value = await app.requireAuthentication();
+        if (value.authenticated) {
             app.executeCommand("popup.rules");
         }
     }

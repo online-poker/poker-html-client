@@ -355,29 +355,28 @@ export class LobbyPage extends PageBase {
             }
         }
     }
-    public selectTable(table: GameTableModel) {
+    public async selectTable(table: GameTableModel) {
         app.processing(true);
-        app.requireGuestAuthentication().then(function (newValue, wasAuthenticated) {
-            if (newValue) {
-                app.executeCommand("app.selectTable", [table, wasAuthenticated]);
+        const authResult = await app.requireGuestAuthentication();
+        if (authResult.authenticated) {
+            app.executeCommand("app.selectTable", [table, authResult.wasAuthenticated]);
 
-                if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
-                    const tableId = table.TableId.toString();
-                    console.log("Save table id " + tableId + " for future auto select of this table.");
-                    localStorage.setItem("tableId", tableId);
-                }
-
-                if (appConfig.game.seatMode) {
-                    app.executeCommand("page.seats");
-                } else {
-                    app.executeCommand("page.tables");
-                }
-
-                app.processing(false);
-            } else {
-                app.processing(false);
+            if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
+                const tableId = table.TableId.toString();
+                console.log("Save table id " + tableId + " for future auto select of this table.");
+                localStorage.setItem("tableId", tableId);
             }
-        });
+
+            if (appConfig.game.seatMode) {
+                app.executeCommand("page.seats");
+            } else {
+                app.executeCommand("page.tables");
+            }
+
+            app.processing(false);
+        } else {
+            app.processing(false);
+        }
     }
     public selectTournament(tournament) {
         app.lobbyPageBlock.selectTournament(tournament);

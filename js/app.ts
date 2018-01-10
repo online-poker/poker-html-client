@@ -62,6 +62,11 @@ import * as timeService from "./timeservice";
 
 type PromiseOrVoid = void | Promise<void>;
 
+export interface LoginPromptResult {
+    authenticated: boolean;
+    wasAuthenticated: boolean;
+}
+
 declare const host: string;
 
 export class App {
@@ -467,24 +472,22 @@ export class App {
     }
     public bindPageBlock(pageBlockName: string, viewModel: PageBlock) {
         const self = this;
-        commandManager.registerCommand("pageblock." + pageBlockName, function() {
+        commandManager.registerCommand("pageblock." + pageBlockName, async function showPageBlock() {
             const requireAuthentication = viewModel.requireAuthentication;
             if (!requireAuthentication) {
                 if (!viewModel.requireGuestAuthentication) {
                     self.showPageBlock(pageBlockName);
                 } else {
-                    app.requireGuestAuthentication().then(function(value) {
-                        if (value) {
-                            self.showPageBlock(pageBlockName);
-                        }
-                    });
-                }
-            } else {
-                app.requireAuthentication().then(function(value) {
-                    if (value) {
+                    const value = await app.requireGuestAuthentication();
+                    if (value.authenticated) {
                         self.showPageBlock(pageBlockName);
                     }
-                });
+                }
+            } else {
+                const value = await app.requireAuthentication();
+                if (value.authenticated) {
+                    self.showPageBlock(pageBlockName);
+                }
             }
         });
 
@@ -495,16 +498,15 @@ export class App {
     }
     public bindSubPage(pageName: string, viewModel: any) {
         const self = this;
-        commandManager.registerCommand("page." + pageName, function() {
+        commandManager.registerCommand("page." + pageName, async function showPage() {
             const requireAuthentication = viewModel.requireAuthentication || false;
             if (!requireAuthentication) {
                 self.showSubPage(pageName);
             } else {
-                app.requireAuthentication().then(function(value) {
-                    if (value) {
-                        self.showSubPage(pageName);
-                    }
-                });
+                const value = await app.requireAuthentication();
+                if (value.authenticated) {
+                    self.showSubPage(pageName);
+                }
             }
         });
 
@@ -742,36 +744,43 @@ export class App {
         /// For now this is works in iOS.
         return ScreenOrientation.shouldRotateToOrientation(interfaceOrientation);
     }
-    public requireAuthentication(): JQueryPromise<boolean> {
-        const result = $.Deferred<boolean>();
+    public requireAuthentication(): Promise<LoginPromptResult> {
         if (!authManager.authenticated()) {
-            // We don't authenticated, so display authentication popup.
-            this.popupClosed.addOnce(function() {
-                // Resolve with current authentication status, so
-                // caller would know operation was successful or not.
-                result.resolve(authManager.authenticated(), false);
-            }, this, null);
-            this.showPopup("auth");
-        } else {
-            // We already authenticated, no need to show authentication popup.
-            result.resolve(true, true);
-        }
-
-        return result;
-    }
-    public requireGuestAuthentication(): JQueryPromise<boolean> {
-        const result = $.Deferred<boolean>();
-        if (!authManager.authenticated()) {
-            // We don't authenticated, so display authentication popup.
-            authManager.loginAsGuest().then(function(status) {
-                result.resolve(authManager.authenticated(), false);
+            return new Promise<LoginPromptResult>((resolve, reject) => {
+                // We don't authenticated, so display authentication popup.
+                this.popupClosed.addOnce(function() {
+                    // Resolve with current authentication status, so
+                    // caller would know operation was successful or not.
+                    resolve({
+                        authenticated: authManager.authenticated(),
+                        wasAuthenticated: false,
+                    });
+                }, this, null);
+                this.showPopup("auth");
             });
         } else {
             // We already authenticated, no need to show authentication popup.
-            result.resolve(true, true);
+            return Promise.resolve({
+                authenticated: true,
+                wasAuthenticated: true,
+            });
         }
-
-        return result;
+    }
+    public async requireGuestAuthentication(): Promise<LoginPromptResult> {
+        if (!authManager.authenticated()) {
+            // We don't authenticated, so display authentication popup.
+            await authManager.loginAsGuest();
+            return {
+                authenticated: authManager.authenticated(),
+                wasAuthenticated: false,
+            };
+        } else {
+            // We already authenticated, no need to show authentication popup.
+            return {
+                authenticated: true,
+                wasAuthenticated: true,
+            };
+        }
     }
     public prompt(title: string, messages: string[], buttons: string[]= null) {
         if (buttons === null) {
