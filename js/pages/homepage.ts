@@ -150,20 +150,19 @@ export class HomePage extends PageBase {
     /**
      * Performs one click authorization as a guest.
      */
-    public loginAsGuest() {
+    public async loginAsGuest() {
         app.processing(true);
-        authManager.loginAsGuest().then((status) => {
-            app.processing(false);
-            if (!status) {
-                this.errorMessage(_("auth.unspecifiedError"));
+        const status = await authManager.loginAsGuest();
+        app.processing(false);
+        if (!status) {
+            this.errorMessage(_("auth.unspecifiedError"));
+        } else {
+            if (status !== "Ok") {
+                this.errorMessage(_("errors." + status));
             } else {
-                if (status !== "Ok") {
-                    this.errorMessage(_("errors." + status));
-                } else {
-                    app.lobbyPageBlock.showLobby();
-                }
+                app.lobbyPageBlock.showLobby();
             }
-        });
+        }
     }
     public openBanner() {
         window.open(this.currentBanner().Link, "_system", "location=yes");
