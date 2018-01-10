@@ -186,6 +186,11 @@ export class ActionBlock {
     public raiseBlockVisible: KnockoutComputed<boolean>;
 
     /**
+     * Value indicating that raise block is collapsed.
+     */
+    public raiseBlockCollapsed: KnockoutObservable<boolean>;
+
+    /**
      * Indicate whether this action block in pot-limit mode.
      */
     public isPotLimitGame = ko.observable(false);
@@ -396,6 +401,9 @@ export class ActionBlock {
             return self.mainButtonsBlockVisible()
                 && self.couldRaise() && self.myPlayerInGame()
                 && !self.gameClosed();
+        });
+        this.raiseBlockCollapsed = ko.computed(() => {
+            return this.expanded() && appConfig.game.collapseRaiseBlockWhenExpanded;
         });
         this.observerModeBlockVisible = ko.computed(function() {
             return (!authManager.authenticated() && !self.testMode()) || self.myPlayer() == null;

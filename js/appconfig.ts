@@ -32,6 +32,7 @@ export class AppConfig {
         noTableMoneyLimit: true,
         showTournamentTables: true,
         isRoundNotificationEnabled: true,
+        collapseRaiseBlockWhenExpanded: true,
     };
     public tournament = {
         enabled: false,
