@@ -1,5 +1,6 @@
 import * as ko from "knockout";
 import { App } from "../app";
+import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
 import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";
@@ -25,6 +26,7 @@ export class RegistrationPopup extends PopupBase {
     public imageFile = ko.observable<string>();
     public loading: KnockoutObservable<boolean>;
     public errors: KnockoutValidationErrors;
+    public allowSelectUserAvatar: KnockoutObservable<boolean>;
     private validationModel: KnockoutObservable<RegistrationPopup>;
 
     constructor() {
@@ -42,6 +44,7 @@ export class RegistrationPopup extends PopupBase {
         this.agreeEula = ko.observable(true).extend({ required: true });
         this.imageUrl = ko.observable("");
         this.loading = ko.observable(false);
+        this.allowSelectUserAvatar = ko.observable(appConfig.registration.allowSelectUserAvatar);
 
         this.errors = ko.validation.group(this);
         this.validationModel = ko.validatedObservable(this);

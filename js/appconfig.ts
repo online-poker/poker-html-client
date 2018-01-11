@@ -42,6 +42,9 @@ export class AppConfig {
         allowUsePersonalAccount: false,
         allowTickets: true,
     };
+    public registration = {
+        allowSelectUserAvatar: true,
+    };
 }
 /**
  * Simple object check.
