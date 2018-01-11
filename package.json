@@ -1,5 +1,5 @@
 {
-  "name": "poker-html-client",
+  "name": "@poker/html-client",
   "version": "0.3.1",
   "description": "HTML client for online poker",
   "main": "dist/main.js",
