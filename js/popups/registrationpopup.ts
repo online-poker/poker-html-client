@@ -114,10 +114,14 @@ export class RegistrationPopup extends PopupBase {
 
         this.loading(true);
         const accountManager = new AccountManager();
-        const additionalProperties = {
-            ImageDataBase64: this.imageFile(),
-            ImageUrl: this.imageUrl(),
-        };
+        let additionalProperties = null;
+        if (appConfig.registration.allowSelectUserAvatar && this.imageUrl() !== "") {
+            additionalProperties = {
+                ImageDataBase64: this.imageFile(),
+                ImageUrl: this.imageUrl(),
+            };
+        }
+
         try {
             const data = await accountManager.register(this.login(), this.email(), this.password(), this.firstName(), this.lastName(),
                 this.patronymicName(), this.country(), this.city(), additionalProperties);
