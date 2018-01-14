@@ -163,6 +163,10 @@ export class TablesPage extends PageBase {
         const currentWidth = $("body").width();
         if (currentWidth >= 1024 || (currentWidth === 768 && $("body").height() === 0)) {
             viewportLandscapeWidth = 1024;
+            if (currentWidth >= 1280) {
+                viewportLandscapeWidth = 1280;
+            }
+
             if (currentWidth >= 1920) {
                 viewportLandscapeWidth = 1920;
             }
