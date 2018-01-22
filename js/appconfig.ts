@@ -44,6 +44,10 @@ export class AppConfig {
     };
     public registration = {
         allowSelectUserAvatar: true,
+        requireEmail: true,
+        requirePhoneNumber: false,
+        requireFirstName: false,
+        requireLastName: false,
     };
 }
 /**
