@@ -8,7 +8,7 @@ module.exports = (env) => {
     const isDevBuild = !(env && env.prod);
     return [{
         stats: { modules: false },
-        entry: { 'main': './js/appInit' },
+        entry: { 'poker-html-client': './js/appInit' },
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
             alias: {
