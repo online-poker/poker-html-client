@@ -13,6 +13,7 @@ declare var app: App;
 export class RegistrationPopup extends PopupBase {
     public login: KnockoutObservable<string>;
     public email: KnockoutObservable<string>;
+    public phoneNumber: KnockoutObservable<string>;
     public firstName: KnockoutObservable<string>;
     public lastName: KnockoutObservable<string>;
     public patronymicName: KnockoutObservable<string>;
@@ -32,9 +33,10 @@ export class RegistrationPopup extends PopupBase {
     constructor() {
         super();
         this.login = ko.observable<string>().extend({ required: true, minLength: 5, maxLength: 12, validatable: true });
-        this.email = ko.observable<string>().extend({ required: true, email: true, validatable: true });
-        this.firstName = ko.observable<string>().extend({ required: true });
-        this.lastName = ko.observable<string>().extend({ required: true });
+        this.email = ko.observable<string>().extend({ required: appConfig.registration.requireEmail, email: true, validatable: true });
+        this.phoneNumber = ko.observable<string>().extend({ required: appConfig.registration.requirePhoneNumber });
+        this.firstName = ko.observable<string>().extend({ required: appConfig.registration.requireFirstName });
+        this.lastName = ko.observable<string>().extend({ required: appConfig.registration.requireLastName });
         this.patronymicName = ko.observable<string>();
         this.password = ko.observable<string>().extend({ required: true, maxLength: 16 });
         this.confirmPassword = ko.observable<string>().extend({ required: true, equal: this.password });
@@ -57,6 +59,7 @@ export class RegistrationPopup extends PopupBase {
 
         this.login(null);
         this.email(null);
+        this.phoneNumber(null);
         this.firstName(null);
         this.lastName(null);
         this.patronymicName(null);
@@ -123,8 +126,17 @@ export class RegistrationPopup extends PopupBase {
         }
 
         try {
-            const data = await accountManager.register(this.login(), this.email(), this.password(), this.firstName(), this.lastName(),
-                this.patronymicName(), this.country(), this.city(), additionalProperties);
+            const data = await accountManager.register(
+                this.login(),
+                this.email(),
+                this.password(),
+                this.phoneNumber(),
+                this.firstName(),
+                this.lastName(),
+                this.patronymicName(),
+                this.country(),
+                this.city(),
+                additionalProperties);
             if (data.Status === "Ok") {
                 self.close();
                 SimplePopup.display(_("auth.registration"), _("auth.registrationsuccess"));

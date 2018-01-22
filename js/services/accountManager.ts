@@ -26,6 +26,7 @@ export class AccountManager {
         login: string,
         email: string,
         password: string,
+        phoneNumber: string,
         firstName: string,
         lastName: string,
         patronymicName: string,
@@ -33,7 +34,7 @@ export class AccountManager {
         city: string,
         additionalProperties: any) {
         const api = new Account(host);
-        return await api.register(login, email, password, firstName, lastName, patronymicName, country, city, additionalProperties);
+        return await api.register(login, email, password, phoneNumber, firstName, lastName, patronymicName, country, city, additionalProperties);
     }
     public async getAccountHistory(fromDate, toDate, fromAmount, toAmount, operationType): Promise<ApiResult<OperationData[]>> {
         const api = new Account(host);

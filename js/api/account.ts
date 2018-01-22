@@ -141,6 +141,7 @@ export class Account {
         login: string,
         email: string,
         password: string,
+        phoneNumber: string,
         firstName: string,
         lastName: string,
         patronymicName: string,
@@ -151,6 +152,7 @@ export class Account {
             login,
             email,
             password,
+            phoneNumber,
             firstName,
             lastName,
             patronymicName,
@@ -201,8 +203,8 @@ export class Account {
         const jsonData = await response.json() as StatusResponse;
         return jsonData;
     }
-    public async updatePlayerProfile(firstName, lastName, patronymicName, email, country, city) {
-        const data = { firstName, lastName, patronymicName, email, country, city };
+    public async updatePlayerProfile(phoneNumber: string, firstName: string, lastName: string, patronymicName: string, email: string, country, city) {
+        const data = { phoneNumber, firstName, lastName, patronymicName, email, country, city };
         const response = await fetch(this.host + `/api/accont/profile`, getPostRequestInit(data));
         const jsonData = await response.json() as StatusResponse;
         return jsonData;
