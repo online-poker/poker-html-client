@@ -67,7 +67,7 @@
   },
   "files": [
     "js/application.js",
-    "dist/main.js",
+    "dist/poker-html-client.js",
     "CHANGELOG.md",
     "README.md",
     "LICENSE"
