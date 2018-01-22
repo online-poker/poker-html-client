@@ -11,7 +11,7 @@ interface TournamentPrizeStructureView {
 
 class TournamentPrizeInformationComponent {
     private data: KnockoutObservable<TournamentDefinition>;
-    private totalPrize: KnockoutComputed<number>;
+    private totalPrize: KnockoutComputed<number | null>;
     private structure: KnockoutComputed<TournamentPrizeStructureView[]>;
 
     constructor(params: { data: KnockoutObservable<TournamentDefinition> }) {
@@ -50,7 +50,7 @@ class TournamentPrizeInformationComponent {
             }
 
             const result = [] as TournamentPrizeStructureView[];
-            const totalPrize = self.totalPrize();
+            const totalPrize = self.totalPrize() || 0;
             currentPrize.PrizeLevel.forEach(function (item, index) {
                 result.push({
                     place: index + 1,

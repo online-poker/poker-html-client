@@ -66,24 +66,24 @@ class Settings {
             localStorage.setItem(name, value ? "true" : "false");
         }
     }
-    private getItemString(name: string, defaultValue: string = null) {
+    private getItemString(name: string, defaultValue: string | null = null) {
         return localStorage.getItem(name) as string || defaultValue;
     }
-    private setItemString(name: string, value: string, defaultValue: string = null) {
+    private setItemString(name: string, value: string, defaultValue: string | null = null) {
         if (value === defaultValue) {
             localStorage.removeItem(name);
         } else {
             localStorage.setItem(name, value);
         }
     }
-    private getItemNumber(name: string, defaultValue: number = null) {
+    private getItemNumber(name: string, defaultValue: number = 0) {
         return Number(localStorage.getItem(name)) || defaultValue;
     }
-    private setItemNumber(name: string, value: number, defaultValue: number = null) {
+    private setItemNumber(name: string, value: number, defaultValue: number) {
         if (value === defaultValue) {
             localStorage.removeItem(name);
         } else {
-            localStorage.setItem(name, value === null ? null : value.toString());
+            localStorage.setItem(name, value.toString());
         }
     }
 }

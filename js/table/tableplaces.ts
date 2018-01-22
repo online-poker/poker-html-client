@@ -86,7 +86,7 @@ export class TablePlaces {
 
         this.places = ko.computed(() => {
             this.placesRefreshTrigger();
-            const result = [];
+            const result: TablePlaceModel[] = [];
             if (this.place1() !== null) {
                 result[this.getRealOffset(1)] = this.place1();
             }
@@ -211,6 +211,8 @@ export class TablePlaces {
     }
     public refreshPlaces() {
         this.placesRefreshTrigger.notifySubscribers();
-        this.placesRefreshTrigger.valueHasMutated();
+        if (this.placesRefreshTrigger.valueHasMutated) {
+            this.placesRefreshTrigger.valueHasMutated();
+        }
     }
 }

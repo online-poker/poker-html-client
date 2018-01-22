@@ -59,7 +59,7 @@ export class TableManager {
     public initialize() {
         const self = this;
         commandManager.registerCommand("app.selectTable", function (parameters?: any[]): void {
-            if (parameters.length < 1) {
+            if (!parameters || parameters.length < 1) {
                 // tslint:disable-next-line:no-console
                 console.log("Insufficient parameters to the 'app.selectTable' command");
                 return;
@@ -74,7 +74,7 @@ export class TableManager {
         });
         commandManager.registerCommand("app.leaveTable", function (parameters?: any[]): JQueryDeferred<void> {
             const result = $.Deferred<void>();
-            if (parameters.length < 1) {
+            if (!parameters || parameters.length < 1) {
                 // tslint:disable-next-line:no-console
                 console.log("Insufficient parameters to the 'app.leaveTable' command");
                 result.reject();
@@ -872,7 +872,7 @@ export class TableManager {
                 return;
             }
 
-            const statusString = [];
+            const statusString: string[] = [];
             if ((status & 1) !== 0) {
                 statusString.push("Sitout");
             }
@@ -1256,7 +1256,7 @@ export class TableManager {
      */
     private removeClosedTables() {
         const tables = this.tables();
-        let tableId = null;
+        let tableId: number | null = null;
         for (const t in tables) {
             if (!tables.hasOwnProperty(t)) {
                 continue;

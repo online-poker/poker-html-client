@@ -49,7 +49,7 @@ export class TournamentView {
     /**
      * Id of the current table where player sitting.
      */
-    public currentTableId: number = null;
+    public currentTableId: number | null = null;
 
     /**
      * Indicates that player is finished playing in the tournament.
@@ -64,12 +64,12 @@ export class TournamentView {
     /**
      * Place which player take in the tournament.
      */
-    public finishedPlace: number = null;
+    public finishedPlace: number | null = null;
 
     /**
      * Request which performs connecting to the table.
      */
-    public connectingRequest: JQueryDeferred<any> = null;
+    public connectingRequest: JQueryDeferred<any> | null = null;
 
     /**
      * Status of the tournament.
@@ -79,7 +79,7 @@ export class TournamentView {
     /**
      * Total prize.
      */
-    public totalPrize: KnockoutComputed<number>;
+    public totalPrize: KnockoutComputed<number | null>;
 
     constructor(public tournamentId: number, data: TournamentDefinition) {
         const self = this;
@@ -208,7 +208,7 @@ export class TournamentView {
         const connectionInfo = "HID:" + hubId;
         this.log("Joining tournament on connection " + connectionInfo);
         const cancelled = false;
-        let subsequentDeferred: JQueryDeferred<any> = null;
+        let subsequentDeferred: JQueryDeferred<any> | null = null;
         const cancelOperation = function() {
             self.log("Cancelling join tournament request");
             result.reject("Cancelled", true);

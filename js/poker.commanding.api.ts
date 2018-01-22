@@ -1,5 +1,5 @@
 ﻿/* tslint:disable:quotemark */
-declare var authToken: string;
+declare var authToken: string | null;
 
 namespace OnlinePoker {
     export namespace Commanding {

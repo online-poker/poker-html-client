@@ -35,18 +35,18 @@ export class HomePage extends PageBase {
         Url: "",
         Link: "",
     });
-    public bannerIntervalHandle: number = null;
-    private intervalHandle: number = null;
+    public bannerIntervalHandle: number | null = null;
+    private intervalHandle: number | null = null;
 
     constructor() {
         super();
         this.online = metadataManager.online;
         this.registered = metadataManager.registered;
-        this.captionLabel = ko.computed(function () {
+        this.captionLabel = ko.computed(() => {
             return _("header.onlinePlayers")
                 .replace("#registered", this.registered())
                 .replace("#online", this.online());
-        }, this);
+        });
         this.rememberMe = ko.observable(false);
         this.username = ko.observable("");
         this.password = ko.observable("");

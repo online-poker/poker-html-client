@@ -8,9 +8,9 @@ class TabBarItem {
     public selected: KnockoutObservable<boolean>;
     public disabled: KnockoutObservable<boolean>;
     public notice: KnockoutObservable<boolean>;
-    public action: () => void;
+    public action: (() => void) | null;
     public handler() {
-        if (this.action != null) {
+        if (this.action !== null) {
             this.action.call(this);
         }
     }
@@ -47,33 +47,48 @@ export class TabBar {
     }
     public select(name: string, enable: boolean): void {
         this.log("Tabbar item '" + name + "' " + (enable ? "selected" : "deselected"));
-        this.items.valueWillMutate();
+        if (this.items.valueWillMutate) {
+            this.items.valueWillMutate();
+        }
+
         this.items().forEach(function (item) {
             if (item.name === name) {
                 item.selected(enable);
             }
         });
-        this.items.valueHasMutated();
+        if (this.items.valueWillMutate) {
+            this.items.valueWillMutate();
+        }
     }
     public enable(name: string, enable: boolean): void {
         this.log("Tabbar item '" + name + "' " + (enable ? "enabled" : "disabled"));
-        this.items.valueWillMutate();
+        if (this.items.valueWillMutate) {
+            this.items.valueWillMutate();
+        }
+
         this.items().forEach(function (item) {
             if (item.name === name) {
                 item.disabled(!enable);
             }
         });
-        this.items.valueHasMutated();
+        if (this.items.valueWillMutate) {
+            this.items.valueWillMutate();
+        }
     }
     public notice(name: string, enable: boolean): void {
         this.log("Notice for tabbar item '" + name + "' " + (enable ? "set" : "unset"));
-        this.items.valueWillMutate();
+        if (this.items.valueWillMutate) {
+            this.items.valueWillMutate();
+        }
+
         this.items().forEach(function (item) {
             if (item.name === name) {
                 item.notice(enable);
             }
         });
-        this.items.valueHasMutated();
+        if (this.items.valueWillMutate) {
+            this.items.valueWillMutate();
+        }
     }
 
     private log(message: string, ...params: any[]) {
