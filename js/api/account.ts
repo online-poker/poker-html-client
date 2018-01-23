@@ -164,12 +164,20 @@ export class Account {
         const jsonData = await response.json() as StatusResponse;
         return jsonData;
     }
+    /**
+     * Checks for ability to create user with given parameters.
+     * @param login Desired login for the user.
+     * @param email Desired email for the user.
+     * @param phoneNumber Desired phone number for the user
+     */
     public async registrationCheck(
         login: string,
-        email: string): Promise<StatusResponse> {
+        email: string,
+        phoneNumber: string): Promise<StatusResponse> {
         const data = {
             login,
             email,
+            phoneNumber,
         };
         const response = await fetch(this.host + `/api/registration/check`, getPostRequestInit(data));
         const jsonData = await response.json() as StatusResponse;
