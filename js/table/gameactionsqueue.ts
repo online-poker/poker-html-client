@@ -22,7 +22,7 @@ export class GameActionsQueue {
      */
     private isExecuting: boolean = false;
 
-    private executingTask: Promise<any>;
+    private executingTask: Promise<any> | null = null;
 
     /**
      * Initializes a new instance of the GameActionsQueue class.
@@ -170,7 +170,7 @@ export class GameActionsQueue {
 
         const self = this;
         const worker = this.tasks.shift();
-        if (worker === null) {
+        if (worker === undefined) {
             this.error("Worker is null");
             return;
         }

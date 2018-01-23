@@ -439,8 +439,13 @@ export class App {
             const listeningElement = parentElement.querySelector(".listening");
             const receivedElement = parentElement.querySelector(".received");
 
-            listeningElement.setAttribute("style", "display:none;");
-            receivedElement.setAttribute("style", "display:block;");
+            if (listeningElement) {
+                listeningElement.setAttribute("style", "display:none;");
+            }
+
+            if (receivedElement) {
+                receivedElement.setAttribute("style", "display:block;");
+            }
         }
     }
     public buildStartConnection() {
@@ -755,7 +760,7 @@ export class App {
                         authenticated: authManager.authenticated(),
                         wasAuthenticated: false,
                     });
-                }, this, null);
+                }, this, undefined);
                 this.showPopup("auth");
             });
         } else {
@@ -782,7 +787,7 @@ export class App {
             };
         }
     }
-    public prompt(title: string, messages: string[], buttons: string[]= null) {
+    public prompt(title: string, messages: string[], buttons: string[] | null = null) {
         if (buttons === null) {
             buttons = [_("common.ok"), _("common.cancel")];
         }
@@ -807,7 +812,7 @@ export class App {
         return deferred;
     }
 
-    public promptAsync(title: string, messages: string[], buttons: string[] = null) {
+    public promptAsync(title: string, messages: string[], buttons: string[] | null = null) {
         return new Promise<boolean>((resolve, reject) => {
             this.prompt(title, messages, buttons).then(() => resolve(true), () => resolve(false));
         });

@@ -63,6 +63,6 @@ export class LanguageManager {
 }
 
 export const l = new LanguageManager();
-export function _(message: string, parameters = null) {
+export function _(message: string, parameters: any = null) {
     return l.getMessage(message, parameters);
 }

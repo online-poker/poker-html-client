@@ -69,7 +69,7 @@ export class SeatPage extends PageBase {
             },
             owner: this,
         });
-        this.currentTable = ko.computed(function() {
+        this.currentTable = ko.computed(() => {
             const tables = tableManager.tables();
             if (tables.length === 0) {
                 return new TableView(0, null);
@@ -81,7 +81,7 @@ export class SeatPage extends PageBase {
             }
 
             return tables[index];
-        }, this);
+        });
         this.selectedTables = ko.computed(function() {
             const tables = tableManager.tables();
             return tables;
@@ -162,7 +162,7 @@ export class SeatPage extends PageBase {
         }
 
         let viewportLandscapeWidth = 640;
-        const currentWidth = $("body").width();
+        const currentWidth = $("body").width()!;
         if (currentWidth >= 1024 || (currentWidth === 768 && $("body").height() === 0)) {
             viewportLandscapeWidth = 1024;
             if (currentWidth >= 1920) {

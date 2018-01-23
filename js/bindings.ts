@@ -121,7 +121,7 @@ export function registerBindings() {
                 value = _(parameters.key, parameters.params);
             }
 
-            ko.bindingHandlers.text.update(element, () => value, allBindingsAccessor, viewModel, bindingContext);
+            ko.bindingHandlers.text.update!(element, () => value, allBindingsAccessor, viewModel, bindingContext);
         },
     };
     ko.bindingHandlers["lattr"] = {
@@ -138,7 +138,7 @@ export function registerBindings() {
                 }
             }
 
-            ko.bindingHandlers.attr.update(element, () => val, allBindingsAccessor, viewModel, bindingContext);
+            ko.bindingHandlers.attr.update!(element, () => val, allBindingsAccessor, viewModel, bindingContext);
         },
     };
     ko.bindingHandlers["lhtml"] = {
@@ -147,7 +147,7 @@ export function registerBindings() {
             allBindingsAccessor: KnockoutAllBindingsAccessor,
             viewModel: any,
             bindingContext: KnockoutBindingContext) {
-            ko.bindingHandlers.html.init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+            ko.bindingHandlers.html.init!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
         },
         update(
             element,
@@ -157,7 +157,7 @@ export function registerBindings() {
             bindingContext: KnockoutBindingContext) {
             const lockey = ko.utils.unwrapObservable(valueAccessor()) as string;
             const value = _(lockey);
-            ko.bindingHandlers.html.update(element, () => value, allBindingsAccessor, viewModel, bindingContext);
+            ko.bindingHandlers.html.update!(element, () => value, allBindingsAccessor, viewModel, bindingContext);
         },
     };
     ko.bindingHandlers["spinner"] = {
@@ -193,7 +193,7 @@ export function registerBindings() {
             valueAccessor: () => any,
             allBindingsAccessor: KnockoutAllBindingsAccessor,
             viewModel: any, bindingContext: KnockoutBindingContext) {
-            ko.bindingHandlers.visible.update(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+            ko.bindingHandlers.visible.update!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
         },
     };
     const dateBindingHander = {
@@ -202,7 +202,7 @@ export function registerBindings() {
             viewModel: any, bindingContext: KnockoutBindingContext) {
             const lockey = ko.utils.unwrapObservable(valueAccessor()) as string;
             const value = _(lockey);
-            ko.bindingHandlers.text.update(element, function() {
+            ko.bindingHandlers.text.update!(element, function() {
                 let dateValue = moment(value);
                 if (debugSettings.application.useUtcDates) {
                     dateValue = dateValue.utc();
@@ -221,7 +221,7 @@ export function registerBindings() {
     ko.bindingHandlers["selector"] = {
         init(element, valueAccessor, allBindings, viewModel, bindingContext) {
             const value = valueAccessor();
-            ko.bindingHandlers.click.init(element, function() {
+            ko.bindingHandlers.click.init!(element, function() {
                 return function() {
                     const val = value();
                     value.options.forEach(function(item: SelectorItem) {
@@ -276,7 +276,7 @@ export function registerBindings() {
                     };
                 };
             }
-            ko.bindingHandlers.event.init(
+            ko.bindingHandlers.event.init!(
                 element,
                 wrapperValueAccessor,
                 allBindingsAccessor,
@@ -302,7 +302,7 @@ export function registerBindings() {
             } else {
                 finalFormatted = "";
             }
-            ko.bindingHandlers.text.update(
+            ko.bindingHandlers.text.update!(
                 element,
                 function() { return finalFormatted; },
                 allBindingsAccessor,
@@ -331,7 +331,7 @@ export function registerBindings() {
                 text = currencySymbolBindingHandler.chipsSymbol;
             }
 
-            ko.bindingHandlers.text.update(
+            ko.bindingHandlers.text.update!(
                 element,
                 () => text,
                 allBindingsAccessor,
@@ -459,14 +459,14 @@ export function registerBindings() {
             element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
             viewModel: any, bindingContext: SwipeKnockoutBindingContext) {
             swipeHandler.log("swipeForeach init ", valueAccessor()(), viewModel, bindingContext.$swiper);
-            ko.bindingHandlers.foreach.init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+            ko.bindingHandlers.foreach.init!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
             return { controlsDescendantBindings: true };
         },
         update(
             element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
             viewModel: any, bindingContext: SwipeKnockoutBindingContext) {
             swipeHandler.log("swipeForeach update ", valueAccessor()(), viewModel, bindingContext.$swiper);
-            ko.bindingHandlers.foreach.update(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+            ko.bindingHandlers.foreach.update!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
             swipeHandler.log("Preious slider position ", bindingContext.$swiperIndex);
             if (bindingContext.$swiper) {
                 bindingContext.$swiper.kill();
@@ -711,22 +711,22 @@ export function registerBindings() {
         duration?: number;
     }
     interface FadeTableBindingContext extends KnockoutBindingContext {
-        $timeout: number;
+        $timeout?: number;
     }
     ko.bindingHandlers["fadeTable"] = {
         init(
-            element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
+            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
             viewModel: any, bindingContext: FadeTableBindingContext) {
             const value = valueAccessor() as FadeTableBindingSettings;
             const duration = value.duration || 1000;
             const subscription = value.item.subscribe(function(val) {
-                if (bindingContext.$timeout != null) {
+                if (bindingContext.$timeout !== undefined) {
                     return;
                 }
 
                 const continuation = () => {
                     value.target(false);
-                    bindingContext.$timeout = null;
+                    bindingContext.$timeout = undefined;
                 };
                 value.target(true);
                 bindingContext.$timeout = setTimeout(continuation, duration);

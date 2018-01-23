@@ -14,5 +14,5 @@ interface AccountInformation {
 interface AccountServiceInformation {
     login: string;
     accounts: AccountInformation[];
-    lastTransaction: AccountTransactionInformation;
+    lastTransaction: AccountTransactionInformation | null;
 }

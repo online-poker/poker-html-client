@@ -26,8 +26,9 @@ class TimeBlockComponent {
         }
 
         if (params && params.selected) {
+            const selected = params.selected;
             this.slider.currentIndex.subscribe(function (newValue) {
-                params.selected(newValue);
+                selected(newValue);
             });
         }
     }
