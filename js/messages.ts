@@ -250,6 +250,7 @@ let messages: any = {
 
         username: 'Логин',
         password: 'Пароль',
+        phoneNumber: 'Телефон',
         newPassword: 'Новый пароль',
         confirmPassword: 'Повторите пароль',
         firstName: 'Имя',
