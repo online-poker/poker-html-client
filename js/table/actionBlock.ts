@@ -974,7 +974,7 @@ export class ActionBlock {
         const gameApi = new Game(host);
         const response = await gameApi.changeWaitQueueSettings(tableId, waitBigBlind);
         if (response.Status !== "OK" && response.Status !== "PlayerDoesNotSit" && response.Status !== "PlayerIsAlreadyInGame") {
-            SimplePopup.display("", _(`errors.${response.Status}`));
+            SimplePopup.display(_("table.changeWaitQueueSettings"), _(`errors.${response.Status}`));
         }
     }
     private log(message: string, ...params: any[]) {

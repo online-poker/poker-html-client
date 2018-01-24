@@ -290,6 +290,7 @@ let messages: any = {
         accountNumber: 'Счет в платежной системе:',
     },
     table: {
+        changeWaitQueueSettings: 'Изменение параметров',
         sitHere: 'Сесть тут',
         sitHere1: 'Сесть',
         sitHere2: 'тут',
