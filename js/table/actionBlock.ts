@@ -530,12 +530,12 @@ export class ActionBlock {
                 return;
             }
 
-            const gameApi = new Game(host);
-            if (value) {
-                gameApi.changeWaitQueueSettings(this.tableView.tableId, true);
-            } else {
-                gameApi.changeWaitQueueSettings(this.tableView.tableId, false);
+            let waitBigBlind = true;
+            if (!value) {
+                waitBigBlind = false;
             }
+
+            this.changeWaitQueueSettings(this.tableView.tableId, waitBigBlind);
         });
 
         this.autoFoldOrCheck.subscribe((value) => {
@@ -969,6 +969,13 @@ export class ActionBlock {
 
         const waitBBHidden = this.isInGame() || this.myPlayerWasInGame();
         return !waitBBHidden;
+    }
+    private async changeWaitQueueSettings(tableId: number, waitBigBlind: boolean) {
+        const gameApi = new Game(host);
+        const response = await gameApi.changeWaitQueueSettings(tableId, waitBigBlind);
+        if (response.Status === 'TableNotFound') {
+            SimplePopup.display("", _("errors.TableNotFound"))
+        }
     }
     private log(message: string, ...params: any[]) {
         if (debugSettings.actionBlock.traceBlocksVisbility) {
