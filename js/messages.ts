@@ -561,6 +561,7 @@ let messages: any = {
         firstName: 'Имя',
         lastName: 'Фамилия',
         email: 'E-mail',
+        phoneNumber: 'Телефон',
         total: 'Состояние счета',
         changePassword: 'Сменить пароль',
         points: 'Очки (PR)',
