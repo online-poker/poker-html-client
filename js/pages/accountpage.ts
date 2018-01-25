@@ -18,6 +18,7 @@ interface AccountPagePlayerAccountModel {
 interface AccountPagePlayerModel {
     login: string;
     email: string;
+    phoneNumber: string;
     firstName: string;
     lastName: string;
     monthPoints: number;
@@ -30,7 +31,7 @@ interface AccountPagePlayerModel {
 export class AccountPage extends PageBase {
     public cashierCaption: KnockoutObservable<string>;
     public loading: KnockoutObservable<boolean>;
-    public player: KnockoutObservable<any>;
+    public player: KnockoutObservable<AccountPagePlayerModel>;
     public ratingSupported = ko.observable(appConfig.game.hasRating);
 
     constructor() {
@@ -42,6 +43,7 @@ export class AccountPage extends PageBase {
         const emptyElement = {
             login: "",
             email: "",
+            phoneNumber: "",
             firstName: "",
             lastName: "",
             monthPoints: 0,
@@ -144,11 +146,12 @@ export class AccountPage extends PageBase {
             email: personalAccountData.Email,
             firstName: personalAccountData.FirstName,
             lastName: personalAccountData.LastName,
+            phoneNumber: personalAccountData.PhoneNumber,
             monthPoints: parseInt(personalAccountData.Properties.Points, 10),
             yearPoints: parseInt(personalAccountData.Properties.Points, 10),
             status,
             accounts: accountsData,
-            stars: personalAccountData.Properties.Stars,
+            stars: parseInt(personalAccountData.Properties.Stars, 10),
         });
     }
 }

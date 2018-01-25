@@ -130,6 +130,7 @@ interface PlayerDefinitionProperties {
 
 interface PlayerDefinition {
     Email: string;
+    PhoneNumber: string;
     FirstName: string;
     LastName: string;
     RealMoney: number;
