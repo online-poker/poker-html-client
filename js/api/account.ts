@@ -45,6 +45,11 @@ export interface AuthenticateResponse extends StatusResponse {
     Email: string;
 
     /**
+     * User's phone number
+     */
+    PhoneNumber: string;
+
+    /**
      * Country of the user.
      */
     Country: string;
