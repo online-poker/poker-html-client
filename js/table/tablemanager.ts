@@ -70,7 +70,9 @@ export class TableManager {
                 ? true
                 : parameters[1] as boolean;
             self.selectTable(table, update);
-            appReloadService.startMonitoring(table.TableId);
+            if (appConfig.game.tableReloadSupported) {
+                appReloadService.startMonitoring(table.TableId);
+            }
         });
         commandManager.registerCommand("app.leaveTable", function (parameters?: any[]): JQueryDeferred<void> {
             const result = $.Deferred<void>();
