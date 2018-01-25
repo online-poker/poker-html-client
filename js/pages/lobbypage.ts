@@ -357,7 +357,13 @@ export class LobbyPage extends PageBase {
     }
     public async selectTable(table: GameTableModel) {
         app.processing(true);
-        const authResult = await app.requireGuestAuthentication();
+        const notAuthenticatedResult = {
+            authenticated: false,
+            wasAuthenticated: false,
+        };
+        const authResult = appConfig.lobby.openTableRequireAuthentication
+            ? appConfig.auth.allowGuest ? await app.requireGuestAuthentication() : await app.requireGuestAuthentication()
+            : notAuthenticatedResult;
         if (authResult.authenticated) {
             app.executeCommand("app.selectTable", [table, authResult.wasAuthenticated]);
 

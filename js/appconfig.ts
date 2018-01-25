@@ -21,6 +21,7 @@ export class AppConfig {
     public auth = {
         automaticLogin: true,
         automaticTableSelection: true,
+        allowGuest: false,
     };
     public game = {
         handHistory: new GameHandHistory(),
@@ -48,6 +49,9 @@ export class AppConfig {
         requirePhoneNumber: false,
         requireFirstName: false,
         requireLastName: false,
+    };
+    public lobby = {
+        openTableRequireAuthentication: true,
     };
 }
 /**
