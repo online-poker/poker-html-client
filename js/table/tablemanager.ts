@@ -289,9 +289,9 @@ export class TableManager {
         };
         if (this.getTablesReservation() >= 4 && tournamentView === null && this.reserveTablesForTournaments) {
             this.maxTablesReached.dispatch(append);
+        } else {
+            append();
         }
-
-        append();
     }
     public selectTable(model: GameTableModel, update: boolean) {
         const tableId = model.TableId;
@@ -321,9 +321,9 @@ export class TableManager {
             this.removeClosedTables();
             if (this.getTablesReservation() >= 4 && tableView === null) {
                 this.maxTablesReached.dispatch(append);
+            } else {
+                append();
             }
-
-            append();
         } else {
             append();
         }
