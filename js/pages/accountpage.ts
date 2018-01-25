@@ -1,4 +1,5 @@
 import * as ko from "knockout";
+import { appConfig } from "poker/appconfig";
 import { App } from "../app";
 import * as authManager from "../authmanager";
 import { AccountManager } from "../services/accountManager";
@@ -30,6 +31,7 @@ export class AccountPage extends PageBase {
     public cashierCaption: KnockoutObservable<string>;
     public loading: KnockoutObservable<boolean>;
     public player: KnockoutObservable<any>;
+    public ratingSupported = ko.observable(appConfig.game.hasRating);
 
     constructor() {
         super();

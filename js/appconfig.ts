@@ -35,6 +35,7 @@ export class AppConfig {
         isRoundNotificationEnabled: true,
         collapseRaiseBlockWhenExpanded: true,
         tableReloadSupported: true,
+        hasRating: false,
     };
     public tournament = {
         enabled: false,
