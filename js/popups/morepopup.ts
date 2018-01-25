@@ -1,4 +1,5 @@
 ﻿import * as ko from "knockout";
+import { appConfig } from "poker/appconfig";
 import { Message } from "../api/message";
 import { App } from "../app";
 import * as authManager from "../authmanager";
@@ -17,6 +18,7 @@ export class MorePopup {
     public loading: KnockoutObservable<boolean>;
     public hasMessages = ko.observable(false);
     public visible = ko.observable(false);
+    public ratingSupported = ko.observable(appConfig.game.hasRating);
 
     constructor() {
         const self = this;

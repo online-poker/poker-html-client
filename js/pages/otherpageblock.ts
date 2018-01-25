@@ -1,3 +1,4 @@
+import { appConfig } from "poker/appconfig";
 import { App } from "../app";
 import { PageBlock } from "../pageblock";
 import { AccountPage } from "./accountpage";
@@ -26,7 +27,10 @@ export class OtherPageBlock extends PageBlock {
         this.requireAuthentication = true;
         this.currentPage = "account";
         this.addSecondary("more", this.morePage);
-        this.addSecondary("rating", this.ratingPage);
+        if (appConfig.game.hasRating) {
+            this.addSecondary("rating", this.ratingPage);
+        }
+
         this.addSecondary("chat", this.chatPage, true);
         this.addSecondary("changePassword", this.changePasswordPage);
     }
