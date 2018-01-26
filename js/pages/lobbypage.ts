@@ -362,7 +362,7 @@ export class LobbyPage extends PageBase {
             wasAuthenticated: false,
         };
         const authResult = appConfig.lobby.openTableRequireAuthentication
-            ? appConfig.auth.allowGuest ? await app.requireGuestAuthentication() : await app.requireGuestAuthentication()
+            ? appConfig.auth.allowGuest ? await app.requireGuestAuthentication() : await app.requireAuthentication()
             : notAuthenticatedResult;
         if (authResult.authenticated) {
             app.executeCommand("app.selectTable", [table, authResult.wasAuthenticated]);
