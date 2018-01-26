@@ -37,6 +37,7 @@ export class AppConfig {
         tableReloadSupported: true,
         hasRating: false,
         hasPageReload: false,
+        soundTheme: "human",
     };
     public tournament = {
         enabled: false,

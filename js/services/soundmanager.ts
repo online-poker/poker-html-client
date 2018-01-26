@@ -1,4 +1,5 @@
 ﻿import * as ko from "knockout";
+import { appConfig } from "../appconfig";
 import * as runtimeSettings from "../table/runtimesettings";
 import { wait } from "./timedeferred";
 
@@ -12,7 +13,9 @@ export class SoundManager {
         }
 
         this.quickPlay("snd/fold.mp3");
-        this.quickPlay("snd/fold_human.mp3");
+        if (appConfig.game.soundTheme === "human") {
+            this.quickPlay("snd/fold_human.mp3");
+        }
     }
 
     public async playCheck() {
@@ -25,7 +28,9 @@ export class SoundManager {
             await wait(200);
             await this.quickPlay("snd/check_loud.mp3");
             await wait(100);
-            await this.quickPlay("snd/check_human.mp3");
+            if (appConfig.game.soundTheme === "human") {
+                await this.quickPlay("snd/check_human.mp3");
+            }
         } catch (e) {
             // tslint:disable-next-line:no-console
             console.log(e);
@@ -37,7 +42,9 @@ export class SoundManager {
         }
 
         this.quickPlay("snd/call.mp3");
-        this.quickPlay("snd/call_human.mp3");
+        if (appConfig.game.soundTheme === "human") {
+            this.quickPlay("snd/call_human.mp3");
+        }
     }
     public playBet() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -45,7 +52,9 @@ export class SoundManager {
         }
 
         this.quickPlay("snd/bet.mp3");
-        this.quickPlay("snd/bet_human.mp3");
+        if (appConfig.game.soundTheme === "human") {
+            this.quickPlay("snd/bet_human.mp3");
+        }
     }
     public playRaise() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -53,7 +62,9 @@ export class SoundManager {
         }
 
         this.quickPlay("snd/raise.mp3");
-        this.quickPlay("snd/raise_human.mp3");
+        if (appConfig.game.soundTheme === "human") {
+            this.quickPlay("snd/raise_human.mp3");
+        }
     }
     public playAllIn() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -61,7 +72,9 @@ export class SoundManager {
         }
 
         this.quickPlay("snd/allin.mp3");
-        this.quickPlay("snd/allin_human.mp3");
+        if (appConfig.game.soundTheme === "human") {
+            this.quickPlay("snd/allin_human.mp3");
+        }
     }
     public playAllInCondition() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -82,14 +95,22 @@ export class SoundManager {
             return;
         }
 
-        this.quickPlay("snd/turnreminder.mp3");
+        if (appConfig.game.soundTheme === "human") {
+            this.quickPlay("snd/turnreminder_human.mp3");
+        } else {
+            this.quickPlay("snd/turnreminder.mp3");
+        }
     }
     public playTurnReminderForAll() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
 
-        this.quickPlay("snd/turnreminder.mp3");
+        if (appConfig.game.soundTheme === "human") {
+            this.quickPlay("snd/turnreminder_human.mp3");
+        } else {
+            this.quickPlay("snd/turnreminder.mp3");
+        }
     }
     public playDealCards() {
         if (!this.enabled() || !this.tableSoundsEnabled() || !runtimeSettings.sounds.dealCardsEnabled) {
@@ -110,21 +131,33 @@ export class SoundManager {
             return;
         }
 
-        this.quickPlay("snd/flop.mp3");
+        if (appConfig.game.soundTheme === "human") {
+            this.quickPlay("snd/flop.mp3");
+        } else {
+            this.quickPlay("snd/flip_b.mp3");
+        }
     }
     public playTurn() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
 
-        this.quickPlay("snd/turn.mp3");
+        if (appConfig.game.soundTheme === "human") {
+            this.quickPlay("snd/turn.mp3");
+        } else {
+            this.quickPlay("snd/flip_b.mp3");
+        }
     }
     public playRiver() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
 
-        this.quickPlay("snd/river.mp3");
+        if (appConfig.game.soundTheme === "human") {
+            this.quickPlay("snd/river.mp3");
+        } else {
+            this.quickPlay("snd/flip_b.mp3");
+        }
     }
     private quickPlay(fileName: string) {
         /* tslint:disable:no-string-literal */
