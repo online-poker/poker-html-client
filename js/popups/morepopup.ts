@@ -19,6 +19,8 @@ export class MorePopup {
     public hasMessages = ko.observable(false);
     public visible = ko.observable(false);
     public ratingSupported = ko.observable(appConfig.game.hasRating);
+    public infoPagesSupported = ko.observable(appConfig.info.hasInfoPages);
+    public supportPagesSupported = ko.observable(appConfig.info.hasSupportPages);
 
     constructor() {
         const self = this;
