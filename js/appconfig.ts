@@ -36,6 +36,7 @@ export class AppConfig {
         collapseRaiseBlockWhenExpanded: true,
         tableReloadSupported: true,
         hasRating: false,
+        hasPageReload: false,
     };
     public tournament = {
         enabled: false,
@@ -54,6 +55,10 @@ export class AppConfig {
     };
     public lobby = {
         openTableRequireAuthentication: true,
+    };
+    public info = {
+        hasInfoPages: false,
+        hasSupportPages: false,
     };
 }
 /**

@@ -41,6 +41,16 @@ export class TableMenuPopup {
      */
     public tournamentHasAddon = ko.observable(false);
 
+    /**
+     * Indicate that page reload is supported.
+     */
+    public pageReloadSupported = ko.observable(appConfig.game.hasPageReload);
+
+    /**
+     * Indicate that rating is supported.
+     */
+    public ratingSupported = ko.observable(appConfig.game.hasRating);
+
     constructor() {
         this.soundEnabled = ko.computed<boolean>({
             owner: this,
