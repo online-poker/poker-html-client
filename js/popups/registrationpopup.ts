@@ -140,6 +140,16 @@ export class RegistrationPopup extends PopupBase {
             if (data.Status === "Ok") {
                 self.close();
                 SimplePopup.display(_("auth.registration"), _("auth.registrationsuccess"));
+            }
+
+            if (data.Status === "PhoneVerificationRequired") {
+                self.close();
+                SimplePopup.display(_("auth.registration"), _("auth.phoneVerificationRequired"));
+            }
+
+            if (data.Status === "EmailVerificationRequired") {
+                self.close();
+                SimplePopup.display(_("auth.registration"), _("auth.emailVerificationRequired"));
             } else {
                 // Report registration errors;
                 if (data.Status === "LoginAlreadyUsed") {
