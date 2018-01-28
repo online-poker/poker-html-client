@@ -8,6 +8,11 @@ import { convertToCards, decodeCardsArray } from "./cardsHelper";
 import * as HoldemHand from "./hand";
 import { TableView } from "./tableview";
 
+interface CardsRepresentation {
+    Cards: number[];
+    Suits: number[];
+}
+
 export class TablePlaceModel {
     /**
      * Default avatar for unspecified images, and
@@ -128,7 +133,7 @@ export class TablePlaceModel {
     /**
      * Last message in the chat which this player shows
      */
-    public LastChatMessageTrimed: KnockoutComputed<string>;
+    public LastChatMessageTrimed: KnockoutComputed<string | null>;
 
     /**
      * Combination of cards for the winner.
@@ -302,7 +307,8 @@ export class TablePlaceModel {
         let cards = (this.RawCards() === null || this.RawCards() === undefined)
             ? [254, 254]
             : this.RawCards();
-        cards = [].concat(cards);
+        const emptyArray: number[] = [];
+        cards = emptyArray.concat(cards);
         cards[cardPosition] = cardValue;
         const cardsClasses = convertToCards(cards);
         if (cardPosition === 0) {
@@ -435,22 +441,22 @@ export class TablePlaceModel {
             return null;
         }
 
-        let totalCards = [] as number[];
+        let totalCards: number[] = [];
         if (tableCards !== null) {
             totalCards = totalCards.concat(tableCards);
         }
 
         totalCards = totalCards.concat(myCards);
-        let handRepresentation = {
+        let handRepresentation: CardsRepresentation = {
             Cards: [],
             Suits: [],
         };
-        totalCards.forEach(function(card) {
+        totalCards.forEach(function(card: number) {
             handRepresentation.Cards.push((card % 13) + 2);
             handRepresentation.Suits.push(1 << (card / 13));
         });
         const rank = HoldemHand.getCardRank(handRepresentation);
-        const winnerCards = [];
+        const winnerCards: number[] = [];
         rank.WinnerCardsSet.forEach(function(item) {
             winnerCards.push(totalCards[item]);
         });

@@ -38,6 +38,11 @@ function getBackCardsFromGameType(gameType: number) {
     return gameType === 1 ? allBacksClassesTwoCards : allBacksClassesFourCards;
 }
 
+interface CardsRepresentation {
+    Cards: number[];
+    Suits: number[];
+}
+
 export class TableView {
     public static MaxMessagesCount: number = 100;
     public tableName: KnockoutObservable<string>;
@@ -56,7 +61,7 @@ export class TableView {
     /**
      * Request which performs connecting to the table.
      */
-    public connectingRequest: JQueryDeferred<any> = null;
+    public connectingRequest: JQueryDeferred<any> | null = null;
 
     public smallBlind: KnockoutObservable<number>;
     public bigBlind: KnockoutObservable<number>;
@@ -149,8 +154,8 @@ export class TableView {
 
     public chatMessage: KnockoutObservable<string>;
     public combinations: KnockoutObservableArray<string>;
-    public currentPlayer: KnockoutComputed<TablePlaceModel>;
-    public myPlayer: KnockoutComputed<TablePlaceModel>;
+    public currentPlayer: KnockoutComputed<TablePlaceModel | null>;
+    public myPlayer: KnockoutComputed<TablePlaceModel | null>;
     public mainButtonsEnabled: KnockoutObservable<boolean>;
     public playerActions: KnockoutObservable<any>;
     public turnEnabled: KnockoutComputed<boolean>;
@@ -171,8 +176,8 @@ export class TableView {
     public currentTotalBet: KnockoutComputed<number>;
     public maximumBet: KnockoutComputed<number>;
     public currentRaise: KnockoutComputed<number>;
-    public minimumRaiseAmount: KnockoutComputed<number>;
-    public maximumRaiseAmount: KnockoutComputed<number>;
+    public minimumRaiseAmount: KnockoutComputed<number | null>;
+    public maximumRaiseAmount: KnockoutComputed<number | null>;
     public amountSupported: KnockoutObservable<number>;
     public maxAmountOfMoneyForOtherActivePlayers: KnockoutObservable<number>;
     public isSitOut: KnockoutComputed<boolean>;
@@ -236,9 +241,9 @@ export class TableView {
     private cardsReceived: boolean;
     private handHistory: HandHistory;
     private pauseDescription = ko.observable("");
-    private pauseDescriptionHandle: number = null;
-    private notificationHandleTimeout: number = null;
-    private notificationHandleInterval: number = null;
+    private pauseDescriptionHandle: number | null = null;
+    private notificationHandleTimeout: number | null = null;
+    private notificationHandleInterval: number | null = null;
     private displayingRebuyAddonNotification = false;
 
     /**
@@ -406,7 +411,7 @@ export class TableView {
             return (myself.WasInGame() === true);
         }, this);
 
-        this.turnEnabled = ko.computed(function () {
+        this.turnEnabled = ko.computed(() => {
             self.tablePlaces.placesRefreshTrigger();
             const cp = self.currentPlayer();
             if (cp === null) {
@@ -561,7 +566,7 @@ export class TableView {
             }
         }, this);
 
-        this.isSitOut = ko.computed(function () {
+        this.isSitOut = ko.computed(() => {
             self.tablePlaces.placesRefreshTrigger();
             const currentPlayer = this.myPlayer();
             if (currentPlayer === null) {
@@ -672,7 +677,7 @@ export class TableView {
             self.tablePlaces.placesRefreshTrigger();
             const totalPot = self.totalPot();
             if (totalPot === null || totalPot === 0) {
-                return null;
+                return "";
             }
 
             return _("table.totalpot")
@@ -866,7 +871,7 @@ export class TableView {
         const connectionInfo = "HID:" + hubId;
         this.log("Joining table on connection " + connectionInfo);
         let cancelled = false;
-        let subsequentDeferred: JQueryDeferred<any> = null;
+        let subsequentDeferred: JQueryDeferred<any> | null = null;
         const cancelOperation = function () {
             self.log("Cancelling join table request");
             result.reject("Cancelled", true);
@@ -933,7 +938,7 @@ export class TableView {
         }
 
         let cancelled = false;
-        let subsequentDeferred: JQueryDeferred<any> = null;
+        let subsequentDeferred: JQueryDeferred<any> | null = null;
         const cancelOperation = function () {
             self.log("Cancelling join table request");
             result.reject("Cancelled", true);
@@ -1001,8 +1006,8 @@ export class TableView {
             this.setSmallBlind(0);
             this.setBigBlind(0);
         } else {
-            const smallBlindSeat = this.getNextPlayerSeat(dealerSeat);
-            const bigBlindSeat = this.getNextPlayerSeat(smallBlindSeat);
+            const smallBlindSeat = this.getNextPlayerSeat(dealerSeat) || 0;
+            const bigBlindSeat = this.getNextPlayerSeat(smallBlindSeat) || 0;
 
             this.setDealer(dealerSeat);
             this.setSmallBlind(smallBlindSeat);
@@ -1011,7 +1016,7 @@ export class TableView {
 
         const playersInGame = this.places().filter((value) => value.WasInGame() && value.IsInGameStatus()).length;
         if (playersInGame === 2) {
-            const bigBlindSeat = this.getNextPlayerSeat(dealerSeat);
+            const bigBlindSeat = this.getNextPlayerSeat(dealerSeat) || 0;
 
             this.setDealer(dealerSeat);
             this.setSmallBlind(dealerSeat);
@@ -1054,10 +1059,10 @@ export class TableView {
         });
     }
 
-    public getNextPlayerSeat(currentSeat: number) {
+    public getNextPlayerSeat(currentSeat: number): number | null {
         const players = this.places();
         let comparePlayer = currentSeat;
-        let nextPlayer = null;
+        let nextPlayer: number | null = null;
         const maxPlayers = this.tablePlaces.getMaxPlayers();
         for (let i = 0; i < maxPlayers; i++) {
             if (nextPlayer != null) {
@@ -1070,7 +1075,7 @@ export class TableView {
             }
 
             players.forEach((p) => {
-                if (nextPlayer != null) {
+                if (nextPlayer !== null) {
                     return;
                 }
 
@@ -1850,7 +1855,8 @@ export class TableView {
      * Shows stand up prompt
      */
     public async showStandupPrompt() {
-        if (this.myPlayer() == null) {
+        const myPlayer = this.myPlayer();
+        if (myPlayer === null) {
             return;
         }
 
@@ -1858,7 +1864,7 @@ export class TableView {
         let messages: string[];
         let caption: string;
         if (tournament == null) {
-            const hasWin = this.myPlayer().Money() > 0 || this.myPlayerInGame();
+            const hasWin = myPlayer.Money() > 0 || this.myPlayerInGame();
             const promptMesssage = hasWin ? "table.standupPrompt" : "table.standupPromptWithoutWin";
             caption = hasWin ? "table.standupPromptCaption" : "table.leave";
             messages = [_(promptMesssage)];
@@ -1874,7 +1880,7 @@ export class TableView {
         const approved = await app.promptAsync(_(caption), messages);
         if (approved) {
             if (this.tournament() == null) {
-                this.standup();
+                await this.standup();
             }
         }
     }
@@ -2693,7 +2699,7 @@ export class TableView {
                     }
 
                     winnerCards = winnerCards.concat(currentPlayer.RawCards());
-                    const handRepresentation = {
+                    const handRepresentation: CardsRepresentation = {
                         Cards: [],
                         Suits: [],
                     };

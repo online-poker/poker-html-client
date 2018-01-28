@@ -85,9 +85,9 @@ export class TableManager {
 
             const tableId: number = parameters[0];
             let tableView = self.getTableById(tableId);
-            // tslint:disable-next-line:no-console
-            console.log("Leaving table " + tableView.tableId.toString());
             if (tableView != null) {
+                // tslint:disable-next-line:no-console
+                console.log("Leaving table " + tableView.tableId.toString());
                 tableView.showStandupPrompt().then(function () {
                     tableView.disconnect();
                     tableView = self.remove(tableView);
@@ -313,7 +313,7 @@ export class TableManager {
                 console.log(`The table ${tableId} added to list of tables, but not updated`);
             }
         };
-        if (tableView == null) {
+        if (tableView == null && model.TournamentId) {
             this.removeTournamentTables(model.TournamentId);
         }
 
@@ -1247,7 +1247,9 @@ export class TableManager {
             self.selectTable(tableData.Data, false);
             const tournamentTableView = self.getTableById(tableId);
             const tournamentView = self.getTournamentById(tournamentId);
-            tournamentTableView.tournament(tournamentView);
+            if (tournamentView && tournamentTableView) {
+                tournamentTableView.tournament(tournamentView);
+            }
         }
 
         return tournamentData;

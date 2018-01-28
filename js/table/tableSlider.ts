@@ -131,7 +131,7 @@ export class TableSlider {
         this.maxRelative = maxRelative;
         this.translator = translator;
     }
-    public setParameters(value, step, min, max) {
+    public setParameters(value: number, step: number, min: number, max: number) {
         this.current(value);
         this.minimum(min);
         this.maximum(max);
@@ -181,12 +181,15 @@ export class TableSlider {
         if (event.pageX) {
             const relativePosition = this.translator(event.pageX);
             this.setPosition(relativePosition);
+            return true;
         } else {
             if (event.originalEvent.gesture) {
                 const relativePosition = this.translator(event.originalEvent.gesture.center.pageX);
                 this.setPosition(relativePosition);
+                return true;
             } else {
                 console.error("Invalid Tap event.");
+                return false;
             }
         }
     }
