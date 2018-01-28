@@ -500,15 +500,14 @@ export class TournamentView {
             if (appConfig.tournament.openTableAutomatically) {
                 if (!this.currentTableId) {
                     this.log(`No current table for tournament ${this.tournamentId}. Stop opening tables page`);
-                    return;
-                }
-
-                await this.openTournamentTable(this.currentTableId);
-                self.log("Opening table for tournament " + self.tournamentId + "");
-                if (appConfig.game.seatMode) {
-                    app.executeCommand("page.seats");
                 } else {
-                    app.executeCommand("page.tables");
+                    await this.openTournamentTable(this.currentTableId);
+                    self.log("Opening table for tournament " + self.tournamentId + "");
+                    if (appConfig.game.seatMode) {
+                        app.executeCommand("page.seats");
+                    } else {
+                        app.executeCommand("page.tables");
+                    }
                 }
             }
         }
