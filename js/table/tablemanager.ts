@@ -1,8 +1,8 @@
 ﻿/* tslint:disable:no-bitwise no-use-before-declare */
 import * as ko from "knockout";
 import * as signals from "signals";
-import { Game } from "../api/game";
-import { Tournament, TournamentDefinition, TournamentPlayerStatus, TournamentStatus } from "../api/tournament";
+import { Game } from "@poker/api-server";
+import { Tournament, TournamentDefinition, TournamentPlayerStatus, TournamentStatus, TournamentPlayerStateDefinition } from "@poker/api-server";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
 import * as commandManager from "../commandmanager";

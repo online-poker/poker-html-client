@@ -2,9 +2,9 @@
 import * as ko from "knockout";
 import * as moment from "moment";
 import * as signals from "signals";
-import { Chat } from "../api/chat";
-import { Game } from "../api/game";
-import { Tournament } from "../api/tournament";
+import { Chat } from "@poker/api-server";
+import { Game } from "@poker/api-server";
+import { Tournament } from "@poker/api-server";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";

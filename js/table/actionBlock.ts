@@ -2,7 +2,7 @@
 
 import * as ko from "knockout";
 import * as signals from "signals";
-import { Game } from "../api/game";
+import { Game } from "@poker/api-server";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";

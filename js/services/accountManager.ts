@@ -1,4 +1,4 @@
-import { Account } from "../api/account";
+import { Account } from "@poker/api-server";
 declare var host: string;
 
 export class AccountManager {

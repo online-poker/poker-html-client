@@ -1,6 +1,6 @@
 ﻿import * as ko from "knockout";
 import * as moment from "moment";
-import { Information } from "./api/information";
+import { Information } from "@poker/api-server";
 import { debugSettings } from "./debugsettings";
 import * as runtimeSettings from "./table/runtimesettings";
 

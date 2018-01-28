@@ -3,8 +3,8 @@ declare var host: string;
 
 import * as ko from "knockout";
 import * as moment from "moment";
-import { Game } from "../api/game";
-import { LobbyTournamentItem, Tournament } from "../api/tournament";
+import { Game } from "@poker/api-server";
+import { LobbyTournamentItem, Tournament } from "@poker/api-server";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";

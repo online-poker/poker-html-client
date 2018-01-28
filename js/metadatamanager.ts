@@ -3,7 +3,7 @@
 declare var host: string;
 
 import * as ko from "knockout";
-import { Information, TournamentBetStructure, TournamentPrizeStructure } from "./api/information";
+import { Information, TournamentBetStructure, TournamentPrizeStructure } from "@poker/api-server";
 import { debugSettings } from "./debugsettings";
 import { PageBlock } from "./pageblock";
 import { imagePreloadService } from "./services";

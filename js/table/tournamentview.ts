@@ -1,7 +1,7 @@
 ﻿import * as ko from "knockout";
-import { Game } from "../api/game";
-import { TournamentPrizeStructure } from "../api/information";
-import { Tournament, TournamentDefinition, TournamentPlayerStatus, TournamentStatus } from "../api/tournament";
+import { Game } from "@poker/api-server";
+import { TournamentPrizeStructure } from "@poker/api-server";
+import { Tournament, TournamentDefinition, TournamentPlayerStatus, TournamentStatus } from "@poker/api-server";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";

@@ -2,9 +2,9 @@
 
 import * as ko from "knockout";
 import * as moment from "moment";
-import { Game } from "../api/game";
-import { TournamentBetStructure, TournamentPrizeStructure } from "../api/information";
-import { Tournament, TournamentDefinition, TournamentPlayerDefinition, TournamentPlayerStatus, TournamentStatus, TournamentTableDefinition } from "../api/tournament";
+import { Game } from "@poker/api-server";
+import { TournamentBetStructure, TournamentPrizeStructure } from "@poker/api-server";
+import { Tournament, TournamentDefinition, TournamentPlayerDefinition, TournamentPlayerStatus, TournamentStatus, TournamentTableDefinition } from "@poker/api-server";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";

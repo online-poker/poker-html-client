@@ -1,8 +1,8 @@
 /// <reference path="../poker.commanding.api.ts" />
 /* tslint:disable:no-bitwise */
 
-import { PersonalAccountData } from "../api/account";
-import { TournamentOptionsEnum } from "../api/tournament";
+import { PersonalAccountData } from "@poker/api-server";
+import { TournamentOptionsEnum } from "@poker/api-server";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";

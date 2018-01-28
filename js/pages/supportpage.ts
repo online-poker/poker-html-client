@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import { Support } from "../api/support";
+import { Support } from "@poker/api-server";
 import { App } from "../app";
 import { _ } from "../languagemanager";
 import { SimplePopup } from "../popups/simplepopup";
@@ -11,7 +11,7 @@ declare var app: App;
 
 export class SupportPage extends PageBase implements KnockoutValidationGroup {
     public displayFullName = false;
-    public displaySubject = false;
+    public displaySubject = false;v
 
     public loading = ko.observable(false);
     public fullName = ko.observable("").extend({ required: this.displayFullName, maxLength: 30 });

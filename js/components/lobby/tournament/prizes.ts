@@ -1,6 +1,5 @@
 ﻿import ko = require("knockout");
-import { TournamentPrizeStructure } from "../../../api/information";
-import { TournamentDefinition } from "../../../api/tournament";
+import { TournamentPrizeStructure, TournamentDefinition } from "@poker/api-server";
 import * as metadataManager from "../../../metadatamanager";
 
 interface TournamentPrizeStructureView {
