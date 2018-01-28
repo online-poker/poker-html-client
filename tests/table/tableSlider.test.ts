@@ -5,7 +5,7 @@ describe("tableSlider", function () {
     let tableSlider;
     beforeEach(function () {
         tableSlider = new TableSlider();
-        tableSlider.setBounds(0, 200);
+        tableSlider.setBounds(0, 200, (x) => x);
         let el = document.getElementById("stage");
         if (el == null) {
             el = document.createElement("div");
@@ -51,5 +51,79 @@ describe("tableSlider", function () {
         tableSlider.increase();
         expect(tableSlider.current()).toEqual(100);
         expect(tableSlider.position()).toEqual(200);
+    });
+    describe("Manually enter value", function () {
+        it("within range", function () {
+            tableSlider.setParameters(100, 20, 100, 200);
+            tableSlider.currentValue("160");
+            expect(tableSlider.current()).toEqual(160);
+            expect(tableSlider.position()).toEqual(120);
+        });
+        it("less then minimum", function () {
+            tableSlider.setParameters(100, 20, 100, 200);
+            tableSlider.currentValue("60");
+            expect(tableSlider.current()).toEqual(100);
+            expect(tableSlider.position()).toEqual(0);
+        });
+        it("more then maximum", function () {
+            tableSlider.setParameters(100, 20, 100, 200);
+            tableSlider.currentValue("260");
+            expect(tableSlider.current()).toEqual(200);
+            expect(tableSlider.position()).toEqual(200);
+        });
+        it("empty string", function () {
+            tableSlider.setParameters(100, 20, 100, 200);
+            tableSlider.currentValue("160");
+            tableSlider.currentValue("");
+            expect(tableSlider.current()).toEqual(160);
+            expect(tableSlider.position()).toEqual(120);
+        });
+    });
+    describe("Mouse operations", function () {
+        it("click mouse in the middle", function () {
+            tableSlider.setBounds(0, 100, (x) => {
+                return x - 100;
+            });
+            tableSlider.setParameters(100, 20, 0, 100);
+            const evt = document.createEvent('MouseEvents');
+            evt.initEvent('click', false, true);
+            evt.pageX = 150;
+            const succeed = tableSlider.selectManually(evt);
+            expect(tableSlider.current()).toEqual(60);
+            expect(tableSlider.position()).toEqual(60);
+            expect(succeed).toEqual(true);
+        });
+    });
+    describe("Tap operations", function () {
+        it("click tap in the middle", function () {
+            tableSlider.setBounds(0, 100, (x) => {
+                return x - 100;
+            });
+            tableSlider.setParameters(100, 20, 0, 100);
+            const evt: TapEvent = document.createEvent('TouchEvent');
+            evt.initEvent('click', false, true);
+            evt.originalEvent = evt;
+            evt.originalEvent.gesture = {
+                center{
+                    pageX: 150
+                }
+            };
+            const succeed = tableSlider.selectManually(evt);
+            expect(tableSlider.current()).toEqual(60);
+            expect(tableSlider.position()).toEqual(60);
+            expect(succeed).toEqual(true);
+        });
+        it("Does not process unknown tap events", function () {
+            tableSlider.setBounds(0, 100, (x) => {
+                return x - 100;
+            });
+            tableSlider.setParameters(100, 20, 0, 100);
+            const evt: TapEvent = document.createEvent('TouchEvent');
+            evt.initEvent('click', false, true);
+            evt.originalEvent = evt;
+            evt.originalEvent.gesture = undefined;
+            const succeed = tableSlider.selectManually(evt);
+            expect(succeed).toEqual(false);
+        });
     });
 });

@@ -148,7 +148,7 @@ export class RegistrationPopup extends PopupBase {
                 const dataEntryError = data.Status === "LoginAlreadyUsed"
                     || data.Status === "EmailAlreadyUsed"
                     || data.Status === "PhoneAlreadyUsed";
-                let observable: KnockoutObservable<string> | undefined = undefined;
+                let observable: KnockoutObservable<string> | undefined;
                 switch (data.Status) {
                     case "LoginAlreadyUsed":
                         observable = self.login;

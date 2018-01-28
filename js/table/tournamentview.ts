@@ -18,7 +18,7 @@ declare var host: string;
 declare var app: App;
 
 export class TournamentView {
-    public tournamentData = ko.observable<TournamentDefinition>(null);
+    public tournamentData = ko.observable<TournamentDefinition>();
     public loading = ko.observable(false);
 
     /**
@@ -105,7 +105,7 @@ export class TournamentView {
         }, this);
     }
 
-    public async refreshTournament(): Promise<ApiResult<TournamentDefinition>> {
+    public async refreshTournament(): Promise<ApiResult<TournamentDefinition | null>> {
         if (this.tournamentId === 0) {
             return Promise.resolve({ Status: "Ok", Data: null });
         }
@@ -475,6 +475,12 @@ export class TournamentView {
         return metadataManager.prizes[structure];
     }
     public removeCurrentTable() {
+        if (!this.currentTableId) {
+            // No current table, so return.
+            this.log(`No current table for tournament ${this.tournamentId}, exiting.`);
+            return;
+        }
+
         tableManager.removeTableById(this.currentTableId);
         tableManager.adjustTablePosition();
         this.currentTableId = null;
@@ -492,6 +498,11 @@ export class TournamentView {
         } finally {
             self.log("Tournament " + self.tournamentId + " started");
             if (appConfig.tournament.openTableAutomatically) {
+                if (!this.currentTableId) {
+                    this.log(`No current table for tournament ${this.tournamentId}. Stop opening tables page`);
+                    return;
+                }
+
                 await this.openTournamentTable(this.currentTableId);
                 self.log("Opening table for tournament " + self.tournamentId + "");
                 if (appConfig.game.seatMode) {
@@ -539,14 +550,17 @@ export class TournamentView {
     }
 
     private getTableForNotification() {
-        const self = this;
+        if (this.currentTableId == null) {
+            return null;
+        }
+
         const table = tableManager.getTableById(this.currentTableId);
         if (table !== null) {
             return table;
         }
 
         const tournamentTables = tableManager.tables().filter((tournamentTable) => tournamentTable.tournament() !== null
-            && tournamentTable.tournament().tournamentId === self.tournamentId);
+            && tournamentTable.tournament().tournamentId === this.tournamentId);
         if (tournamentTables.length !== 0) {
             return tournamentTables[0];
         }
@@ -586,6 +600,11 @@ export class TournamentView {
     }
 
     private executeOnCurrentTable(callback: () => void) {
+        if (!this.currentTableId) {
+            callback();
+            return;
+        }
+
         const currentTable = tableManager.getTableById(this.currentTableId);
         if (app.tablesPage.visible() && currentTable != null) {
             currentTable.pushCallback(() => {
@@ -597,12 +616,15 @@ export class TournamentView {
     }
 
     private async openTournamentTable(tableId: number) {
-        const self = this;
         const api = new Game(host);
         const data = await api.getTableById(tableId);
         tableManager.selectTable(data.Data, true);
         const currentTable = tableManager.getTableById(tableId);
-        currentTable.tournament(self);
+        if (!currentTable) {
+            return;
+        }
+
+        currentTable.tournament(this);
     }
     private finalizeTournament() {
         if (tableManager.tables().length <= 1) {
