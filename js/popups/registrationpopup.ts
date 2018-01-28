@@ -137,28 +137,37 @@ export class RegistrationPopup extends PopupBase {
                 this.country(),
                 this.city(),
                 additionalProperties);
-            if (data.Status === "Ok") {
+            const registrationSuccess = data.Status === "Ok"
+                || data.Status === "PhoneVerificationRequired"
+                || data.Status === "EmailVerificationRequired";
+            if (registrationSuccess) {
                 self.close();
-                SimplePopup.display(_("auth.registration"), _("auth.registrationsuccess"));
-            }
-
-            if (data.Status === "PhoneVerificationRequired") {
-                self.close();
-                SimplePopup.display(_("auth.registration"), _("auth.phoneVerificationRequired"));
-            }
-
-            if (data.Status === "EmailVerificationRequired") {
-                self.close();
-                SimplePopup.display(_("auth.registration"), _("auth.emailVerificationRequired"));
+                SimplePopup.display(_("auth.registration"), _("auth.registrationStatus." + data.Status));
             } else {
                 // Report registration errors;
-                if (data.Status === "LoginAlreadyUsed") {
-                    self.login.setError(_("errors." + data.Status));
-                    self.moveToError();
-                } else if (data.Status === "EmailAlreadyUsed") {
-                    self.email.setError(_("errors." + data.Status));
+                const dataEntryError = data.Status === "LoginAlreadyUsed"
+                    || data.Status === "EmailAlreadyUsed"
+                    || data.Status === "PhoneAlreadyUsed";
+                let observable: KnockoutObservable<string> | undefined = undefined;
+                switch (data.Status) {
+                    case "LoginAlreadyUsed":
+                        observable = self.login;
+                        break;
+                    case "EmailAlreadyUsed":
+                        observable = self.email;
+                        break;
+                    case "PhoneAlreadyUsed":
+                        observable = self.phoneNumber;
+                        break;
+                }
+
+                // If this is error related to some variable
+                // display targeted error message
+                if (dataEntryError && observable) {
+                    observable.setError(_("errors." + data.Status));
                     self.moveToError();
                 } else {
+                    // Otherwise display generic error.
                     SimplePopup.display(_("auth.registration"), _("errors." + data.Status));
                 }
 
