@@ -48,7 +48,7 @@
       "js"
     ],
     "moduleNameMapper": {
-      "poker/(.*)": "<rootDir>/js/$1"
+      "^poker/(.*)": "<rootDir>/js/$1"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
