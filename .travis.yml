@@ -9,5 +9,7 @@ node_js:
 script:
   - npm run test
   - npm run lint
+before_install:
+- npm i -g makeshift && makeshift -s @poker -r pokerkz.pkgs.visualstudio.com/_packaging/50dc0ca2-b4b7-4773-922d-1f1486f9c8c8/npm/registry/
 after_success:
   - npm run report-coverage
