@@ -1,10 +1,8 @@
 /* tslint:disable:no-bitwise */
+import { Chat, Game, Tournament } from "@poker/api-server";
 import * as ko from "knockout";
 import * as moment from "moment";
 import * as signals from "signals";
-import { Chat } from "@poker/api-server";
-import { Game } from "@poker/api-server";
-import { Tournament } from "@poker/api-server";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";

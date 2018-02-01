@@ -1,5 +1,5 @@
-﻿import ko = require("knockout");
-import { TournamentDefinition } from "@poker/api-server";
+﻿import { TournamentDefinition } from "@poker/api-server";
+import ko = require("knockout");
 import * as timeService from "../../timeservice";
 
 class TimeBlockComponent {

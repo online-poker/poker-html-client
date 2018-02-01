@@ -1,5 +1,5 @@
-import * as ko from "knockout";
 import { Chat } from "@poker/api-server";
+import * as ko from "knockout";
 import { App } from "../app";
 import { _ } from "../languagemanager";
 import { SimplePopup } from "../popups/simplepopup";
