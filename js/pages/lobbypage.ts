@@ -1,10 +1,9 @@
 ﻿/* tslint:disable:no-bitwise */
 declare var host: string;
 
+import { Game, LobbyTournamentItem, Tournament } from "@poker/api-server";
 import * as ko from "knockout";
 import * as moment from "moment";
-import { Game } from "../api/game";
-import { LobbyTournamentItem, Tournament } from "../api/tournament";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";

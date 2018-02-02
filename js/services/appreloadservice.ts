@@ -1,4 +1,4 @@
-﻿import { TableReload } from "../api/tableReload";
+﻿import { TableReload } from "@poker/api-server";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
 

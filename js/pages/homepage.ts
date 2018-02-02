@@ -1,6 +1,6 @@
 declare var host: string;
 
-import { Information } from "../api/information";
+import { Information } from "@poker/api-server";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";

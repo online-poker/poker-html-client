@@ -2,13 +2,13 @@
   "name": "@poker/html-client",
   "version": "0.3.1",
   "description": "HTML client for online poker",
-  "main": "dist/main.js",
+  "main": "dist/poker-html-client.js",
   "scripts": {
     "compile": "tsc",
     "lint": "tslint --project tsconfig.json",
     "tslint": "tslint",
     "configure-ci": "node build/configure-ci.js",
-    "build": "npm run compile && npm run webpack && npm run lint",
+    "build": "npm run webpack && npm run lint",
     "webpack": "webpack",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -48,7 +48,7 @@
       "js"
     ],
     "moduleNameMapper": {
-      "poker/(.*)": "<rootDir>/js/$1"
+      "^poker/(.*)": "<rootDir>/js/$1"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
@@ -66,7 +66,6 @@
     "mapCoverage": true
   },
   "files": [
-    "js/application.js",
     "dist/poker-html-client.js",
     "CHANGELOG.md",
     "README.md",
@@ -103,11 +102,11 @@
     "webpack": "^3.8.1"
   },
   "dependencies": {
+    "@poker/api-server": "0.1.0-dev.20180128065311",
     "isomorphic-fetch": "^2.2.1",
     "jquery": "^3.2.1",
     "knockout": "^3.4.2",
     "knockout.validation": "^2.0.3",
-    "poker-server-api": "0.0.2",
     "signalr": "^2.2.2",
     "signals": "^1.0.0"
   }

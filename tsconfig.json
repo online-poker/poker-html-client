@@ -24,7 +24,7 @@
   "baseUrl": ".",
   "rootDir": ".",
   "paths": {
-      "poker/*": ["js/*"]
+    "poker/*": [ "js/*" ]
   }
  },
  "compileOnSave": false,

@@ -1,8 +1,8 @@
 ﻿declare var host: string;
 declare var appInsights: Client;
 
+import { Account } from "@poker/api-server";
 import ko = require("knockout");
-import { Account } from "./api/account";
 import { App } from "./app";
 import { appConfig } from "./appconfig";
 import { settings } from "./settings";
