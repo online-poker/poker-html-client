@@ -1988,6 +1988,10 @@ export class TableView {
     public async sendMessage() {
         const chatApi = new Chat(host);
         const data = await chatApi.send(this.tableId, this.chatMessage());
+        if (data.Status !== "Ok") {
+            SimplePopup.display(_("chat.sendingMessage"), _("errors." + data.Status));
+        }
+
         this.chatMessage("");
     }
 
