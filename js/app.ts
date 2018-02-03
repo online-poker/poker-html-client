@@ -1,3 +1,4 @@
+import { getAuthToken, setAuthToken } from "@poker/api-server";
 import * as $ from "jquery";
 import "signalr";
 import * as signals from "signals";
@@ -330,10 +331,10 @@ export class App {
             const currentTime = new Date();
             const timeDiff = currentTime.valueOf() - settings.lastTime();
             if (timeDiff > 1000 * 60 * 20) {
-                authToken = null;
+                setAuthToken(null);
                 startPage = "main";
             } else {
-                authToken = settings.authToken();
+                setAuthToken(settings.authToken());
                 startPage = settings.lastPage();
             }
         }
@@ -922,7 +923,7 @@ export class App {
                 settings.lastPage("main");
             }
 
-            settings.authToken(authToken);
+            settings.authToken(getAuthToken());
             settings.lastTime(new Date().valueOf());
             settings.saveSettings();
             return;

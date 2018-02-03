@@ -1,7 +1,7 @@
 ﻿declare var host: string;
 declare var appInsights: Client;
 
-import { Account } from "@poker/api-server";
+import { Account, setAuthToken } from "@poker/api-server";
 import ko = require("knockout");
 import { App } from "./app";
 import { appConfig } from "./appconfig";
@@ -63,7 +63,7 @@ class AuthManager {
         settings.password(null);
         settings.saveSettings();
 
-        authToken = null;
+        setAuthToken(null);
         this.authenticated(false);
         this.login(null);
     }

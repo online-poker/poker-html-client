@@ -1,5 +1,6 @@
 ﻿declare var baseUrl: string;
 
+import { getAuthToken } from "@poker/api-server";
 import * as signals from "signals";
 import { debugSettings } from "../debugsettings";
 import { CancelToken } from "./cancelToken";
@@ -44,6 +45,7 @@ export class ConnectionService {
 
         const connection = $.hubConnection(baseUrl);
         connection.logging = $.connection.hub.logging;
+        const authToken = getAuthToken();
         if (authToken == null) {
             connection.qs = null;
         } else {
