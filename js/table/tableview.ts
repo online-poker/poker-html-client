@@ -10,7 +10,7 @@ import { debugSettings } from "../debugsettings";
 import { withCommas } from "../helpers";
 import { _ } from "../languagemanager";
 import { SimplePopup } from "../popups/simplepopup";
-import { connectionService, slowInternetService, soundManager } from "../services";
+import { connectionService, getSoundManager, slowInternetService } from "../services";
 import { ConnectionWrapper } from "../services/connectionwrapper";
 import { SlowInternetService } from "../services/slowinternetservice";
 import { settings } from "../settings";
@@ -742,10 +742,12 @@ export class TableView {
                 if (self.timeLeft() === 7) {
                     if (self.currentPlayer() === self.myPlayer()) {
                         if (self.soundEnabled) {
+                            const soundManager = getSoundManager();
                             soundManager.playTurnReminder();
                         }
                     } else {
                         if (self.soundEnabled) {
+                            const soundManager = getSoundManager();
                             soundManager.playTurnReminderForAll();
                         }
                     }
@@ -1395,6 +1397,7 @@ export class TableView {
 
                 const c = this.calculateWinnerAmount(places, winners, needHightlightCards);
                 if (self.soundEnabled) {
+                    const soundManager = getSoundManager();
                     soundManager.playWinChips();
                 }
 
@@ -1470,6 +1473,7 @@ export class TableView {
                         const potWinners = winners.filter((winner) => winner.Pot === potNumber);
                         const c = this.calculateWinnerAmount(places, potWinners, needHightlightCards);
                         if (this.soundEnabled) {
+                            const soundManager = getSoundManager();
                             soundManager.playWinChips();
                         }
 
@@ -2178,18 +2182,21 @@ export class TableView {
             if (currentCardsOpened === 0 && cards.length === 3) {
                 self.handHistory.onFlop(cards[0], cards[1], cards[2]);
                 self.actionBlock.dealsAllowed(true);
+                const soundManager = getSoundManager();
                 soundManager.playFlopCards();
                 self.onFlopDealed.dispatch(this.tableId);
             }
             if (currentCardsOpened === 3 && cards.length === 4) {
                 self.handHistory.onTurn(cards[3]);
                 self.actionBlock.dealsAllowed(true);
+                const soundManager = getSoundManager();
                 soundManager.playTurn();
                 self.onTurnDealed.dispatch(this.tableId);
             }
             if (currentCardsOpened === 4 && cards.length === 5) {
                 self.handHistory.onRiver(cards[4]);
                 self.actionBlock.dealsAllowed(true);
+                const soundManager = getSoundManager();
                 soundManager.playRiver();
                 self.onRiverDealed.dispatch(this.tableId);
             }
@@ -2208,6 +2215,7 @@ export class TableView {
             self.actionBlock.updateAdditionalButtons();
         });
         if (self.soundEnabled) {
+            const soundManager = getSoundManager();
             soundManager.playFlop();
         }
 
@@ -2637,6 +2645,7 @@ export class TableView {
         });
         this.setButtons(dealerSeat);
         if (this.soundEnabled) {
+            const soundManager = getSoundManager();
             soundManager.playDealCards();
         }
 
@@ -2932,6 +2941,7 @@ export class TableView {
             currentPlayer.startAction("table.actiontext.fold");
             this.handHistory.onFold(playerId);
             if (this.soundEnabled) {
+                const soundManager = getSoundManager();
                 soundManager.playFold();
             }
         } else if (type === 2) {
@@ -2940,6 +2950,7 @@ export class TableView {
                 currentPlayer.startAction("table.actiontext.allin");
                 this.handHistory.onAllIn(playerId, amount);
                 if (this.soundEnabled) {
+                    const soundManager = getSoundManager();
                     soundManager.playAllIn();
                 }
             } else {
@@ -2947,12 +2958,14 @@ export class TableView {
                     currentPlayer.startAction("table.actiontext.check");
                     this.handHistory.onCheck(playerId, amount);
                     if (this.soundEnabled) {
+                        const soundManager = getSoundManager();
                         soundManager.playCheck();
                     }
                 } else {
                     currentPlayer.startAction("table.actiontext.call");
                     this.handHistory.onCall(playerId, amount);
                     if (this.soundEnabled) {
+                        const soundManager = getSoundManager();
                         soundManager.playCall();
                     }
                 }
@@ -2963,6 +2976,7 @@ export class TableView {
                 currentPlayer.startAction("table.actiontext.allin");
                 this.handHistory.onAllIn(playerId, amount);
                 if (this.soundEnabled) {
+                    const soundManager = getSoundManager();
                     soundManager.playAllIn();
                 }
             } else {
@@ -2970,12 +2984,14 @@ export class TableView {
                     currentPlayer.startAction("table.actiontext.bet");
                     this.handHistory.onBet2(playerId, amount);
                     if (this.soundEnabled) {
+                        const soundManager = getSoundManager();
                         soundManager.playBet();
                     }
                 } else {
                     currentPlayer.startAction("table.actiontext.raise");
                     this.handHistory.onRaise(playerId, amount);
                     if (this.soundEnabled) {
+                        const soundManager = getSoundManager();
                         soundManager.playRaise();
                     }
                 }

@@ -43,13 +43,13 @@ import { Selector, SelectorItem } from "./selector";
 import {
     connectionService,
     deviceEvents,
+    getSoundManager,
     imagePreloadService,
     keyboardActivationService,
     orientationService,
     pushService,
     reloadManager,
     slowInternetService,
-    soundManager,
     WebsiteService,
 } from "./services";
 import * as broadcastService from "./services/broadcastservice";
@@ -296,6 +296,7 @@ export class App {
         const self = this;
         timeService.start();
         settings.soundEnabled.subscribe(function(value) {
+            const soundManager = getSoundManager();
             soundManager.enabled(value);
         });
         settings.loadSettings();

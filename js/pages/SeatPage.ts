@@ -8,9 +8,9 @@ import { PageBlock } from "../pageblock";
 import {
     connectionService,
     deviceEvents,
+    getSoundManager,
     orientationService,
     reloadManager,
-    soundManager,
 } from "../services";
 import { uiManager } from "../services/uimanager";
 import { settings } from "../settings";
@@ -228,6 +228,7 @@ export class SeatPage extends PageBase {
         /* tslint:disable:no-string-literal no-unused-expression */
         window["StatusBar"] && StatusBar.show();
         /* tslint:enable:no-string-literal no-unused-expression */
+        const soundManager = getSoundManager();
         soundManager.tableSoundsEnabled(false);
         if (!PageBlock.useDoubleView) {
             orientationService.setOrientation("portrait");
@@ -256,6 +257,7 @@ export class SeatPage extends PageBase {
         /* tslint:disable:no-string-literal no-unused-expression */
         window["StatusBar"] && StatusBar.hide();
         /* tslint:enable:no-string-literal no-unused-expression */
+        const soundManager = getSoundManager();
         if (appConfig.game.seatMode) {
             soundManager.enabled(false);
         } else {
