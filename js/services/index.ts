@@ -1,3 +1,4 @@
+import { appConfig } from "../appconfig";
 import { AccountService } from "./accountservice";
 import { AppReloadService } from "./appreloadservice";
 import { ConnectionService } from "./connectionservice";
@@ -18,7 +19,7 @@ export let accountService = new AccountService(true, false);
 export let imagePreloadService = new ImagePreloadService();
 export let reloadManager = new ReloadManager();
 export let deviceEvents = new DeviceEventService();
-export let soundManager = new SoundManager();
+export let soundManager = new SoundManager(appConfig.game.soundTheme, appConfig.game.hasHumanVoice);
 export let orientationService = new OrientationService();
 export let pushService = new PushService();
 export const appReloadService = new AppReloadService();
