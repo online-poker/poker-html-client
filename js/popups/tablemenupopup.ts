@@ -241,6 +241,12 @@ export class TableMenuPopup {
             app.executeCommand("popup.rules");
         }
     }
+    public async showSweepstakesRules() {
+        const value = await app.requireAuthentication();
+        if (value.authenticated) {
+            app.executeCommand("popup.sweepstakesRules");
+        }
+    }
     /**
      * Reload console window.
      */
