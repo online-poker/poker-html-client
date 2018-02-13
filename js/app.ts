@@ -36,6 +36,7 @@ import {
     SelectAvatarPopup,
     SettingsPopup,
     SlowConnectionPopup,
+    SweepstakesRulesPopup,
     TableMenuPopup,
 } from "./popups";
 import { SimplePopup } from "./popups/simplepopup";
@@ -100,6 +101,7 @@ export class App {
     public accountStatusPopup: AccountStatusPopup;
     public settingsPopup: SettingsPopup;
     public rulesPopup: RulesPopup;
+    public sweepstakesRulesPopup: SweepstakesRulesPopup;
     public newsPopup = new NewsPopup();
     public selectAvatarPopup = new SelectAvatarPopup();
 
@@ -141,6 +143,7 @@ export class App {
         this.joinTablePopup = new JoinTablePopup();
         this.settingsPopup = new SettingsPopup();
         this.rulesPopup = new RulesPopup();
+        this.sweepstakesRulesPopup = new SweepstakesRulesPopup();
         this.tableMenuPopup = new TableMenuPopup();
         this.addMoneyPopup = new AddMoneyPopup();
         this.slowConnectionPopup = new SlowConnectionPopup();
@@ -170,6 +173,7 @@ export class App {
         this.bindPopup("joinTable", this.joinTablePopup);
         this.bindPopup("settings", this.settingsPopup);
         this.bindPopup("rules", this.rulesPopup);
+        this.bindPopup("sweepstakesRules", this.sweepstakesRulesPopup);
         this.bindPopup("tableMenu", this.tableMenuPopup);
         this.bindPopup("addMoney", this.addMoneyPopup);
         this.bindPopup("slowConnection", this.slowConnectionPopup);
