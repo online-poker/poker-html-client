@@ -318,6 +318,12 @@ export class TablesPage extends PageBase {
     public showMenu() {
         app.executeCommand("popup.tableMenu");
     }
+    public showChat() {
+        const currentTable = this.currentTable();
+        if (currentTable) {
+            currentTable.actionBlock.showChatPopup();
+        }
+    }
     /**
      * Removes tournament tables which are finished.
      */
