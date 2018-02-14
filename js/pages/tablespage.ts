@@ -318,6 +318,10 @@ export class TablesPage extends PageBase {
     public showMenu() {
         app.executeCommand("popup.tableMenu");
     }
+
+    /**
+     * Open chat popup on the current table.
+     */
     public showChat() {
         const currentTable = this.currentTable();
         if (currentTable) {
