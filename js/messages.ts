@@ -381,6 +381,8 @@ let messages: any = {
         betLevelChangeNextGame: "Ставки повысятся в следующей игре: МБ - ##smallBlind, ББ - ##bigBlind",
         betLevelChangeNextGameWithAnte: "Ставки повысятся в следующей игре: МБ - ##smallBlind, ББ - ##bigBlind, Анте - ##ante",
         gameTypeChangeNextGame: "Тип игры изменится на - ##gameType",
+        holdem: 'Техас Холдем',
+        omaha: 'Омаха',
     },
     tournament: {
         caption: 'Турнир',

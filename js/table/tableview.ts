@@ -614,7 +614,7 @@ export class TableView {
                 return "";
             }
 
-            const gameTypeName = this.nextGameType() === 1 ? "Техас Холдем" : "Омаха";
+            const gameTypeName = this.nextGameType() === 1 ? _("table.holdem") : _("table.omaha");
             return _("table.gameTypeChangeNextGame", {
                 gameType: gameTypeName,
             });
