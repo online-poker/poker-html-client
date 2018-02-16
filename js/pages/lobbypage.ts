@@ -4,6 +4,9 @@ declare var host: string;
 import { Game, LobbyTournamentItem, Tournament } from "@poker/api-server";
 import * as ko from "knockout";
 import * as moment from "moment";
+import * as authManager from "poker/authmanager";
+import { AccountManager } from "poker/services/accountManager";
+import { settings } from "poker/settings";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
@@ -149,6 +152,10 @@ export class LobbyPage extends PageBase {
     public loading: KnockoutObservable<boolean>;
     public currentTime: KnockoutComputed<string>;
 
+    public authenticated: KnockoutObservable<boolean>;
+    public login: KnockoutComputed<string>;
+    public amount: KnockoutObservable<number>;
+
     constructor() {
         super();
         const self = this;
@@ -206,6 +213,21 @@ export class LobbyPage extends PageBase {
         tableManager.tables.subscribe(function () {
             self.updateOpenedTables();
         });
+
+        this.authenticated = ko.computed(function () {
+            return authManager.authenticated();
+        }, this);
+        this.login = ko.computed(function () {
+            return authManager.login();
+        }, this);
+        authManager.login.subscribe(function (newValue) {
+            if (newValue === null) {
+                self.amount(0);
+            } else {
+                self.updateAccount();
+            }
+        });
+        this.amount = ko.observable(0);
     }
 
     public deactivate(pageName?: string) {
@@ -451,6 +473,38 @@ export class LobbyPage extends PageBase {
         if (this.filterLocked()) {
             e.preventDefault();
         }
+    }
+    public async updateAccount() {
+        if (!authManager.authenticated()) {
+            return;
+        }
+
+        const self = this;
+        try {
+            await this.updateAccountData();
+        } catch (e) {
+            self.updateAccount();
+        }
+    }
+    public showAccount() {
+        app.executeCommand("pageblock.cashier");
+    }
+    /**
+     * Starts request for the account data.
+     */
+    private async updateAccountData() {
+        const self = this;
+        const manager = new AccountManager();
+        const data = await manager.getAccount();
+        if (data.Status === "Ok") {
+            const personalAccountData = data.Data;
+            const total = settings.isGuest() ? personalAccountData.GameMoney : personalAccountData.RealMoney;
+            self.amount(total);
+        } else {
+            console.error("Error during making call to Account.GetPlayerDefinition in lobby page");
+        }
+
+        return data;
     }
     private log(message: string, ...params: any[]) {
         if (debugSettings.lobby.trace) {
