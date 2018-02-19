@@ -973,7 +973,7 @@ export class ActionBlock {
     private async changeWaitQueueSettings(tableId: number, waitBigBlind: boolean) {
         const gameApi = new Game(host);
         const response = await gameApi.changeWaitQueueSettings(tableId, waitBigBlind);
-        if (response.Status !== "OK" && response.Status !== "PlayerDoesNotSit" && response.Status !== "PlayerIsAlreadyInGame") {
+        if (response.Status !== "Ok" && response.Status !== "PlayerDoesNotSit" && response.Status !== "PlayerIsAlreadyInGame") {
             SimplePopup.display(_("table.changeWaitQueueSettings"), _(`errors.${response.Status}`));
         }
     }
