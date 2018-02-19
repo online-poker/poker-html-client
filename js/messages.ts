@@ -20,6 +20,8 @@ let messages: any = {
         minutes: '',
         timeseparator: ':',
         unspecifiedError: 'Произошла неизвестная ошибка',
+        quitApp: 'Вы действительно хотите закрыть игру?',
+        quit: 'Закрыть игру',
     },
     updater: {
         title: 'Обновление',
