@@ -1,6 +1,7 @@
 ﻿import { Message } from "@poker/api-server";
 import * as ko from "knockout";
 import { appConfig } from "poker/appconfig";
+import { _ } from "poker/languagemanager";
 import { App } from "../app";
 import * as authManager from "../authmanager";
 import { WebsiteService } from "../services";
@@ -85,7 +86,20 @@ export class MorePopup {
     public showRegistration() {
         app.showPopup("registration");
     }
+    public showQuitPrompt() {
+        const self = this;
+        app.prompt(_("table.quit"), [_("table.quitApp")]).then(function () {
+            self.quitApp();
+        });
+    }
 
+    /**
+     * Quit current browser window.
+     */
+    private quitApp() {
+        authManager.logout();
+        window.close();
+    }
     /**
      * Starts request for the account data.
      */

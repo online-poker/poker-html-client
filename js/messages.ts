@@ -331,6 +331,8 @@ let messages: any = {
         lobby: 'Лобби',
         menu: 'Меню',
         leave: 'Выйти',
+        quitApp: 'Вы действительно хотите закрыть игру?',
+        quit: 'Закрыть игру',
         skipDeals: 'Отсесть',
         autofold: 'Авто-фолд',
         waitbb: 'Ожидать ББ',
