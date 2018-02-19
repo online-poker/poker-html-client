@@ -20,6 +20,8 @@ let messages: any = {
         minutes: '',
         timeseparator: ':',
         unspecifiedError: 'Произошла неизвестная ошибка',
+        quitApp: 'Вы действительно хотите закрыть игру?',
+        quit: 'Закрыть игру',
     },
     updater: {
         title: 'Обновление',
@@ -331,8 +333,6 @@ let messages: any = {
         lobby: 'Лобби',
         menu: 'Меню',
         leave: 'Выйти',
-        quitApp: 'Вы действительно хотите закрыть игру?',
-        quit: 'Закрыть игру',
         skipDeals: 'Отсесть',
         autofold: 'Авто-фолд',
         waitbb: 'Ожидать ББ',

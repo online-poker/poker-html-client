@@ -88,7 +88,7 @@ export class MorePopup {
     }
     public showQuitPrompt() {
         const self = this;
-        app.prompt(_("table.quit"), [_("table.quitApp")]).then(function () {
+        app.prompt(_("common.quit"), [_("common.quitApp")]).then(function () {
             self.quitApp();
         });
     }
