@@ -1,32 +1,9 @@
 {
- "compilerOptions": {
-  "module": "amd",
-  "moduleResolution": "node",
-  "noImplicitAny": false,
-  "removeComments": false,
-  "target": "es5",
-  "strict": false,
-  "experimentalDecorators": true,
-  "emitDecoratorMetadata": true,
-  "preserveConstEnums": true,
-  "suppressImplicitAnyIndexErrors": true,
-  "sourceMap": true,
-  "lib": [
-      "es5",
-      "es2015.promise",
-      "dom",
-      "scripthost",
-      "es2015.iterable",
-      "es2015.core"
-    ],
-  "out": "js/application.js",
-  "sourceRoot": ".",
-  "baseUrl": ".",
-  "rootDir": ".",
-  "paths": {
-    "poker/*": [ "js/*" ]
-  }
- },
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "amd",
+    "out": "js/application.js",
+  },
  "compileOnSave": false,
  "exclude": [
      "js/messages.ts",

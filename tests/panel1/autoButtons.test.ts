@@ -9,7 +9,7 @@ import { GameActionsQueue } from "../../js/table/gameactionsqueue";
 import {
     TableView,
 } from "../../js/table/tableview";
-import { drainQueue, getTable, printTableView, simpleInitialization } from "../table/helper";
+import { drainQueue, getTable, getTestTableView, printTableView, simpleInitialization } from "../table/helper";
 
 describe("auto buttons", function () {
     GameActionsQueue.waitDisabled = true;
@@ -34,7 +34,7 @@ describe("auto buttons", function () {
     describe("initial status", function () {
         it("after game start", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -54,7 +54,7 @@ describe("auto buttons", function () {
 
         it("after flop", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -80,7 +80,7 @@ describe("auto buttons", function () {
 
         it("after turn", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -111,7 +111,7 @@ describe("auto buttons", function () {
 
         it("after river", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -146,7 +146,7 @@ describe("auto buttons", function () {
     describe("only one active", function () {
         it("2 players", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -177,7 +177,7 @@ describe("auto buttons", function () {
         });
         it("if uncheck then no checked", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
             simpleInitialization(view1, 1, [400, 200]);
@@ -202,7 +202,7 @@ describe("auto buttons", function () {
     describe("flop on raise", function () {
         it("2 players", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -225,7 +225,7 @@ describe("auto buttons", function () {
 
         it("3 players", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -257,7 +257,7 @@ describe("auto buttons", function () {
 
         it("check", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -280,7 +280,7 @@ describe("auto buttons", function () {
 
         it("check on 3 players", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 200, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -302,7 +302,7 @@ describe("auto buttons", function () {
 
         xit("check after my turn", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -325,7 +325,7 @@ describe("auto buttons", function () {
 
         it("check after my turn 2", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 200, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -359,7 +359,7 @@ describe("auto buttons", function () {
 
         it("Automatic action executed", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             actionBlock.suppressActions = true;
 

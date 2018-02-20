@@ -9,7 +9,7 @@ import { GameActionsQueue } from "../../js/table/gameactionsqueue";
 import {
     TableView,
 } from "../../js/table/tableview";
-import { drainQueue, getTable, printTableView, simpleInitialization } from "../table/helper";
+import { drainQueue, getTable, getTestTableView, printTableView, simpleInitialization } from "../table/helper";
 
 describe("gameplay", function () {
     const login1 = "Player1";
@@ -42,7 +42,7 @@ describe("gameplay", function () {
     describe("2 players", function () {
         it("Could raise then other players has more money on hands", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
             simpleInitialization(view1, 1, [400, 200]);
@@ -67,7 +67,7 @@ describe("gameplay", function () {
         });
         it("Could not raise then other players has less money on hands", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
             simpleInitialization(view1, 1, [200, 400]);
@@ -91,7 +91,7 @@ describe("gameplay", function () {
         });
         it("Should go all-in", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
             simpleInitialization(view1, 1, [2244, 1990]);
@@ -113,7 +113,7 @@ describe("gameplay", function () {
 
         it("Should go all-in 2", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
             simpleInitialization(view1, 1, [1244, 1990]);
@@ -135,7 +135,7 @@ describe("gameplay", function () {
 
         it("Should go all-in 3", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
             simpleInitialization(view1, 1, [1244, 1990]);
@@ -162,7 +162,7 @@ describe("gameplay", function () {
 
         it("Should go all-in 4", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
             simpleInitialization(view1, 1, [1244, 1990], 2);
@@ -187,7 +187,7 @@ describe("gameplay", function () {
         });
         it("All-in only on last", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
             simpleInitialization(view1, 1, [390, 390]);
@@ -208,7 +208,7 @@ describe("gameplay", function () {
 
         it("All-in only on last 2", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
             simpleInitialization(view1, 1, [390, 390]);
@@ -229,7 +229,7 @@ describe("gameplay", function () {
 
         it("Able to raise when after call left only BB", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
             simpleInitialization(view1, 1, [200, 400]);
@@ -249,7 +249,7 @@ describe("gameplay", function () {
 
         xit("Multiple re-raise during preflop", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [200, 400]);
             // blinds
@@ -275,7 +275,7 @@ describe("gameplay", function () {
 
         it("Initial big re-raise during preflop", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [600, 200]);
             // blinds
@@ -295,7 +295,7 @@ describe("gameplay", function () {
 
         it("Could not re-reraise 3", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
             simpleInitialization(view1, 1, [1128, 4855], 2);
@@ -318,7 +318,7 @@ describe("gameplay", function () {
         });
         it("Min raise to equal total amount of money left for the other player", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
             simpleInitialization(view1, 1, [400, 29]);
@@ -337,7 +337,7 @@ describe("gameplay", function () {
         });
         it("Min raise to equal total amount of money left for the other player 2 (G#2918858)", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [730, 39], 2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -363,7 +363,7 @@ describe("gameplay", function () {
         });
         it("Min raise to equal total amount of money left for the other player after flop", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
             simpleInitialization(view1, 1, [400, 29]);
@@ -389,7 +389,7 @@ describe("gameplay", function () {
 
         it("Sitout player which still in game should be accounted", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [1128, 4855], 2);
             // blinds
@@ -407,7 +407,7 @@ describe("gameplay", function () {
 
         it("1 helper button should be correct", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -425,7 +425,7 @@ describe("gameplay", function () {
 
         it("Game №3253513", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [4288, 138981]);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -455,7 +455,7 @@ describe("gameplay", function () {
 
         it("Receiving sitout state does not affect calculations", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [4288, 138981], 2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -478,7 +478,7 @@ describe("gameplay", function () {
 
         it("Allin after opening cards should display correct additional buttons amount", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [4288, 138981]);
             expect(view1.myPlayer() != null).toBeTruthy();

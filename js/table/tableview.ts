@@ -1,7 +1,7 @@
 /* tslint:disable:no-bitwise */
-import { Chat, Game, Tournament } from "@poker/api-server";
 import * as ko from "knockout";
 import * as moment from "moment";
+import { IApiProvider } from "poker/api";
 import * as signals from "signals";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
@@ -29,7 +29,6 @@ import { TablePlaces } from "./tableplaces";
 import { TablePlaceModel } from "./tabpleplacemodel";
 import { TournamentView } from "./tournamentview";
 
-declare let host: string;
 declare let app: App;
 
 function getBackCardsFromGameType(gameType: number) {
@@ -251,11 +250,13 @@ export class TableView {
 
     private enableInjectPlayerCards = false;
 
-    constructor(public tableId: number, public model: GameTableModel) {
-        /// <signature>
-        ///     <summary>Updates the information about the table from the server</summary>
-        ///     <param name="tableId" type="Number">Id of the table for which view has to be created.</param>
-        /// </signature>
+    /**
+     * Initializes a new instance of the @see TableView class
+     * @param tableId Id of the table.
+     * @param model View model.
+     * @param apiProvider API provider for performing operation.
+     */
+    constructor(public tableId: number, public model: GameTableModel, private apiProvider: IApiProvider) {
         const self = this;
         this.tableId = tableId;
         this.tableName = ko.observable(model === null ? "0" : model.TableName);
@@ -789,7 +790,7 @@ export class TableView {
         const connectionInfo = "HID:" + hubId;
         this.log("Connecting to table " + this.tableId + " on connection " + connectionInfo);
         const startConnection = app.buildStartConnection();
-        const api = new Game(host);
+        const api = this.apiProvider.getGame();
 
         // Set opening card parameters in parallel to other operations.
         await api.setTableParameters(this.tableId, !settings.autoHideCards());
@@ -1142,7 +1143,7 @@ export class TableView {
         this.actionBlock.updateNeedBB();
         this.actionBlock.updateBlocks();
         if (playerName === this.currentLogin()) {
-            const api = new Game(host);
+            const api = this.apiProvider.getGame();
             await api.setTableParameters(this.tableId, !settings.autoHideCards());
         }
     }
@@ -1735,7 +1736,7 @@ export class TableView {
     public async rebuy() {
         const self = this;
         const tournamentView = this.tournament();
-        const tapi = new Tournament(host);
+        const tapi = this.apiProvider.getTournament();
         try {
             const data = await tapi.rebuy(tournamentView.tournamentId, false);
             if (data.Status === "Ok") {
@@ -1755,7 +1756,7 @@ export class TableView {
     public async doubleRebuy() {
         const self = this;
         const tournamentView = this.tournament();
-        const tapi = new Tournament(host);
+        const tapi = this.apiProvider.getTournament();
         try {
             const data = await tapi.rebuy(tournamentView.tournamentId, true);
             if (data.Status === "Ok") {
@@ -1775,7 +1776,7 @@ export class TableView {
     public async addon() {
         const self = this;
         const tournamentView = this.tournament();
-        const tapi = new Tournament(host);
+        const tapi = this.apiProvider.getTournament();
         try {
             const data = await tapi.addon(tournamentView.tournamentId);
             if (data.Status === "Ok") {
@@ -1819,7 +1820,7 @@ export class TableView {
     }
     public async sit(seat: number, amount: number, ticketCode: string) {
         const self = this;
-        const gameApi = new Game(host);
+        const gameApi = this.apiProvider.getGame();
         try {
             const data = await gameApi.sit(self.tableId, seat, amount, ticketCode);
             // report on successfull seating.
@@ -1894,7 +1895,7 @@ export class TableView {
     }
     public async standup() {
         const self = this;
-        const gameApi = new Game(host);
+        const gameApi = this.apiProvider.getGame();
         const data = await gameApi.standup(this.tableId);
         // report on successfull seating.
         if (data.Status === "AuthorizationError") {
@@ -1922,7 +1923,7 @@ export class TableView {
     public async addBalance(amount: number, ticketCode: string) {
         const places = this.places();
         const targetPlayer = this.myPlayer();
-        const gameApi = new Game(host);
+        const gameApi = this.apiProvider.getGame();
         try {
             const data = await gameApi.addBalance(this.tableId, amount, ticketCode);
             // report on successfull seating.
@@ -1990,7 +1991,7 @@ export class TableView {
      * Sends mesage to the table chat.
      */
     public async sendMessage() {
-        const chatApi = new Chat(host);
+        const chatApi = this.apiProvider.getChat();
         const data = await chatApi.send(this.tableId, this.chatMessage());
         if (data.Status !== "Ok") {
             SimplePopup.display(_("chat.sendingMessage"), _("errors." + data.Status));
@@ -2002,7 +2003,7 @@ export class TableView {
     public async fold() {
         const self = this;
         this.actionBlock.buttonsEnabled(false);
-        const gameApi = new Game(host);
+        const gameApi = this.apiProvider.getGame();
         if (appConfig.game.useSignalR) {
             // TODO: We should provide notification, which will return any error from the server.
             connectionService.currentConnection.connection.Game.server.fold(this.tableId);
@@ -2031,7 +2032,7 @@ export class TableView {
     public async checkOrCall() {
         const self = this;
         this.actionBlock.buttonsEnabled(false);
-        const gameApi = new Game(host);
+        const gameApi = this.apiProvider.getGame();
         if (appConfig.game.useSignalR) {
             // TODO: We should provide notification, which will return any error from the server.
             connectionService.currentConnection.connection.Game.server.checkOrCall(this.tableId);
@@ -2060,7 +2061,7 @@ export class TableView {
     public async betOrRaise() {
         const self = this;
         this.actionBlock.buttonsEnabled(false);
-        const gameApi = new Game(host);
+        const gameApi = this.apiProvider.getGame();
         const amount: number = this.currentRaise() - this.currentBet();
         if (appConfig.game.useSignalR) {
             // TODO: We should provide notification, which will return any error from the server.
@@ -2092,7 +2093,7 @@ export class TableView {
      */
     public async showCards() {
         this.actionBlock.showCardsEnabled(false);
-        const gameApi = new Game(host);
+        const gameApi = this.apiProvider.getGame();
         try {
             const data = await gameApi.showCards(this.tableId);
             if (data.Status !== "Ok") {
@@ -2112,7 +2113,7 @@ export class TableView {
      */
     public async muckCards() {
         this.actionBlock.showCardsEnabled(false);
-        const gameApi = new Game(host);
+        const gameApi = this.apiProvider.getGame();
         try {
             const data = await gameApi.muck(this.tableId);
             if (data.Status !== "Ok") {
@@ -2148,7 +2149,7 @@ export class TableView {
             ? this.actionBlock.showHoleCard1Enabled
             : this.actionBlock.showHoleCard2Enabled;
         showCardVariable(false);
-        const gameApi = new Game(host);
+        const gameApi = this.apiProvider.getGame();
         try {
             const data = await gameApi.showHoleCard(this.tableId, cardPosition);
             if (data.Status !== "Ok") {
@@ -2228,7 +2229,7 @@ export class TableView {
 
     public async comeBack() {
         const self = this;
-        const gameApi = new Game(host);
+        const gameApi = this.apiProvider.getGame();
         const data = await gameApi.comeBack(this.tableId);
         if (data.Status === "OperationNotValidAtThisTime") {
             return;
@@ -2241,7 +2242,7 @@ export class TableView {
 
     public async sitOut() {
         const self = this;
-        const gameApi = new Game(host);
+        const gameApi = this.apiProvider.getGame();
         const data = await gameApi.sitOut(this.tableId);
         if (data.Status === "OperationNotValidAtThisTime") {
             return;

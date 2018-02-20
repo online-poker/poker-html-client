@@ -1,4 +1,4 @@
-import { PersonalAccountData } from "../../js/api/account";
+import { PersonalAccountData } from "@poker/api-server";
 import { AccountService } from "../../js/services/accountservice";
 
 function defineMockResponse(response: ApiResult<PersonalAccountData>) {

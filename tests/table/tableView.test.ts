@@ -10,7 +10,7 @@ import { GameActionsQueue } from "../../js/table/gameactionsqueue";
 import {
     TableView,
 } from "../../js/table/tableview";
-import { drainQueue } from "./helper";
+import { drainQueue, noopApiProvider } from "./helper";
 
 function getSeatPlayer(seat: number, initialAmount: number): PlayerStatusInfo {
     return {
@@ -53,7 +53,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const players: GamePlayerStartInformation[] = [{
                 PlayerId: 1,
                 Money: 10000,
@@ -120,7 +120,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const players: GamePlayerStartInformation[] = [{
                 PlayerId: 1,
                 Money: 10000,
@@ -178,7 +178,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const players: GamePlayerStartInformation[] = [{
                 PlayerId: 1,
                 Money: 10000,
@@ -236,7 +236,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const players: GamePlayerStartInformation[] = [{
                 PlayerId: 1,
                 Money: 10000,
@@ -300,7 +300,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const players: GamePlayerStartInformation[] = [{
                 PlayerId: 1,
                 Money: 10000,
@@ -374,7 +374,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             login("player1");
             loginId(1);
             tableView.onTableStatusInfo([], null, null, 4, 100, 10, null, null, null, null, null, true, 0, false, true, null, 0, 2);
@@ -402,7 +402,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             login("player1");
             loginId(1);
             const tableSatusPlayers = [
@@ -453,7 +453,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const players: GamePlayerStartInformation[] = [{
                 PlayerId: 1,
                 Money: 10000,
@@ -539,7 +539,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const players: GamePlayerStartInformation[] = [{
                 PlayerId: 1,
                 Money: 10000,
@@ -602,7 +602,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const players: GamePlayerStartInformation[] = [{
                 PlayerId: 1,
                 Money: 10000,
@@ -671,7 +671,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const players: GamePlayerStartInformation[] = [{
                 PlayerId: 1,
                 Money: 10000,
@@ -745,7 +745,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const players: GamePlayerStartInformation[] = [{
                 PlayerId: 1,
                 Money: 10000,
@@ -822,7 +822,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const players: GamePlayerStartInformation[] = [{
                 PlayerId: 1,
                 Money: 10000,
@@ -883,7 +883,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const d = new Date(2017, 12, 25, 21, 56, 10);
             tableView.addMessage(1, d, "admin", "Test message");
             expect(tableView.messages().length).toEqual(1);
@@ -902,7 +902,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const d = new Date(2017, 12, 25, 21, 56, 10);
             tableView.addMessage(1, d, "Humpfy Dumpfy", "sat on a wall");
             expect(tableView.messages().length).toEqual(1);
@@ -922,7 +922,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const d = new Date(2017, 12, 25, 21, 56, 10);
             tableView.addMessage(1, d, "admin", "Test message 1");
             tableView.addMessage(2, d, "admin", "Test message 2");
@@ -950,7 +950,7 @@ describe("Table view", () => {
                 JoinedPlayers: 2,
                 MaxPlayers: 8,
                 PotLimitType: 2,
-            });
+            }, noopApiProvider);
             const d = new Date(2017, 12, 25, 21, 56, 10);
             tableView.addSystemMessage(2, "Cover you bases!");
             expect(tableView.systemMessages().length).toEqual(1);

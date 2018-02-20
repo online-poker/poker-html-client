@@ -9,7 +9,7 @@ import { GameActionsQueue } from "../../js/table/gameactionsqueue";
 import {
     TableView,
 } from "../../js/table/tableview";
-import { drainQueue, getTable, printTableView, simpleInitialization } from "../table/helper";
+import { drainQueue, getTable, getTestTableView, printTableView, simpleInitialization } from "../table/helper";
 
 describe("main buttons", function () {
     let logEnabled = false;
@@ -33,7 +33,7 @@ describe("main buttons", function () {
     describe("initial status", function () {
         it("after game start", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();

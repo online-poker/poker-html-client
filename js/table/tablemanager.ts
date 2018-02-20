@@ -1,13 +1,12 @@
 ﻿/* tslint:disable:no-bitwise no-use-before-declare */
 import {
-    Game,
-    Tournament,
     TournamentDefinition,
     TournamentPlayerStateDefinition,
     TournamentPlayerStatus,
     TournamentStatus,
 } from "@poker/api-server";
 import * as ko from "knockout";
+import { DefaultApiProvider, IApiProvider } from "poker/api";
 import * as signals from "signals";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
@@ -48,7 +47,7 @@ export class TableManager {
     private duplicators: DuplicateFinder[];
     private reserveTablesForTournaments = false;
 
-    constructor() {
+    constructor(private apiProvider: IApiProvider) {
         const self = this;
         this.tables = ko.observableArray<TableView>([]);
         this.tournaments = ko.observableArray<TournamentView>([]);
@@ -120,8 +119,8 @@ export class TableManager {
                 self.initializeGameHub(connectionService.currentConnection);
             }
         });
-        settings.autoHideCards.subscribe(function(newValue) {
-            const api = new Game(host);
+        settings.autoHideCards.subscribe((newValue) => {
+            const api = this.apiProvider.getGame();
             self.tables().forEach(function(tableView) {
                 // Set open card parameters in parallel for all tables.
                 api.setTableParameters(tableView.tableId, !newValue);
@@ -135,7 +134,7 @@ export class TableManager {
         this.connectTournaments();
     }
     public async getCurrentTables() {
-        const api = new Game(host);
+        const api = this.apiProvider.getGame();
         const data = await api.getTables(null, 0, 0, 0, 1, 0, appConfig.game.showTournamentTables);
         const tablesData = data.Data as GameTableModel[];
         const sittingTables = !(appConfig.game.seatMode || appConfig.game.tablePreviewMode)
@@ -153,8 +152,8 @@ export class TableManager {
     }
     public async getCurrentTournaments() {
         const self = this;
-        const gapi = new Game(host);
-        const tapi = new Tournament(host);
+        const gapi = this.apiProvider.getGame();
+        const tapi = this.apiProvider.getTournament();
         const data = await tapi.getTournaments(0, 0, 0, 0, 0);
         const tournamentsData = data.Data;
         const registeredTournamentsData = await tapi.getRegisteredTournaments();
@@ -244,7 +243,7 @@ export class TableManager {
             return;
         }
 
-        const tournamentApi = new Tournament(host);
+        const tournamentApi = this.apiProvider.getTournament();
         const tournamentInfo = await tournamentApi.getTournament(tournamentId);
         if (tournamentInfo.Status === "Ok") {
             const tournamentData = tournamentInfo.Data;
@@ -335,7 +334,7 @@ export class TableManager {
         }
     }
     public addTable(tableId: number, model: GameTableModel) {
-        const table = new TableView(tableId, model);
+        const table = new TableView(tableId, model, this.apiProvider);
         this.tables.push(table);
         table.onMyTurn.add(this.onMyTurn, this);
         table.onGamefinished.add(this.onGameFinished, this);
@@ -504,6 +503,10 @@ export class TableManager {
             slowInternetService.showDuplicatedConnectionPopup();
         }
     }
+
+    public getNonExistingTable(): TableView {
+        return new TableView(0, null, this.apiProvider);
+    }
     private onPlayerCardsDealed(tableId: number) {
         const tableView = this.getTableById(tableId);
         if (!tableView) {
@@ -577,7 +580,7 @@ export class TableManager {
         }, 3000);
     }
     private async getSittingTablesFromServer() {
-        const api = new Game(host);
+        const api = this.apiProvider.getGame();
         const sittingTablesData = await api.getSitingTables();
         const status = sittingTablesData.Status;
         if (status === "Ok") {
@@ -1243,8 +1246,8 @@ export class TableManager {
 
     private async buildTournamentInformationRequest(tournamentId: number, tableId: number): Promise<TournamentDefinition> {
         const self = this;
-        const gapi = new Game(host);
-        const tapi = new Tournament(host);
+        const gapi = this.apiProvider.getGame();
+        const tapi = this.apiProvider.getTournament();
         const data = await tapi.getTournament(tournamentId);
         const tournamentData = data.Data;
         self.selectTournament(tournamentData, false);
@@ -1310,4 +1313,4 @@ export class TableManager {
     }
 }
 
-export const tableManager = new TableManager();
+export const tableManager = new TableManager(DefaultApiProvider);
