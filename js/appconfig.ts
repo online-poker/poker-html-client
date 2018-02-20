@@ -22,6 +22,7 @@ export class AppConfig {
         automaticLogin: true,
         automaticTableSelection: true,
         allowGuest: false,
+        allowSelfRegistration: false,
     };
     public game = {
         handHistory: new GameHandHistory(),

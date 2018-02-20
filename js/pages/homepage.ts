@@ -24,6 +24,7 @@ export class HomePage extends PageBase {
     public password: KnockoutObservable<string>;
     public errorMessage: KnockoutObservable<string>;
     public rememberMe: KnockoutObservable<boolean>;
+    public allowSelfRegistration: KnockoutObservable<boolean>;
 
     public captionLabel: KnockoutComputed<string>;
     public authenticatedUser: KnockoutComputed<string>;
@@ -60,6 +61,7 @@ export class HomePage extends PageBase {
         authManager.authenticated.subscribe((value) => {
             this.banners(metadataManager.smallBanners);
         });
+        this.allowSelfRegistration = ko.observable(appConfig.auth.allowSelfRegistration);
     }
     public deactivate(pageName?: string) {
         super.deactivate(pageName);
