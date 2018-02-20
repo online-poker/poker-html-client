@@ -21,6 +21,7 @@ module.exports = (env) => {
             knockout: 'knockout',
             signals: 'signals',
             signalr: 'signalr',
+            hammerjs: 'hammerjs',
             'knockout.validation': 'knockout.validation',
         },
         output: {

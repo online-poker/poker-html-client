@@ -1,5 +1,6 @@
 /* tslint:disable:no-string-literal */
 
+import * as Hammer from "hammerjs";
 import * as $ from "jquery";
 import ko = require("knockout");
 import * as moment from "moment";
@@ -618,8 +619,9 @@ export function registerBindings() {
             viewModel: any, bindingContext: KnockoutBindingContext) {
             const value = valueAccessor();
             const functionValue = value as () => void;
-            const hammer = Hammer(element, { dragMinDistance: 3 });
-            hammer.on("dragup", function(event) {
+            const hammer = new Hammer(element);
+            hammer.add( new Hammer.Pan({ threshold: 3, direction: Hammer.DIRECTION_UP }) );
+            hammer.on("panup", function(event) {
                 functionValue.apply(viewModel);
             });
         },
@@ -631,8 +633,9 @@ export function registerBindings() {
             viewModel: any, bindingContext: KnockoutBindingContext) {
             const value = valueAccessor();
             const functionValue = value as () => void;
-            const hammer = Hammer(element, { dragMinDistance: 3 });
-            hammer.on("dragdown", function(event) {
+            const hammer = new Hammer(element);
+            hammer.add( new Hammer.Pan({ threshold: 3, direction: Hammer.DIRECTION_DOWN }) );
+            hammer.on("pandown", function(event) {
                 functionValue.apply(viewModel);
             });
         },
@@ -643,7 +646,8 @@ export function registerBindings() {
             viewModel: any, bindingContext: KnockoutBindingContext) {
             const value = valueAccessor();
             const functionValue = value as () => void;
-            const hammer = Hammer(element, { threshold: 10 });
+            const hammer = new Hammer(element);
+            hammer.add( new Hammer.Swipe({ direction: Hammer.DIRECTION_LEFT, threshold: 10 }) );
             hammer.on("swipeleft", function(event) {
                 functionValue.apply(viewModel);
             });
@@ -656,7 +660,8 @@ export function registerBindings() {
             viewModel: any, bindingContext: KnockoutBindingContext) {
             const value = valueAccessor();
             const functionValue = value as () => void;
-            const hammer = Hammer(element, { threshold: 10 });
+            const hammer = new Hammer(element);
+            hammer.add( new Hammer.Swipe({ direction: Hammer.DIRECTION_RIGHT, threshold: 10 }) );
             hammer.on("swiperight", function(event) {
                 functionValue.apply(viewModel);
             });
@@ -669,9 +674,10 @@ export function registerBindings() {
             viewModel: any, bindingContext: KnockoutBindingContext) {
             const value = valueAccessor();
             const functionValue = value as () => void;
-            const hammer = Hammer(element, { tap: true });
-            hammer.on("doubletap", function(event) {
-                if (event.gesture.target === element) {
+            const hammer = new Hammer(element);
+            hammer.add( new Hammer.Tap({ taps: 2 }) );
+            hammer.on("tap", function(event) {
+                if (event.target === element) {
                     functionValue.apply(viewModel);
                 }
             });
@@ -684,10 +690,11 @@ export function registerBindings() {
             viewModel: any, bindingContext: KnockoutBindingContext) {
             const value = valueAccessor();
             const functionValue = value as () => void;
-            const hammer = Hammer(element, { drag_block_horizontal: true, drag_lock_to_axis: true });
+            const hammer = new Hammer(element);
+            hammer.add( new Hammer.Pan({ threshold: 10, direction: Hammer.DIRECTION_HORIZONTAL }) );
             const parent = element.parentElement;
-            hammer.on("drag", function(event) {
-                const touch = event.gesture.touches[0];
+            hammer.on("pan", function(event) {
+                const touch = event.pointers[0];
                 let offset = 50;
                 if (PageBlock.useDoubleView) {
                     if ($(element).width() === 800) {

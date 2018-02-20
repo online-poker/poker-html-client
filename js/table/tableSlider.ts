@@ -4,7 +4,8 @@ import * as timeService from "../timeservice";
 interface TapGestureEvent {
     gesture: {
         center: {
-            pageX: number;
+            x?: number;
+            pageX?: number;
         };
     };
 }
@@ -184,6 +185,7 @@ export class TableSlider {
             return true;
         } else {
             if (event.originalEvent.gesture) {
+                const pageX = event.originalEvent.gesture.center.pageX || event.originalEvent.gesture.center.x;
                 const relativePosition = this.translator(event.originalEvent.gesture.center.pageX);
                 this.setPosition(relativePosition);
                 return true;

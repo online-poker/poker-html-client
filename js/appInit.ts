@@ -1,3 +1,4 @@
+import * as Hammer from "hammerjs";
 import * as $ from "jquery";
 import ko = require("knockout");
 import * as moment from "moment";
@@ -36,7 +37,8 @@ export function bootstrap(localConfiguration?: Partial<AppConfig>) {
     // tslint:enable:no-string-literal
 
     // Enable hammer events on whole document
-    Hammer(document);
+    // tslint:disable-next-line:no-string-literal
+    window["globalHammer"] = new Hammer(document as any, { domEvents: true });
 
     registerBindings();
     registerExtenders();
