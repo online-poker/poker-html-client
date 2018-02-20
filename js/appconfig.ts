@@ -22,7 +22,7 @@ export class AppConfig {
         automaticLogin: true,
         automaticTableSelection: true,
         allowGuest: false,
-        allowSelfRegistration: false,
+        allowSelfRegistration: true,
     };
     public game = {
         handHistory: new GameHandHistory(),
