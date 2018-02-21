@@ -9,7 +9,7 @@ import { GameActionsQueue } from "../../js/table/gameactionsqueue";
 import {
     TableView,
 } from "../../js/table/tableview";
-import { drainQueue, getTable, printTableView, simpleInitialization } from "../table/helper";
+import { drainQueue, getTable, getTestTableView, printTableView, simpleInitialization } from "../table/helper";
 
 describe("quick buttons", function () {
     GameActionsQueue.waitDisabled = true;
@@ -40,11 +40,10 @@ describe("quick buttons", function () {
     // Texas holdem by default has no limit games
     describe("No limit games", function () {
         it("after game start", async function () {
-            const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             view1.currentLogin("Player2");
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200]);
+            await simpleInitialization(view1, 1, [400, 200]);
             login("Player2");
             loginId(2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -71,10 +70,10 @@ describe("quick buttons", function () {
         });
         it("when money only for 3bb", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             view1.currentLogin("Player2");
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [80, 200]);
+            await simpleInitialization(view1, 1, [80, 200]);
             login("Player2");
             loginId(2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -99,10 +98,10 @@ describe("quick buttons", function () {
         });
         it("when money only for pot when it is smaller 3bb", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             view1.currentLogin("Player2");
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [50, 200]);
+            await simpleInitialization(view1, 1, [50, 200]);
             login("Player2");
             loginId(2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -125,10 +124,10 @@ describe("quick buttons", function () {
         });
         it("when money only smaller pot and 3bb", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             view1.currentLogin("Player2");
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [45, 200]);
+            await simpleInitialization(view1, 1, [45, 200]);
             login("Player2");
             loginId(2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -151,9 +150,9 @@ describe("quick buttons", function () {
         });
         it("when money only for 3bb", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [110, 200, 200]);
+            await simpleInitialization(view1, 1, [110, 200, 200]);
             login("Player1");
             loginId(1);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -180,9 +179,9 @@ describe("quick buttons", function () {
         // and don't want spend any more time on that.
         xit("when money only for 3bb - variant2", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [100, 200, 200]);
+            await simpleInitialization(view1, 1, [100, 200, 200]);
             login("Player1");
             loginId(1);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -209,9 +208,9 @@ describe("quick buttons", function () {
     describe("Pot limit mode", function () {
         it("headsup after game start", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 2, [1000, 1000]);
+            await simpleInitialization(view1, 2, [1000, 1000]);
             login("Player2");
             loginId(2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -234,9 +233,9 @@ describe("quick buttons", function () {
         });
         it("headsup after raise", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 2, [1000, 1000]);
+            await simpleInitialization(view1, 2, [1000, 1000]);
             login("Player2");
             loginId(2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -259,10 +258,10 @@ describe("quick buttons", function () {
         });
         it("regular after game start", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             view1.currentLogin("Player4");
-            simpleInitialization(view1, 2, [1000, 1000, 1000, 1000]);
+            await simpleInitialization(view1, 2, [1000, 1000, 1000, 1000]);
             login("Player4");
             loginId(4);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -288,9 +287,9 @@ describe("quick buttons", function () {
         });
         it("all in when not enough money for pot", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 2, [1000, 1000, 1000, 90]);
+            await simpleInitialization(view1, 2, [1000, 1000, 1000, 90]);
             view1.currentLogin("Player4");
             login("Player4");
             loginId(4);
@@ -318,9 +317,9 @@ describe("quick buttons", function () {
         });
         it("all in when exactly enough money for half pot", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 2, [1000, 1000, 1000, 45]);
+            await simpleInitialization(view1, 2, [1000, 1000, 1000, 45]);
             view1.currentLogin("Player4");
             login("Player4");
             loginId(4);
@@ -346,9 +345,9 @@ describe("quick buttons", function () {
         });
         it("all in when not enough money for half pot", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 2, [1000, 1000, 1000, 40]);
+            await simpleInitialization(view1, 2, [1000, 1000, 1000, 40]);
             view1.currentLogin("Player4");
             login("Player4");
             loginId(4);

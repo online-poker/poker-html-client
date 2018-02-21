@@ -72,12 +72,12 @@ export class SeatPage extends PageBase {
         this.currentTable = ko.computed(() => {
             const tables = tableManager.tables();
             if (tables.length === 0) {
-                return new TableView(0, null);
+                return tableManager.getNonExistingTable();
             }
 
             const index = this.currentIndex();
             if (!tables.hasOwnProperty(index)) {
-                return new TableView(0, null);
+                return tableManager.getNonExistingTable();
             }
 
             return tables[index];

@@ -9,7 +9,7 @@ import { GameActionsQueue } from "../../js/table/gameactionsqueue";
 import {
     TableView,
 } from "../../js/table/tableview";
-import { drainQueue, getTable, printTableView, simpleInitialization } from "../table/helper";
+import { drainQueue, getTable, getTestTableView, printTableView, simpleInitialization } from "../table/helper";
 
 describe("gameplay", function () {
     const login1 = "Player1";
@@ -38,7 +38,7 @@ describe("gameplay", function () {
     describe("force join", function () {
         it("Could raise then other players has more money on hands", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             loginId(1);
             const actionBlock = view1.actionBlock;
             simpleInitialization(view1, 1, [400, 400, 400, 400], 2);

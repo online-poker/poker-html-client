@@ -70,12 +70,12 @@ export class TablesPage extends PageBase {
         this.currentTable = ko.computed(() => {
             const tables = tableManager.tables();
             if (tables.length === 0) {
-                return new TableView(0, null);
+                return tableManager.getNonExistingTable();
             }
 
             const index = this.currentIndex();
             if (!tables.hasOwnProperty(index.toString())) {
-                return new TableView(0, null);
+                return tableManager.getNonExistingTable();
             }
 
             return tables[index];

@@ -85,8 +85,8 @@ describe("tableSlider", function () {
                 return x - 100;
             });
             tableSlider.setParameters(100, 20, 0, 100);
-            const evt = document.createEvent('MouseEvents');
-            evt.initEvent('click', false, true);
+            const evt = document.createEvent("MouseEvents");
+            evt.initEvent("click", false, true);
             evt.pageX = 150;
             const succeed = tableSlider.selectManually(evt);
             expect(tableSlider.current()).toEqual(60);
@@ -100,11 +100,11 @@ describe("tableSlider", function () {
                 return x - 100;
             });
             tableSlider.setParameters(100, 20, 0, 100);
-            const evt: TapEvent = document.createEvent('TouchEvent');
-            evt.initEvent('click', false, true);
+            const evt: TapEvent = document.createEvent("TouchEvent");
+            evt.initEvent("click", false, true);
             evt.originalEvent = evt;
             evt.originalEvent.gesture = {
-                center{
+                center: {
                     pageX: 150
                 }
             };
@@ -118,8 +118,8 @@ describe("tableSlider", function () {
                 return x - 100;
             });
             tableSlider.setParameters(100, 20, 0, 100);
-            const evt: TapEvent = document.createEvent('TouchEvent');
-            evt.initEvent('click', false, true);
+            const evt: TapEvent = document.createEvent("TouchEvent");
+            evt.initEvent("click", false, true);
             evt.originalEvent = evt;
             evt.originalEvent.gesture = undefined;
             const succeed = tableSlider.selectManually(evt);

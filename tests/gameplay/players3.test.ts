@@ -8,7 +8,7 @@ import { GameActionsQueue } from "../../js/table/gameactionsqueue";
 import {
     TableView,
 } from "../../js/table/tableview";
-import { drainQueue, getTable, printTableView, simpleInitialization } from "../table/helper";
+import { drainQueue, getTable, getTestTableView, printTableView, simpleInitialization } from "../table/helper";
 
 describe("gameplay", function () {
     const login1 = "Player1";
@@ -44,7 +44,7 @@ describe("gameplay", function () {
     describe("3 players", function () {
         it("Could raise then other players has more money on hands", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             view1.currentLogin(login1);
             login(login1);
@@ -82,7 +82,7 @@ describe("gameplay", function () {
         });
         it("Could not raise more then other players has on hands", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             view1.currentLogin(login1);
             login(login1);
@@ -115,9 +115,9 @@ describe("gameplay", function () {
 
         it("Max amount same for all players", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [1200, 200, 1200]);
+            await simpleInitialization(view1, 1, [1200, 200, 1200]);
             // blinds
             log("Blinds round started");
             view1.onBet(1, 0, 10, 2);
@@ -135,9 +135,9 @@ describe("gameplay", function () {
 
         it("Sitout players which not in game should not be accounted", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200, 1200]);
+            await simpleInitialization(view1, 1, [400, 200, 1200]);
             // blinds
             log("Blinds round started");
             view1.onBet(1, 0, 10, 2);
@@ -154,9 +154,9 @@ describe("gameplay", function () {
 
         it("Sitout players which not in game should not be accounted 2", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200, 100]);
+            await simpleInitialization(view1, 1, [400, 200, 100]);
             // blinds
             log("Blinds round started");
             view1.onBet(1, 0, 10, 2);
@@ -173,9 +173,9 @@ describe("gameplay", function () {
 
         it("Sitout players which not in game should not be accounted 3", async function () {
             const tableModel = getTable();
-            const view1 = new TableView(1, tableModel);
+            const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 1200, 100]);
+            await simpleInitialization(view1, 1, [400, 1200, 100]);
             // blinds
             log("Blinds round started");
             log("Bet ", actionBlock.tableView.myPlayer().Bet(), view1.myPlayer().Bet());

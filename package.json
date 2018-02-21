@@ -56,10 +56,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 33,
-        "functions": 36,
-        "lines": 46,
-        "statements": 45
+        "branches": 34,
+        "functions": 39,
+        "lines": 47,
+        "statements": 47
       }
     },
     "collectCoverage": true,
@@ -102,7 +102,7 @@
     "webpack": "^3.8.1"
   },
   "dependencies": {
-    "@poker/api-server": "0.1.0-dev.20180203183553",
+    "@poker/api-server": "0.1.0-dev.20180220173214",
     "isomorphic-fetch": "^2.2.1",
     "jquery": "^3.2.1",
     "knockout": "^3.4.2",
