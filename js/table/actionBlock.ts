@@ -367,6 +367,8 @@ export class ActionBlock {
                 self.foldOnRaise(false);
 
                 self.amountSupported(self.tableView.maximumBet() - self.tableView.myBet());
+            } else {
+                self.amountSupported(-1);
             }
         });
         this.supportAny.subscribe(function(value) {

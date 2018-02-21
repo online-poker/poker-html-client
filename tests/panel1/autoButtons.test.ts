@@ -400,5 +400,34 @@ describe("auto buttons", function () {
             expect(checkOrCallExecutedCount).toEqual(1);
             expect(actionBlock.supportDirectAmount()).toEqual(false);
         });
+
+        it("If check and then uncheck, nothing happens", async function () {
+            const tableModel = getTable();
+            const view1 = getTestTableView();
+            const actionBlock = view1.actionBlock;
+            await simpleInitialization(view1, 1, [400, 200]);
+            expect(view1.myPlayer() != null).toBeTruthy();
+            // blinds
+            log("Blinds round started");
+            view1.onBet(1, 0, 10, 2);
+            view1.onBet(2, 0, 20, 1);
+            view1.onPlayerCards(1, [1, 2]);
+            // preflop
+            log("Preflop round started");
+            view1.onBet(1, 3, 40, 2);
+            view1.onBet(2, 3, 40, 1);
+            view1.onMoveMoneyToPot([80]);
+            view1.onOpenCards([1, 2, 3]);
+            await drainQueue(view1.queue);
+            expect(actionBlock.supportDirectAmount()).toEqual(false);
+            expect(view1.actionBlock.amountSupported()).toEqual(-1);
+            view1.onBet(1, 3, 0, 2);
+            await drainQueue(view1.queue);
+            expect(view1.actionBlock.amountSupported()).toEqual(-1);
+            view1.actionBlock.supportDirectAmount(true);
+            view1.actionBlock.supportDirectAmount(false);
+            expect(view1.actionBlock.amountSupported()).toEqual(-1);
+            expect(actionBlock.supportDirectAmount()).toEqual(false);
+        });
     });
 });
