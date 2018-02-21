@@ -117,7 +117,7 @@ describe("gameplay", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [1200, 200, 1200]);
+            await simpleInitialization(view1, 1, [1200, 200, 1200]);
             // blinds
             log("Blinds round started");
             view1.onBet(1, 0, 10, 2);
@@ -137,7 +137,7 @@ describe("gameplay", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200, 1200]);
+            await simpleInitialization(view1, 1, [400, 200, 1200]);
             // blinds
             log("Blinds round started");
             view1.onBet(1, 0, 10, 2);
@@ -156,7 +156,7 @@ describe("gameplay", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200, 100]);
+            await simpleInitialization(view1, 1, [400, 200, 100]);
             // blinds
             log("Blinds round started");
             view1.onBet(1, 0, 10, 2);
@@ -175,7 +175,7 @@ describe("gameplay", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 1200, 100]);
+            await simpleInitialization(view1, 1, [400, 1200, 100]);
             // blinds
             log("Blinds round started");
             log("Bet ", actionBlock.tableView.myPlayer().Bet(), view1.myPlayer().Bet());

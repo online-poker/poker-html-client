@@ -43,7 +43,7 @@ describe("quick buttons", function () {
             const view1 = getTestTableView();
             view1.currentLogin("Player2");
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200]);
+            await simpleInitialization(view1, 1, [400, 200]);
             login("Player2");
             loginId(2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -73,7 +73,7 @@ describe("quick buttons", function () {
             const view1 = getTestTableView();
             view1.currentLogin("Player2");
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [80, 200]);
+            await simpleInitialization(view1, 1, [80, 200]);
             login("Player2");
             loginId(2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -101,7 +101,7 @@ describe("quick buttons", function () {
             const view1 = getTestTableView();
             view1.currentLogin("Player2");
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [50, 200]);
+            await simpleInitialization(view1, 1, [50, 200]);
             login("Player2");
             loginId(2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -127,7 +127,7 @@ describe("quick buttons", function () {
             const view1 = getTestTableView();
             view1.currentLogin("Player2");
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [45, 200]);
+            await simpleInitialization(view1, 1, [45, 200]);
             login("Player2");
             loginId(2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -152,7 +152,7 @@ describe("quick buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [110, 200, 200]);
+            await simpleInitialization(view1, 1, [110, 200, 200]);
             login("Player1");
             loginId(1);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -181,7 +181,7 @@ describe("quick buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [100, 200, 200]);
+            await simpleInitialization(view1, 1, [100, 200, 200]);
             login("Player1");
             loginId(1);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -210,7 +210,7 @@ describe("quick buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 2, [1000, 1000]);
+            await simpleInitialization(view1, 2, [1000, 1000]);
             login("Player2");
             loginId(2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -235,7 +235,7 @@ describe("quick buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 2, [1000, 1000]);
+            await simpleInitialization(view1, 2, [1000, 1000]);
             login("Player2");
             loginId(2);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -261,7 +261,7 @@ describe("quick buttons", function () {
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
             view1.currentLogin("Player4");
-            simpleInitialization(view1, 2, [1000, 1000, 1000, 1000]);
+            await simpleInitialization(view1, 2, [1000, 1000, 1000, 1000]);
             login("Player4");
             loginId(4);
             expect(view1.myPlayer() != null).toBeTruthy();
@@ -289,7 +289,7 @@ describe("quick buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 2, [1000, 1000, 1000, 90]);
+            await simpleInitialization(view1, 2, [1000, 1000, 1000, 90]);
             view1.currentLogin("Player4");
             login("Player4");
             loginId(4);
@@ -319,7 +319,7 @@ describe("quick buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 2, [1000, 1000, 1000, 45]);
+            await simpleInitialization(view1, 2, [1000, 1000, 1000, 45]);
             view1.currentLogin("Player4");
             login("Player4");
             loginId(4);
@@ -347,7 +347,7 @@ describe("quick buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 2, [1000, 1000, 1000, 40]);
+            await simpleInitialization(view1, 2, [1000, 1000, 1000, 40]);
             view1.currentLogin("Player4");
             login("Player4");
             loginId(4);

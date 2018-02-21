@@ -5,20 +5,20 @@ import {
     TableView,
 } from "../../js/table/tableview";
 
-export function simpleSit(view: TableView, gameType: number, money: number[]) {
+export async function simpleSit(view: TableView, gameType: number, money: number[]) {
     view.currentLogin("Player1");
     view.onTableStatusInfo([], [], null, 2, 10, 10, 30, 0, 1, 0, 1, true, 0, false, this, null, null, gameType);
     const data = [];
     for (let i = 1; i <= money.length; i++) {
-        view.onSit(i, i, "Player" + i, money[i - 1], "url", 10, 1);
+        await view.onSit(i, i, "Player" + i, money[i - 1], "url", 10, 1);
         data.push({ PlayerId: i, Money: money[i - 1] });
     }
 
     return data;
 }
 
-export function simpleInitialization(view: TableView, gameType: number, money: number[], dealer: number = null) {
-    const data = simpleSit(view, gameType, money);
+export async function simpleInitialization(view: TableView, gameType: number, money: number[], dealer: number = null) {
+    const data = await simpleSit(view, gameType, money);
 
     if (dealer == null) {
         if (money.length === 2) {

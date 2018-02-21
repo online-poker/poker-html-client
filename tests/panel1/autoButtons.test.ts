@@ -36,7 +36,7 @@ describe("auto buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200]);
+            await simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -56,7 +56,7 @@ describe("auto buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200]);
+            await simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -82,7 +82,7 @@ describe("auto buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200]);
+            await simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -113,7 +113,7 @@ describe("auto buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200]);
+            await simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -148,7 +148,7 @@ describe("auto buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200]);
+            await simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -180,7 +180,7 @@ describe("auto buttons", function () {
             const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
-            simpleInitialization(view1, 1, [400, 200]);
+            await simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -204,7 +204,7 @@ describe("auto buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200]);
+            await simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -227,7 +227,7 @@ describe("auto buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 400, 200]);
+            await simpleInitialization(view1, 1, [400, 400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -259,7 +259,7 @@ describe("auto buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200]);
+            await simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -282,7 +282,7 @@ describe("auto buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200, 200]);
+            await simpleInitialization(view1, 1, [400, 200, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -300,11 +300,11 @@ describe("auto buttons", function () {
             expect(actionBlock.supportDirectAmount()).toEqual(false);
         });
 
-        xit("check after my turn", async function () {
+        it("check after my turn", async function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200]);
+            await simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -319,6 +319,8 @@ describe("auto buttons", function () {
             expect(view1.actionBlock.amountSupported()).toEqual(0);
             expect(view1.actionBlock.supportDirectAmountCaption()).toEqual("Чек");
             view1.onBet(2, 3, 40, 1);
+            view1.onMoveMoneyToPot([80]);
+            view1.onOpenCards([1, 2, 3]);
             await drainQueue(view1.queue);
             expect(actionBlock.supportDirectAmount()).toEqual(false);
         });
@@ -327,7 +329,7 @@ describe("auto buttons", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200, 200]);
+            await simpleInitialization(view1, 1, [400, 200, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -363,7 +365,7 @@ describe("auto buttons", function () {
             const actionBlock = view1.actionBlock;
             actionBlock.suppressActions = true;
 
-            simpleInitialization(view1, 1, [400, 200, 200]);
+            await simpleInitialization(view1, 1, [400, 200, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");

@@ -45,7 +45,7 @@ describe("gameplay", function () {
             const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
-            simpleInitialization(view1, 1, [400, 200]);
+            await simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -70,7 +70,7 @@ describe("gameplay", function () {
             const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
-            simpleInitialization(view1, 1, [200, 400]);
+            await simpleInitialization(view1, 1, [200, 400]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -94,7 +94,7 @@ describe("gameplay", function () {
             const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
-            simpleInitialization(view1, 1, [2244, 1990]);
+            await simpleInitialization(view1, 1, [2244, 1990]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -116,7 +116,7 @@ describe("gameplay", function () {
             const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
-            simpleInitialization(view1, 1, [1244, 1990]);
+            await simpleInitialization(view1, 1, [1244, 1990]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -138,7 +138,7 @@ describe("gameplay", function () {
             const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
-            simpleInitialization(view1, 1, [1244, 1990]);
+            await simpleInitialization(view1, 1, [1244, 1990]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -165,7 +165,7 @@ describe("gameplay", function () {
             const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
-            simpleInitialization(view1, 1, [1244, 1990], 2);
+            await simpleInitialization(view1, 1, [1244, 1990], 2);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -190,7 +190,7 @@ describe("gameplay", function () {
             const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
-            simpleInitialization(view1, 1, [390, 390]);
+            await simpleInitialization(view1, 1, [390, 390]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -211,7 +211,7 @@ describe("gameplay", function () {
             const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
-            simpleInitialization(view1, 1, [390, 390]);
+            await simpleInitialization(view1, 1, [390, 390]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -232,7 +232,7 @@ describe("gameplay", function () {
             const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
-            simpleInitialization(view1, 1, [200, 400]);
+            await simpleInitialization(view1, 1, [200, 400]);
             // blinds
             log("Blinds round started");
             view1.onBet(1, 0, 10, 2);
@@ -251,7 +251,7 @@ describe("gameplay", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [200, 400]);
+            await simpleInitialization(view1, 1, [200, 400]);
             // blinds
             log("Blinds round started");
             view1.onBet(1, 0, 10, 2);
@@ -277,7 +277,7 @@ describe("gameplay", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [600, 200]);
+            await simpleInitialization(view1, 1, [600, 200]);
             // blinds
             log("Blinds round started");
             view1.onBet(1, 0, 10, 2);
@@ -298,7 +298,7 @@ describe("gameplay", function () {
             const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
-            simpleInitialization(view1, 1, [1128, 4855], 2);
+            await simpleInitialization(view1, 1, [1128, 4855], 2);
             // blinds
             log("Blinds round started");
             view1.onBet(2, 0, 10, 1);
@@ -321,7 +321,7 @@ describe("gameplay", function () {
             const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
-            simpleInitialization(view1, 1, [400, 29]);
+            await simpleInitialization(view1, 1, [400, 29]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -339,7 +339,7 @@ describe("gameplay", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [730, 39], 2);
+            await simpleInitialization(view1, 1, [730, 39], 2);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -366,7 +366,7 @@ describe("gameplay", function () {
             const view1 = getTestTableView();
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);
-            simpleInitialization(view1, 1, [400, 29]);
+            await simpleInitialization(view1, 1, [400, 29]);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -391,7 +391,7 @@ describe("gameplay", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [1128, 4855], 2);
+            await simpleInitialization(view1, 1, [1128, 4855], 2);
             // blinds
             log("Blinds round started");
             view1.onBet(2, 0, 10, 1);
@@ -409,7 +409,7 @@ describe("gameplay", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 200]);
+            await simpleInitialization(view1, 1, [400, 200]);
             expect(view1.myPlayer() != null).toBeTruthy();
             loginId(1);
             // blinds
@@ -427,7 +427,7 @@ describe("gameplay", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [4288, 138981]);
+            await simpleInitialization(view1, 1, [4288, 138981]);
             expect(view1.myPlayer() != null).toBeTruthy();
             loginId(1);
             // blinds
@@ -457,7 +457,7 @@ describe("gameplay", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [4288, 138981], 2);
+            await simpleInitialization(view1, 1, [4288, 138981], 2);
             expect(view1.myPlayer() != null).toBeTruthy();
             loginId(1);
             // blinds
@@ -480,7 +480,7 @@ describe("gameplay", function () {
             const tableModel = getTable();
             const view1 = getTestTableView();
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [4288, 138981]);
+            await simpleInitialization(view1, 1, [4288, 138981]);
             expect(view1.myPlayer() != null).toBeTruthy();
             loginId(1);
             // blinds

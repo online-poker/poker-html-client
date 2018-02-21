@@ -378,7 +378,7 @@ describe("Table view", () => {
             login("player1");
             loginId(1);
             tableView.onTableStatusInfo([], null, null, 4, 100, 10, null, null, null, null, null, true, 0, false, true, null, 0, 2);
-            tableView.onSit(1, 1, "player1", 10000, "", 1, 1);
+            await tableView.onSit(1, 1, "player1", 10000, "", 1, 1);
 
             await tableView.queue.waitCurrentTask();
             while (tableView.queue.size() > 0) {
