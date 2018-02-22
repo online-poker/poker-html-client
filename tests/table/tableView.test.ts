@@ -433,7 +433,7 @@ describe("Table view", () => {
             GameActionsQueue.waitDisabled = false;
             GameActionsQueue.drainQueuePause = 100;
         });
-        it("Cards Hightlighted should be true for omaha gametype", async () => {
+        it("Cards should be highlighted for Omaha", async () => {
             const winner: GameWinnerModel[] = [
                 {
                     Amount: 100,
@@ -502,14 +502,24 @@ describe("Table view", () => {
                 await tableView.queue.execute();
                 await tableView.queue.waitCurrentTask();
             }
+
+            // Check player cards hightlight
             expect(tableView.tablePlaces.place1().CardsHightlighted()).toEqual(true);
             expect(tableView.tablePlaces.place1().Card1Hightlighted()).toEqual(true);
             expect(tableView.tablePlaces.place1().Card2Hightlighted()).toEqual(false);
             expect(tableView.tablePlaces.place1().Card3Hightlighted()).toEqual(false);
             expect(tableView.tablePlaces.place1().Card4Hightlighted()).toEqual(true);
+
+            // Check table cards hightlight
+            expect(tableView.tableCards.CardsHightlighted()).toEqual(true);
+            expect(tableView.tableCards.Card1Hightlighted()).toEqual(false);
+            expect(tableView.tableCards.Card2Hightlighted()).toEqual(true);
+            expect(tableView.tableCards.Card3Hightlighted()).toEqual(true);
+            expect(tableView.tableCards.Card4Hightlighted()).toEqual(true);
+            expect(tableView.tableCards.Card5Hightlighted()).toEqual(false);
         });
 
-        it("Cards Hightlighted should be true for tehas gametype", async () => {
+        it("Cards should be highlighted for Texas Holdem", async () => {
             const winner: GameWinnerModel[] = [
                 {
                     Amount: 100,
@@ -571,18 +581,27 @@ describe("Table view", () => {
             tableView.onBet(2, 4, 0, 1);
             tableView.executeMoveMoneyToPot([0]);
             tableView.onOpenCards([19, 21, 22, 25, 7]);
-            tableView.onPlayerCards(1, [15, 5, 41, 18]);
+            tableView.onPlayerCards(1, [15, 5]);
             tableView.onGameFinished(1, winner, 0);
             await tableView.queue.waitCurrentTask();
             while (tableView.queue.size() > 0) {
                 await tableView.queue.execute();
                 await tableView.queue.waitCurrentTask();
             }
+            // Check player cards hightlight
             expect(tableView.tablePlaces.place1().CardsHightlighted()).toEqual(true);
             expect(tableView.tablePlaces.place1().Card1Hightlighted()).toEqual(true);
             expect(tableView.tablePlaces.place1().Card2Hightlighted()).toEqual(false);
             expect(tableView.tablePlaces.place1().Card3Hightlighted()).toEqual(false);
-            expect(tableView.tablePlaces.place1().Card4Hightlighted()).toEqual(true);
+            expect(tableView.tablePlaces.place1().Card4Hightlighted()).toEqual(false);
+
+            // Check table cards hightlight
+            expect(tableView.tableCards.CardsHightlighted()).toEqual(true);
+            expect(tableView.tableCards.Card1Hightlighted()).toEqual(true);
+            expect(tableView.tableCards.Card2Hightlighted()).toEqual(true);
+            expect(tableView.tableCards.Card3Hightlighted()).toEqual(true);
+            expect(tableView.tableCards.Card4Hightlighted()).toEqual(true);
+            expect(tableView.tableCards.Card5Hightlighted()).toEqual(false);
         });
     });
     describe("Verify game event notifications", () => {
