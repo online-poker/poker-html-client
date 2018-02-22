@@ -71,6 +71,7 @@ export class TableView {
     public nextGameAnte: KnockoutObservable<number> = ko.observable(0);
     public nextGameInformation: KnockoutComputed<string>;
     public nextGameTypeInformation: KnockoutComputed<string>;
+    public currentCombinationVisible: KnockoutComputed<boolean>;
     /**
      * Minimal amount of money which currently authenticated player
      * could bring on the table if he stand up from the table lately.
@@ -711,6 +712,17 @@ export class TableView {
             const tableTotal = totalBet + me.Money() + me.Bet();
             return (20 * baseMinimalBuyIn) > tableTotal;
         }, this);
+        this.currentCombinationVisible = ko.computed(() => {
+            if (!this.myPlayer()) {
+                return false;
+            }
+
+            if (!appConfig.game.cardsOverlaySupported) {
+                return true;
+            }
+
+            return !this.myPlayer().cardsOverlayVisible();
+        });
 
         this.actionBlock.attach(this);
 

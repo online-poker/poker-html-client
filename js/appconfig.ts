@@ -40,6 +40,7 @@ export class AppConfig {
         hasPageReload: false,
         soundTheme: "poker",
         hasHumanVoice: true,
+        cardsOverlaySupported: true,
     };
     public tournament = {
         enabled: false,
