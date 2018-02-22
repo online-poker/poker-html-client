@@ -257,7 +257,9 @@ export class LobbyPage extends PageBase {
             }
 
             reloadManager.setReloadCallback(() => self.update(true));
-    }
+        }
+
+        this.updateAccount();
         super.activate(pageName);
     }
     public updateOpenedTables() {
