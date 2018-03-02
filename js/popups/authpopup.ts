@@ -1,7 +1,6 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { App } from "../app";
+import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
 import { _ } from "../languagemanager";
 import { keyboardActivationService } from "../services";
@@ -17,6 +16,10 @@ export class AuthPopup extends PopupBase {
     public validationPassword = ko.observable<string>().extend({ required: true, maxLength: 16 });
     public errorMessage: KnockoutObservable<string>;
     public rememberMe: KnockoutObservable<boolean>;
+    public allowSelfRegistration: KnockoutObservable<boolean>;
+    public allowRememberMe: KnockoutObservable<boolean>;
+    public allowPasswordRecovery: KnockoutObservable<boolean>;
+
     public errors: KnockoutValidationErrors;
     public loading: KnockoutObservable<boolean>;
     private validationModel: KnockoutObservable<AuthPopup>;
@@ -30,6 +33,9 @@ export class AuthPopup extends PopupBase {
         this.validationModel = ko.validatedObservable(this);
         this.errorMessage = ko.observable<string>();
         this.loading = ko.observable(false);
+        this.allowSelfRegistration = ko.observable(appConfig.auth.allowSelfRegistration);
+        this.allowRememberMe = ko.observable(appConfig.auth.allowRememberMe);
+        this.allowPasswordRecovery = ko.observable(appConfig.auth.allowPasswordRecovery);
     }
     public shown(args: any[]= []): void {
         this.login(settings.login());

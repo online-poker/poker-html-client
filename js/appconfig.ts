@@ -23,6 +23,8 @@ export class AppConfig {
         automaticTableSelection: true,
         allowGuest: false,
         allowSelfRegistration: true,
+        allowRememberMe: true,
+        allowPasswordRecovery: true,
     };
     public game = {
         handHistory: new GameHandHistory(),
