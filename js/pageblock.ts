@@ -1,4 +1,5 @@
 ﻿import * as $ from "jquery";
+import * as ko from "knockout";
 import { Signal } from "signals";
 
 export class PageBlock {

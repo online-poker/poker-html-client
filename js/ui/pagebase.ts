@@ -1,5 +1,5 @@
 ﻿/* tslint:disable:no-string-literal */
-
+import * as ko from "knockout";
 import { debugSettings } from "../debugsettings";
 
 export class PageBase implements Page {
