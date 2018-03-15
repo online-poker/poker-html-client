@@ -141,6 +141,7 @@ export class TablePlaceModel {
     public WinnerCombination = ko.observable<string>();
 
     public cardsOverlayVisible = ko.observable(true);
+    public needCardsOverlay = ko.observable(false);
 
     /**
      * Timer which control clearing of current action text
