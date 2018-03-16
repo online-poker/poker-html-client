@@ -5,7 +5,8 @@ import {
 } from "poker/authmanager";
 import { ActionBlock } from "poker/table/actionBlock";
 import { drainQueue, getTable, getTestTableView, simpleInitialization, noopApiProvider } from "./helper";
-import { TableView } from "../../js/table/tableview";
+import { TableView } from "poker/table/tableview";
+import { allBacksClassesTwoCards } from "poker/table/cardsHelper";
 
 const logEnabled = false;
 const log = function (message: string, ...params: any[]) {
@@ -83,6 +84,20 @@ describe("Player cards", function () {
             expect(view.myPlayer()).not.toBeNull();
             view.myPlayer().cardsOverlayVisible(false);
             expect(view.currentCombinationVisible()).toEqual(true);
+        });
+
+        it("If player has overlay opened, hand cards should be all backs", async function () {
+            const view = await playUntilFlop(1);
+            view.myPlayer().cardsOverlayVisible(true);
+            expect(view.myPlayer()).not.toBeNull();
+            expect(view.myPlayer().HandCards()).toEqual(allBacksClassesTwoCards);
+        });
+
+        it("If player hide overlay, preview cards shoud be displayed", async function () {
+            const view = await playUntilFlop(1);
+            expect(view.myPlayer()).not.toBeNull();
+            view.myPlayer().cardsOverlayVisible(false);
+            expect(view.myPlayer().HandCards()).toEqual(["cards clubs c3", "cards clubs c4"]);
         });
     });
     describe("Overlay cards not supported", function () {
