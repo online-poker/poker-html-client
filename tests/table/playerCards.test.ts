@@ -4,7 +4,8 @@ import {
     loginId,
 } from "poker/authmanager";
 import { ActionBlock } from "poker/table/actionBlock";
-import { drainQueue, getTable, getTestTableView, simpleInitialization } from "./helper";
+import { drainQueue, getTable, getTestTableView, simpleInitialization, noopApiProvider } from "./helper";
+import { TableView } from "../../js/table/tableview";
 
 const logEnabled = false;
 const log = function (message: string, ...params: any[]) {
@@ -34,6 +35,21 @@ async function playUntilFlop(playerId: number) {
     view1.onOpenCards([3, 4, 5]);
     await drainQueue(view1.queue);
     return view1;
+}
+
+function getSeatPlayer(seat: number, initialAmount: number): PlayerStatusInfo {
+    return {
+        Seat: seat,
+        Bet: 0,
+        Cards: "",
+        Money: initialAmount,
+        PlayerId: seat,
+        PlayerName: "player" + seat,
+        PlayerUrl: "",
+        Points: 0,
+        Stars: 0,
+        Status: 0,
+    };
 }
 
 describe("Player cards", function () {
@@ -95,6 +111,48 @@ describe("Player cards", function () {
             expect(view.myPlayer()).not.toBeNull();
             view.myPlayer().cardsOverlayVisible(false);
             expect(view.currentCombinationVisible()).toEqual(true);
+        });
+    });
+
+    describe("Overlay for current user", function () {
+        it("Overlay is needed only by current user", function () {
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            }, noopApiProvider);
+            const players: GamePlayerStartInformation[] = [{
+                PlayerId: 1,
+                Money: 10000,
+            }, {
+                PlayerId: 2,
+                Money: 10000,
+            }];
+            const actions: GameActionStartInformation[] = [];
+            login("player1");
+            loginId(1);
+            const tableSatusPlayers = [
+                getSeatPlayer(1, 10000),
+                getSeatPlayer(2, 10000),
+            ];
+            tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
+            tableView.onGameStarted(1, players, actions, 4);
+            tableView.onBet(2, 0, 100, 1);
+            tableView.onBet(1, 0, 200, 2);
+            tableView.onPlayerCards(1, [15, 5, 41, 18]);
+            tableView.onPlayerCards(2, [1, 2, 3, 4]);
+            tableView.onBet(2, 2, 50, 1);
+            tableView.onBet(1, 2, 50, 1);
+
+            expect(tableView.tablePlaces.place1().needCardsOverlay()).toEqual(true);
+            expect(tableView.tablePlaces.place2().needCardsOverlay()).toEqual(false);
         });
     });
 });

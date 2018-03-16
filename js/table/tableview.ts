@@ -343,6 +343,12 @@ export class TableView {
             return null;
         }, this).extend({ notify: "always" });
 
+        this.myPlayer.subscribe(function (value) {
+            if (value != null && authManager.loginId() === value.PlayerId()) {
+                self.myPlayer().needCardsOverlay(true);
+            }
+        });
+
         this.myPlayerInGame = ko.computed(function () {
             const gid = self.gameId();
             if (gid === null || gid === 0) {
