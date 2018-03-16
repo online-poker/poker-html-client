@@ -151,14 +151,12 @@ describe("Player cards", function () {
             tableView.onBet(2, 2, 50, 1);
             tableView.onBet(1, 2, 50, 1);
 
-            console.log("=========" + loginId());
-            console.log(tableView.myPlayer().PlayerId());
-
-            if (tableView.myPlayer().PlayerId() === loginId()) {
+            if (tableView.myPlayer().PlayerName() === login()) {
                 expect(tableView.myPlayer().needCardsOverlay()).toEqual(true);
+            } else {
+                expect(tableView.myPlayer().needCardsOverlay()).toEqual(false);
             }
 
-            expect(tableView.myPlayer().needCardsOverlay()).toEqual(false);
         });
     });
 });
