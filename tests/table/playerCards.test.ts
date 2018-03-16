@@ -151,12 +151,13 @@ describe("Player cards", function () {
             tableView.onBet(2, 2, 50, 1);
             tableView.onBet(1, 2, 50, 1);
 
-            if (tableView.myPlayer().PlayerName() === login()) {
-                expect(tableView.myPlayer().needCardsOverlay()).toEqual(true);
-            } else {
-                expect(tableView.myPlayer().needCardsOverlay()).toEqual(false);
-            }
-
+            tableView.places().map((place) => {
+                if (place.PlayerId() === loginId()) {
+                    expect(place.needCardsOverlay()).toEqual(true);
+                } else {
+                    expect(place.needCardsOverlay()).toEqual(false);
+                }
+            })
         });
     });
 });
