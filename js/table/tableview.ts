@@ -734,11 +734,11 @@ export class TableView {
                 return;
             }
             if (value) {
-                self.myPlayer().HandCards(self.myPlayer().ActualHandCards());
+                self.myPlayer().DisplayedHandCards(self.myPlayer().HandCards());
                 return;
             }
 
-            self.myPlayer().HandCards(getBackCardsFromGameType(self.gameType()));
+            self.myPlayer().DisplayedHandCards(getBackCardsFromGameType(self.gameType()));
 
         });
         this.actionBlock.attach(this);
@@ -2869,9 +2869,9 @@ export class TableView {
                 if (couldDisplayOtherCards) {
                     p.setCards(cards);
                     if (self.currentCombinationVisible()) {
-                        p.HandCards(p.ActualHandCards());
+                        p.DisplayedHandCards(p.HandCards());
                     } else {
-                        p.HandCards(getBackCardsFromGameType(self.gameType()));
+                        p.DisplayedHandCards(getBackCardsFromGameType(self.gameType()));
                     }
 
                     if (!isHoleCards) {

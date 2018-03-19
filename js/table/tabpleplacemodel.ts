@@ -55,7 +55,7 @@ export class TablePlaceModel {
     /*
      * Actual hand cards which player has in this game.
      */
-    public ActualHandCards: KnockoutObservableArray<string>;
+    public DisplayedHandCards: KnockoutObservableArray<string>;
 
     /*
      * Folded hand cards which player has in this game.
@@ -183,7 +183,7 @@ export class TablePlaceModel {
         this.Cards = ko.observableArray(cardClasses);
         this.BackCards = ko.observableArray(null);
         this.HandCards = ko.observableArray(cardClasses);
-        this.ActualHandCards = ko.observableArray(cardClasses);
+        this.DisplayedHandCards = ko.observableArray(cardClasses);
         this.FoldedCards = ko.observableArray<string>(null);
         this.Stars = ko.observable(data.Stars);
         this.Points = ko.observable(data.Points);
@@ -271,7 +271,7 @@ export class TablePlaceModel {
         this.RawCards(null);
         this.Cards(null);
         this.HandCards(null);
-        this.ActualHandCards(null);
+        this.DisplayedHandCards(null);
         this.FoldedCards(null);
         this.WinAmount(null);
         if (this.Money() === 0) {
@@ -308,7 +308,7 @@ export class TablePlaceModel {
         } else {
             this.RawCards(cards || null);
             this.Cards(cardsClasses);
-            this.ActualHandCards(cardsClasses);
+            this.HandCards(cardsClasses);
         }
     }
     public openCard(cardPosition: number, cardValue: number) {
@@ -330,7 +330,7 @@ export class TablePlaceModel {
             this.FoldedCards(cardsClasses);
         } else {
             this.Cards(cardsClasses);
-            this.ActualHandCards(cardsClasses);
+            this.HandCards(cardsClasses);
         }
     }
     public markCardsOpened() {

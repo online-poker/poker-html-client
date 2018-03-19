@@ -90,14 +90,14 @@ describe("Player cards", function () {
             const view = await playUntilFlop(1);
             view.myPlayer().cardsOverlayVisible(true);
             expect(view.myPlayer()).not.toBeNull();
-            expect(view.myPlayer().HandCards()).toEqual(allBacksClassesTwoCards);
+            expect(view.myPlayer().DisplayedHandCards()).toEqual(allBacksClassesTwoCards);
         });
 
         it("If player hide overlay, preview cards shoud be displayed", async function () {
             const view = await playUntilFlop(1);
             expect(view.myPlayer()).not.toBeNull();
             view.myPlayer().cardsOverlayVisible(false);
-            expect(view.myPlayer().HandCards()).toEqual(["cards clubs c3", "cards clubs c4"]);
+            expect(view.myPlayer().DisplayedHandCards()).toEqual(["cards clubs c3", "cards clubs c4"]);
         });
     });
     describe("Overlay cards not supported", function () {
