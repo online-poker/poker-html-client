@@ -707,10 +707,9 @@ export class TournamentLobbyPage extends PageBase {
         const tournament = self.tournamentData();
         const name = tournament.TournamentName;
         const joinAmount = tournament.JoinFee + tournament.BuyIn;
-        /* tslint:disable:no-string-literal */
-        const numericTextBinding = ko.bindingHandlers["numericText"] as any;
+        
         /* tslint:enable:no-string-literal */
-        const joinAmountString = numericTextBinding.withCommas(joinAmount.toFixed(0), ",");
+        const joinAmountString = this.numericText(joinAmount);
         if (currentBalance < joinAmount) {
             await SimplePopup.display(
                 _("tournamentLobby.tournamentRegistrationPromptCaption"),
@@ -718,7 +717,7 @@ export class TournamentLobbyPage extends PageBase {
             return;
         }
 
-        const balanceString = numericTextBinding.withCommas(currentBalance.toFixed(0), ",");
+        const balanceString = this.numericText(currentBalance);
         app.okcancelPopup.customStyle("popup-container-left");
         await app.promptAsync(
             _("tournamentLobby.tournamentRegistrationPromptCaption"),
@@ -752,7 +751,15 @@ export class TournamentLobbyPage extends PageBase {
             self.loading(false);
             SimplePopup.display(_("tournamentLobby.registrationSuccess"), _("tournamentLobby.registrationError"));
         }
+    }  
+
+    public numericText(value: number) {
+        /* tslint:disable:no-string-literal */
+        const numericTextBinding = ko.bindingHandlers["numericText"] as any;
+        const numericText = numericTextBinding.withCommas(value.toFixed(0), ",");
+        return numericText;
     }
+
     private log(message: string, ...params: any[]) {
         if (debugSettings.lobby.trace) {
             console.log(message, params);
