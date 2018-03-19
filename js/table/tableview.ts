@@ -729,7 +729,18 @@ export class TableView {
 
             return !this.myPlayer().cardsOverlayVisible();
         });
+        this.currentCombinationVisible.subscribe(function (value) {
+            if (self.myPlayer() === null) {
+                return;
+            }
+            if (value) {
+                self.myPlayer().DisplayedHandCards(self.myPlayer().HandCards());
+                return;
+            }
 
+            self.myPlayer().DisplayedHandCards(getBackCardsFromGameType(self.gameType()));
+
+        });
         this.actionBlock.attach(this);
 
         this.initHandHistory();
@@ -2857,6 +2868,12 @@ export class TableView {
                 couldDisplayOtherCards = true;
                 if (couldDisplayOtherCards) {
                     p.setCards(cards);
+                    if (self.currentCombinationVisible()) {
+                        p.DisplayedHandCards(p.HandCards());
+                    } else {
+                        p.DisplayedHandCards(getBackCardsFromGameType(self.gameType()));
+                    }
+
                     if (!isHoleCards) {
                         p.markCardsOpened();
                     }
