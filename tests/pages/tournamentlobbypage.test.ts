@@ -72,6 +72,21 @@ describe("Tournament lobby page", function () {
             ],
         ];
     });
+    describe("Numeric text", function () {
+        it("Value that is > as 1000 shoud be with comma", function () {
+            const tlobbyPage = new TournamentLobbyPage();
+            const numericText = tlobbyPage.numericText(6526);
+
+            expect(numericText).toEqual("6,526");
+        });
+        it("Value that is < as 1000 shoud be without comma", function () {
+            const tlobbyPage = new TournamentLobbyPage();
+            const numericText = tlobbyPage.numericText(652);
+
+            expect(numericText).toEqual("652");
+        });
+    });
+
     describe("Registration button", function () {
         it("Unauthenticted could not register", function () {
             const tlobbyPage = new TournamentLobbyPage();
