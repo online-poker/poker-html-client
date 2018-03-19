@@ -710,7 +710,7 @@ export class TournamentLobbyPage extends PageBase {
         /* tslint:disable:no-string-literal */
         const numericTextBinding = ko.bindingHandlers["numericText"] as any;
         /* tslint:enable:no-string-literal */
-        const joinAmountString = numericTextBinding.withCommas(joinAmount.toFixed(0));
+        const joinAmountString = numericTextBinding.withCommas(joinAmount.toFixed(0), numericTextBinding.separator);
         if (currentBalance < joinAmount) {
             await SimplePopup.display(
                 _("tournamentLobby.tournamentRegistrationPromptCaption"),
@@ -718,7 +718,7 @@ export class TournamentLobbyPage extends PageBase {
             return;
         }
 
-        const balanceString = numericTextBinding.withCommas(currentBalance.toFixed(0));
+        const balanceString = numericTextBinding.withCommas(currentBalance.toFixed(0), numericTextBinding.separator);
         app.okcancelPopup.customStyle("popup-container-left");
         await app.promptAsync(
             _("tournamentLobby.tournamentRegistrationPromptCaption"),
