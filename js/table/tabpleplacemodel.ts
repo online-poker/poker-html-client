@@ -48,7 +48,7 @@ export class TablePlaceModel {
     public BackCards: KnockoutObservableArray<string>;
 
     /*
-     * Visible hand cards which player has in this game.
+     * Actual  hand cards which player has in this game.
      */
     public HandCards: KnockoutObservableArray<string>;
 
