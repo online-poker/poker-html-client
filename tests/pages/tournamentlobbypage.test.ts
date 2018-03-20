@@ -1,12 +1,12 @@
 import {
     TournamentDefinition,
     TournamentOptionsEnum,
-    TournamentStatus,
     TournamentPlayerStatus,
+    TournamentStatus,
 } from "@poker/api-server";
 import * as authManager from "poker/authmanager";
-import { TournamentLobbyPage } from "poker/pages/tournamentlobbypage";
 import * as metadataManager from "poker/metadatamanager";
+import { TournamentLobbyPage } from "poker/pages/tournamentlobbypage";
 
 const baseTournament: TournamentDefinition = {
     TournamentId: 1,
@@ -25,6 +25,7 @@ const baseTournament: TournamentDefinition = {
     TournamentPlayers: [],
     BetLevel: null,
     PrizeAmount: 1000,
+    PrizeAmountType: 0,
     CollectedPrizeAmount: 0,
     JoinFee: 0,
     BuyIn: 0,
@@ -269,6 +270,60 @@ describe("Tournament lobby page", function () {
                 tlobbyPage.tournamentData(tournament);
 
                 expect(tlobbyPage.couldContinueGame()).toEqual(false);
+            });
+        });
+        describe("Prize amount type", function () {
+            it(`Guaranteed plus collections from players`, function () {
+                const tlobbyPage = new TournamentLobbyPage();
+                authManager.authenticated(true);
+                authManager.loginId(1);
+                const tournament = Object.assign(registeredTournament, {
+                    PrizeAmountType: 0,
+                    PrizeAmount: 12345,
+                    CollectedPrizeAmount: 23456,
+                });
+                tlobbyPage.tournamentData(tournament);
+
+                expect(tlobbyPage.totalPrize()).toEqual(35801);
+            });
+            it(`Guaranteed or collections from players`, function () {
+                const tlobbyPage = new TournamentLobbyPage();
+                authManager.authenticated(true);
+                authManager.loginId(1);
+                const tournament = Object.assign(registeredTournament, {
+                    PrizeAmountType: 1,
+                    PrizeAmount: 12345,
+                    CollectedPrizeAmount: 23456,
+                });
+                tlobbyPage.tournamentData(tournament);
+
+                expect(tlobbyPage.totalPrize()).toEqual(23456);
+            });
+            it(`Guaranteed or collections from players 2`, function () {
+                const tlobbyPage = new TournamentLobbyPage();
+                authManager.authenticated(true);
+                authManager.loginId(1);
+                const tournament = Object.assign(registeredTournament, {
+                    PrizeAmountType: 1,
+                    PrizeAmount: 23456,
+                    CollectedPrizeAmount: 12345,
+                });
+                tlobbyPage.tournamentData(tournament);
+
+                expect(tlobbyPage.totalPrize()).toEqual(23456);
+            });
+            it(`Guaranteed only`, function () {
+                const tlobbyPage = new TournamentLobbyPage();
+                authManager.authenticated(true);
+                authManager.loginId(1);
+                const tournament = Object.assign(registeredTournament, {
+                    PrizeAmountType: 2,
+                    PrizeAmount: 12345,
+                    CollectedPrizeAmount: 23456,
+                });
+                tlobbyPage.tournamentData(tournament);
+
+                expect(tlobbyPage.totalPrize()).toEqual(12345);
             });
         });
     });

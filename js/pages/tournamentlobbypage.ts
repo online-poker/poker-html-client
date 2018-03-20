@@ -129,6 +129,14 @@ export class TournamentLobbyPage extends PageBase {
                 return null;
             }
 
+            if (tdata.PrizeAmountType === 1) {
+                return Math.max(tdata.PrizeAmount || 0, tdata.CollectedPrizeAmount || 0);
+            }
+
+            if (tdata.PrizeAmountType === 2) {
+                return tdata.PrizeAmount || 0;
+            }
+
             return tdata.PrizeAmount + (tdata.CollectedPrizeAmount || 0);
         }, this);
         this.stackInformation = ko.computed(function() {
