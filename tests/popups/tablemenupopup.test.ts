@@ -1,4 +1,4 @@
-import { PersonalAccountData, TournamentOptionsEnum, Account } from "@poker/api-server";
+import { Account, PersonalAccountData, TournamentOptionsEnum } from "@poker/api-server";
 import { TableMenuPopup } from "poker/popups";
 import { IAccountManager } from "poker/services/accountManager";
 import { getTestTableView, getTestTournamentTableView, simpleInitialization } from "tests/table/helper";

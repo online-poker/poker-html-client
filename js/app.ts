@@ -1,5 +1,6 @@
 import { getAuthToken, setAuthToken } from "@poker/api-server";
 import * as $ from "jquery";
+import { AccountManager } from "poker/services/accountManager";
 import "signalr";
 import * as signals from "signals";
 import * as authManager from "./authmanager";
@@ -61,7 +62,6 @@ import { AnimationSettings } from "./table/animationsettings";
 import * as runtimeSettings from "./table/runtimesettings";
 import { tableManager } from "./table/tablemanager";
 import * as timeService from "./timeservice";
-import { AccountManager } from "poker/services/accountManager";
 
 type PromiseOrVoid = void | Promise<void>;
 

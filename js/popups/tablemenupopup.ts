@@ -1,6 +1,5 @@
 /* tslint:disable:no-bitwise */
-import { PersonalAccountData } from "@poker/api-server";
-import { TournamentOptionsEnum } from "@poker/api-server";
+import { PersonalAccountData, TournamentOptionsEnum } from "@poker/api-server";
 import * as ko from "knockout";
 import { ICommandExecutor } from "poker/commandmanager";
 import { ICurrentTableProvider } from "poker/services";
