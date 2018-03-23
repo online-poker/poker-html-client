@@ -1812,29 +1812,47 @@ export class TableView {
             SimplePopup.display(_("tableMenu.addon"), _("tableMenu.addonError"));
         }
     }
-    public showRebuyPrompt() {
+
+    /**
+     * Show prompt for buying rebuy.
+     */
+    public async showRebuyPrompt() {
         const self = this;
         const tdata = this.tournament().tournamentData();
-        const prompt = [_("table.rebuyPrompt", { price: tdata.RebuyFee + tdata.RebuyPrice })];
-        app.prompt(_("table.rebuyPromptCaption"), prompt).then(function () {
-            self.rebuy();
-        });
+        const prompt = [
+            _("table.rebuyPrompt", { price: tdata.RebuyFee + tdata.RebuyPrice }),
+            _("table.rebuyPrompt2", { chips: tdata.ChipsAddedAtReBuy }),
+        ];
+        await app.prompt(_("table.rebuyPromptCaption"), prompt);
+        await this.rebuy();
     }
-    public showDoubleRebuyPrompt() {
+
+    /**
+     * Show prompt for buying double rebuy.
+     */
+    public async showDoubleRebuyPrompt() {
         const self = this;
         const tdata = this.tournament().tournamentData();
-        const prompt = [_("table.doubleRebuyPrompt", { price: 2 * (tdata.RebuyFee + tdata.RebuyPrice) })];
-        app.prompt(_("table.doubleRebuyPromptCaption"), prompt).then(function () {
-            self.doubleRebuy();
-        });
+        const prompt = [
+            _("table.doubleRebuyPrompt", { price: 2 * (tdata.RebuyFee + tdata.RebuyPrice) }),
+            _("table.doubleRebuyPrompt2", { chips: tdata.ChipsAddedAtDoubleReBuy }),
+        ];
+        await app.prompt(_("table.doubleRebuyPromptCaption"), prompt);
+        await this.doubleRebuy();
     }
-    public showAddonPrompt() {
+
+    /**
+     * Show prompt for buying addon.
+     */
+    public async showAddonPrompt() {
         const self = this;
         const tdata = this.tournament().tournamentData();
-        const prompt = [_("table.addonPrompt", { price: tdata.AddonFee + tdata.AddonPrice })];
-        app.prompt(_("table.addonPromptCaption"), prompt).then(function () {
-            self.addon();
-        });
+        const prompt = [
+            _("table.addonPrompt", { price: tdata.AddonFee + tdata.AddonPrice }),
+            _("table.addonPrompt2", { chips: tdata.ChipsAddedAtAddOn }),
+        ];
+        await app.prompt(_("table.addonPromptCaption"), prompt);
+        await this.addon();
     }
     public async sit(seat: number, amount: number, ticketCode: string) {
         const self = this;
