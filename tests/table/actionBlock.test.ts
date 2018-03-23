@@ -8,7 +8,7 @@ function setupTestSlider(actionBlock: ActionBlock) {
         const handleWidth = 100;
         const adj = -5;
         console.log(lineWidth - handleWidth + (-adj));
-        tableSlider.setBounds(adj, lineWidth - handleWidth + (-adj)); // -5 is base adjustment from one size; width - 5(base adj.) - 10(?)
+        tableSlider.setBounds(adj, lineWidth - handleWidth + (-adj), (relativeX) => relativeX); // -5 is base adjustment from one size; width - 5(base adj.) - 10(?)
     };
     window.onresize = x;
     x();

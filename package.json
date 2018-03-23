@@ -4,8 +4,9 @@
   "description": "HTML client for online poker",
   "main": "dist/poker-html-client.js",
   "scripts": {
-    "compile": "tsc",
+    "compile": "tsc --project build-tsconfig.json",
     "lint": "tslint --project tsconfig.json",
+    "lint:test": "tslint --project test-tsconfig.json",
     "tslint": "tslint",
     "configure-ci": "node build/configure-ci.js",
     "build": "npm run webpack && npm run lint",
@@ -48,7 +49,8 @@
       "js"
     ],
     "moduleNameMapper": {
-      "^poker/(.*)": "<rootDir>/js/$1"
+      "^poker/(.*)": "<rootDir>/js/$1",
+      "^tests/(.*)": "<rootDir>/tests/$1"
     },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
@@ -56,10 +58,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 34,
-        "functions": 40,
-        "lines": 47,
-        "statements": 47
+        "branches": 36,
+        "functions": 41,
+        "lines": 48,
+        "statements": 48
       }
     },
     "collectCoverage": true,

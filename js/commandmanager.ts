@@ -1,7 +1,25 @@
 
-type CommandHandler = (params?: any[]) => any;
+export type CommandHandler = (params?: any[]) => any;
 
-class CommandManager {
+export interface ICommandExecutor {
+    /**
+     * Executes command by name, optionally pass arguments to it.
+     * @param commandName Name of the command to execute.
+     * @param parameters Optional parameters to pass in the command.
+     */
+    executeCommand(commandName: string, parameters?: any[]): any;
+}
+
+export interface ICommandManager extends ICommandExecutor {
+    /**
+     * Register command with given name for execution.
+     * @param commandName Name of the command to register.
+     * @param handler Handler to execute by the command.
+     */
+    registerCommand(commandName: string, handler: CommandHandler): void;
+}
+
+export class CommandManager implements ICommandManager {
     public commands: any[] = [];
 
     public registerCommand(commandName: string, handler: CommandHandler): void {
@@ -19,5 +37,4 @@ class CommandManager {
     }
 }
 
-const commandManager = new CommandManager();
-export = commandManager;
+export const commandManager = new CommandManager();

@@ -105,8 +105,8 @@ describe("tableSlider", function () {
             evt.originalEvent = evt;
             evt.originalEvent.gesture = {
                 center: {
-                    pageX: 150
-                }
+                    pageX: 150,
+                },
             };
             const succeed = tableSlider.selectManually(evt);
             expect(tableSlider.current()).toEqual(60);

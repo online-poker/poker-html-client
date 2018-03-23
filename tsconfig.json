@@ -1,13 +1,13 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "module": "amd",
-    "out": "js/application.js",
+      "module": "commonjs",
+      "types": [
+          "jest"
+      ]
   },
- "compileOnSave": false,
- "exclude": [
-     "js/messages.ts",
-     "node_modules",
-     "tests"
- ]
+  "exclude": [
+      "js/messages.ts",
+      "node_modules"
+  ]
 }

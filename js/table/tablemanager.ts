@@ -7,10 +7,10 @@ import {
 } from "@poker/api-server";
 import * as ko from "knockout";
 import { DefaultApiProvider, IApiProvider } from "poker/api";
+import { commandManager } from "poker/commandmanager";
 import * as signals from "signals";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
-import * as commandManager from "../commandmanager";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
 import { SimplePopup } from "../popups/simplepopup";

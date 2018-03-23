@@ -1,7 +1,11 @@
-import { Account } from "@poker/api-server";
+import { Account, PersonalAccountData } from "@poker/api-server";
 declare var host: string;
 
-export class AccountManager {
+export interface IAccountManager {
+    getAccount(): Promise<ApiResult<PersonalAccountData>>;
+}
+
+export class AccountManager implements IAccountManager {
     public async getAccount() {
         const api = new Account(host);
         return api.getAccount();
