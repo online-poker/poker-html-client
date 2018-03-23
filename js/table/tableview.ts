@@ -2460,9 +2460,15 @@ export class TableView {
         if (player.Money() === 0 && !this.hasPendingMoney()) {
             // Display popup with three buttons.
             const result = $.Deferred<void>();
+            const tdata = this.tournament().tournamentData();
+            const messages = [
+                _("table.tournamentGameFinishedRebuy"),
+                _("table.rebuyPrompt", { price: tdata.RebuyFee + tdata.RebuyPrice }),
+                _("table.doubleRebuyPrompt", { price: 2 * (tdata.RebuyFee + tdata.RebuyPrice) }),
+            ];
             app.promptEx(
                 _("table.tournamentGameFinishedCaption"),
-                [_("table.tournamentGameFinishedRebuy")],
+                messages,
                 [_("table.rebuy"), _("table.doubleRebuy"), _("common.cancel")],
                 [() => 1, () => 2, () => { /* nothing */ }])
                 .then(function (value: number) {
@@ -2496,9 +2502,14 @@ export class TableView {
         if (player.Money() === 0 && !this.hasPendingMoney() && this.tournament().addonCount() === 0) {
             // Display popup with two buttons.
             const result = $.Deferred<void>();
+            const tdata = this.tournament().tournamentData();
+            const messages = [
+                _("table.tournamentGameFinishedAddon"),
+                _("table.addonPrompt", { price: tdata.AddonFee + tdata.AddonPrice }),
+            ];
             app.promptEx(
                 _("table.tournamentGameFinishedCaption"),
-                [_("table.tournamentGameFinishedAddon")],
+                messages,
                 [_("table.addon"), _("common.cancel")],
                 [() => 1, () => { /* nothing */ }])
                 .then(function (value: number) {
