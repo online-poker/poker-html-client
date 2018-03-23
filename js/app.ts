@@ -3,7 +3,7 @@ import * as $ from "jquery";
 import "signalr";
 import * as signals from "signals";
 import * as authManager from "./authmanager";
-import * as commandManager from "./commandmanager";
+import { commandManager } from "./commandmanager";
 import { debugSettings } from "./debugsettings";
 import { _ } from "./languagemanager";
 import * as metadataManager from "./metadatamanager";
@@ -61,6 +61,7 @@ import { AnimationSettings } from "./table/animationsettings";
 import * as runtimeSettings from "./table/runtimesettings";
 import { tableManager } from "./table/tablemanager";
 import * as timeService from "./timeservice";
+import { AccountManager } from "poker/services/accountManager";
 
 type PromiseOrVoid = void | Promise<void>;
 
@@ -129,8 +130,8 @@ export class App {
         this.infoPageBlock = new InfoPageBlock();
         this.lobbyPageBlock = new LobbyPageBlock();
         this.cashierPageBlock = new CashierPageBlock();
-        this.tablesPage = new TablesPage();
-        this.seatsPage = new SeatPage();
+        this.tablesPage = new TablesPage(commandManager);
+        this.seatsPage = new SeatPage(commandManager);
 
         this.authPopup = new AuthPopup();
         this.forgetPasswordPopup = new ForgetPasswordPopup();
@@ -144,7 +145,7 @@ export class App {
         this.settingsPopup = new SettingsPopup();
         this.rulesPopup = new RulesPopup();
         this.sweepstakesRulesPopup = new SweepstakesRulesPopup();
-        this.tableMenuPopup = new TableMenuPopup();
+        this.tableMenuPopup = new TableMenuPopup(this.tablesPage, commandManager, new AccountManager());
         this.addMoneyPopup = new AddMoneyPopup();
         this.slowConnectionPopup = new SlowConnectionPopup();
         this.tableChatPopup = new ChatPopup();
@@ -156,6 +157,7 @@ export class App {
         this.processing = ko.observable(false);
 
         this.popupClosed = new signals.Signal();
+        this.registerCommands();
     }
 
     public bindPages() {
@@ -687,61 +689,6 @@ export class App {
         }
     }
     public executeCommand(commandName: string, parameters: any[]= []) {
-        if (commandName === "popup.auth.show") {
-            this.showPopup("auth");
-            return;
-        }
-
-        if (commandName === "popup.auth.forgetPassword") {
-            this.showPopup("forgetPassword");
-            return;
-        }
-
-        if (commandName === "popup.auth.registration") {
-            this.showPopup("registration");
-            return;
-        }
-
-        if (commandName === "popup.auth.continueForgetPassword") {
-            this.showPopup("continueForgetPassword");
-            return;
-        }
-
-        if (commandName === "popup.close") {
-            this.closePopup();
-            return;
-        }
-
-        if (commandName === "legal.eula") {
-            app.closePopup();
-            app.executeCommand("pageblock.info");
-            app.infoPageBlock.showLicenseAgreement();
-            return;
-        }
-
-        if (commandName === "popup.cancel") {
-            this.closePopup("cancel");
-            return;
-        }
-
-        if (commandName === "more.close") {
-            this.hideMoreBlock();
-            const currentTabBarItem = UIManager.getTabBarItemForPage(uiManager.currentPageBlock);
-            app.tabBar.select(currentTabBarItem, true);
-            return;
-        }
-
-        if (commandName === "logout") {
-            authManager.logout();
-            return;
-        }
-
-        if (commandName === "app.exit") {
-            authManager.logout();
-            this.reloadApplication();
-            return;
-        }
-
         commandManager.executeCommand(commandName, parameters);
     }
     public reloadApplication() {
@@ -1023,6 +970,43 @@ export class App {
                 self.updateMetadataOnResume(pageBeforeClosing, pageBlockBeforeClosing, subPageBeforeClosing);
             });
         }
+    }
+    private registerCommands() {
+        commandManager.registerCommand("popup.auth.show", () => {
+            this.showPopup("auth");
+        });
+        commandManager.registerCommand("popup.auth.forgetPassword", () => {
+            this.showPopup("forgetPassword");
+        });
+        commandManager.registerCommand("popup.auth.registration", () => {
+            this.showPopup("registration");
+        });
+        commandManager.registerCommand("popup.auth.continueForgetPassword", () => {
+            this.showPopup("continueForgetPassword");
+        });
+        commandManager.registerCommand("popup.close", () => {
+            this.closePopup();
+        });
+        commandManager.registerCommand("popup.cancel", () => {
+            this.closePopup("cancel");
+        });
+        commandManager.registerCommand("more.close", () => {
+            this.hideMoreBlock();
+            const currentTabBarItem = UIManager.getTabBarItemForPage(uiManager.currentPageBlock);
+            app.tabBar.select(currentTabBarItem, true);
+        });
+        commandManager.registerCommand("legal.eula", () => {
+            app.closePopup();
+            app.executeCommand("pageblock.info");
+            app.infoPageBlock.showLicenseAgreement();
+        });
+        commandManager.registerCommand("logout", () => {
+            authManager.logout();
+        });
+        commandManager.registerCommand("app.exit", () => {
+            authManager.logout();
+            this.reloadApplication();
+        });
     }
     private async updateMetadataOnResume(lastPage, pageBlockBeforeClosing, subPageBeforeClosing) {
         const self = this;

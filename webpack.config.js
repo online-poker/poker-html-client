@@ -13,6 +13,7 @@ module.exports = (env) => {
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
             alias: {
                 "poker": path.join(__dirname, "js"),
+                "tests": path.join(__dirname, "tests"),
             }
         },
         externals: {
@@ -37,7 +38,7 @@ module.exports = (env) => {
         },
         module: {
             rules: [
-                { test: /\.(tsx|ts)?$/, include: /js/, use: 'awesome-typescript-loader?silent=true' },
+                { test: /\.(tsx|ts)?$/, include: /js/, use: 'awesome-typescript-loader?configFileName=build-tsconfig.json&silent=true' },
                 { test: /\.css$/, use: isDevBuild ? ['style-loader', 'css-loader'] : ExtractTextPlugin.extract({ use: 'css-loader?minimize' }) },
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' }
             ]

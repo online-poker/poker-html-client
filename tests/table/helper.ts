@@ -1,4 +1,17 @@
-import { IAccount, IChat, IGame, ITournament, LobbyTournamentItem, PersonalAccountData, TournamentDefinition, TournamentPlayerStateDefinition } from "@poker/api-server";
+import {
+    IAccount,
+    IChat,
+    IGame,
+    ITournament,
+    LobbyTournamentItem,
+    PersonalAccountData,
+    Tournament,
+    TournamentDefinition,
+    TournamentOptionsEnum,
+    TournamentPlayerStateDefinition,
+    TournamentStatus,
+} from "@poker/api-server";
+import { TournamentView } from "poker/table/tournamentview";
 import { IApiProvider } from "../../js/api";
 import { GameActionsQueue } from "../../js/table/gameactionsqueue";
 import {
@@ -130,6 +143,60 @@ export const noopApiProvider: IApiProvider = {
 export function getTestTableView(): TableView {
     const tableModel = getTable();
     return new TableView(1, tableModel, noopApiProvider);
+}
+
+export const baseTournament: TournamentDefinition = {
+    TournamentId: 1,
+    TournamentName: "name",
+    Description: "desc",
+    Type: 1,
+    CurrencyId: 1,
+    PrizeCurrencyId: 1,
+    RegistrationStartDate: "",
+    RegistrationEndDate: "",
+    StartDate: "",
+    EndDate: null,
+    FinishDate: null,
+    JoinedPlayers: 0,
+    TournamentTables: [],
+    TournamentPlayers: [],
+    BetLevel: null,
+    PrizeAmount: 1000,
+    PrizeAmountType: 0,
+    CollectedPrizeAmount: 0,
+    JoinFee: 0,
+    BuyIn: 0,
+    StartingChipsAmount: 1000,
+    WellKnownBetStructure: 1,
+    WellKnownPrizeStructure: 1,
+    BlindUpdateTime: 0,
+    IsRebuyAllowed: false,
+    RebuyPrice: 100,
+    RebuyFee: null,
+    RebuyPeriodTime: 60,
+    IsAddonAllowed: false,
+    AddonPrice: 100,
+    AddonFee: null,
+    AddonPeriodTime: 60,
+    PauseTimeout: null,
+    Options: TournamentOptionsEnum.None,
+    MaximumAmountForRebuy: 1000,
+    IsRegistered: true,
+    ChipsAddedAtReBuy: 1000,
+    ChipsAddedAtDoubleReBuy: 2000,
+    Status: TournamentStatus.Started,
+    IsPaused: false,
+    MinPlayers: 2,
+    MaxPlayers: 1000,
+};
+
+export function getTestTournamentTableView(tournamentDataOverride?: Partial<TournamentDefinition>): TableView {
+    const tableModel = getTable();
+    const view = new TableView(1, tableModel, noopApiProvider);
+    const tournamentData = Object.assign({}, baseTournament, tournamentDataOverride || {});
+    const tournamentView = new TournamentView(1, tournamentData);
+    view.tournament(tournamentView);
+    return view;
 }
 
 /**

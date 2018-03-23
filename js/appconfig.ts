@@ -99,7 +99,11 @@ function mergeDeep(target, ...sources) {
     return mergeDeep(target, ...sources);
 }
 
-export function overrideConfiguration(localConfiguration: Partial<AppConfig>) {
+export type PartialConfiguration<T> = {
+    [P in keyof T]?: Partial<T[P]>;
+};
+
+export function overrideConfiguration(localConfiguration: PartialConfiguration<AppConfig>) {
     appConfig = mergeDeep(appConfig, localConfiguration);
 }
 

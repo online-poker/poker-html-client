@@ -1,12 +1,13 @@
-/// <reference path="../poker.commanding.api.ts" />
 /* tslint:disable:no-bitwise */
-
 import { PersonalAccountData } from "@poker/api-server";
 import { TournamentOptionsEnum } from "@poker/api-server";
+import * as ko from "knockout";
+import { ICommandExecutor } from "poker/commandmanager";
+import { ICurrentTableProvider } from "poker/services";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
-import { AccountManager } from "../services/accountManager";
+import { AccountManager, IAccountManager } from "../services/accountManager";
 import { settings } from "../settings";
 import { tableManager } from "../table/tablemanager";
 import { TournamentView } from "../table/tournamentview";
@@ -51,7 +52,10 @@ export class TableMenuPopup {
      */
     public ratingSupported = ko.observable(appConfig.game.hasRating);
 
-    constructor() {
+    constructor(
+        private currentTableProvider: ICurrentTableProvider,
+        private commandExecutor: ICommandExecutor,
+        private accountManager: IAccountManager) {
         this.soundEnabled = ko.computed<boolean>({
             owner: this,
             read() {
@@ -93,7 +97,7 @@ export class TableMenuPopup {
         this.allowUsePersonalAccount = ko.observable(appConfig.joinTable.allowUsePersonalAccount);
         this.allowTickets = ko.observable(appConfig.joinTable.allowTickets);
         this.standupText = ko.pureComputed(() => {
-            const currentTable = app.tablesPage.currentTable();
+            const currentTable = this.currentTableProvider.currentTable();
             const player = currentTable.myPlayer();
             if (player === null) {
                 return "table.takeWin";
@@ -106,12 +110,12 @@ export class TableMenuPopup {
     public async shown() {
         // Load settings
         const self = this;
-        const currentTable = app.tablesPage.currentTable();
+        const currentTable = this.currentTableProvider.currentTable();
         const playerIsInGame = currentTable.myPlayer() != null;
         this.addMoneyAvailable(currentTable.tournament() == null && currentTable.opened());
         this.addMoneyAllowed(currentTable.couldAddChips());
         this.handHistoryAllowed(playerIsInGame && currentTable.lastHandHistory() != null);
-        this.leaveAllowed(!currentTable.myPlayerInGame() && currentTable.myPlayer().IsSitoutStatus());
+        this.leaveAllowed(playerIsInGame && !currentTable.myPlayerInGame() && currentTable.myPlayer().IsSitoutStatus());
         this.accountStatusAllowed(authManager.authenticated());
 
         const tournamentView = currentTable.tournament();
@@ -132,20 +136,19 @@ export class TableMenuPopup {
                 const moneyInGame = currentTable.myPlayer().TotalBet() + currentTable.myPlayer().Money();
                 this.addonAllowed(tournamentView.addonAllowed() && tournamentView.addonCount() === 0);
                 this.rebuyAllowed(tournamentView.rebuyAllowed()
-                    && (moneyInGame + tdata.ChipsAddedAtReBuy) <= tdata.MaximumAmountForRebuy
+                    && moneyInGame <= tdata.MaximumAmountForRebuy
                     && !currentTable.hasPendingMoney());
                 this.doublerebuyAllowed(tournamentView.rebuyAllowed()
-                    && (moneyInGame + tdata.ChipsAddedAtDoubleReBuy) <= tdata.MaximumAmountForRebuy);
+                    && moneyInGame === 0);
                 if (tournamentView.addonAllowed() || tournamentView.rebuyAllowed()) {
-                    const api = new AccountManager();
-                    const data = await api.getAccount();
+                    const data = await this.accountManager.getAccount();
                     const personalAccount = data.Data;
                     const currentMoney = self.getCurrentMoney(tournamentView, personalAccount);
                     const addonPrice = tdata.AddonPrice + tdata.AddonFee;
                     const rebuyPrice = tdata.RebuyFee + tdata.RebuyPrice;
                     self.addonAllowed(self.addonAllowed() && addonPrice < currentMoney);
                     self.rebuyAllowed(self.rebuyAllowed() && (rebuyPrice < currentMoney));
-                    self.doublerebuyAllowed(self.doublerebuyAllowed() && ((2 * rebuyPrice) > currentMoney));
+                    self.doublerebuyAllowed(self.doublerebuyAllowed() && ((2 * rebuyPrice) < currentMoney));
                 }
             }
         } else {
@@ -175,7 +178,7 @@ export class TableMenuPopup {
             return;
         }
 
-        const currentTable = app.tablesPage.currentTable();
+        const currentTable = this.currentTableProvider.currentTable();
         app.handHistoryPopup.tableView(currentTable);
         app.showPopup("handHistory");
     }
@@ -184,12 +187,12 @@ export class TableMenuPopup {
             return;
         }
 
-        const currentTable = app.tablesPage.currentTable();
+        const currentTable = this.currentTableProvider.currentTable();
         app.addMoneyPopup.tableView(currentTable);
         app.closePopup();
         app.showPopup("addMoney").then(function(results: { name: string; result: any }) {
             if (results.result === "cancel") {
-                app.executeCommand("popup.tableMenu");
+                this.commandExecutor.executeCommand("popup.tableMenu");
             }
         });
     }
@@ -198,7 +201,7 @@ export class TableMenuPopup {
             return;
         }
 
-        const currentTable = app.tablesPage.currentTable();
+        const currentTable = this.currentTableProvider.currentTable();
         const tournamentView = currentTable.tournament();
         app.lobbyPageBlock.showLobby();
         app.lobbyPageBlock.selectTournament({ TournamentId: tournamentView.tournamentId });
@@ -210,7 +213,7 @@ export class TableMenuPopup {
             return;
         }
 
-        const currentTable = app.tablesPage.currentTable();
+        const currentTable = this.currentTableProvider.currentTable();
         currentTable.showRebuyPrompt();
     }
     public doubleRebuy() {
@@ -218,7 +221,7 @@ export class TableMenuPopup {
             return;
         }
 
-        const currentTable = app.tablesPage.currentTable();
+        const currentTable = this.currentTableProvider.currentTable();
         currentTable.showDoubleRebuyPrompt();
     }
     public addon() {
@@ -226,25 +229,25 @@ export class TableMenuPopup {
             return;
         }
 
-        const currentTable = app.tablesPage.currentTable();
+        const currentTable = this.currentTableProvider.currentTable();
         currentTable.showAddonPrompt();
     }
     public async showSettingsPrompt() {
         const value = await app.requireAuthentication();
         if (value.authenticated) {
-            app.executeCommand("popup.settings");
+            this.commandExecutor.executeCommand("popup.settings");
         }
     }
     public async showRules() {
         const value = await app.requireAuthentication();
         if (value.authenticated) {
-            app.executeCommand("popup.rules");
+            this.commandExecutor.executeCommand("popup.rules");
         }
     }
     public async showSweepstakesRules() {
         const value = await app.requireAuthentication();
         if (value.authenticated) {
-            app.executeCommand("popup.sweepstakesRules");
+            this.commandExecutor.executeCommand("popup.sweepstakesRules");
         }
     }
     /**

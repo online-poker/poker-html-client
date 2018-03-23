@@ -1,8 +1,8 @@
 ﻿import * as $ from "jquery";
 import * as ko from "knockout";
+import { ICommandExecutor } from "poker/commandmanager";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
-import * as commandManager from "../commandmanager";
 import { debugSettings } from "../debugsettings";
 import { PageBlock } from "../pageblock";
 import {
@@ -45,7 +45,8 @@ export class SeatPage extends PageBase {
     public nextGameTypeInformation: KnockoutComputed<string>;
     public splashShown = ko.observable(false);
     public tablesShown = ko.observable(true);
-    constructor() {
+
+    constructor(private commandExecutor: ICommandExecutor) {
         super();
         const self = this;
         this.slideWidth = ko.observable(0);
@@ -310,7 +311,7 @@ export class SeatPage extends PageBase {
                 self.deactivate();
             }
         };
-        const leaved = commandManager.executeCommand("app.leaveTable", [tableView.tableId]) as JQueryDeferred<() => void>;
+        const leaved = this.commandExecutor.executeCommand("app.leaveTable", [tableView.tableId]) as JQueryDeferred<() => void>;
         leaved.then(removeCurrentTable);
     }
     public showMenu() {

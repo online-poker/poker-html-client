@@ -3,11 +3,8 @@ declare var appInsights: Client;
 
 import { Account, setAuthToken } from "@poker/api-server";
 import ko = require("knockout");
-import { App } from "./app";
 import { appConfig } from "./appconfig";
 import { settings } from "./settings";
-
-declare const app: App;
 
 class AuthManager {
     public authenticated: KnockoutObservable<boolean>;
@@ -80,7 +77,6 @@ class AuthManager {
                 settings.login(value.Login);
                 settings.password(value.Password);
                 settings.saveSettings();
-                app.processing(false);
                 if (value.Status === "Ok") {
                     return await this.authenticate(value.Login, value.Password, true);
                 } else {

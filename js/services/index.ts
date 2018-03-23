@@ -1,3 +1,4 @@
+import { TableView } from "poker/table/tableview";
 import { appConfig } from "../appconfig";
 import { AccountService } from "./accountservice";
 import { AppReloadService } from "./appreloadservice";
@@ -31,3 +32,7 @@ export let deviceEvents = new DeviceEventService();
 export let orientationService = new OrientationService();
 export let pushService = new PushService();
 export const appReloadService = new AppReloadService();
+
+export interface ICurrentTableProvider {
+    currentTable(): TableView;
+}

@@ -4,9 +4,9 @@ import {
     loginId,
 } from "poker/authmanager";
 import { ActionBlock } from "poker/table/actionBlock";
-import { drainQueue, getTable, getTestTableView, simpleInitialization, noopApiProvider } from "./helper";
-import { TableView } from "poker/table/tableview";
 import { allBacksClassesTwoCards } from "poker/table/cardsHelper";
+import { TableView } from "poker/table/tableview";
+import { drainQueue, getTable, getTestTableView, noopApiProvider, simpleInitialization } from "./helper";
 
 const logEnabled = false;
 const log = function (message: string, ...params: any[]) {
