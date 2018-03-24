@@ -38,6 +38,7 @@ export class TableManager {
     public currentIndex: KnockoutObservable<number>;
     public hasTurn: KnockoutComputed<boolean>;
     public maxTablesReached: Signal;
+    public duplicateEventFound: Signal = new signals.Signal();
 
     /**
      * Tournaments in which player registered.
@@ -127,6 +128,10 @@ export class TableManager {
             });
 
             settings.saveSettings();
+        });
+        this.duplicateEventFound.add((finder: DuplicateFinder) => {
+            this.printFinderDebugInfo(finder);
+            slowInternetService.showDuplicatedConnectionPopup();
         });
     }
     public onReconnected() {
@@ -499,8 +504,7 @@ export class TableManager {
 
         finder.registerEvent(data);
         if (finder.validateDuplicateEvents()) {
-            finder.printDebug();
-            slowInternetService.showDuplicatedConnectionPopup();
+            this.duplicateEventFound.dispatch(finder);
         }
     }
 
@@ -1304,6 +1308,13 @@ export class TableManager {
         }
 
         return finder;
+    }
+
+    private printFinderDebugInfo(finder: DuplicateFinder) {
+        this.logDataEvent("Duplicate events detected.");
+        finder.getDataEvents().forEach((dataEvent) => {
+            this.logDataEvent(JSON.stringify(dataEvent));
+        });
     }
 
     private logDataEvent(message: any, ...optionalParams: any[]) {

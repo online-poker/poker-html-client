@@ -5,6 +5,10 @@
         this.dataEvents = [];
     }
 
+    public getDataEvents() {
+        return Array.prototype.concat([], this.dataEvents);
+    }
+
     public registerEvent(data: any[]) {
         this.dataEvents.push(data);
         while (this.dataEvents.length > 8) {
@@ -54,13 +58,5 @@
         }
 
         return false;
-    }
-    public printDebug() {
-        // tslint:disable-next-line:no-console
-        console.log("Duplicate events detected.");
-        this.dataEvents.forEach((_) => {
-            // tslint:disable-next-line:no-console
-            console.log(JSON.stringify(_));
-        });
     }
 }

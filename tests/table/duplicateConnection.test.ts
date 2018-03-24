@@ -1,4 +1,5 @@
 import * as ko from "knockout";
+import { DefaultApiProvider } from "poker/api";
 import { App } from "../../js/app";
 import {
     login,
@@ -49,7 +50,8 @@ describe("gameplay", function () {
     describe("Fatal errors", function () {
         it("Fatal error raised when duplicate connection received", async function () {
             const tableModel = getTable();
-            const tableManager = new TableManager();
+            const tableManager = new TableManager(DefaultApiProvider);
+            tableManager.initialize();
             const view1 = tableManager.addTable(1, tableModel);
             const actionBlock = new ActionBlock();
             actionBlock.attach(view1);

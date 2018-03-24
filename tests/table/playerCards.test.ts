@@ -3,6 +3,7 @@ import {
     login,
     loginId,
 } from "poker/authmanager";
+import { debugSettings } from "poker/debugsettings";
 import { ActionBlock } from "poker/table/actionBlock";
 import { allBacksClassesTwoCards } from "poker/table/cardsHelper";
 import { TableView } from "poker/table/tableview";
@@ -57,6 +58,7 @@ describe("Player cards", function () {
     beforeAll(() => {
         global.messages = {
         };
+        debugSettings.tableView.trace = false;
     });
     describe("Overlay cards supported", function () {
         beforeAll(() => {

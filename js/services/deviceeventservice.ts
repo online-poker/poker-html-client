@@ -33,7 +33,6 @@ export class DeviceEventService {
         document.addEventListener("resume", () => this.onResume(), false);
     }
     private onDeviceReady() {
-        console.log("ondr");
         this.ready.dispatch();
     }
     private onResign() {

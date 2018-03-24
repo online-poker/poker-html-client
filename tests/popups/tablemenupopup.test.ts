@@ -1,4 +1,5 @@
 import { Account, PersonalAccountData, TournamentOptionsEnum } from "@poker/api-server";
+import { debugSettings } from "poker/debugsettings";
 import { TableMenuPopup } from "poker/popups";
 import { IAccountManager } from "poker/services/accountManager";
 import { getTestTableView, getTestTournamentTableView, simpleInitialization } from "tests/table/helper";
@@ -32,6 +33,7 @@ describe("Table menu", function () {
     beforeAll(() => {
         global.messages = {
         };
+        debugSettings.tableView.trace = false;
     });
     describe("rebuy button", function () {
         it("rebuy button don't visible for the regular table", async function () {
