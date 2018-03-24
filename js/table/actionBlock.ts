@@ -205,13 +205,14 @@ export class ActionBlock {
      */
     public testMode = ko.observable(false);
 
-    public cardsOverlayVisible = ko.observable(true);
-
-    private myPlayerWasInGame: KnockoutObservable<boolean>;
     /**
      * Indicates that game finished.
      */
-    private gameFinished: KnockoutObservable<boolean>;
+    public gameFinished: KnockoutObservable<boolean>;
+
+    public cardsOverlayVisible = ko.observable(true);
+
+    private myPlayerWasInGame: KnockoutObservable<boolean>;
     private suppressSetSitoutStatus: boolean;
 
     constructor() {
@@ -512,9 +513,11 @@ export class ActionBlock {
         });
         this.tableView.maximumRaiseAmount.subscribe((value) => {
             const myself = this.tableView.myPlayer();
-            if (myself != null) {
-                this.tableSlider.maximum(value + myself.Bet());
+            if (myself === null) {
+                return;
             }
+
+            this.tableSlider.maximum(value + myself.Bet());
         });
         this.tableView.checkOrCallAmount.subscribe((value) => {
             this.isCheck(value === 0);
@@ -925,8 +928,7 @@ export class ActionBlock {
     }
     public updateNeedBB() {
         const currentPlayer = this.tableView.myPlayer();
-        const hasPlayer = currentPlayer != null;
-        if (!hasPlayer) {
+        if (currentPlayer == null) {
             this.needBB(false);
             return;
         }

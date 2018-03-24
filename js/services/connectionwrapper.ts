@@ -10,7 +10,7 @@ import { connectionService, slowInternetService } from "./index";
 
 export class ConnectionWrapper {
     public terminated = false;
-    private refreshHandle: number = null;
+    private refreshHandle: number | null = null;
     constructor(public connection: SignalR.Hub.Connection) {
         connection.connectionSlow(() => {
             if (this.terminated) {
@@ -131,7 +131,7 @@ export class ConnectionWrapper {
         return await this.establishConnectionCoreAsync(maxAttempts, cancellationToken);
     }
     public buildStartConnection() {
-        let supportedTransports = null;
+        let supportedTransports: string[] | null = null;
         const androidVersion = this.getAndroidVersion();
         if (androidVersion === false || (androidVersion as string).indexOf("4.4") === 0) {
             supportedTransports = ["webSockets"];
@@ -196,7 +196,7 @@ export class ConnectionWrapper {
         return startConnection;
     }
     public async buildStartConnectionAsync() {
-        let supportedTransports = null;
+        let supportedTransports: string[] | null = null;
         const androidVersion = this.getAndroidVersion();
         if (androidVersion === false || (androidVersion as string).indexOf("4.4") === 0) {
             supportedTransports = ["webSockets"];

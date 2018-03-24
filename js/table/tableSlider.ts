@@ -32,7 +32,7 @@ export class TableSlider {
             read() {
                 const ivalue = self.current();
                 if (ivalue === null) {
-                    return null;
+                    return "";
                 }
 
                 return ivalue.toString();

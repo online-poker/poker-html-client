@@ -147,7 +147,7 @@ export class TableView {
     public has4Cards: KnockoutComputed<boolean>;
 
     public timeLeft: KnockoutComputed<number>;
-    public timerInterval: number;
+    public timerInterval: number = 0;
     public chipWidth: number;
 
     public chatMessage: KnockoutObservable<string>;
@@ -344,8 +344,8 @@ export class TableView {
         }, this).extend({ notify: "always" });
 
         this.myPlayer.subscribe(function (value) {
-            if (value != null && authManager.loginId() === value.PlayerId()) {
-                self.myPlayer().needCardsOverlay(true);
+            if (value !== null && authManager.loginId() === value.PlayerId()) {
+                value.needCardsOverlay(true);
             }
         });
 
@@ -719,7 +719,8 @@ export class TableView {
             return (20 * baseMinimalBuyIn) > tableTotal;
         }, this);
         this.currentCombinationVisible = ko.computed(() => {
-            if (!this.myPlayer()) {
+            const myPlayer = this.myPlayer();
+            if (!myPlayer) {
                 return false;
             }
 
@@ -727,19 +728,19 @@ export class TableView {
                 return true;
             }
 
-            return !this.myPlayer().cardsOverlayVisible();
+            return !myPlayer.cardsOverlayVisible();
         });
-        this.currentCombinationVisible.subscribe(function (value) {
-            if (self.myPlayer() === null) {
+        this.currentCombinationVisible.subscribe((value) => {
+            const myPlayer = this.myPlayer();
+            if (myPlayer === null) {
                 return;
             }
             if (value) {
-                self.myPlayer().DisplayedHandCards(self.myPlayer().HandCards());
+                myPlayer.DisplayedHandCards(myPlayer.HandCards());
                 return;
             }
 
-            self.myPlayer().DisplayedHandCards(getBackCardsFromGameType(self.gameType()));
-
+            myPlayer.DisplayedHandCards(getBackCardsFromGameType(self.gameType()));
         });
         this.actionBlock.attach(this);
 
@@ -815,6 +816,11 @@ export class TableView {
         const currentLoadingRequest = $.Deferred();
         this.clearTimer();
         const wrapper = connectionService.currentConnection;
+        if (wrapper === null) {
+            console.error(`Connection to ${this.tableId} should be initialied at this point. This indicate serious error.`);
+            return;
+        }
+
         let hubId = wrapper.connection.id;
         const connectionInfo = "HID:" + hubId;
         this.log("Connecting to table " + this.tableId + " on connection " + connectionInfo);
@@ -1155,7 +1161,7 @@ export class TableView {
 
         const initialStatus = !this.paused() ? 0 : (8 /* IsParticipatingStatus */ + 16 /* IsInGame */);
         const playerModel = new TablePlaceModel({
-            Bet: null,
+            Bet: 0,
             Cards: null,
             Money: amount,
             PlayerId: playerId,
@@ -1242,7 +1248,7 @@ export class TableView {
     public onFinalTableCardsOpened(cards: number[]) {
         this.handHistory.onFinalTableCardsOpened(cards);
     }
-    public onTableBetParametersChanged(smallBind: number, bigBlind: number, ante: number) {
+    public onTableBetParametersChanged(smallBind: number, bigBlind: number, ante: number | null) {
         this.setTableBetingParametersNextGame(smallBind, bigBlind, ante);
     }
 
@@ -1281,7 +1287,7 @@ export class TableView {
      * @param gameType Type of the game which starts on the table.
      */
     public onTableStatusInfo(
-        players: PlayerStatusInfo[], pots: number[] | null, cards: string, dealerSeat: number, buyIn: number,
+        players: PlayerStatusInfo[], pots: number[] | null, cards: string | null, dealerSeat: number, buyIn: number,
         baseBuyIn: number, leaveTime, timePass: number, currentPlayerId: number, lastRaise: number, gameId: number,
         authenticated: boolean, actionsCount: number, frozen: boolean, opened: boolean, pauseDate: number,
         lastMessageId: number, gameType: number) {
@@ -1572,6 +1578,11 @@ export class TableView {
     public onPlayerCardsMucked(playerId: number) {
         this.queue.pushCallback(() => {
             const currentPlayer = this.tablePlaces.getPlaceByPlayerId(playerId);
+            if (currentPlayer === null) {
+                console.error(`The player ${playerId} could not muck cards since it is not on the table ${this.tableId}.`);
+                return;
+            }
+
             this.foldCardsForPlayer(currentPlayer, true, this.animationSettings.foldAnimationTimeout / 2);
         });
     }
@@ -2162,6 +2173,11 @@ export class TableView {
 
     public toggleCards() {
         const my = this.myPlayer();
+        if (!my) {
+            console.error(`Player ${authManager.loginId()} does not sit on the table ${this.tableId}.`);
+            return;
+        }
+
         if (my.IsCardsOpened()) {
             this.muckCards();
         } else {
@@ -2314,7 +2330,7 @@ export class TableView {
      * @param bigBlind Big blind
      * @param ante Ante
      */
-    public setTableBetingParametersNextGame(smallBlind: number, bigBlind: number, ante: number) {
+    public setTableBetingParametersNextGame(smallBlind: number, bigBlind: number, ante: number | null) {
         this.nextGameBigBlind(bigBlind);
         this.nextGameSmallBlind(smallBlind);
         this.nextGameAnte(ante);
@@ -2365,7 +2381,8 @@ export class TableView {
 
     public proposeRebuyOrAddon() {
         const tournamentView = this.tournament();
-        if (tournamentView !== null && this.myPlayer() !== null && this.myPlayer().Money() === 0 && !this.hasPendingMoney()) {
+        const myPlayer = this.myPlayer();
+        if (tournamentView !== null && myPlayer !== null && myPlayer.Money() === 0 && !this.hasPendingMoney()) {
             if (tournamentView.rebuyAllowed()) {
                 this.proposeBuyRebuy();
             }

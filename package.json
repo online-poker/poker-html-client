@@ -5,6 +5,7 @@
   "main": "dist/poker-html-client.js",
   "scripts": {
     "compile": "tsc --project build-tsconfig.json",
+    "compile:test": "tsc --project tsconfig.json",
     "lint": "tslint --project tsconfig.json",
     "lint:test": "tslint --project test-tsconfig.json",
     "tslint": "tslint",

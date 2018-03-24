@@ -7,6 +7,8 @@ import { CancelToken } from "./cancelToken";
 import { ConnectionWrapper } from "./connectionwrapper";
 import { slowInternetService } from "./index";
 
+type CancelConnectionCallback = (reason: string) => void;
+
 export class ConnectionService {
     public static stateConversion = {
         0: "connecting",
@@ -27,9 +29,9 @@ export class ConnectionService {
     public terminatedConnection = new signals.Signal();
     public attempts = 0;
     public lastAttempt = 0;
-    public currentConnection: ConnectionWrapper = null;
-    private lastConnection: JQueryDeferred<any> = null;
-    private cancelCurrentConnection: (reason: string) => void | null = null;
+    public currentConnection: ConnectionWrapper | null = null;
+    private lastConnection: JQueryDeferred<any> | null = null;
+    private cancelCurrentConnection: CancelConnectionCallback | null = null;
 
     constructor() {
         this.connectionSlow = new signals.Signal();
@@ -68,7 +70,7 @@ export class ConnectionService {
         }
 
         let hubId: string;
-        if (this.currentConnection.connection == null) {
+        if (this.currentConnection.connection !== null) {
             hubId = this.currentConnection.connection.id;
         } else {
             hubId = "NULL";

@@ -1,14 +1,15 @@
 ﻿/// <reference path="../poker.commanding.api.ts" />
 
 import * as ko from "knockout";
-import { connectionService } from "../services";
+import { connectionService } from "poker/services";
+import { ConnectionWrapper } from "poker/services/connectionwrapper";
 import * as timeService from "../timeservice";
 
 export class ChatControl {
     public currentMessage: KnockoutObservable<string>;
     public messages: KnockoutObservableArray<string>;
     public loading: KnockoutObservable<boolean>;
-    private timeoutHandler: number;
+    private timeoutHandler: number = 0;
     private tableId: KnockoutObservable<number>;
 
     constructor() {
@@ -18,8 +19,8 @@ export class ChatControl {
         this.tableId = ko.observable(0);
     }
     public initialize() {
-        connectionService.newConnection.add(() => {
-            const chatHub = connectionService.currentConnection.connection.createHubProxy("chat");
+        connectionService.newConnection.add((currentConnection: ConnectionWrapper) => {
+            const chatHub = currentConnection.connection.createHubProxy("chat");
             const handler = (...msg: any[]) => {
                 const messageId = msg[0];
                 const tableId: number = msg[1];
@@ -43,9 +44,8 @@ export class ChatControl {
         const m = this.messages();
         this.messages(["[" + sender + "] " + message].concat(m));
     }
-    public attachToHub() {
+    public attachToHub(wrapper: ConnectionWrapper) {
         this.loading(true);
-        const wrapper = connectionService.currentConnection;
         wrapper.buildStartConnection()().then(() => {
             if (wrapper.terminated) {
                 return;
@@ -58,8 +58,7 @@ export class ChatControl {
             this.timeoutHandler = 0;
         }, 2000);
     }
-    public detachFromHub() {
-        const wrapper = connectionService.currentConnection;
+    public detachFromHub(wrapper: ConnectionWrapper) {
         wrapper.buildStartConnection()().then(() => {
             if (wrapper.terminated) {
                 return;

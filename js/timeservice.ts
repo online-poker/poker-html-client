@@ -10,7 +10,7 @@ class TimeService {
     private static MillisecondsInMinutes = 60 * 1000;
     public currentTime: KnockoutObservable<string>;
     public timeDiff: number = 0;
-    private handle: number;
+    private handle: number = 0;
     private timeouts: number[] = [];
     private intervals: number[] = [];
 

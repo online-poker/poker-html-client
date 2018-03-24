@@ -205,7 +205,7 @@ export class TournamentView {
         const hubId = connectionService.currentConnection.connection.id;
         const connectionInfo = "HID:" + hubId;
         this.log("Joining tournament on connection " + connectionInfo);
-        const cancelled = false;
+        let cancelled = false;
         let subsequentDeferred: JQueryDeferred<any> | null = null;
         const cancelOperation = function() {
             self.log("Cancelling join tournament request");
@@ -253,7 +253,7 @@ export class TournamentView {
                 });
 
             result.progress(function(command: string) {
-                this.cancelled = true;
+                cancelled = true;
                 result.reject("Cancelled");
                 if (subsequentDeferred != null) {
                     subsequentDeferred.notify("cancel");
@@ -572,12 +572,23 @@ export class TournamentView {
                 _("tournament.playerGameCompleted", { tournament: data.TournamentName, place: placeTaken }),
                 10 * 1000);
         } else {
-            const winAmount = (this.totalPrize() * prize.PrizeLevel[placeTaken - 1] / 100).toFixed();
+            const totalPrize = this.totalPrize() || 0;
+            const winAmount = (totalPrize * prize.PrizeLevel[placeTaken - 1] / 100).toFixed();
             const onTournamentCompleted = () => {
                 if (placeTaken === 1 || placeTaken === 2) {
                     this.finalizeTournament();
                 } else {
+                    if (this.currentTableId === null) {
+                        console.warn("Could not show display notification about game fnish, since no current game to tournament is set.");
+                        return;
+                    }
+
                     const currentTable = tableManager.getTableById(this.currentTableId);
+                    if (currentTable === null) {
+                        console.warn(`Could not show display notification about game fnish, since no table with id ${this.currentTableId} is null.`);
+                        return;
+                    }
+
                     if (!currentTable.opened()) {
                         this.finalizeTournament();
                     }

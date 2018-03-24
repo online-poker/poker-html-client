@@ -4,10 +4,12 @@ import { connectionService } from "./index";
 
 declare var app: App;
 
+type RetryHandler = () => void;
+
 export class SlowInternetService {
     public static popupName = "slowConnection";
     public manualDisconnect: boolean;
-    public retyHandler: () => void;
+    public retyHandler: RetryHandler | null = null;
     public fatalError = false;
     private offline: boolean;
     private suppressReconnected: boolean;
@@ -67,7 +69,7 @@ export class SlowInternetService {
         this.log("Connection type is " + navigator.connection.type + " testing against " + expectedConnection);
         return navigator.connection.type !== expectedConnection;
     }
-    public setRetryHandler(handler: () => void) {
+    public setRetryHandler(handler: RetryHandler) {
         this.retyHandler = handler;
     }
     public onConnectionSlow() {

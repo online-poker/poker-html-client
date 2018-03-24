@@ -20,7 +20,7 @@ export class TablesListPage extends PageBase {
     constructor() {
         super();
         this.tables = ko.observableArray([]);
-        this.tablesCaption = ko.computed(function () {
+        this.tablesCaption = ko.computed(() => {
             return _("tablesList.headerCaption")
                 .replace("#count", this.tables().length.toString());
         }, this);

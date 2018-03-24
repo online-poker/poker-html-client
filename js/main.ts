@@ -1,4 +1,5 @@
 declare function testInit();
+declare function require(modulename: string[], callback: () => void);
 
 // tslint:disable-next-line:no-var-requires
 require(["appInit"], () => {

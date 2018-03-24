@@ -453,7 +453,7 @@ export function registerBindings() {
             swiper.slide(valObservable.index() - 1, valObservable.duration || swipeHandler.defaultDuration);
         },
     };
-    ko.bindingHandlers["swipe"] = swipeHandler;
+    ko.bindingHandlers["swipe"] = swipeHandler as any;
     ko.bindingHandlers["swipeForeach"] = {
         init(
             element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
@@ -475,7 +475,7 @@ export function registerBindings() {
                 bindingContext.$swiper.slide(bindingContext.$swiperIndex - 1, 0);
             }
         },
-    };
+    } as any;
     ko.virtualElements.allowedBindings["swipeForeach"] = true;
     interface ScrollBindingOptions {
         refreshTrigger: KnockoutObservable<any>;
@@ -555,7 +555,7 @@ export function registerBindings() {
             }
         },
     };
-    ko.bindingHandlers["scroll"] = scrollHandler;
+    ko.bindingHandlers["scroll"] = scrollHandler as any;
     ko.bindingHandlers["bet"] = {
         update(
             element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,

@@ -13,8 +13,8 @@ const exectedVersion = 1;
 class MetadataManager {
     public online = ko.observable("-");
     public registered = ko.observable("-");
-    public prizes: TournamentPrizeStructure[][];
-    public bets: TournamentBetStructure[][];
+    public prizes: TournamentPrizeStructure[][] = [];
+    public bets: TournamentBetStructure[][] = [];
     public banners: BannerData[];
     public smallBanners: BannerData[];
     public avatars: string[];
@@ -108,6 +108,22 @@ class MetadataManager {
         self.registered(onlinePlayers.Data[1].toString());
         self.online(onlinePlayers.Data[0].toString());
         return onlinePlayers;
+    }
+
+    /**
+     * Set well-known bet structures.
+     * @param bets Well known bet structures
+     */
+    public setBets(bets: TournamentBetStructure[][]) {
+        this.bets = bets;
+    }
+
+    /**
+     * Set well known methods for prize distribution
+     * @param prizes Well known prize structure
+     */
+    public setPrizes(prizes: TournamentPrizeStructure[][]) {
+        this.prizes = prizes;
     }
     private async preloadFirstBanner(format: number) {
         const metadataApi = new Information(host);

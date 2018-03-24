@@ -168,11 +168,11 @@ export class LobbyPage extends PageBase {
         }, this);
         this.online = metadataManager.online;
         this.registered = metadataManager.registered;
-        this.captionLabel = ko.computed(function () {
+        this.captionLabel = ko.computed(() => {
             return _("header.onlinePlayersShort")
                 .replace("#registered", this.registered())
                 .replace("#online", this.online());
-        }, this);
+        });
         this.tournamentsCaption = ko.computed(function () {
             return _("tournamentsList.headerCaption")
                 .replace("#count", "0".toString());

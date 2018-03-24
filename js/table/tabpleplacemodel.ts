@@ -151,12 +151,12 @@ export class TablePlaceModel {
     /**
      * Timer which control clearing of current action text
      */
-    private CurrentActionTimer: number;
+    private CurrentActionTimer: number = 0;
 
     /**
      * Timer which control clearing of current action text
      */
-    private LastChatMessageTimer: number;
+    private LastChatMessageTimer: number = 0;
 
     constructor(data: TablePlayer) {
         this.PlayerId = ko.observable(data.PlayerId);
