@@ -110,11 +110,12 @@ export class TableMenuPopup {
         // Load settings
         const self = this;
         const currentTable = this.currentTableProvider.currentTable();
-        const playerIsInGame = currentTable.myPlayer() != null;
+        const myPlayer = currentTable.myPlayer();
+        const playerIsInGame = myPlayer != null;
         this.addMoneyAvailable(currentTable.tournament() == null && currentTable.opened());
         this.addMoneyAllowed(currentTable.couldAddChips());
         this.handHistoryAllowed(playerIsInGame && currentTable.lastHandHistory() != null);
-        this.leaveAllowed(playerIsInGame && !currentTable.myPlayerInGame() && currentTable.myPlayer().IsSitoutStatus());
+        this.leaveAllowed(myPlayer != null && !currentTable.myPlayerInGame() && myPlayer.IsSitoutStatus());
         this.accountStatusAllowed(authManager.authenticated());
 
         const tournamentView = currentTable.tournament();
@@ -132,7 +133,7 @@ export class TableMenuPopup {
 
             if ((this.tournamentHasRebuy() || this.tournamentHasAddon())
                 && playerIsInGame) {
-                const moneyInGame = currentTable.myPlayer().TotalBet() + currentTable.myPlayer().Money();
+                const moneyInGame = myPlayer.TotalBet() + myPlayer.Money();
                 this.addonAllowed(tournamentView.addonAllowed() && tournamentView.addonCount() === 0);
                 this.rebuyAllowed(tournamentView.rebuyAllowed()
                     && moneyInGame <= tdata.MaximumAmountForRebuy
@@ -181,7 +182,7 @@ export class TableMenuPopup {
         app.handHistoryPopup.tableView(currentTable);
         app.showPopup("handHistory");
     }
-    public addMoney() {
+    public async addMoney() {
         if (!this.addMoneyAllowed()) {
             return;
         }
@@ -189,11 +190,10 @@ export class TableMenuPopup {
         const currentTable = this.currentTableProvider.currentTable();
         app.addMoneyPopup.tableView(currentTable);
         app.closePopup();
-        app.showPopup("addMoney").then(function(results: { name: string; result: any }) {
-            if (results.result === "cancel") {
-                this.commandExecutor.executeCommand("popup.tableMenu");
-            }
-        });
+        const results: { name: string; result: any } = await app.showPopup("addMoney");
+        if (results.result === "cancel") {
+            this.commandExecutor.executeCommand("popup.tableMenu");
+        }
     }
     public showTournamentInformation() {
         if (!this.tournamentInformationAllowed()) {

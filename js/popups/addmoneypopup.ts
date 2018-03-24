@@ -68,7 +68,7 @@ export class AddMoneyPopup {
                     }
 
                     const tableView = self.tableView();
-                    const myPlayer = tableView.myPlayer();
+                    const myPlayer = tableView.myPlayer()!;
                     const totalBet = (myPlayer.TotalBet() === null ? 0 : myPlayer.TotalBet()) + myPlayer.Bet();
                     const tableTotal = totalBet + myPlayer.Money();
                     self.accountTotal(balance);
@@ -124,7 +124,7 @@ export class AddMoneyPopup {
                 return;
             }
 
-            const myPlayer = this.tableView().myPlayer();
+            const myPlayer = this.tableView().myPlayer()!;
             const totalMoneyAmountExpected = this.buyin() + myPlayer.Money() + myPlayer.TotalBet();
             if (totalMoneyAmountExpected > this.maxBuyin()) {
                 this.buyin.setError(_("addMoney.couldnotAddMoreThenMax"));

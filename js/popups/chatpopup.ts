@@ -1,5 +1,6 @@
 ﻿/// <reference path="../poker.commanding.api.ts" />
 
+import { connectionService } from "poker/services";
 import { App } from "../app";
 import { _ } from "../languagemanager";
 import { PlayerMessage } from "../table/playerMessage";
@@ -17,8 +18,8 @@ export class ChatPopup {
     public loading: KnockoutObservable<boolean>;
     public messages: KnockoutObservableArray<PlayerMessage>;
     public systemMessages: KnockoutObservableArray<SystemMessage>;
-    private tableView: TableView;
-    private subscription: KnockoutSubscription = null;
+    private tableView: TableView | null = null;
+    private subscription: KnockoutSubscription | null = null;
 
     constructor() {
         this.control = new ChatControl();
@@ -49,6 +50,11 @@ export class ChatPopup {
      * Handles pressing Send button on the chat popup.
      */
     public async send() {
+        if (this.tableView === null) {
+            console.error("Could not send messages, since Chat popup does not attached to the TableView. Make sure that you did not miss call to ChatPopup.attach(TableView)");
+            return;
+        }
+
         if (this.currentMessage() === "") {
             return;
         }
@@ -70,6 +76,11 @@ export class ChatPopup {
         }, 10);
     }
     public shown(): void {
-        this.control.attachToHub();
+        if (connectionService.currentConnection === null) {
+            console.error("Could not connect to the chat popup, since no active SignalR connection");
+            return;
+        }
+
+        this.control.attachToHub(connectionService.currentConnection);
     }
 }

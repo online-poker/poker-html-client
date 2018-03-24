@@ -9,6 +9,7 @@ node_js:
 script:
   - npm run test
   - npm run lint:test
+  - npm run compile:test -- --noEmit
 before_install:
 - printf "@poker:registry=https://pokerkz.pkgs.visualstudio.com/_packaging/50dc0ca2-b4b7-4773-922d-1f1486f9c8c8/npm/registry/\n" >> ~/.npmrc
 - printf "//pokerkz.pkgs.visualstudio.com/_packaging/50dc0ca2-b4b7-4773-922d-1f1486f9c8c8/npm/registry/:_authToken=${NPM_TOKEN}\n" >> ~/.npmrc

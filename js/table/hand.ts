@@ -420,7 +420,7 @@
         let maxRank = 0;
         let winIndex = 10;
         let winningScore = -1;
-        let wci: number[];
+        let wci: number[] = [];
 
         // Generate permutations for each combination of two hands in the hole.
         const holeCardPermutations = getCombinations(2, Math.max(2, totalCardsCount - 5));

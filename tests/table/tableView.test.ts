@@ -91,7 +91,7 @@ describe("Table view", () => {
 
             const currentPlayer = tableView.currentPlayer();
             expect(currentPlayer).not.toBeNull();
-            expect(currentPlayer.PlayerId()).toBe(3);
+            expect(currentPlayer!.PlayerId()).toBe(3);
             expect(tableView.minimumRaiseAmount()).toBe(400);
             expect(tableView.maximumRaiseAmount()).toBe(10000);
         });
@@ -160,7 +160,7 @@ describe("Table view", () => {
 
             const currentPlayer = tableView.currentPlayer();
             expect(currentPlayer).not.toBeNull();
-            expect(currentPlayer.PlayerId()).toBe(4);
+            expect(currentPlayer!.PlayerId()).toBe(4);
             expect(tableView.minimumRaiseAmount()).toBe(400);
             expect(tableView.maximumRaiseAmount()).toBe(900);
         });
@@ -218,7 +218,7 @@ describe("Table view", () => {
 
             const currentPlayer = tableView.currentPlayer();
             expect(currentPlayer).not.toBeNull();
-            expect(currentPlayer.PlayerId()).toBe(4);
+            expect(currentPlayer!.PlayerId()).toBe(4);
             expect(tableView.minimumRaiseAmount()).toBe(600);
             expect(tableView.maximumRaiseAmount()).toBe(1200);
         });
@@ -277,12 +277,12 @@ describe("Table view", () => {
 
             const currentPlayer = tableView.currentPlayer();
             expect(currentPlayer).not.toBeNull();
-            expect(currentPlayer.PlayerId()).toBe(1);
+            expect(currentPlayer!.PlayerId()).toBe(1);
 
             // This test different from server test, since maximumRasieAmount value does
             // not take into acount current bet which added to that value later.
             // Thus in this test value reduced by current player bet.
-            expect(currentPlayer.Bet()).toBe(100);
+            expect(currentPlayer!.Bet()).toBe(100);
             expect(tableView.minimumRaiseAmount()).toBe(1200);
             expect(tableView.maximumRaiseAmount()).toBe(2500);
         });
@@ -351,12 +351,12 @@ describe("Table view", () => {
 
             const currentPlayer = tableView.currentPlayer();
             expect(currentPlayer).not.toBeNull();
-            expect(currentPlayer.PlayerId()).toBe(1);
+            expect(currentPlayer!.PlayerId()).toBe(1);
 
             // This test different from server test, since maximumRasieAmount value does
             // not take into acount current bet which added to that value later.
             // Thus in this test value reduced by current player bet.
-            expect(currentPlayer.Bet()).toBe(200);
+            expect(currentPlayer!.Bet()).toBe(200);
             expect(tableView.minimumRaiseAmount()).toBe(1000);
             expect(tableView.maximumRaiseAmount()).toBe(2800);
         });
@@ -654,10 +654,10 @@ describe("Table view", () => {
             let turnCounter = 0;
             let riverCounter = 0;
 
-            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; }, this);
-            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; }, this);
-            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; }, this);
-            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; }, this);
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; });
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; });
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; });
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; });
 
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
@@ -718,10 +718,10 @@ describe("Table view", () => {
             let turnCounter = 0;
             let riverCounter = 0;
 
-            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; }, this);
-            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; }, this);
-            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; }, this);
-            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; }, this);
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; });
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; });
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; });
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; });
 
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
@@ -786,10 +786,10 @@ describe("Table view", () => {
             let turnCounter = 0;
             let riverCounter = 0;
 
-            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; }, this);
-            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; }, this);
-            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; }, this);
-            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; }, this);
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; });
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; });
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; });
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; });
 
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
@@ -860,10 +860,10 @@ describe("Table view", () => {
             let turnCounter = 0;
             let riverCounter = 0;
 
-            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; }, this);
-            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; }, this);
-            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; }, this);
-            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; }, this);
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; });
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; });
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; });
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; });
 
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);
@@ -937,10 +937,10 @@ describe("Table view", () => {
             let turnCounter = 0;
             let riverCounter = 0;
 
-            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; }, this);
-            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; }, this);
-            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; }, this);
-            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; }, this);
+            tableView.onPlayerCardsDealed.add(() => { preflopCounter = preflopCounter + 1; });
+            tableView.onFlopDealed.add(() => { flopCounter = flopCounter + 1; });
+            tableView.onTurnDealed.add(() => { turnCounter = turnCounter + 1; });
+            tableView.onRiverDealed.add(() => { riverCounter = riverCounter + 1; });
 
             tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
             tableView.onGameStarted(1, players, actions, 4);

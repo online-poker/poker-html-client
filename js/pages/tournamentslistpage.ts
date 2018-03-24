@@ -27,7 +27,7 @@ export class TournamentsListPage extends PageBase {
     constructor() {
         super();
         this.tournaments = ko.observableArray([]);
-        this.tournamentsCaption = ko.computed(function () {
+        this.tournamentsCaption = ko.computed(() => {
             return _("tournamentsList.headerCaption")
                 .replace("#count", this.tournaments().length.toString());
         }, this);

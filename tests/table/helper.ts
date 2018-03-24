@@ -20,7 +20,7 @@ import {
 
 export async function simpleSit(view: TableView, gameType: number, money: number[]) {
     view.currentLogin("Player1");
-    view.onTableStatusInfo([], [], null, 2, 10, 10, 30, 0, 1, 0, 1, true, 0, false, this, null, null, gameType);
+    view.onTableStatusInfo([], [], null, 2, 10, 10, 30, 0, 1, 0, 1, true, 0, false, true, null, null, gameType);
     const data = [];
     for (let i = 1; i <= money.length; i++) {
         await view.onSit(i, i, "Player" + i, money[i - 1], "url", 10, 1);
@@ -30,10 +30,10 @@ export async function simpleSit(view: TableView, gameType: number, money: number
     return data;
 }
 
-export async function simpleInitialization(view: TableView, gameType: number, money: number[], dealer: number = null) {
+export async function simpleInitialization(view: TableView, gameType: number, money: number[], dealer: number | null = null) {
     const data = await simpleSit(view, gameType, money);
 
-    if (dealer == null) {
+    if (dealer === null) {
         if (money.length === 2) {
             dealer = 1;
         } else {
@@ -184,6 +184,7 @@ export const baseTournament: TournamentDefinition = {
     IsRegistered: true,
     ChipsAddedAtReBuy: 1000,
     ChipsAddedAtDoubleReBuy: 2000,
+    ChipsAddedAtAddOn: 2500,
     Status: TournamentStatus.Started,
     IsPaused: false,
     MinPlayers: 2,

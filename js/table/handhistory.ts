@@ -153,11 +153,11 @@ export class HandHistory extends TableMonitor {
 
         // Sort players by total winning.
         winnersList = winnersList.sort((a, b) => {
-            if (a.winAmount === null) {
+            if (a.winAmount === null || a.winAmount === undefined) {
                 return 1;
             }
 
-            if (b.winAmount === null) {
+            if (b.winAmount === null || b.winAmount === undefined) {
                 return 1;
             }
 

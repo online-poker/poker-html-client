@@ -1,4 +1,12 @@
-﻿interface Device {
+﻿/// <reference types="cordova-plugin-camera" />
+/// <reference types="cordova-plugin-device" />
+/// <reference types="cordova-plugin-keyboard" />
+/// <reference types="cordova-plugin-media" />
+/// <reference types="cordova-plugin-network-information" />
+/// <reference types="cordova-plugin-statusbar" />
+/// <reference types="cordova-plugin-splashscreen" />
+
+interface Device {
     available: boolean;
 }
 

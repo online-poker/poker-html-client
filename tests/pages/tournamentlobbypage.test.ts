@@ -47,6 +47,7 @@ const baseTournament: TournamentDefinition = {
     IsRegistered: true,
     ChipsAddedAtReBuy: 1000,
     ChipsAddedAtDoubleReBuy: 2000,
+    ChipsAddedAtAddOn: 2500,
     Status: TournamentStatus.Started,
     IsPaused: false,
     MinPlayers: 2,
@@ -60,18 +61,18 @@ describe("Tournament lobby page", function () {
     beforeAll(() => {
         global.messages = {
         };
-        metadataManager.bets = [
+        metadataManager.setBets([
             [],
             [
                 { Level: 1, SmallBlind: 10, BigBlind: 20, Ante: undefined },
             ],
-        ];
-        metadataManager.prizes = [
+        ]);
+        metadataManager.setPrizes([
             [],
             [
                 { MaxPlayer: 10, PrizeLevel: [50, 30, 20] },
             ],
-        ];
+        ]);
     });
     describe("Registration button", function () {
         it("Unauthenticted could not register", function () {

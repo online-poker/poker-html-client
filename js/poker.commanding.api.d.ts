@@ -83,7 +83,7 @@ interface PlayerStatusInfo {
     PlayerUrl: string;
     Money: number;
     Seat: number;
-    Cards: string;
+    Cards: string | null;
     Bet: number;
     Status: number;
     Points: number;
@@ -198,7 +198,7 @@ interface GameActionStartInformation {
     /**
      * Amount of money which put in the pot
      */
-    Amount: number;
+    Amount: number | null;
 }
 
 interface GameHubClient {
@@ -322,7 +322,7 @@ interface GameHubClient {
      * @param bigBlind New value of big blind on the table
      * @param ante New value of the ante on the table
      */
-    TableBetParametersChanged: (tableId: number, smallBlind: number, bigBlind: number, ante: number) => void;
+    TableBetParametersChanged: (tableId: number, smallBlind: number, bigBlind: number, ante: number | null) => void;
 
     /**
     * Inform that table game type changed.

@@ -83,6 +83,7 @@ export function cardValue(card: number) {
             value = "A";
             break;
         default:
+            value = "invalid";
             break;
     }
 
@@ -122,8 +123,9 @@ export function cardValue(card: number) {
 /**
  * Decode cards array from the base64 representation.
  * @param cardsData Cards data encoded as string.
+ * @param gameType Type of the game for which return the decoded cards.
  */
-export function decodeCardsArray(cardsData: string): number[] {
+export function decodeCardsArray(cardsData: string | null): number[] {
     if (cardsData === null || cardsData === null) {
         return null;
     }

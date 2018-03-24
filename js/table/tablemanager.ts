@@ -8,6 +8,7 @@ import {
 import * as ko from "knockout";
 import { DefaultApiProvider, IApiProvider } from "poker/api";
 import { commandManager } from "poker/commandmanager";
+import { TablePlaceModel } from "poker/table/tabpleplacemodel";
 import * as signals from "signals";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
@@ -90,13 +91,14 @@ export class TableManager {
             }
 
             const tableId: number = parameters[0];
-            let tableView = self.getTableById(tableId);
+            const tableView = self.getTableById(tableId);
             if (tableView != null) {
+                let tableViewSafe = tableView;
                 // tslint:disable-next-line:no-console
                 console.log("Leaving table " + tableView.tableId.toString());
                 tableView.showStandupPrompt().then(function () {
-                    tableView.disconnect();
-                    tableView = self.remove(tableView);
+                    tableViewSafe.disconnect();
+                    tableViewSafe = self.remove(tableViewSafe);
 
                     // appReloadService.clearMonitoring(table.TableId);
 
@@ -114,10 +116,10 @@ export class TableManager {
             result.reject();
             return result;
         });
-        connectionService.newConnection.add(function() {
+        connectionService.newConnection.add(function(currentConnection: ConnectionWrapper) {
             if (authManager.authenticated()) {
-                self.initializeChatHub(connectionService.currentConnection);
-                self.initializeGameHub(connectionService.currentConnection);
+                self.initializeChatHub(currentConnection);
+                self.initializeGameHub(currentConnection);
             }
         });
         settings.autoHideCards.subscribe((newValue) => {
@@ -509,7 +511,19 @@ export class TableManager {
     }
 
     public getNonExistingTable(): TableView {
-        return new TableView(0, null, this.apiProvider);
+        const nonExistingTableModel: GameTableModel = {
+            TableId: 0,
+            TableName: "NON-EXISTING",
+            SmallBlind: 0,
+            BigBlind: 0,
+            AveragePotSize: 0,
+            CurrencyId: 1,
+            HandsPerHour: 0,
+            JoinedPlayers: 0,
+            MaxPlayers: 10,
+            PotLimitType: 2,
+        };
+        return new TableView(0, nonExistingTableModel, this.apiProvider);
     }
     private onPlayerCardsDealed(tableId: number) {
         const tableView = this.getTableById(tableId);

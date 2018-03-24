@@ -27,6 +27,21 @@ describe("tableSlider", function () {
                         "   </div>",
                         "</div>"].join("\n");
         ko.applyBindings(tableSlider, el.childNodes[0]);
+
+        el.innerHTML = ["<div class=\"slider-container\">",
+                        "   <span class=\"min-bet-amount\" data-bind=\"text: minimum\"></span>",
+                        "   <input class=\"bet-amount input-small\" type=\"text\"",
+                        "       data-bind=\"value: current\" />",
+                        "   <span class=\"max-bet-amount\" data-bind=\"text: maximum\"></span>",
+                        "   <div class=\"slider\">",
+                        "       <div class=\"slider-controls\">",
+                        "           <span class=\"slider-move-left\"></span>",
+                        "           <span class=\"slider-move-right\"></span>",
+                        "       </div>",
+                        "       <div class=\"slider-handle\"></div>",
+                        "   </div>",
+                        "</div>"].join("\n");
+        ko.applyBindings(tableSlider, el.childNodes[0]);
     });
     it("increase should work", function () {
         tableSlider.setParameters(0, 20, 0, 100);
@@ -85,7 +100,7 @@ describe("tableSlider", function () {
                 return x - 100;
             });
             tableSlider.setParameters(100, 20, 0, 100);
-            const evt = document.createEvent("MouseEvents");
+            const evt: any = document.createEvent("MouseEvents");
             evt.initEvent("click", false, true);
             evt.pageX = 150;
             const succeed = tableSlider.selectManually(evt);
@@ -100,7 +115,7 @@ describe("tableSlider", function () {
                 return x - 100;
             });
             tableSlider.setParameters(100, 20, 0, 100);
-            const evt: TapEvent = document.createEvent("TouchEvent");
+            const evt = document.createEvent("TouchEvent");
             evt.initEvent("click", false, true);
             evt.originalEvent = evt;
             evt.originalEvent.gesture = {
@@ -118,7 +133,7 @@ describe("tableSlider", function () {
                 return x - 100;
             });
             tableSlider.setParameters(100, 20, 0, 100);
-            const evt: TapEvent = document.createEvent("TouchEvent");
+            const evt = document.createEvent("TouchEvent");
             evt.initEvent("click", false, true);
             evt.originalEvent = evt;
             evt.originalEvent.gesture = undefined;

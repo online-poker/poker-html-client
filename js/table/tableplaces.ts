@@ -180,11 +180,13 @@ export class TablePlaces {
 
         return playerList[0];
     }
+
+    /**
+     * Sets players which play on the table.
+     * @param players Players which play on table
+     * @param gameType Type of the game which players play
+     */
     public setPlayers(players: TablePlayer[]) {
-        /// <signature>
-        ///     <summary>Sets players on the table.</summary>
-        ///     <param name="players" type="Array">Array of players</param>
-        /// </signature>
         this.clear();
         for (let i = 1; i <= this.maxPlayers; i++) {
             const playersOnSeat = players.filter((player) => player.Seat === i);
