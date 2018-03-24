@@ -253,6 +253,9 @@ export class App {
         document.addEventListener("pause", this.onPause, false);
         document.addEventListener("resume", this.onResume, false);
         deviceEvents.initialize();
+        deviceEvents.ready.addOnce(function() {
+            console.log("Device ready fired");
+        });
     }
     // deviceready Event Handler
     //
