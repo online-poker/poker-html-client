@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import * as authManager from "../authmanager";
+import { authManager } from "poker/authmanager";
 
 export class PlayerMessage {
     public messageId: number;

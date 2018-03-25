@@ -1,6 +1,6 @@
 ﻿import { TableReload } from "@poker/api-server";
+import { authManager } from "poker/authmanager";
 import { appConfig } from "../appconfig";
-import * as authManager from "../authmanager";
 
 declare var host: string;
 

@@ -4,7 +4,7 @@ declare var host: string;
 import { Game, LobbyTournamentItem, Tournament, TournamentDefinition } from "@poker/api-server";
 import * as ko from "knockout";
 import * as moment from "moment";
-import * as authManager from "poker/authmanager";
+import { authManager } from "poker/authmanager";
 import { AccountManager } from "poker/services/accountManager";
 import { settings } from "poker/settings";
 import { App } from "../app";

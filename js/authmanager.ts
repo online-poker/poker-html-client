@@ -6,7 +6,7 @@ import ko = require("knockout");
 import { appConfig } from "./appconfig";
 import { settings } from "./settings";
 
-class AuthManager {
+export class AuthManager {
     public authenticated: KnockoutObservable<boolean>;
     public login: KnockoutObservable<string>;
     public loginId: KnockoutObservable<number>;
@@ -89,5 +89,4 @@ class AuthManager {
     }
 }
 
-const authManager: AuthManager = new AuthManager();
-export = authManager;
+export const authManager: AuthManager = new AuthManager();

@@ -13,9 +13,9 @@ import {
 } from "@poker/api-server";
 import * as ko from "knockout";
 import * as moment from "moment";
+import { authManager } from "poker/authmanager";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
-import * as authManager from "../authmanager";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";

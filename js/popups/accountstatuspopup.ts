@@ -1,8 +1,8 @@
 /// <reference path="../poker.commanding.api.ts" />
 
 import * as ko from "knockout";
+import { authManager } from "poker/authmanager";
 import { App } from "../app";
-import * as authManager from "../authmanager";
 import { _ } from "../languagemanager";
 import { accountService } from "../services";
 import { PopupBase } from "../ui/popupbase";

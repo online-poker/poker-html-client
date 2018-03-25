@@ -1,4 +1,4 @@
-import * as authManager from "../authmanager";
+import { authManager } from "poker/authmanager";
 import { AccountManager } from "./accountManager";
 
 export class AccountService {

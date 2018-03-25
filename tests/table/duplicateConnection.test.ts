@@ -2,10 +2,6 @@ import * as ko from "knockout";
 import { DefaultApiProvider } from "poker/api";
 import { CommandManager } from "poker/commandmanager";
 import { App } from "../../js/app";
-import {
-    login,
-    loginId,
-} from "../../js/authmanager";
 import { debugSettings } from "../../js/debugsettings";
 import { slowInternetService } from "../../js/services";
 import { ActionBlock } from "../../js/table/actionBlock";

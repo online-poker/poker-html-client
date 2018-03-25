@@ -1,6 +1,6 @@
 import * as ko from "knockout";
+import { authManager } from "poker/authmanager";
 import { App } from "../app";
-import * as authManager from "../authmanager";
 import { accountService, reloadManager, WebsiteService } from "../services";
 import { PageBase } from "../ui/pagebase";
 

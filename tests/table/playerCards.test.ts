@@ -1,8 +1,5 @@
 import { appConfig, overrideConfiguration } from "poker/appconfig";
-import {
-    login,
-    loginId,
-} from "poker/authmanager";
+import { authManager } from "poker/authmanager";
 import { debugSettings } from "poker/debugsettings";
 import { ActionBlock } from "poker/table/actionBlock";
 import { allBacksClassesTwoCards } from "poker/table/cardsHelper";
@@ -15,6 +12,9 @@ const log = function (message: string, ...params: any[]) {
         console.log(message);
     }
 };
+
+const login = authManager.login;
+const loginId = authManager.loginId;
 
 async function playUntilFlop(playerId: number) {
     const tableModel = getTable();

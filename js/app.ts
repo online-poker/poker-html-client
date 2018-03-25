@@ -1,11 +1,11 @@
 import { getAuthToken, setAuthToken } from "@poker/api-server";
 import * as $ from "jquery";
+import { authManager } from "poker/authmanager";
 import { CommandManager } from "poker/commandmanager";
 import { AccountManager } from "poker/services/accountManager";
 import { TableView } from "poker/table/tableview";
 import "signalr";
 import * as signals from "signals";
-import * as authManager from "./authmanager";
 import { debugSettings } from "./debugsettings";
 import { _ } from "./languagemanager";
 import * as metadataManager from "./metadatamanager";

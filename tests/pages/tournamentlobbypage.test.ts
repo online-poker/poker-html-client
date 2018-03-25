@@ -4,7 +4,7 @@ import {
     TournamentPlayerStatus,
     TournamentStatus,
 } from "@poker/api-server";
-import * as authManager from "poker/authmanager";
+import { authManager } from "poker/authmanager";
 import * as metadataManager from "poker/metadatamanager";
 import { TournamentLobbyPage } from "poker/pages/tournamentlobbypage";
 

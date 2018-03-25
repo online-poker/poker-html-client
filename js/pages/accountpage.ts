@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import { appConfig } from "poker/appconfig";
+import { authManager } from "poker/authmanager";
 import { App } from "../app";
-import * as authManager from "../authmanager";
 import { AccountManager } from "../services/accountManager";
 import { settings } from "../settings";
 import { PageBase } from "../ui/pagebase";

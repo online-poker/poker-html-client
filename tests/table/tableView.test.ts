@@ -1,9 +1,6 @@
 /** global process */
 import * as ko from "knockout";
-import {
-    login,
-    loginId,
-} from "../../js/authmanager";
+import { authManager } from "poker/authmanager";
 import { debugSettings } from "../../js/debugsettings";
 import { allBacksClassesFourCards } from "../../js/table/cardsHelper";
 import { GameActionsQueue } from "../../js/table/gameactionsqueue";
@@ -26,6 +23,9 @@ function getSeatPlayer(seat: number, initialAmount: number): PlayerStatusInfo {
         Status: 0,
     };
 }
+
+const login = authManager.login;
+const loginId = authManager.loginId;
 
 describe("Table view", () => {
     describe("No limit", () => {
