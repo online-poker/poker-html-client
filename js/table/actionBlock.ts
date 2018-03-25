@@ -2,10 +2,10 @@
 
 import { Game } from "@poker/api-server";
 import * as ko from "knockout";
+import { authManager } from "poker/authmanager";
 import * as signals from "signals";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
-import * as authManager from "../authmanager";
 import { debugSettings } from "../debugsettings";
 import { withCommas } from "../helpers";
 import { _ } from "../languagemanager";

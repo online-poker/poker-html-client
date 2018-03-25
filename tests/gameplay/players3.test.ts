@@ -1,14 +1,14 @@
 import * as ko from "knockout";
-import {
-    login,
-    loginId,
-} from "../../js/authmanager";
+import { authManager } from "poker/authmanager";
 import { debugSettings } from "../../js/debugsettings";
 import { GameActionsQueue } from "../../js/table/gameactionsqueue";
 import {
     TableView,
 } from "../../js/table/tableview";
 import { drainQueue, getTable, getTestTableView, printTableView, simpleInitialization } from "../table/helper";
+
+const login = authManager.login;
+const loginId = authManager.loginId;
 
 describe("gameplay", function () {
     const login1 = "Player1";

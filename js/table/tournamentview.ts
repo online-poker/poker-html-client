@@ -1,9 +1,9 @@
 ﻿import { Game, Tournament, TournamentDefinition, TournamentPlayerStatus, TournamentPrizeStructure, TournamentStatus } from "@poker/api-server";
 import * as ko from "knockout";
+import { authManager } from "poker/authmanager";
 import { TableView } from "poker/table/tableview";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
-import * as authManager from "../authmanager";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";

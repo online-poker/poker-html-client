@@ -1,9 +1,9 @@
 ﻿import { Message } from "@poker/api-server";
 import * as ko from "knockout";
 import { appConfig } from "poker/appconfig";
+import { authManager } from "poker/authmanager";
 import { _ } from "poker/languagemanager";
 import { App } from "../app";
-import * as authManager from "../authmanager";
 import { WebsiteService } from "../services";
 import { AccountManager } from "../services/accountManager";
 import { settings } from "../settings";

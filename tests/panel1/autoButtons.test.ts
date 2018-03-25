@@ -1,8 +1,4 @@
 import * as ko from "knockout";
-import {
-    login,
-    loginId,
-} from "../../js/authmanager";
 import { debugSettings } from "../../js/debugsettings";
 import { ActionBlock } from "../../js/table/actionBlock";
 import { GameActionsQueue } from "../../js/table/gameactionsqueue";

@@ -1,5 +1,5 @@
+import { authManager } from "poker/authmanager";
 import { App } from "../app";
-import * as authManager from "../authmanager";
 import { PageBlock } from "../pageblock";
 import { AccountManager } from "../services/accountManager";
 import { PageBase } from "../ui/pagebase";

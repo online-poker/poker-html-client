@@ -1,12 +1,12 @@
 /* tslint:disable:no-bitwise */
 import { PersonalAccountData, TournamentOptionsEnum } from "@poker/api-server";
 import * as ko from "knockout";
+import { authManager } from "poker/authmanager";
 import { ICommandExecutor } from "poker/commandmanager";
 import { ICurrentTableProvider } from "poker/services";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
-import * as authManager from "../authmanager";
-import { AccountManager, IAccountManager } from "../services/accountManager";
+import { IAccountManager } from "../services/accountManager";
 import { settings } from "../settings";
 import { tableManager } from "../table/tablemanager";
 import { TournamentView } from "../table/tournamentview";
