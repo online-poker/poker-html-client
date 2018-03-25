@@ -198,7 +198,7 @@ export function registerBindings() {
     };
     const dateBindingHander = {
         update(
-            element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
+            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
             viewModel: any, bindingContext: KnockoutBindingContext) {
             const lockey = ko.utils.unwrapObservable(valueAccessor()) as string;
             const value = _(lockey);
@@ -246,7 +246,7 @@ export function registerBindings() {
             }
 
             let wrapperValueAccessor: () => any;
-            const handler = function(viewMovel, event) {
+            const handler = function(viewMovel: any, event: Event) {
                 if (typeof commandTag === "string") {
                     app.executeCommand(commandTag);
                 } else if (typeof commandTag === "function") {
@@ -286,7 +286,7 @@ export function registerBindings() {
     };
     const numericTextHandler = {
         update(
-            element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
+            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
             viewModel: any, bindingContext: KnockoutBindingContext) {
             const value = ko.utils.unwrapObservable(valueAccessor()) as any;
             const positions = ko.utils.unwrapObservable(allBindingsAccessor().positions) as number || numericTextHandler.defaultPositions;
@@ -320,7 +320,7 @@ export function registerBindings() {
         moneySymbol: "$",
         chipsSymbol: "",
         update(
-            element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
+            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
             viewModel: any, bindingContext: KnockoutBindingContext) {
             const value = ko.utils.unwrapObservable(valueAccessor()) as any;
             const positions = ko.utils.unwrapObservable(allBindingsAccessor()) as number;
@@ -362,7 +362,7 @@ export function registerBindings() {
         firstTime: true,
         logging: false,
         defaultDuration: 400,
-        log(message, ...params) {
+        log(message: string, ...params: any[]) {
             if (swipeHandler.logging) {
                 // tslint:disable-next-line:no-console
                 console.log(message, params);
@@ -388,7 +388,7 @@ export function registerBindings() {
             const updateOnSlideChange = valObservable.updateOnSlideChange === undefined
                 ? true
                 : valObservable.updateOnSlideChange;
-            function endHandler(index, elem) {
+            function endHandler(index: number, elem: any) {
                     swipeHandler.log("Callback: index - ", index, ", value - ", valObservable.index());
                     if (bindingContext.insideUpdate) {
                         swipeHandler.log("swipeHandler.insideUpdate = false");
@@ -427,7 +427,7 @@ export function registerBindings() {
             bindingContext.$swiper = new Swipe(element, options);
         },
         update(
-            element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
+            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
             viewModel: any, bindingContext: SwipeKnockoutBindingContext) {
             const valObservable: SwipeBindingOptions = valueAccessor();
             if (valObservable.disabled) {
@@ -463,7 +463,7 @@ export function registerBindings() {
             return { controlsDescendantBindings: true };
         },
         update(
-            element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
+            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
             viewModel: any, bindingContext: SwipeKnockoutBindingContext) {
             swipeHandler.log("swipeForeach update ", valueAccessor()(), viewModel, bindingContext.$swiper);
             ko.bindingHandlers.foreach.update!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
@@ -487,7 +487,7 @@ export function registerBindings() {
     const scrollHandler = {
         logging: false,
         defaultDuration: 400,
-        log(message, ...params) {
+        log(message: string, ...params: any[]) {
             if (scrollHandler.logging) {
                 // tslint:disable-next-line:no-console
                 console.log(message, params);
@@ -602,7 +602,7 @@ export function registerBindings() {
         init(
             element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
             viewModel: any, bindingContext: KnockoutBindingContext) {
-            const handler = function(data, event: Event) {
+            const handler = function(data: any, event: Event) {
                 setTimeout(() => {
                     const currentTargetElement = event.currentTarget as HTMLElement;
                     currentTargetElement.focus();

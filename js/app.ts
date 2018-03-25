@@ -1,6 +1,7 @@
 import { getAuthToken, setAuthToken } from "@poker/api-server";
 import * as $ from "jquery";
 import { AccountManager } from "poker/services/accountManager";
+import { TableView } from "poker/table/tableview";
 import "signalr";
 import * as signals from "signals";
 import * as authManager from "./authmanager";
@@ -288,20 +289,20 @@ export class App {
         app.tablesPage.calculateLandscapeWidth();
         pushService.register();
 
-        tableManager.maxTablesReached.add(function(continuation) {
+        tableManager.maxTablesReached.add(function(continuation: () => void) {
             SimplePopup.display(_("maxtables.caption"), _("maxtables.maxtablesreached"));
         });
         tableManager.hasTurn.subscribe(function(value) {
             app.tabBar.notice("tables", value);
         });
-        app.popupClosed.add(function(popupName) {
+        app.popupClosed.add(function(popupName: string) {
             keyboardActivationService.forceHideKeyboard();
             console.log("Popup " + popupName + " closed");
         });
         app.receivedEvent("deviceready");
     }
     // Update DOM on a Received Event
-    public async receivedEvent(id) {
+    public async receivedEvent(id: string) {
         const self = this;
         timeService.start();
         settings.soundEnabled.subscribe(function(value) {
@@ -1011,7 +1012,7 @@ export class App {
             this.reloadApplication();
         });
     }
-    private async updateMetadataOnResume(lastPage, pageBlockBeforeClosing, subPageBeforeClosing) {
+    private async updateMetadataOnResume(lastPage: string, pageBlockBeforeClosing: string, subPageBeforeClosing: string) {
         const self = this;
         if (debugSettings.initialization.stopOnResume) {
             return;
@@ -1291,7 +1292,7 @@ export class App {
         app.tabBar.select("more", false);
     }
 
-    private updateTabbar(authenticated, tables) {
+    private updateTabbar(authenticated: boolean, tables: TableView[]) {
         const self = this;
         if (authenticated) {
             const tablesEnabled = tables.length > 0;
@@ -1339,7 +1340,7 @@ export class App {
             console.log(message);
         }
     }
-    private getParameterByName(name) {
+    private getParameterByName(name: string) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         const regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
         const results = regex.exec(location.search);

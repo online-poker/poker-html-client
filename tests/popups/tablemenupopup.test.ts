@@ -1,4 +1,5 @@
 import { Account, PersonalAccountData, TournamentOptionsEnum } from "@poker/api-server";
+import { ICommandExecutor } from "poker/commandmanager";
 import { debugSettings } from "poker/debugsettings";
 import { TableMenuPopup } from "poker/popups";
 import { IAccountManager } from "poker/services/accountManager";
@@ -13,6 +14,11 @@ const defaultPersonalAccountData = {
     LastIncomeDate: "",
     LastIncomeAmount: 0,
     LastRequestNumber: 0,
+};
+const dummyCommandExecutor: ICommandExecutor = {
+    executeCommand: (name, args) => {
+        // do nothing.
+    },
 };
 
 function getAccount(baseData?: Partial<PersonalAccountData>) {
@@ -43,13 +49,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.rebuyAllowed()).toEqual(false);
         });
@@ -60,13 +61,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.rebuyAllowed()).toEqual(false);
         });
@@ -79,13 +75,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.rebuyAllowed()).toEqual(false);
         });
@@ -100,13 +91,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.rebuyAllowed()).toEqual(false);
         });
@@ -125,11 +111,6 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             let isGetAccountCalled = false;
             const accountManager = {
                 getAccount: async () => {
@@ -138,7 +119,7 @@ describe("Table menu", function () {
                     return await getAccount();
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
         });
@@ -157,11 +138,6 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             let isGetAccountCalled = false;
             const accountManager = {
                 getAccount: async () => {
@@ -174,7 +150,7 @@ describe("Table menu", function () {
                     return account;
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
             expect(tableMenuPopup.rebuyAllowed()).toEqual(false);
@@ -194,11 +170,6 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             let isGetAccountCalled = false;
             const accountManager = {
                 getAccount: async () => {
@@ -210,7 +181,7 @@ describe("Table menu", function () {
                     });
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.rebuyAllowed()).toEqual(true);
         });
@@ -223,13 +194,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
@@ -240,13 +206,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
@@ -259,13 +220,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
@@ -280,13 +236,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
@@ -301,13 +252,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
@@ -325,11 +271,6 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             let isGetAccountCalled = false;
             const accountManager = {
                 getAccount: async () => {
@@ -338,7 +279,7 @@ describe("Table menu", function () {
                     return await getAccount();
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
         });
@@ -357,11 +298,6 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             let isGetAccountCalled = false;
             const accountManager = {
                 getAccount: async () => {
@@ -374,7 +310,7 @@ describe("Table menu", function () {
                     return account;
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
@@ -394,11 +330,6 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             let isGetAccountCalled = false;
             const accountManager = {
                 getAccount: async () => {
@@ -410,7 +341,7 @@ describe("Table menu", function () {
                     });
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(true);
         });
@@ -423,13 +354,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
@@ -440,13 +366,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
@@ -459,13 +380,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
@@ -480,13 +396,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
@@ -504,11 +415,6 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             let isGetAccountCalled = false;
             const accountManager = {
                 getAccount: async () => {
@@ -517,7 +423,7 @@ describe("Table menu", function () {
                     return await getAccount();
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
         });
@@ -535,13 +441,8 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
@@ -561,11 +462,6 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             let isGetAccountCalled = false;
             const accountManager = {
                 getAccount: async () => {
@@ -577,7 +473,7 @@ describe("Table menu", function () {
                     });
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
@@ -597,11 +493,6 @@ describe("Table menu", function () {
             const currentTablePovider = {
                 currentTable: () => view,
             };
-            const commandExecutor = {
-                executeCommand: (name, args) => {
-                    // do nothing.
-                },
-            };
             let isGetAccountCalled = false;
             const accountManager = {
                 getAccount: async () => {
@@ -613,7 +504,7 @@ describe("Table menu", function () {
                     });
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, commandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(true);
         });

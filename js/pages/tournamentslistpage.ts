@@ -3,7 +3,7 @@
 
 declare var host: string;
 
-import { LobbyTournamentItem, Tournament } from "@poker/api-server";
+import { LobbyTournamentItem, Tournament, TournamentDefinition } from "@poker/api-server";
 import * as ko from "knockout";
 import { App } from "../app";
 import { debugSettings } from "../debugsettings";
@@ -80,7 +80,7 @@ export class TournamentsListPage extends PageBase {
     public back() {
         app.lobbyPageBlock.showLobby();
     }
-    public selectTournament(tournament) {
+    public selectTournament(tournament: TournamentDefinition) {
         app.lobbyPageBlock.selectTournament(tournament);
     }
     private log(message: string, ...params: any[]) {

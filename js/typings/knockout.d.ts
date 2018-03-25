@@ -1,3 +1,3 @@
 ﻿interface KnockoutObservable<T> {
-    setError(error: string);
+    setError(error: string): void;
 }

@@ -1,4 +1,5 @@
-﻿import { App } from "../app";
+﻿import { TournamentDefinition } from "@poker/api-server";
+import { App } from "../app";
 import { PageBlock } from "../pageblock";
 import { LobbyPage } from "./lobbypage";
 import { TablesListPage } from "./tableslistpage";
@@ -38,7 +39,7 @@ export class LobbyPageBlock extends PageBlock {
         app.executeCommand("pageblock.lobby");
         app.lobbyPageBlock.showSecondary("lobby");
     }
-    public selectTournament(tournament) {
+    public selectTournament(tournament: TournamentDefinition) {
         this.tournamentLobbyPage.setTournament(tournament.TournamentId, this.currentPage);
         this.showSecondary("tournamentLobby");
     }

@@ -93,7 +93,7 @@ class TabBar {
 
     private log(message: string, ...params: any[]) {
         if (debugSettings.application.debugTabbar) {
-            const traceFunction = console.trace as (message: string, ...args) => void;
+            const traceFunction = console.trace as (message: string, ...args: any[]) => void;
             traceFunction.bind(console, message, params)();
         }
     }

@@ -18,7 +18,7 @@ export class SelectAvatarPopup extends PopupBase {
     public confirm() {
         this.selected.dispatch(this.selectedAvatar());
     }
-    public selectAvatar(item) {
+    public selectAvatar(item: string) {
         this.selectedAvatar(item);
         this.close();
     }

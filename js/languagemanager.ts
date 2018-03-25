@@ -14,7 +14,7 @@ export class LanguageManager {
     public setProvider(provider: any) {
         messages = provider;
     }
-    public getMessage(message: string, parameters = null): string {
+    public getMessage(message: string, parameters: object | null = null): string {
         if (message == null) {
             return "";
         }

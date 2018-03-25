@@ -4,7 +4,7 @@ import * as ko from "knockout";
 import { SelectorItem } from "./selector";
 
 export function registerExtenders() {
-    ko.extenders["options"] = (target, option: { caption: string; items: SelectorItem[]}) => {
+    ko.extenders["options"] = (target: KnockoutObservable<any>, option: { caption: string; items: SelectorItem[]}) => {
         target.options = option.items;
         target.caption = option.caption;
         target.currentValue = ko.computed(() => {

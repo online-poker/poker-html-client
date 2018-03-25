@@ -153,7 +153,7 @@ export class ConnectionWrapper {
             };
 
             const fixup = $.Deferred();
-            const x = (attempts) => {
+            const x = (attempts: number) => {
                 if (attempts === 0) {
                     fixup.reject();
                 }
@@ -256,7 +256,7 @@ export class ConnectionWrapper {
             connectionService.isConnected = false;
         }
     }
-    private establishConnectionCore(maxAttempts) {
+    private establishConnectionCore(maxAttempts: number) {
         const result = $.Deferred<ConnectionWrapper>();
         if (maxAttempts <= 0) {
             this.logEvent("Stop connection attempts");
@@ -342,7 +342,7 @@ export class ConnectionWrapper {
 
         this.refreshHandle = null;
     }
-    private getAndroidVersion(userAgent = null) {
+    private getAndroidVersion(userAgent: string = null) {
         const ua = userAgent || navigator.userAgent;
         const match = ua.match(/Android\s([0-9\.]*)/);
         return match ? match[1] : false;

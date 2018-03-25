@@ -360,7 +360,7 @@ export class TournamentView {
 
         const data = this.tournamentData();
         const structure = this.getPrizeStructure(data.WellKnownPrizeStructure);
-        const ascendingSort = (a, b) => {
+        const ascendingSort = (a: TournamentPrizeStructure, b: TournamentPrizeStructure) => {
             return a.MaxPlayer - b.MaxPlayer;
         };
         const prizes = structure.filter((prizeStructure) => {

@@ -72,7 +72,7 @@ export class AppConfig {
  * @param item
  * @returns {boolean}
  */
-function isObject(item) {
+function isObject(item: any) {
     return (item && typeof item === "object" && !Array.isArray(item));
 }
 
@@ -81,7 +81,7 @@ function isObject(item) {
  * @param target
  * @param ...sources
  */
-function mergeDeep(target, ...sources) {
+function mergeDeep(target: any, ...sources: any[]): any {
     if (!sources.length) { return target; }
     const source = sources.shift();
 

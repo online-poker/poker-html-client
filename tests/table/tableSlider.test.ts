@@ -2,7 +2,7 @@ import * as ko from "knockout";
 import { TableSlider } from "../../js/table/tableSlider";
 
 describe("tableSlider", function () {
-    let tableSlider;
+    let tableSlider: TableSlider;
     beforeEach(function () {
         tableSlider = new TableSlider();
         tableSlider.setBounds(0, 200, (x) => x);
@@ -123,7 +123,7 @@ describe("tableSlider", function () {
                     pageX: 150,
                 },
             };
-            const succeed = tableSlider.selectManually(evt);
+            const succeed = tableSlider.selectManually(evt as any);
             expect(tableSlider.current()).toEqual(60);
             expect(tableSlider.position()).toEqual(60);
             expect(succeed).toEqual(true);
@@ -137,7 +137,7 @@ describe("tableSlider", function () {
             evt.initEvent("click", false, true);
             evt.originalEvent = evt;
             evt.originalEvent.gesture = undefined;
-            const succeed = tableSlider.selectManually(evt);
+            const succeed = tableSlider.selectManually(evt as any);
             expect(succeed).toEqual(false);
         });
     });

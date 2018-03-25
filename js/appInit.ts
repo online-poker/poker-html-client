@@ -63,7 +63,7 @@ export function bootstrap(localConfiguration?: Partial<AppConfig>) {
     moment.locale("ru");
 
     // This function prevents the rotation from
-    function shouldRotateToOrientation(interfaceOrientation) {
+    function shouldRotateToOrientation(interfaceOrientation: any) {
         return app.shouldRotateToOrientation(interfaceOrientation);
     }
 

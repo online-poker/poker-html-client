@@ -1,7 +1,7 @@
 ﻿/* tslint:disable:no-bitwise */
 declare var host: string;
 
-import { Game, LobbyTournamentItem, Tournament } from "@poker/api-server";
+import { Game, LobbyTournamentItem, Tournament, TournamentDefinition } from "@poker/api-server";
 import * as ko from "knockout";
 import * as moment from "moment";
 import * as authManager from "poker/authmanager";
@@ -307,7 +307,7 @@ export class LobbyPage extends PageBase {
     public async refreshTables() {
         const gameApi = new Game(host);
         const privateTables = 0;
-        const fullTables = null;
+        const fullTables: boolean | null = null;
 
         const options = this.cashOptions;
         const maxPlayers = options.maxPlayers() === 0 ? 0 : 1 << options.maxPlayers();
@@ -343,7 +343,7 @@ export class LobbyPage extends PageBase {
         }
     }
 
-    public async refreshTournaments(tournamentType) {
+    public async refreshTournaments(tournamentType: number) {
         const self = this;
         const tournamentApi = new Tournament(host);
 
@@ -407,7 +407,7 @@ export class LobbyPage extends PageBase {
             app.processing(false);
         }
     }
-    public selectTournament(tournament) {
+    public selectTournament(tournament: TournamentDefinition) {
         app.lobbyPageBlock.selectTournament(tournament);
     }
     public showFilterOptions() {
@@ -435,8 +435,8 @@ export class LobbyPage extends PageBase {
         if (this.slider.currentIndex() === 2) {
             app.lobbyPageBlock.showSecondary("lobby");
         }
-        }
-    public selectFilterParameter(parameter, value) {
+    }
+    public selectFilterParameter<T>(parameter: KnockoutObservable<T>, value: T) {
         parameter(value);
         if (PageBlock.useDoubleView) {
             app.lobbyPageBlock.showSecondary("lobby");

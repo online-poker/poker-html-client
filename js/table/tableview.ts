@@ -1182,7 +1182,7 @@ export class TableView {
             await api.setTableParameters(this.tableId, !settings.autoHideCards());
         }
     }
-    public onStandup(playerId) {
+    public onStandup(playerId: number) {
         /// <signature>
         ///     <summary>Standup player from the table.</summary>
         ///     <param name="playerId" type="Number">Id of the player which join the table</param>
@@ -1288,7 +1288,7 @@ export class TableView {
      */
     public onTableStatusInfo(
         players: PlayerStatusInfo[], pots: number[] | null, cards: string | null, dealerSeat: number, buyIn: number,
-        baseBuyIn: number, leaveTime, timePass: number, currentPlayerId: number, lastRaise: number, gameId: number,
+        baseBuyIn: number, leaveTime: number, timePass: number, currentPlayerId: number, lastRaise: number, gameId: number,
         authenticated: boolean, actionsCount: number, frozen: boolean, opened: boolean, pauseDate: number,
         lastMessageId: number, gameType: number) {
         const tablePlayers = [] as TablePlayer[];
