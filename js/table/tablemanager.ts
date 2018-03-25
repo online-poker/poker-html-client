@@ -254,7 +254,7 @@ export class TableManager {
         const tournamentInfo = await tournamentApi.getTournament(tournamentId);
         if (tournamentInfo.Status === "Ok") {
             const tournamentData = tournamentInfo.Data;
-            tableManager.selectTournament(tournamentData, true);
+            this.selectTournament(tournamentData, true);
         } else {
             this.openTournamentById(tournamentId, attempts - 1);
         }
@@ -623,28 +623,27 @@ export class TableManager {
     }
 
     private initializeChatHub(wrapper: ConnectionWrapper) {
-        const self = this;
         const chatHub = wrapper.connection.Chat;
-        chatHub.client.ChatConnected = function(tableId, lastMessageId) {
+        chatHub.client.ChatConnected = (tableId, lastMessageId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            self.logDataEvent("ChatConnected", tableId, lastMessageId);
-            const tableView = tableManager.getTableById(tableId);
+            this.logDataEvent("ChatConnected", tableId, lastMessageId);
+            const tableView = this.getTableById(tableId);
             if (tableView === null) {
                 return;
             }
 
             tableView.lastMessageId = lastMessageId;
         };
-        chatHub.client.Message = function(messageId, tableId, type, sender, message) {
+        chatHub.client.Message = (messageId, tableId, type, sender, message) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            self.logDataEvent("Message", messageId, tableId, type, sender, message);
-            const tableView = tableManager.getTableById(tableId);
+            this.logDataEvent("Message", messageId, tableId, type, sender, message);
+            const tableView = this.getTableById(tableId);
             if (tableView === null) {
                 return;
             }
@@ -661,13 +660,13 @@ export class TableManager {
                 broadcastService.displayMessage(message);
             }
         };
-        chatHub.client.MessageChanged = function(messageId, tableId, type, sender, message) {
+        chatHub.client.MessageChanged = (messageId, tableId, type, sender, message) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            self.logDataEvent("MessageChanged", messageId, tableId, type, sender, message);
-            const tableView = tableManager.getTableById(tableId);
+            this.logDataEvent("MessageChanged", messageId, tableId, type, sender, message);
+            const tableView = this.getTableById(tableId);
             if (tableView === null) {
                 return;
             }
@@ -682,17 +681,16 @@ export class TableManager {
         };
     }
     private initializeGameHub(wrapper: ConnectionWrapper) {
-        const self = this;
         const gameHub = wrapper.connection.Game;
-        gameHub.client.TableStatusInfo = function(
+        gameHub.client.TableStatusInfo = (
             tableId, players, pots, cards, dealerSeat, buyIn,
             baseBuyIn, leaveTime, timePass, currentPlayerId, lastRaise, gameId, authenticated,
-            actionsCount, frozen, opened, pauseDate, lastMessageId, gameType) {
+            actionsCount, frozen, opened, pauseDate, lastMessageId, gameType) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 return;
             }
@@ -705,34 +703,34 @@ export class TableManager {
 
             const allNoneClasses = gameType === 1 ? allNoneClassesTwoCards : allNoneClassesFourCards;
             const cardsArr = cards == null ? allNoneClasses : cardsArray(cards);
-            self.logDataEvent(`Table status info: TableId - ${tableId}, Game type: ${gameType} Players - `, players, players.length,
+            this.logDataEvent(`Table status info: TableId - ${tableId}, Game type: ${gameType} Players - `, players, players.length,
                 " Pots - ", pots, " Cards - ", cardsArr.join(" "));
         };
-        gameHub.client.GameStarted = function(tableId, gameId, players, actions, dealerSeat) {
+        gameHub.client.GameStarted = (tableId, gameId, players, actions, dealerSeat) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            self.clearBetEvents(tableId);
-            self.registerEvent(tableId, ["Game", "GameStarted", tableId, gameId, players, actions, dealerSeat]);
-            const tableView = tableManager.getTableById(tableId);
+            this.clearBetEvents(tableId);
+            this.registerEvent(tableId, ["Game", "GameStarted", tableId, gameId, players, actions, dealerSeat]);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 return;
             }
 
             tableView.onGameStarted(gameId, players, actions, dealerSeat);
-            self.logDataEvent("Game started: TableId - ", tableId, " GameId - ", gameId, " Players - ", players);
+            this.logDataEvent("Game started: TableId - ", tableId, " GameId - ", gameId, " Players - ", players);
         };
-        gameHub.client.Bet = function(tableId, playerId, type, amount, nextPlayerId, actionId) {
+        gameHub.client.Bet = (tableId, playerId, type, amount, nextPlayerId, actionId) => {
             if (wrapper.terminated) {
                 return;
             }
 
             if (type !== 2 && type !== 3) {
-                self.registerEvent(tableId, ["Game", "Bet", tableId, playerId, type, amount, nextPlayerId, actionId]);
+                this.registerEvent(tableId, ["Game", "Bet", tableId, playerId, type, amount, nextPlayerId, actionId]);
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView === null) {
                 return;
             }
@@ -766,18 +764,18 @@ export class TableManager {
                     typeString = "Unknown bet type: " + type.toString();
                     break;
             }
-            self.logDataEvent("Bet: TableId - ", tableId,
+            this.logDataEvent("Bet: TableId - ", tableId,
                 " PlayerId - ", playerId,
                 " Type - ", typeString,
                 " Amount - ", amount,
                 " Next Player Id - ", nextPlayerId);
         };
-        gameHub.client.OpenCards = function(tableId, type, cards: string, pots: number[]) {
+        gameHub.client.OpenCards = (tableId, type, cards: string, pots: number[]) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 return;
             }
@@ -801,54 +799,54 @@ export class TableManager {
             }
 
             const cardsStrings = cardsArray(cards).join(" ");
-            self.logDataEvent(`Open cards: TableId - ${tableId} Type - ${typeString} Cards - ${cardsStrings}`);
+            this.logDataEvent(`Open cards: TableId - ${tableId} Type - ${typeString} Cards - ${cardsStrings}`);
         };
-        gameHub.client.MoneyAdded = function(tableId, playerId, amount) {
+        gameHub.client.MoneyAdded = (tableId, playerId, amount) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            self.logDataEvent("Money added: TableId - ", tableId, " PlayerId - ", playerId, " Amount - ", amount);
-            const tableView = tableManager.getTableById(tableId);
+            this.logDataEvent("Money added: TableId - ", tableId, " PlayerId - ", playerId, " Amount - ", amount);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 return;
             }
 
             tableView.onMoneyAdded(playerId, amount);
         };
-        gameHub.client.MoneyRemoved = function(tableId, playerId, amount) {
+        gameHub.client.MoneyRemoved = (tableId, playerId, amount) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            self.logDataEvent("Money removed: TableId - ", tableId, " PlayerId - ", playerId, " Amount - ", amount);
-            const tableView = tableManager.getTableById(tableId);
+            this.logDataEvent("Money removed: TableId - ", tableId, " PlayerId - ", playerId, " Amount - ", amount);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 return;
             }
 
             tableView.onMoneyRemoved(playerId, amount);
         };
-        gameHub.client.PlayerCards = function(tableId, playerId, cards: string) {
+        gameHub.client.PlayerCards = (tableId, playerId, cards: string) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 return;
             }
 
             tableView.onPlayerCards(playerId, decodeCardsArray(cards));
             const cardsString = cardsArray(cards).join(" ");
-            self.logDataEvent("Player cards: TableId - ", tableId, " PlayerId - ", playerId, " Cards - ", cardsString);
+            this.logDataEvent("Player cards: TableId - ", tableId, " PlayerId - ", playerId, " Cards - ", cardsString);
         };
         gameHub.client.PlayerCardOpened = (tableId, playerId, cardPosition, cardValue) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 return;
             }
@@ -856,47 +854,47 @@ export class TableManager {
             tableView.onPlayerCardOpened(playerId, cardPosition, cardValue);
             this.logDataEvent("Player cards: TableId - ", tableId, " PlayerId - ", playerId, " Card on position - ", cardPosition, " with value - ", cardValue);
         };
-        gameHub.client.PlayerCardsMucked = function(tableId, playerId) {
+        gameHub.client.PlayerCardsMucked = (tableId, playerId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 return;
             }
 
             tableView.onPlayerCardsMucked(playerId);
-            self.logDataEvent("Cards mucked. TableId - ", tableId, " PlayerId - ", playerId);
+            this.logDataEvent("Cards mucked. TableId - ", tableId, " PlayerId - ", playerId);
         };
-        gameHub.client.MoveMoneyToPot = function(tableId, amount) {
+        gameHub.client.MoveMoneyToPot = (tableId, amount) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            self.logDataEvent("TableId - ", tableId, " Amount - ", amount);
-            const tableView = tableManager.getTableById(tableId);
+            this.logDataEvent("TableId - ", tableId, " Amount - ", amount);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 return;
             }
 
             tableView.onMoveMoneyToPot(amount);
         };
-        gameHub.client.GameFinished = function(tableId, gameId, winners, rake) {
+        gameHub.client.GameFinished = (tableId, gameId, winners, rake) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            self.registerEvent(tableId, ["Game", "GameFinished", tableId, gameId, winners, rake]);
-            const tableView = tableManager.getTableById(tableId);
+            this.registerEvent(tableId, ["Game", "GameFinished", tableId, gameId, winners, rake]);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 return;
             }
 
             tableView.onGameFinished(gameId, winners, rake);
-            self.logDataEvent("TableId - ", tableId, " GameId - ", gameId, " Winners - ", winners, " Rake - ", rake);
+            this.logDataEvent("TableId - ", tableId, " GameId - ", gameId, " Winners - ", winners, " Rake - ", rake);
         };
-        gameHub.client.PlayerStatus = function(tableId, playerId, status) {
+        gameHub.client.PlayerStatus = (tableId, playerId, status) => {
             if (wrapper.terminated) {
                 return;
             }
@@ -918,8 +916,8 @@ export class TableManager {
                 statusString.push("InGame");
             }
 
-            self.logDataEvent("TableId - ", tableId, " PlayerId - ", playerId, " Status - ", statusString.join("+"));
-            const tableView = tableManager.getTableById(tableId);
+            this.logDataEvent("TableId - ", tableId, " PlayerId - ", playerId, " Status - ", statusString.join("+"));
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 // tslint:disable-next-line:no-console
                 console.warn("Receive unexpected PlayerStatus(" + tableId + "," + playerId + "," + status + ")");
@@ -928,40 +926,40 @@ export class TableManager {
 
             tableView.onPlayerStatus(playerId, status);
         };
-        gameHub.client.Sit = function(tableId, playerId, playerName, seat, amount, playerUrl, points, stars) {
+        gameHub.client.Sit = (tableId, playerId, playerName, seat, amount, playerUrl, points, stars) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 console.warn("Receive unexpected Sit(" + tableId + "," + playerId + "," + playerName + ")");
                 return;
             }
 
-            self.logDataEvent("Sit: TableId - ", tableId, " PlayerId - ", playerId, " PlayerName- ", playerName);
+            this.logDataEvent("Sit: TableId - ", tableId, " PlayerId - ", playerId, " PlayerName- ", playerName);
             tableView.onSit(playerId, seat, playerName, amount, playerUrl, points, stars);
         };
-        gameHub.client.Standup = function(tableId, playerId) {
+        gameHub.client.Standup = (tableId, playerId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 console.warn("Receive unexpected Standup(" + tableId + "," + playerId + ")");
                 return;
             }
 
-            self.logDataEvent("Standup: TableId - ", tableId, " PlayerId - ", playerId);
+            this.logDataEvent("Standup: TableId - ", tableId, " PlayerId - ", playerId);
             tableView.onStandup(playerId);
         };
-        gameHub.client.TableFrozen = function(tableId) {
+        gameHub.client.TableFrozen = (tableId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 console.warn("Receive unexpected TableFrozen(" + tableId + ")");
                 return;
@@ -969,12 +967,12 @@ export class TableManager {
 
             tableView.onFrozen();
         };
-        gameHub.client.TableUnfrozen = function(tableId) {
+        gameHub.client.TableUnfrozen = (tableId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 console.warn("Receive unexpected TableUnfrozen(" + tableId + ")");
                 return;
@@ -982,12 +980,12 @@ export class TableManager {
 
             tableView.onUnfrozen();
         };
-        gameHub.client.TableOpened = function(tableId) {
+        gameHub.client.TableOpened = (tableId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 console.warn("Receive unexpected TableOpened(" + tableId + ")");
                 return;
@@ -995,12 +993,12 @@ export class TableManager {
 
             tableView.onOpened();
         };
-        gameHub.client.TableClosed = function(tableId) {
+        gameHub.client.TableClosed = (tableId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 console.warn("Receive unexpected TableClosed(" + tableId + ")");
                 return;
@@ -1009,12 +1007,12 @@ export class TableManager {
             tableView.onClosed();
         };
 
-        gameHub.client.TablePaused = function(tableId) {
+        gameHub.client.TablePaused = (tableId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 console.warn("Receive unexpected TablePaused(" + tableId + ")");
                 return;
@@ -1022,12 +1020,12 @@ export class TableManager {
 
             tableView.onPaused();
         };
-        gameHub.client.TableResumed = function(tableId) {
+        gameHub.client.TableResumed = (tableId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 console.warn("Receive unexpected TableResumed(" + tableId + ")");
                 return;
@@ -1036,12 +1034,12 @@ export class TableManager {
             tableView.onResumed();
         };
 
-        gameHub.client.FinalTableCardsOpened = function(tableId, cards) {
+        gameHub.client.FinalTableCardsOpened = (tableId, cards) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 console.warn("Receive unexpected FinalTableCardsOpened(" + tableId + "," + cards + ")");
                 return;
@@ -1050,12 +1048,12 @@ export class TableManager {
             tableView.onFinalTableCardsOpened(decodeCardsArray(cards));
         };
 
-        gameHub.client.TableBetParametersChanged = function(tableId, smallBind, bigBlind, ante) {
+        gameHub.client.TableBetParametersChanged = (tableId, smallBind, bigBlind, ante) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 console.warn(`Receive unexpected TableBetParametersChanged(${tableId},${smallBind},${bigBlind},${ante}`);
                 return;
@@ -1063,12 +1061,12 @@ export class TableManager {
 
             tableView.onTableBetParametersChanged(smallBind, bigBlind, ante);
         };
-        gameHub.client.TableGameTypeChanged = function (tableId, gameType) {
+        gameHub.client.TableGameTypeChanged = (tableId, gameType) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 console.warn(`Receive unexpected TableGameTypeChanged(${tableId},${gameType}`);
                 return;
@@ -1076,12 +1074,12 @@ export class TableManager {
 
             tableView.onTableGameTypeChanged(gameType);
         };
-        gameHub.client.TableTournamentChanged = function(tableId, tournamentId) {
+        gameHub.client.TableTournamentChanged = (tableId, tournamentId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tableView = tableManager.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView == null) {
                 console.warn(`Receive unexpected TableTournamentChanged(${tableId}, ${tournamentId})`);
                 return;
@@ -1089,12 +1087,12 @@ export class TableManager {
 
             tableView.onTableTournamentChanged(tournamentId);
         };
-        gameHub.client.TournamentStatusChanged = function(tournamentId, status) {
+        gameHub.client.TournamentStatusChanged = (tournamentId, status) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tournamentView = tableManager.getTournamentById(tournamentId);
+            const tournamentView = this.getTournamentById(tournamentId);
             if (tournamentView == null) {
                 console.warn("Receive unexpected TournamentStatusChanged(" + tournamentId + "," + status + ")");
                 return;
@@ -1102,12 +1100,12 @@ export class TableManager {
 
             tournamentView.onTournamentStatusChanged(status as any);
         };
-        gameHub.client.TournamentTableChanged = function(tournamentId, tableId) {
+        gameHub.client.TournamentTableChanged = (tournamentId, tableId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tournamentView = tableManager.getTournamentById(tournamentId);
+            const tournamentView = this.getTournamentById(tournamentId);
             if (tournamentView == null) {
                 console.warn("Receive unexpected TournamentTableChanged(" + tournamentId + "," + tableId + ")");
                 return;
@@ -1115,12 +1113,12 @@ export class TableManager {
 
             tournamentView.onTournamentTableChanged(tableId);
         };
-        gameHub.client.TournamentPlayerGameCompleted = function(tournamentId, placeTaken) {
+        gameHub.client.TournamentPlayerGameCompleted = (tournamentId, placeTaken) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tournamentView = tableManager.getTournamentById(tournamentId);
+            const tournamentView = this.getTournamentById(tournamentId);
             if (tournamentView == null) {
                 console.warn("Receive unexpected TournamentPlayerGameCompleted(" + tournamentId + "," + placeTaken + ")");
                 return;
@@ -1128,12 +1126,12 @@ export class TableManager {
 
             tournamentView.onTournamentPlayerGameCompleted(placeTaken);
         };
-        gameHub.client.TournamentBetLevelChanged = function(tournamentId, level) {
+        gameHub.client.TournamentBetLevelChanged = (tournamentId, level) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tournamentView = tableManager.getTournamentById(tournamentId);
+            const tournamentView = this.getTournamentById(tournamentId);
             if (tournamentView == null) {
                 console.warn("Receive unexpected TournamentBetLevelChanged(" + tournamentId + "," + level + ")");
                 return;
@@ -1141,12 +1139,12 @@ export class TableManager {
 
             tournamentView.onTournamentBetLevelChanged(level);
         };
-        gameHub.client.TournamentRoundChanged = function(tournamentId, round) {
+        gameHub.client.TournamentRoundChanged = (tournamentId, round) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tournamentView = tableManager.getTournamentById(tournamentId);
+            const tournamentView = this.getTournamentById(tournamentId);
             if (tournamentView == null) {
                 console.warn("Receive unexpected TournamentRoundChanged(" + tournamentId + "," + round + ")");
                 return;
@@ -1154,12 +1152,12 @@ export class TableManager {
 
             tournamentView.onTournamentRoundChanged(round);
         };
-        gameHub.client.TournamentRebuyStatusChanged = function(tournamentId, rebuyAllowed, addonAllowed) {
+        gameHub.client.TournamentRebuyStatusChanged = (tournamentId, rebuyAllowed, addonAllowed) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tournamentView = tableManager.getTournamentById(tournamentId);
+            const tournamentView = this.getTournamentById(tournamentId);
             if (tournamentView == null) {
                 console.warn("Receive unexpected TournamentRebuyStatusChanged(" + tournamentId + ","
                     + rebuyAllowed + "," + addonAllowed + ")");
@@ -1168,12 +1166,12 @@ export class TableManager {
 
             tournamentView.onTournamentRebuyStatusChanged(rebuyAllowed, addonAllowed);
         };
-        gameHub.client.TournamentRebuyCountChanged = function(tournamentId, rebuyCount, addonCount) {
+        gameHub.client.TournamentRebuyCountChanged = (tournamentId, rebuyCount, addonCount) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tournamentView = tableManager.getTournamentById(tournamentId);
+            const tournamentView = this.getTournamentById(tournamentId);
             if (tournamentView == null) {
                 console.warn("Receive unexpected TournamentRebuyCountChanged(" + tournamentId + "," + rebuyCount + "," + addonCount + ")");
                 return;
@@ -1181,12 +1179,12 @@ export class TableManager {
 
             tournamentView.onTournamentRebuyCountChanged(rebuyCount, addonCount);
         };
-        gameHub.client.TournamentFrozen = function(tournamentId) {
+        gameHub.client.TournamentFrozen = (tournamentId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tournamentView = tableManager.getTournamentById(tournamentId);
+            const tournamentView = this.getTournamentById(tournamentId);
             if (tournamentView == null) {
                 console.warn("Receive unexpected TournamentFrozen(" + tournamentId + ")");
                 return;
@@ -1194,12 +1192,12 @@ export class TableManager {
 
             tournamentView.onTournamentFrozen();
         };
-        gameHub.client.TournamentUnfrozen = function(tournamentId) {
+        gameHub.client.TournamentUnfrozen = (tournamentId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tournamentView = tableManager.getTournamentById(tournamentId);
+            const tournamentView = this.getTournamentById(tournamentId);
             if (tournamentView == null) {
                 console.warn("Receive unexpected TournamentUnfrozen(" + tournamentId + ")");
                 return;
@@ -1208,26 +1206,26 @@ export class TableManager {
             tournamentView.onTournamentUnfrozen();
         };
 
-        gameHub.client.TournamentRegistration = function(tournamentId) {
+        gameHub.client.TournamentRegistration = (tournamentId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tournamentView = tableManager.getTournamentById(tournamentId);
+            const tournamentView = this.getTournamentById(tournamentId);
             if (tournamentView != null) {
                 console.warn("Receive unexpected TournamentRegistration(" + tournamentId + ")");
                 return;
             }
 
-            self.openTournamentById(tournamentId);
+            this.openTournamentById(tournamentId);
         };
 
-        gameHub.client.TournamentRegistrationCancelled = function(tournamentId) {
+        gameHub.client.TournamentRegistrationCancelled = (tournamentId) => {
             if (wrapper.terminated) {
                 return;
             }
 
-            const tournamentView = tableManager.getTournamentById(tournamentId);
+            const tournamentView = this.getTournamentById(tournamentId);
             if (tournamentView === null) {
                 console.warn("Receive unexpected TournamentRegistrationCancelled(" + tournamentId + ")");
                 return;
@@ -1235,7 +1233,7 @@ export class TableManager {
 
             tournamentView.onTournamentRegistrationCancelled();
             gameHub.server.unsubscribeTournament(tournamentId);
-            tableManager.removeTournamentById(tournamentId);
+            this.removeTournamentById(tournamentId);
         };
     }
 
