@@ -2,12 +2,12 @@
 
 import * as table from "./table";
 
-const trivialViewModelFactory = function (params, componentInfo) {
+const trivialViewModelFactory = function (params: { data: any }, componentInfo: KnockoutComponentTypes.ComponentConfig) {
     return params.data;
 };
 
-const tableIconViewModelFactory = function (params, componentInfo) {
-    const tableData = params.data as LobbyTableItem;
+const tableIconViewModelFactory = function (params: { data: LobbyTableItem }, componentInfo: KnockoutComponentTypes.ComponentConfig) {
+    const tableData = params.data;
     return {
         displayTakenSeats: true,
         hasLoadingIndicator: false,

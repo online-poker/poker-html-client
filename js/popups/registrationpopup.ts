@@ -77,7 +77,7 @@ export class RegistrationPopup extends PopupBase {
      */
     public selectPicture() {
         app.showPopup("selectAvatar", metadataManager.avatars);
-        app.selectAvatarPopup.selected.addOnce((avatarUrl) => {
+        app.selectAvatarPopup.selected.addOnce((avatarUrl: string) => {
             if (avatarUrl != null) {
                 this.imageUrl(avatarUrl);
             }
@@ -95,7 +95,7 @@ export class RegistrationPopup extends PopupBase {
         };
 
         // capture error callback
-        const captureError = function (message) {
+        const captureError = function (message: string) {
             app.suppressResume = true;
             console.log("Error code: " + message, null, "Capture Error");
         };

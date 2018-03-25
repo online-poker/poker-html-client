@@ -48,7 +48,7 @@ export class TablesListPage extends PageBase {
         const self = this;
         const gameApi = new Game(host);
         const privateTables = 0;
-        const fullTables = null;
+        const fullTables: boolean | null = null;
 
         const lobbyPage = app.lobbyPageBlock.lobbyPage;
         /* tslint:disable:no-bitwise */

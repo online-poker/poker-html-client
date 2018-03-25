@@ -34,10 +34,10 @@ interface CordovaMenu {
 }
 
 interface CordovaScreenOrientation {
-    setOrientation(orientation: string);
-    lock();
-    unlock();
-    shouldRotateToOrientation(orientation: any);
+    setOrientation(orientation: string): void;
+    lock(): void;
+    unlock(): void;
+    shouldRotateToOrientation(orientation: any): boolean;
 }
 
 interface ScreenOrientation {
@@ -62,7 +62,7 @@ declare module WindowsAzure {
         }
 
         interface NotificationHubInterface {
-            (hub, connectionString, options): void;
+            new (hub: string, connectionString: string, options: any): this;
             registerApplicationAsync: () => Promise;
             onPushNotificationReceived: (message: any) => void;
         }

@@ -203,7 +203,7 @@ export class TableMenuPopup {
         const currentTable = this.currentTableProvider.currentTable();
         const tournamentView = currentTable.tournament();
         app.lobbyPageBlock.showLobby();
-        app.lobbyPageBlock.selectTournament({ TournamentId: tournamentView.tournamentId });
+        app.lobbyPageBlock.selectTournament(tournamentView.tournamentData());
         app.tablesPage.deactivate();
         this.confirm();
     }

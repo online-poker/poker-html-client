@@ -1,6 +1,6 @@
 ﻿interface Console {
-    timeStamp(label?: string);
-    markTimeline(label?: string);
-    trace();
-    count(label?: string);
+    timeStamp(label?: string): void;
+    markTimeline(label?: string): void;
+    trace(): void;
+    count(label?: string): void;
 }

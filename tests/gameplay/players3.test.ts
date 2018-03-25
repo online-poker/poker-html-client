@@ -53,7 +53,7 @@ describe("gameplay", function () {
             view1.onSit(1, 1, login1, 400, "url", 0, 1);
             view1.onSit(2, 2, login2, 400, "url", 0, 1);
             view1.onSit(3, 3, login3, 200, "url", 0, 1);
-            const defaultBets = [];
+            const defaultBets: GameActionStartInformation[] = [];
             const players = [
                 { PlayerId: 1, PlayerName: login1, Money: 400 },
                 { PlayerId: 2, PlayerName: login2, Money: 400 },

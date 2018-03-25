@@ -642,7 +642,7 @@ export class ActionBlock {
             const lineWidth = $(".slider-line").width();
             const handleWidth = $(".slider-handle").width();
             const adj = -5;
-            const translator = (pageX) => {
+            const translator = (pageX: number) => {
                 const startOffset = $(".slider-line").offset().left;
                 return pageX - startOffset + adj;
             };

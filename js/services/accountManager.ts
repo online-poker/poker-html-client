@@ -40,7 +40,7 @@ export class AccountManager implements IAccountManager {
         const api = new Account(host);
         return await api.register(login, email, password, phoneNumber, firstName, lastName, patronymicName, country, city, additionalProperties);
     }
-    public async getAccountHistory(fromDate, toDate, fromAmount, toAmount, operationType): Promise<ApiResult<OperationData[]>> {
+    public async getAccountHistory(fromDate: string | null, toDate: string | null, fromAmount: number | null, toAmount: number | null, operationType: number | null): Promise<ApiResult<OperationData[]>> {
         const api = new Account(host);
         return await api.getAccountHistory(fromDate, toDate, fromAmount, toAmount, operationType);
     }

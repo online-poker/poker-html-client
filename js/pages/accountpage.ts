@@ -40,7 +40,7 @@ export class AccountPage extends PageBase {
         const self = this;
         this.cashierCaption = ko.observable<string>();
         this.loading = ko.observable(false);
-        const emptyElement = {
+        const emptyElement: AccountPagePlayerModel = {
             login: "",
             email: "",
             phoneNumber: "",

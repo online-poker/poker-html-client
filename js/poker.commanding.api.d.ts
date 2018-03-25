@@ -20,17 +20,17 @@ declare namespace SignalR {
 }
 
 interface GameHubServer {
-    join(tableId: number);
-    leave(tableId: number);
-    subscribeLobby();
-    unsubscribeLobby();
-    subscribeTournamentLobby();
-    unsubscribeTournamentLobby();
-    subscribeTournament(tournamentId: number);
-    unsubscribeTournament(tournamentId: number);
-    betOrRaise(tableId: number, amount: number);
-    checkOrCall(tableId: number);
-    fold(tableId: number);
+    join(tableId: number): Promise<void>;
+    leave(tableId: number): Promise<void>;
+    subscribeLobby(): Promise<void>;
+    unsubscribeLobby(): Promise<void>;
+    subscribeTournamentLobby(): Promise<void>;
+    unsubscribeTournamentLobby(): Promise<void>;
+    subscribeTournament(tournamentId: number): Promise<void>;
+    unsubscribeTournament(tournamentId: number): Promise<void>;
+    betOrRaise(tableId: number, amount: number): Promise<void>;
+    checkOrCall(tableId: number): Promise<void>;
+    fold(tableId: number): Promise<void>;
 }
 
 interface StatusResponse {
@@ -225,15 +225,16 @@ interface GameHubClient {
      * @param lastMessageId Last id of the message.
      * @param gameType Type of the game which is start playing on the table.
      */
-    TableStatusInfo: (tableId: number, players: PlayerStatusInfo[], pots: number[], cards, dealerSeat,
-        buyIn, baseBuyIn, leaveTime, timePass, currentPlayerId, lastRaise, gameId, authenticated,
+    TableStatusInfo: (tableId: number, players: PlayerStatusInfo[], pots: number[], cards: string | null, dealerSeat: number,
+        buyIn: number, baseBuyIn: number, leaveTime: number, timePass: number, currentPlayerId: number, lastRaise: number, 
+        gameId: number, authenticated: boolean,
         actionsCount: number, frozen: boolean, opened: boolean, pauseDate: number, lastMessageId: number,
         gameType: number | undefined) => void;
 
     GameStarted: (tableId: number, gameId: number, players: GamePlayerStartInformation[],
         actions: GameActionStartInformation[], dealerSeat: number) => void;
     Bet: (tableId: number, playerId: number, type: number, amount: number, nextPlayerId: number, actionId: number) => void;
-    OpenCards: (tableId: number, type, cards: string, pots: number[]) => void;
+    OpenCards: (tableId: number, type: number, cards: string, pots: number[]) => void;
     /**
      * Informs that player adds money on the table.
      * @param tableId Id of the table for which notification passed.
@@ -248,7 +249,7 @@ interface GameHubClient {
      * @param amount Amount of money removed
      */
     MoneyRemoved: (tableId: number, playerId: number, amount: number) => void;
-    PlayerCards: (tableId: number, playerId, cards) => void;
+    PlayerCards: (tableId: number, playerId: number, cards: string) => void;
 
     /**
      * Inform about player open card.
@@ -258,10 +259,10 @@ interface GameHubClient {
      * @param card Value of the card.
      */
     PlayerCardOpened: (tableId: number, playerId: number, cardPosition: number, card: number) => void;
-    PlayerCardsMucked: (tableId: number, playerId, cards) => void;
-    MoveMoneyToPot: (tableId, amount) => void;
-    GameFinished: (tableId, gameId, winners, rake) => void;
-    PlayerStatus: (tableId, playerId, status) => void;
+    PlayerCardsMucked: (tableId: number, playerId: number, cards: string) => void;
+    MoveMoneyToPot: (tableId: number, amount: number[]) => void;
+    GameFinished: (tableId: number, playerId: number, winners: GameWinnerModel[], rake: number) => void;
+    PlayerStatus: (tableId: number, playerId: number, status: number) => void;
     /**
      * Informs that player sits on the table.
      * @param tableId Id of the table for which notification passed.
@@ -270,7 +271,11 @@ interface GameHubClient {
      */
     Sit: (tableId: number, playerId: number, playerName: string, seat: number, amount: number,
         playerUrl: string, points: number, stars: number) => void;
-    Standup: (tableId, playerId) => void;
+
+        /**
+     * Standup player from the table
+     */
+    Standup: (tableId: number, playerId: number) => void;
 
     /**
      * Informs that table frozen.
@@ -415,8 +420,8 @@ interface GameHubClient {
 }
 
 interface ChatHubServer {
-    join(tableId: number);
-    leave(tableId: number);
+    join(tableId: number): Promise<void>;
+    leave(tableId: number): Promise<void>;
 }
 
 interface ChatHubClient {

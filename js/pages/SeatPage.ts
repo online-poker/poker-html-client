@@ -278,7 +278,7 @@ export class SeatPage extends PageBase {
     public canActivate(): boolean {
         return tableManager.tables().length !== 0;
     }
-    public switchTable(index) {
+    public switchTable(index: KnockoutObservable<number>) {
         this.currentIndex(index());
     }
     public prevTable() {
