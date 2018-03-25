@@ -1,5 +1,6 @@
 ﻿import { Game, Tournament, TournamentDefinition, TournamentPlayerStatus, TournamentPrizeStructure, TournamentStatus } from "@poker/api-server";
 import * as ko from "knockout";
+import { TableView } from "poker/table/tableview";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import * as authManager from "../authmanager";
@@ -556,7 +557,7 @@ export class TournamentView {
             return table;
         }
 
-        const tournamentTables = tableManager.tables().filter((tournamentTable) => tournamentTable.tournament() !== null
+        const tournamentTables = tableManager.tables().filter((tournamentTable: TableView) => tournamentTable.tournament() !== null
             && tournamentTable.tournament().tournamentId === this.tournamentId);
         if (tournamentTables.length !== 0) {
             return tournamentTables[0];

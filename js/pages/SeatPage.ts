@@ -144,10 +144,10 @@ export class SeatPage extends PageBase {
             return ct.changeGameTypeNextGame();
         }, this);
         this.currentTable.subscribe(function(value: TableView) {
-            tableManager.tables().forEach((_) => {
-                if (_ !== value) {
-                    _.soundEnabled = false;
-                    _.animationSuppressed(true);
+            tableManager.tables().forEach((table: TableView) => {
+                if (table !== value) {
+                    table.soundEnabled = false;
+                    table.animationSuppressed(true);
                 }
             });
             if (value != null) {
@@ -191,7 +191,7 @@ export class SeatPage extends PageBase {
     public setConnecting() {
         if (this.lastConnecton !== navigator.connection.type) {
             this.lastConnecton = navigator.connection.type;
-            tableManager.tables().forEach((table) => table.connecting(true));
+            tableManager.tables().forEach((table: TableView) => table.connecting(true));
         }
     }
     public deactivate() {
@@ -321,15 +321,15 @@ export class SeatPage extends PageBase {
      * Removes tournament tables which are finished.
      */
     public removeFinishedTournamentTable() {
-        const finishedTournamentTables = tableManager.tables().filter((_) => {
-            const tournament = _.tournament();
+        const finishedTournamentTables = tableManager.tables().filter((table: TableView) => {
+            const tournament = table.tournament();
             if (tournament == null) {
                 return false;
             }
 
             return tournament.finishedPlaying();
         });
-        finishedTournamentTables.forEach((_) => tableManager.remove(_));
+        finishedTournamentTables.forEach((tournamentTable: TableView) => tableManager.remove(tournamentTable));
     }
     /**
      * Reload console window.
