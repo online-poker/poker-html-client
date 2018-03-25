@@ -143,10 +143,10 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
             return ct.changeGameTypeNextGame();
         }, this);
         this.currentTable.subscribe((value: TableView) => {
-            tableManager.tables().forEach((_) => {
-                if (_ !== value) {
-                    _.soundEnabled = false;
-                    _.animationSuppressed(true);
+            tableManager.tables().forEach((table: TableView) => {
+                if (table !== value) {
+                    table.soundEnabled = false;
+                    table.animationSuppressed(true);
                 }
             });
             if (value != null) {
@@ -198,7 +198,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
     public setConnecting() {
         if (this.lastConnecton !== navigator.connection.type) {
             this.lastConnecton = navigator.connection.type;
-            tableManager.tables().forEach((table) => table.connecting(true));
+            tableManager.tables().forEach((table: TableView) => table.connecting(true));
         }
     }
     public deactivate() {
@@ -338,15 +338,15 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
      * Removes tournament tables which are finished.
      */
     public removeFinishedTournamentTable() {
-        const finishedTournamentTables = tableManager.tables().filter((_) => {
-            const tournament = _.tournament();
+        const finishedTournamentTables = tableManager.tables().filter((table: TableView) => {
+            const tournament = table.tournament();
             if (tournament == null) {
                 return false;
             }
 
             return tournament.finishedPlaying();
         });
-        finishedTournamentTables.forEach((_) => tableManager.remove(_));
+        finishedTournamentTables.forEach((tournamentTable: TableView) => tableManager.remove(tournamentTable));
     }
     private onConnectionSlow() {
         const self = this;

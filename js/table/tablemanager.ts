@@ -7,7 +7,7 @@ import {
 } from "@poker/api-server";
 import * as ko from "knockout";
 import { DefaultApiProvider, IApiProvider } from "poker/api";
-import { commandManager } from "poker/commandmanager";
+import { ICommandManager } from "poker/commandmanager";
 import { TablePlaceModel } from "poker/table/tabpleplacemodel";
 import * as signals from "signals";
 import { appConfig } from "../appconfig";
@@ -63,7 +63,7 @@ export class TableManager {
         }, this);
     }
 
-    public initialize() {
+    public initialize(commandManager: ICommandManager) {
         const self = this;
         commandManager.registerCommand("app.selectTable", function (parameters?: any[]): void {
             if (!parameters || parameters.length < 1) {

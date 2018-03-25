@@ -1,11 +1,11 @@
 import { getAuthToken, setAuthToken } from "@poker/api-server";
 import * as $ from "jquery";
+import { CommandManager } from "poker/commandmanager";
 import { AccountManager } from "poker/services/accountManager";
 import { TableView } from "poker/table/tableview";
 import "signalr";
 import * as signals from "signals";
 import * as authManager from "./authmanager";
-import { commandManager } from "./commandmanager";
 import { debugSettings } from "./debugsettings";
 import { _ } from "./languagemanager";
 import * as metadataManager from "./metadatamanager";
@@ -120,6 +120,7 @@ export class App {
     public suppressResume: boolean;
     private stopped = false;
     private savedPopup: string = null;
+    private commandManager = new CommandManager();
 
     constructor() {
         const self = this;
@@ -131,8 +132,8 @@ export class App {
         this.infoPageBlock = new InfoPageBlock();
         this.lobbyPageBlock = new LobbyPageBlock();
         this.cashierPageBlock = new CashierPageBlock();
-        this.tablesPage = new TablesPage(commandManager);
-        this.seatsPage = new SeatPage(commandManager);
+        this.tablesPage = new TablesPage(this.commandManager);
+        this.seatsPage = new SeatPage(this.commandManager);
 
         this.authPopup = new AuthPopup();
         this.forgetPasswordPopup = new ForgetPasswordPopup();
@@ -146,7 +147,7 @@ export class App {
         this.settingsPopup = new SettingsPopup();
         this.rulesPopup = new RulesPopup();
         this.sweepstakesRulesPopup = new SweepstakesRulesPopup();
-        this.tableMenuPopup = new TableMenuPopup(this.tablesPage, commandManager, new AccountManager());
+        this.tableMenuPopup = new TableMenuPopup(this.tablesPage, this.commandManager, new AccountManager());
         this.addMoneyPopup = new AddMoneyPopup();
         this.slowConnectionPopup = new SlowConnectionPopup();
         this.tableChatPopup = new ChatPopup();
@@ -292,7 +293,7 @@ export class App {
         tableManager.maxTablesReached.add(function(continuation: () => void) {
             SimplePopup.display(_("maxtables.caption"), _("maxtables.maxtablesreached"));
         });
-        tableManager.hasTurn.subscribe(function(value) {
+        tableManager.hasTurn.subscribe(function(value: boolean) {
             app.tabBar.notice("tables", value);
         });
         app.popupClosed.add(function(popupName: string) {
@@ -402,7 +403,7 @@ export class App {
                 self.loadTablesAndTournaments(true);
             }
 
-            tableManager.tables.subscribe(function(newValue) {
+            tableManager.tables.subscribe(function(newValue: TableView[]) {
                 self.updateTabbar(authManager.authenticated(), newValue);
                 if (newValue && metadataManager.banners != null) {
                     const filteredBanners = metadataManager.banners
@@ -489,7 +490,7 @@ export class App {
     }
     public bindPageBlock(pageBlockName: string, viewModel: PageBlock) {
         const self = this;
-        commandManager.registerCommand("pageblock." + pageBlockName, async function showPageBlock() {
+        this.commandManager.registerCommand("pageblock." + pageBlockName, async function showPageBlock() {
             const requireAuthentication = viewModel.requireAuthentication;
             if (!requireAuthentication) {
                 if (!viewModel.requireGuestAuthentication) {
@@ -515,7 +516,7 @@ export class App {
     }
     public bindSubPage(pageName: string, viewModel: any) {
         const self = this;
-        commandManager.registerCommand("page." + pageName, async function showPage() {
+        this.commandManager.registerCommand("page." + pageName, async function showPage() {
             const requireAuthentication = viewModel.requireAuthentication || false;
             if (!requireAuthentication) {
                 self.showSubPage(pageName);
@@ -561,7 +562,7 @@ export class App {
     }
     public bindPopup(popup: string, viewModel: any): void {
         const self = this;
-        commandManager.registerCommand("popup." + popup, function() {
+        this.commandManager.registerCommand("popup." + popup, function() {
             self.showPopup(popup);
         });
         if (typeof window === "undefined") {
@@ -693,7 +694,7 @@ export class App {
         }
     }
     public executeCommand(commandName: string, parameters: any[]= []) {
-        commandManager.executeCommand(commandName, parameters);
+        this.commandManager.executeCommand(commandName, parameters);
     }
     public reloadApplication() {
         /* tslint:disable:no-unused-expression no-string-literal */
@@ -976,38 +977,38 @@ export class App {
         }
     }
     private registerCommands() {
-        commandManager.registerCommand("popup.auth.show", () => {
+        this.commandManager.registerCommand("popup.auth.show", () => {
             this.showPopup("auth");
         });
-        commandManager.registerCommand("popup.auth.forgetPassword", () => {
+        this.commandManager.registerCommand("popup.auth.forgetPassword", () => {
             this.showPopup("forgetPassword");
         });
-        commandManager.registerCommand("popup.auth.registration", () => {
+        this.commandManager.registerCommand("popup.auth.registration", () => {
             this.showPopup("registration");
         });
-        commandManager.registerCommand("popup.auth.continueForgetPassword", () => {
+        this.commandManager.registerCommand("popup.auth.continueForgetPassword", () => {
             this.showPopup("continueForgetPassword");
         });
-        commandManager.registerCommand("popup.close", () => {
+        this.commandManager.registerCommand("popup.close", () => {
             this.closePopup();
         });
-        commandManager.registerCommand("popup.cancel", () => {
+        this.commandManager.registerCommand("popup.cancel", () => {
             this.closePopup("cancel");
         });
-        commandManager.registerCommand("more.close", () => {
+        this.commandManager.registerCommand("more.close", () => {
             this.hideMoreBlock();
             const currentTabBarItem = UIManager.getTabBarItemForPage(uiManager.currentPageBlock);
             app.tabBar.select(currentTabBarItem, true);
         });
-        commandManager.registerCommand("legal.eula", () => {
+        this.commandManager.registerCommand("legal.eula", () => {
             app.closePopup();
             app.executeCommand("pageblock.info");
             app.infoPageBlock.showLicenseAgreement();
         });
-        commandManager.registerCommand("logout", () => {
+        this.commandManager.registerCommand("logout", () => {
             authManager.logout();
         });
-        commandManager.registerCommand("app.exit", () => {
+        this.commandManager.registerCommand("app.exit", () => {
             authManager.logout();
             this.reloadApplication();
         });
@@ -1039,7 +1040,7 @@ export class App {
         this.preloadTableImages();
         try {
             await metadataManager.update();
-            tableManager.initialize();
+            tableManager.initialize(this.commandManager);
             try {
                 await tableManager.getCurrentTablesAndTournaments();
                 this.spinner.stop();
@@ -1109,7 +1110,7 @@ export class App {
         try {
             await metadataManager.update();
             self.spinner.stop();
-            tableManager.initialize();
+            tableManager.initialize(this.commandManager);
             try {
                 await self.establishConnection();
                 await tableManager.getCurrentTablesAndTournaments();
