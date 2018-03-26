@@ -115,6 +115,16 @@ interface UserRating {
     Stars: number;
 }
 
+interface UserRatingModel {
+    Id: number;
+    Login: string;
+    Points: number;
+    Stars: number;
+    IsGold: boolean;
+    IsSilver: boolean;
+    IsBronse: boolean;
+}
+
 interface GameWinnerModel {
     PlayerId: number;
     Pot: number;
