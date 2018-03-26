@@ -20,19 +20,18 @@ export class RatingPage implements Page {
                 return;
             }
 
-            const ratings: UserRatingModel[] = [];
-            data.Data.forEach((_: UserRating) => {
-                const rating: UserRatingModel = {
-                    Id : _.Id,
+            const ratings: UserRatingModel[] = data.Data.map((_: UserRating) => {
+                return {
+                    Id: _.Id,
                     Login: _.Login,
                     Points: _.Points,
                     Stars: _.Stars,
                     IsGold: _.Points >= 500000,
                     IsSilver: _.Points >= 200000 && _.Points < 500000,
                     IsBronse: _.Points >= 100000 && _.Points < 200000,
-                };
-                ratings.push(rating);
+                }
             });
+
             this.ratings(ratings);
         } catch (e) {
             this.loading(false);
