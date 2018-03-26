@@ -1,6 +1,6 @@
-import { App } from "poker/app";
 import { appConfig } from "poker/appconfig";
 import { ChatPage } from "poker/pages/chatpage";
+import { UIManager } from "poker/services/uimanager";
 import { PageBlock } from "../pageblock";
 import { AccountPage } from "./accountpage";
 import { OperationsHistoryPage } from "./operationshistorypage";
@@ -13,13 +13,13 @@ export class CashierPageBlock extends PageBlock {
     public operationsHistoryPage: OperationsHistoryPage;
     constructor() {
         const accountPage = new AccountPage();
-        App.addTabBarItemMapping("cashier", "account");
+        UIManager.addTabBarItemMapping("cashier", "account");
         super("cashier", "account", accountPage);
         this.accountPage = accountPage;
         this.ratingPage = new RatingPage();
-        App.addTabBarItemMapping("more", "rating");
+        UIManager.addTabBarItemMapping("more", "rating");
         this.operationsHistoryPage = new OperationsHistoryPage();
-        App.addTabBarItemMapping("cashier", "operationsHistory");
+        UIManager.addTabBarItemMapping("cashier", "operationsHistory");
         this.requireAuthentication = true;
         // this.addSecondary("account", this.accountPage);
         if (appConfig.game.hasRating) {
@@ -32,6 +32,6 @@ export class CashierPageBlock extends PageBlock {
         }
 
         this.addSecondary("withdrawal", new WithdrawalPage());
-        App.addTabBarItemMapping("cashier", "withdrawal");
+        UIManager.addTabBarItemMapping("cashier", "withdrawal");
     }
 }

@@ -74,10 +74,6 @@ export interface LoginPromptResult {
 declare const host: string;
 
 export class App {
-    public static addTabBarItemMapping(tabBarItem: string, pageName: string) {
-        UIManager.addTabBarItemMapping(tabBarItem, pageName);
-    }
-
     public currentPopup: string = null;
     public homePage: HomePage;
     public lobbyPageBlock: LobbyPageBlock;
