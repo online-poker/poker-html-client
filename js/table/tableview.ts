@@ -1829,7 +1829,6 @@ export class TableView {
      * Show prompt for buying rebuy.
      */
     public async showRebuyPrompt() {
-        const self = this;
         const tdata = this.tournament().tournamentData();
         const accountMoney = await this.getAccountMoney();
         const prompt = [
@@ -1845,7 +1844,6 @@ export class TableView {
      * Show prompt for buying double rebuy.
      */
     public async showDoubleRebuyPrompt() {
-        const self = this;
         const tdata = this.tournament().tournamentData();
         const accountMoney = await this.getAccountMoney();
         const prompt = [
@@ -1861,7 +1859,6 @@ export class TableView {
      * Show prompt for buying addon.
      */
     public async showAddonPrompt() {
-        const self = this;
         const tdata = this.tournament().tournamentData();
         const accountMoney = await this.getAccountMoney();
         const prompt = [
@@ -2493,18 +2490,16 @@ export class TableView {
      * Get current user money amount
      */
     private async getAccountMoney() {
-        const self = this;
         const manager = new AccountManager();
         const data = await manager.getAccount();
-        if (data.Status === "Ok") {
-            const personalAccountData = data.Data;
-            const total = settings.isGuest() ? personalAccountData.GameMoney : personalAccountData.RealMoney;
-            return total;
-        } else {
+        if (data.Status !== "Ok") {
             console.error("Error during making call to Account.GetPlayerDefinition");
+            return 0;
         }
 
-        return null;
+        const personalAccountData = data.Data;
+        const total = settings.isGuest() ? personalAccountData.GameMoney : personalAccountData.RealMoney;
+        return total;
     }
     /**
      * Propose buying rebuy or double rebuy
