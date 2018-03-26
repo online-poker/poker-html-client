@@ -4,33 +4,37 @@ import { AccountManager } from "../services/accountManager";
 declare var app: App;
 
 export class RatingPage implements Page {
-    public ratings = ko.observableArray<UserRating>();
+    public ratings = ko.observableArray<UserRatingModel>();
     public loading = ko.observable(false);
 
     public deactivate() {
         // Do nothing.
     }
     public async activate() {
-        const self = this;
         this.loading(true);
         const api = new AccountManager();
         try {
             const data = await api.getBestPlayers();
-            self.loading(false);
+            this.loading(false);
             if (data.Status !== "Ok") {
                 return;
             }
 
-            const ratings = data.Data;
-            ratings.forEach((_: any) => {
-                const points = parseInt(_.Points, 10);
-                _.IsGold = points >= 500000;
-                _.IsSilver = points >= 200000 && points < 500000;
-                _.IsBronse = points >= 100000 && points < 200000;
+            const ratings: UserRatingModel[] = data.Data.map((_: UserRating) => {
+                return {
+                    Id: _.Id,
+                    Login: _.Login,
+                    Points: _.Points,
+                    Stars: _.Stars,
+                    IsGold: _.Points >= 500000,
+                    IsSilver: _.Points >= 200000 && _.Points < 500000,
+                    IsBronse: _.Points >= 100000 && _.Points < 200000,
+                };
             });
-            self.ratings(ratings);
+
+            this.ratings(ratings);
         } catch (e) {
-            self.loading(false);
+            this.loading(false);
         }
     }
     public back() {
