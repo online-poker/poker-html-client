@@ -36,7 +36,6 @@ export class AccountPage extends PageBase {
 
     constructor() {
         super();
-        App.addTabBarItemMapping("cashier", "account");
         const self = this;
         this.cashierCaption = ko.observable<string>();
         this.loading = ko.observable(false);

@@ -16,14 +16,19 @@ export class OtherPageBlock extends PageBlock {
 
     constructor() {
         const accountPage = new AccountPage();
+        App.addTabBarItemMapping("cashier", "account");
         super("other", "account", accountPage);
         this.accountPage = accountPage;
         this.morePage = new SettingsPage();
+        App.addTabBarItemMapping("more", "settings");
         App.addTabBarItemMapping("more", "other");
 
         this.ratingPage = new RatingPage();
+        App.addTabBarItemMapping("more", "rating");
         this.changePasswordPage = new ChangePasswordPage();
+        App.addTabBarItemMapping("more", "changePassword");
         this.chatPage = new ChatPage();
+        App.addTabBarItemMapping("more", "chat");
         this.requireAuthentication = true;
         this.currentPage = "account";
         this.addSecondary("more", this.morePage);

@@ -1,8 +1,5 @@
-import { App } from "../app";
 import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";
-
-declare var app: App;
 
 export class SettingsPage implements Page {
     public online: KnockoutObservable<string>;
@@ -10,7 +7,6 @@ export class SettingsPage implements Page {
     public captionLabel: KnockoutComputed<string>;
 
     constructor() {
-        App.addTabBarItemMapping("more", "settings");
         this.online = metadataManager.online;
         this.registered = metadataManager.registered;
         this.captionLabel = ko.computed(() => {

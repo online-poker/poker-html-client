@@ -17,7 +17,6 @@ export class OperationsHistoryPage extends PageBase implements KnockoutValidatio
 
     constructor() {
         super();
-        App.addTabBarItemMapping("cashier", "operationsHistory");
         this.loading = ko.observable(false);
         this.operations = ko.observableArray<OperationData>([]);
         this.from = ko.observable<string>();
