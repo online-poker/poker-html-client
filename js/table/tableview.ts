@@ -3,6 +3,7 @@ import * as ko from "knockout";
 import * as moment from "moment";
 import { IApiProvider } from "poker/api";
 import { authManager } from "poker/authmanager";
+import { AccountManager } from "poker/services/accountManager";
 import * as signals from "signals";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
@@ -1828,11 +1829,12 @@ export class TableView {
      * Show prompt for buying rebuy.
      */
     public async showRebuyPrompt() {
-        const self = this;
         const tdata = this.tournament().tournamentData();
+        const accountMoney = await this.getAccountMoney();
         const prompt = [
             _("table.rebuyPrompt", { price: tdata.RebuyFee + tdata.RebuyPrice }),
             _("table.rebuyPrompt2", { chips: tdata.ChipsAddedAtReBuy }),
+            _("table.myPlayerMoneyPromt", { money: accountMoney }),
         ];
         await app.prompt(_("table.rebuyPromptCaption"), prompt);
         await this.rebuy();
@@ -1842,11 +1844,12 @@ export class TableView {
      * Show prompt for buying double rebuy.
      */
     public async showDoubleRebuyPrompt() {
-        const self = this;
         const tdata = this.tournament().tournamentData();
+        const accountMoney = await this.getAccountMoney();
         const prompt = [
             _("table.doubleRebuyPrompt", { price: 2 * (tdata.RebuyFee + tdata.RebuyPrice) }),
             _("table.doubleRebuyPrompt2", { chips: tdata.ChipsAddedAtDoubleReBuy }),
+            _("table.myPlayerMoneyPromt", { money: accountMoney }),
         ];
         await app.prompt(_("table.doubleRebuyPromptCaption"), prompt);
         await this.doubleRebuy();
@@ -1856,11 +1859,12 @@ export class TableView {
      * Show prompt for buying addon.
      */
     public async showAddonPrompt() {
-        const self = this;
         const tdata = this.tournament().tournamentData();
+        const accountMoney = await this.getAccountMoney();
         const prompt = [
             _("table.addonPrompt", { price: tdata.AddonFee + tdata.AddonPrice }),
             _("table.addonPrompt2", { chips: tdata.ChipsAddedAtAddOn }),
+            _("table.myPlayerMoneyPromt", { money: accountMoney }),
         ];
         await app.prompt(_("table.addonPromptCaption"), prompt);
         await this.addon();
@@ -2482,6 +2486,21 @@ export class TableView {
         }
     }
 
+    /**
+     * Get current user money amount
+     */
+    private async getAccountMoney() {
+        const manager = new AccountManager();
+        const data = await manager.getAccount();
+        if (data.Status !== "Ok") {
+            console.error("Error during making call to Account.GetPlayerDefinition");
+            return 0;
+        }
+
+        const personalAccountData = data.Data;
+        const total = settings.isGuest() ? personalAccountData.GameMoney : personalAccountData.RealMoney;
+        return total;
+    }
     /**
      * Propose buying rebuy or double rebuy
      */
