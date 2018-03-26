@@ -15,7 +15,6 @@ export class WithdrawalPage extends PageBase {
 
     constructor() {
         super();
-        App.addTabBarItemMapping("cashier", "withdrawal");
         const self = this;
         this.withdrawalAmount = ko.observable(null);
         this.withdrawalMethod = ko.observable(null);

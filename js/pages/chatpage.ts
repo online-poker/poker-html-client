@@ -17,7 +17,6 @@ export class ChatPage implements Page {
     public timeoutHandler: number = 0;
 
     constructor() {
-        App.addTabBarItemMapping("more", "chat");
         this.currentMessage = ko.observable<string>();
         this.messages = ko.observableArray<PlayerMessage>([]);
         this.loading = ko.observable(false);

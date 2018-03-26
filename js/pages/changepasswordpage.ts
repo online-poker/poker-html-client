@@ -1,5 +1,4 @@
 import * as ko from "knockout";
-import { App } from "../app";
 import { PageBase } from "../ui/pagebase";
 
 export class ChangePasswordPage extends PageBase implements KnockoutValidationGroup {
@@ -11,7 +10,6 @@ export class ChangePasswordPage extends PageBase implements KnockoutValidationGr
 
     constructor() {
         super();
-        App.addTabBarItemMapping("more", "changePassword");
         this.oldpassword = ko.observable<string>().extend({ required: true });
         this.password = ko.observable<string>().extend({ required: true });
         this.confirmpassword = ko.observable<string>().extend({ required: true });

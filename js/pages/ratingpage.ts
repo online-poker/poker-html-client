@@ -7,9 +7,6 @@ export class RatingPage implements Page {
     public ratings = ko.observableArray<UserRating>();
     public loading = ko.observable(false);
 
-    constructor() {
-        App.addTabBarItemMapping("more", "rating");
-    }
     public deactivate() {
         // Do nothing.
     }
