@@ -1,5 +1,5 @@
 import { appConfig } from "poker/appconfig";
-import { App } from "../app";
+import { UIManager } from "poker/services/uimanager";
 import { PageBlock } from "../pageblock";
 import { AccountPage } from "./accountpage";
 import { ChangePasswordPage } from "./changepasswordpage";
@@ -16,19 +16,19 @@ export class OtherPageBlock extends PageBlock {
 
     constructor() {
         const accountPage = new AccountPage();
-        App.addTabBarItemMapping("cashier", "account");
+        UIManager.addTabBarItemMapping("cashier", "account");
         super("other", "account", accountPage);
         this.accountPage = accountPage;
         this.morePage = new SettingsPage();
-        App.addTabBarItemMapping("more", "settings");
-        App.addTabBarItemMapping("more", "other");
+        UIManager.addTabBarItemMapping("more", "settings");
+        UIManager.addTabBarItemMapping("more", "other");
 
         this.ratingPage = new RatingPage();
-        App.addTabBarItemMapping("more", "rating");
+        UIManager.addTabBarItemMapping("more", "rating");
         this.changePasswordPage = new ChangePasswordPage();
-        App.addTabBarItemMapping("more", "changePassword");
+        UIManager.addTabBarItemMapping("more", "changePassword");
         this.chatPage = new ChatPage();
-        App.addTabBarItemMapping("more", "chat");
+        UIManager.addTabBarItemMapping("more", "chat");
         this.requireAuthentication = true;
         this.currentPage = "account";
         this.addSecondary("more", this.morePage);

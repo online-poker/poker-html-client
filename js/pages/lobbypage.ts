@@ -160,9 +160,6 @@ export class LobbyPage extends PageBase {
         super();
         const self = this;
 
-        App.addTabBarItemMapping("lobby", "tablesFilter");
-        App.addTabBarItemMapping("lobby", "tournamentsFilter");
-        App.addTabBarItemMapping("lobby", "sngFilter");
         this.currentTime = ko.computed(function () {
             return timeService.currentTime();
         }, this);
