@@ -29,7 +29,7 @@ export class RatingPage implements Page {
                     IsGold: _.Points >= 500000,
                     IsSilver: _.Points >= 200000 && _.Points < 500000,
                     IsBronse: _.Points >= 100000 && _.Points < 200000,
-                }
+                };
             });
 
             this.ratings(ratings);
