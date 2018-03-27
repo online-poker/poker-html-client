@@ -6,9 +6,73 @@ import ko = require("knockout");
 import { appConfig } from "./appconfig";
 import { settings } from "./settings";
 
-export class AuthManager {
+export interface IDisposable {
+    dispose(): void;
+}
+
+/**
+ * Provides information about authentication status for application user.
+ */
+export interface IAuthenticationInformation {
+    /**
+     * Returns information about current login.
+     */
+    login(): string;
+
+    /**
+     * Returns information about id of the current login.
+     */
+    loginId(): number;
+
+    /**
+     * Returns authentication status of the application user.
+     */
+    authenticated(): boolean;
+}
+
+/**
+ * Controls authentication of the application user.
+ */
+export interface IAuthenticationManager {
+    /**
+     * Authenticate user with given password and return status of operation.
+     * @param login Login which use for authentication.
+     * @param password Password which user for login.
+     * @param rememberMe Value indicating whether remember user in manager.
+     * @returns Promise with status code of operation.
+     */
+    authenticate(login: string, password: string, rememberMe: boolean): Promise<string>;
+    /**
+     * Logout currently authenticated user.
+     */
+    logout(): void;
+    /**
+     * Initiate login as guest request to server.
+     */
+    loginAsGuest(): Promise<string>;
+
+    /**
+     * Register handler function for the authentication state change.
+     * @param handler Function which would be called when authentication state is changed.
+     * @returns Object which allow disposing of the subscription
+     */
+    registerAuthenticationChangedHandler(handler: (authenticated: boolean) => void): IDisposable;
+}
+
+export class AuthManager implements IAuthenticationInformation, IAuthenticationManager {
+    /**
+     * Returns authentication status of the application user.
+     */
     public authenticated: KnockoutObservable<boolean>;
+
+    /**
+     * Returns information about current login.
+     */
     public login: KnockoutObservable<string>;
+
+    /**
+     * Returns information about id of the current login.
+     */
     public loginId: KnockoutObservable<number>;
 
     constructor() {
@@ -22,6 +86,7 @@ export class AuthManager {
      * @param login Login which use for authentication.
      * @param password Password which user for login.
      * @param rememberMe Value indicating whether remember user in manager.
+     * @returns Promise with status code of operation.
      */
     public async authenticate(login: string, password: string, rememberMe: boolean = false): Promise<string> {
         const accountApi = new Account(host);
@@ -55,6 +120,19 @@ export class AuthManager {
             return "";
         }
     }
+
+    /**
+     * Register handler function for the authentication state change.
+     * @param handler Function which would be called when authentication state is changed.
+     * @returns Object which allow disposing of the subscription
+     */
+    public registerAuthenticationChangedHandler(handler: (authenticated: boolean) => void): IDisposable {
+        return this.authenticated.subscribe(handler);
+    }
+
+    /**
+     * Logout currently authenticated user.
+     */
     public logout() {
         settings.login(null);
         settings.password(null);
