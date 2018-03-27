@@ -33,8 +33,8 @@ export class MorePopup {
             return authManager.login();
         }, this);
         this.loading = ko.observable(false);
-        authManager.login.subscribe(function (newValue) {
-            if (newValue === null) {
+        authManager.registerAuthenticationChangedHandler(function (newValue) {
+            if (authManager.login() === null) {
                 self.amount(0);
             } else {
                 self.update();

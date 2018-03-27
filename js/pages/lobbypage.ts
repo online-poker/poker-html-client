@@ -125,7 +125,7 @@ export class TournamentOptions {
                 ],
             },
         });
-}
+    }
 }
 
 interface LobbyTournamentItemEx extends LobbyTournamentItem {
@@ -217,8 +217,8 @@ export class LobbyPage extends PageBase {
         this.login = ko.computed(function () {
             return authManager.login();
         }, this);
-        authManager.login.subscribe(function (newValue) {
-            if (newValue === null) {
+        authManager.registerAuthenticationChangedHandler(function (newValue) {
+            if (authManager.login() === null) {
                 self.amount(0);
             } else {
                 self.updateAccount();
