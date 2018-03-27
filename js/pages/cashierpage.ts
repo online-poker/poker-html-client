@@ -18,7 +18,7 @@ class CashierPage extends PageBase {
         const self = this;
         this.loading = ko.observable(false);
         this.cashierCaption = ko.observable<string>();
-        authManager.authenticated.subscribe(function(newValue) {
+        authManager.registerAuthenticationChangedHandler(function(newValue) {
             if (newValue) {
                 self.updateInformation();
             } else {

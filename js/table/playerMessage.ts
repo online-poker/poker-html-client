@@ -18,7 +18,7 @@ export class PlayerMessage {
         }
 
         this.isMy = ko.observable(authManager.login() === sender);
-        authManager.authenticated.subscribe(() => {
+        authManager.registerAuthenticationChangedHandler(() => {
             this.isMy(authManager.login() === sender);
         });
 

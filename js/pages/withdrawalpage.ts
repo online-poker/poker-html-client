@@ -24,7 +24,7 @@ export class WithdrawalPage extends PageBase {
             { id: 3, text: "MasterCard" },
         ]);
         this.accountNumber = ko.observable(null);
-        authManager.authenticated.subscribe(async (newValue) => {
+        authManager.registerAuthenticationChangedHandler(async (newValue) => {
             if (newValue) {
                 const api = new AccountManager();
                 const data = await api.getAccount();

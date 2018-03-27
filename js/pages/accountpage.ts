@@ -51,7 +51,7 @@ export class AccountPage extends PageBase {
             accounts: [],
             stars: 0,
         };
-        authManager.authenticated.subscribe(function(newValue) {
+        authManager.registerAuthenticationChangedHandler(function(newValue) {
             if (newValue) {
                 self.updateInformation(true);
             } else {
