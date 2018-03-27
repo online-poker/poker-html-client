@@ -29,7 +29,7 @@ export let accountService = new AccountService(true, false);
 export let imagePreloadService = new ImagePreloadService();
 export let reloadManager = new ReloadManager();
 export let deviceEvents = new DeviceEventService();
-export let orientationService = new OrientationService();
+export let orientationService = new OrientationService(screen);
 export let pushService = new PushService();
 export const appReloadService = new AppReloadService();
 

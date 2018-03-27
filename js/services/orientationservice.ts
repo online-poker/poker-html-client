@@ -4,10 +4,17 @@ export class OrientationService {
     private lastOrientation: string = null;
     private disableRotation = false;
 
-    public setOrientation(orientation: string) {
+    constructor (private screen: IScreen) {
+    }
+
+    public async setOrientation(orientation: string) {
         if (this.isScreenOrientationSupported() && !this.disableRotation) {
             // ScreenOrientation.setOrientation(orientation);
-            screen.orientation.lock(orientation);
+            try {
+                await this.screen.orientation.lock(orientation);
+            } catch {
+                // If DOMException happens, do nothing.
+            }
         }
 
         this.lastOrientation = orientation;
@@ -33,13 +40,13 @@ export class OrientationService {
         }
     }
 
-    public setLastOrientation() {
-        this.setOrientation(this.lastOrientation);
+    public async setLastOrientation() {
+        await this.setOrientation(this.lastOrientation);
     }
 
-    private isScreenOrientationSupported() {
+    public isScreenOrientationSupported(): boolean {
         /* tslint:disable:no-string-literal */
-        return screen["orientation"];
+        return !!this.screen["orientation"];
         /* tslint:enable:no-string-literal */
     }
 }

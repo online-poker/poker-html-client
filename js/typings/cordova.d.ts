@@ -40,12 +40,16 @@ interface CordovaScreenOrientation {
     shouldRotateToOrientation(orientation: any): boolean;
 }
 
-interface ScreenOrientation {
-    lock(orientation: string): Promise<any>;
+interface IScreenOrientation {
+    lock(orientation: string): Promise<void>;
 }
 
-interface Screen {
-    orientation: ScreenOrientation;
+interface IScreen {
+    orientation: IScreenOrientation;
+}
+
+interface Screen extends IScreen {
+
 }
 
 declare var menu: CordovaMenu;
