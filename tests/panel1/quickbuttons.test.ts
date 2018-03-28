@@ -12,6 +12,12 @@ const authenticated = authManager.authenticated;
 const login = authManager.login;
 const loginId = authManager.loginId;
 
+beforeEach(() => {
+    authenticated(false);
+    loginId(null);
+    login(null);
+});
+
 describe("quick buttons", function () {
     GameActionsQueue.waitDisabled = true;
     let logEnabled = false;
@@ -45,7 +51,6 @@ describe("quick buttons", function () {
             view1.currentLogin("Player2");
             const actionBlock = view1.actionBlock;
             await simpleInitialization(view1, 1, [400, 200]);
-            authenticated(false);
             login("Player2");
             loginId(2);
             authenticated(true);
@@ -265,7 +270,6 @@ describe("quick buttons", function () {
             const actionBlock = view1.actionBlock;
             view1.currentLogin("Player4");
             await simpleInitialization(view1, 2, [1000, 1000, 1000, 1000]);
-            authenticated(false);
             login("Player4");
             loginId(4);
             authenticated(true);

@@ -17,6 +17,12 @@ const authenticated = authManager.authenticated;
 const login = authManager.login;
 const loginId = authManager.loginId;
 
+beforeEach(() => {
+    authenticated(false);
+    loginId(null);
+    login(null);
+});
+
 async function playUntilFlop(playerId: number) {
     const tableModel = getTable();
     const view1 = getTestTableView();
@@ -154,7 +160,6 @@ describe("Player cards", function () {
                 Money: 10000,
             }];
             const actions: GameActionStartInformation[] = [];
-            authenticated(false);
             login("player1");
             loginId(1);
             authenticated(true);

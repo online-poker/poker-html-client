@@ -28,6 +28,12 @@ const authenticated = authManager.authenticated;
 const login = authManager.login;
 const loginId = authManager.loginId;
 
+beforeEach(() => {
+    authenticated(false);
+    loginId(null);
+    login(null);
+});
+
 describe("Table view", () => {
     describe("No limit", () => {
         beforeAll(() => {
@@ -72,7 +78,6 @@ describe("Table view", () => {
 
             // This use should be same for which test final assertion
             // othervise max raise amount would be calculated incorectly.
-            authenticated(false);
             login("player3");
             loginId(3);
             authenticated(true);
@@ -138,7 +143,6 @@ describe("Table view", () => {
                 Money: 10000,
             }];
             const actions: GameActionStartInformation[] = [];
-            authenticated(false);
             login("player4");
             loginId(4);
             authenticated(true);
@@ -200,6 +204,7 @@ describe("Table view", () => {
             const actions: GameActionStartInformation[] = [];
             login("player4");
             loginId(4);
+            authenticated(true);
             const tableSatusPlayers = [
                 getSeatPlayer(1, 10000),
                 getSeatPlayer(2, 10000),
@@ -256,7 +261,6 @@ describe("Table view", () => {
                 Money: 10000,
             }];
             const actions: GameActionStartInformation[] = [];
-            authenticated(false);
             login("player1");
             loginId(1);
             authenticated(true);
@@ -324,6 +328,7 @@ describe("Table view", () => {
             const actions: GameActionStartInformation[] = [];
             login("player1");
             loginId(1);
+            authenticated(true);
             const tableSatusPlayers = [
                 getSeatPlayer(1, 10000),
                 getSeatPlayer(2, 10000),
