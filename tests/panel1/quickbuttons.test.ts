@@ -8,8 +8,15 @@ import {
 } from "../../js/table/tableview";
 import { drainQueue, getTable, getTestTableView, printTableView, simpleInitialization } from "../table/helper";
 
+const authenticated = authManager.authenticated;
 const login = authManager.login;
 const loginId = authManager.loginId;
+
+beforeEach(() => {
+    authenticated(false);
+    loginId(null);
+    login(null);
+});
 
 describe("quick buttons", function () {
     GameActionsQueue.waitDisabled = true;
@@ -46,6 +53,7 @@ describe("quick buttons", function () {
             await simpleInitialization(view1, 1, [400, 200]);
             login("Player2");
             loginId(2);
+            authenticated(true);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
@@ -264,6 +272,7 @@ describe("quick buttons", function () {
             await simpleInitialization(view1, 2, [1000, 1000, 1000, 1000]);
             login("Player4");
             loginId(4);
+            authenticated(true);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");

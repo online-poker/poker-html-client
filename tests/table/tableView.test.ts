@@ -24,8 +24,15 @@ function getSeatPlayer(seat: number, initialAmount: number): PlayerStatusInfo {
     };
 }
 
+const authenticated = authManager.authenticated;
 const login = authManager.login;
 const loginId = authManager.loginId;
+
+beforeEach(() => {
+    authenticated(false);
+    loginId(null);
+    login(null);
+});
 
 describe("Table view", () => {
     describe("No limit", () => {
@@ -73,6 +80,7 @@ describe("Table view", () => {
             // othervise max raise amount would be calculated incorectly.
             login("player3");
             loginId(3);
+            authenticated(true);
             const tableSatusPlayers = [
                 getSeatPlayer(1, 10000),
                 getSeatPlayer(2, 10000),
@@ -137,6 +145,7 @@ describe("Table view", () => {
             const actions: GameActionStartInformation[] = [];
             login("player4");
             loginId(4);
+            authenticated(true);
             const tableSatusPlayers = [
                 getSeatPlayer(1, 10000),
                 getSeatPlayer(2, 10000),
@@ -195,6 +204,7 @@ describe("Table view", () => {
             const actions: GameActionStartInformation[] = [];
             login("player4");
             loginId(4);
+            authenticated(true);
             const tableSatusPlayers = [
                 getSeatPlayer(1, 10000),
                 getSeatPlayer(2, 10000),
@@ -253,6 +263,7 @@ describe("Table view", () => {
             const actions: GameActionStartInformation[] = [];
             login("player1");
             loginId(1);
+            authenticated(true);
             const tableSatusPlayers = [
                 getSeatPlayer(1, 10000),
                 getSeatPlayer(2, 10000),
@@ -317,6 +328,7 @@ describe("Table view", () => {
             const actions: GameActionStartInformation[] = [];
             login("player1");
             loginId(1);
+            authenticated(true);
             const tableSatusPlayers = [
                 getSeatPlayer(1, 10000),
                 getSeatPlayer(2, 10000),

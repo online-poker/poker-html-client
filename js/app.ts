@@ -318,7 +318,7 @@ export class App {
                 app.lobbyPageBlock.lobbyPage.tournamentOptions.currency(2);
             }
         });
-        authManager.authenticated.subscribe(function(value) {
+        authManager.registerAuthenticationChangedHandler(function (value) {
             if (value && !settings.isGuest()) {
                 app.lobbyPageBlock.lobbyPage.cashOptions.currency(1);
                 app.lobbyPageBlock.lobbyPage.sngOptions.currency(1);
@@ -416,7 +416,7 @@ export class App {
                     }
                 }
             });
-            authManager.authenticated.subscribe(function(newValue) {
+            authManager.registerAuthenticationChangedHandler(function(newValue) {
                 self.updateTabbar(newValue, tableManager.tables());
 
                 // tslint:disable-next-line:no-console

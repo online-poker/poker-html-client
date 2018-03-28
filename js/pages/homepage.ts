@@ -61,7 +61,7 @@ export class HomePage extends PageBase {
         this.authenticatedUser = ko.computed(function () {
             return authManager.login();
         }, this);
-        authManager.authenticated.subscribe((value) => {
+        authManager.registerAuthenticationChangedHandler((value) => {
             this.banners(metadataManager.smallBanners);
         });
         this.allowSelfRegistration = ko.observable(appConfig.auth.allowSelfRegistration);

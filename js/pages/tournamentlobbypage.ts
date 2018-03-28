@@ -112,7 +112,7 @@ export class TournamentLobbyPage extends PageBase {
         });
         this.loading = ko.observable(true);
         this.currentView = ko.observable(1);
-        authManager.authenticated.subscribe(function(newValue) {
+        authManager.registerAuthenticationChangedHandler(function(newValue) {
             self.refreshTournament();
         });
         this.lateRegistrationAllowed = ko.computed(function() {

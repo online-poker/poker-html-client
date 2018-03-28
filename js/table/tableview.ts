@@ -365,8 +365,8 @@ export class TableView {
         }, this);
 
         this.currentLogin = ko.observable(authManager.login());
-        authManager.login.subscribe(function (value) {
-            self.currentLogin(value);
+        authManager.registerAuthenticationChangedHandler(function (value) {
+            self.currentLogin(authManager.login());
         });
 
         this.timeLeft = ko.computed(function () {
