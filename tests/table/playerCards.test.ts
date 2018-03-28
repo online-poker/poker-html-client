@@ -13,6 +13,7 @@ const log = function (message: string, ...params: any[]) {
     }
 };
 
+const authenticated = authManager.authenticated;
 const login = authManager.login;
 const loginId = authManager.loginId;
 
@@ -153,8 +154,10 @@ describe("Player cards", function () {
                 Money: 10000,
             }];
             const actions: GameActionStartInformation[] = [];
+            authenticated(false);
             login("player1");
             loginId(1);
+            authenticated(true);
             const tableSatusPlayers = [
                 getSeatPlayer(1, 10000),
                 getSeatPlayer(2, 10000),
