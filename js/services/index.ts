@@ -1,5 +1,5 @@
-import { TableView } from "poker/table/tableview";
 import { authManager } from "poker/authmanager";
+import { TableView } from "poker/table/tableview";
 import { appConfig } from "../appconfig";
 import { AccountService } from "./accountservice";
 import { AppReloadService } from "./appreloadservice";
