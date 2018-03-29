@@ -3,6 +3,7 @@ import { ICommandExecutor } from "poker/commandmanager";
 import { debugSettings } from "poker/debugsettings";
 import { TableMenuPopup } from "poker/popups";
 import { IAccountManager } from "poker/services/accountManager";
+import { notAuthenticated } from "tests/authHelper";
 import { getTestTableView, getTestTournamentTableView, simpleInitialization } from "tests/table/helper";
 
 const defaultPersonalAccountData = {
@@ -50,7 +51,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.rebuyAllowed()).toEqual(false);
         });
@@ -62,7 +63,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.rebuyAllowed()).toEqual(false);
         });
@@ -76,7 +77,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.rebuyAllowed()).toEqual(false);
         });
@@ -92,7 +93,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.rebuyAllowed()).toEqual(false);
         });
@@ -119,7 +120,7 @@ describe("Table menu", function () {
                     return await getAccount();
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
         });
@@ -150,7 +151,7 @@ describe("Table menu", function () {
                     return account;
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
             expect(tableMenuPopup.rebuyAllowed()).toEqual(false);
@@ -181,7 +182,7 @@ describe("Table menu", function () {
                     });
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.rebuyAllowed()).toEqual(true);
         });
@@ -195,7 +196,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
@@ -207,7 +208,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
@@ -221,7 +222,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
@@ -237,7 +238,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
@@ -253,7 +254,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
@@ -279,7 +280,7 @@ describe("Table menu", function () {
                     return await getAccount();
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
         });
@@ -310,7 +311,7 @@ describe("Table menu", function () {
                     return account;
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
@@ -341,7 +342,7 @@ describe("Table menu", function () {
                     });
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(true);
         });
@@ -355,7 +356,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
@@ -367,7 +368,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
@@ -381,7 +382,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
@@ -397,7 +398,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
@@ -423,7 +424,7 @@ describe("Table menu", function () {
                     return await getAccount();
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
         });
@@ -442,7 +443,7 @@ describe("Table menu", function () {
                 currentTable: () => view,
             };
             const accountManager = getAccountManager();
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
@@ -473,7 +474,7 @@ describe("Table menu", function () {
                     });
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
@@ -504,7 +505,7 @@ describe("Table menu", function () {
                     });
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.addonAllowed()).toEqual(true);
         });
