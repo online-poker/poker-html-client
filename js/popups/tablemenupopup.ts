@@ -51,17 +51,11 @@ export class TableMenuPopup {
      */
     public ratingSupported = ko.observable(appConfig.game.hasRating);
 
-    /**
-     * Provides information about authentication status for application user.
-     */
-    private authInformation: IAuthenticationInformation;
-
     constructor(
         private currentTableProvider: ICurrentTableProvider,
         private commandExecutor: ICommandExecutor,
         private accountManager: IAccountManager,
-        private authInfo: IAuthenticationInformation) {
-        this.authInformation = authInfo;
+        private authInformation: IAuthenticationInformation) {
         this.soundEnabled = ko.computed<boolean>({
             owner: this,
             read() {
