@@ -2,7 +2,7 @@
 import * as ko from "knockout";
 import * as moment from "moment";
 import { IApiProvider } from "poker/api";
-import { authManager } from "poker/authmanager";
+import { authManager, IAuthenticationInformation } from "poker/authmanager";
 import { AccountManager } from "poker/services/accountManager";
 import * as signals from "signals";
 import { App } from "../app";
@@ -244,7 +244,7 @@ export class TableView {
     private notificationHandleTimeout: number | null = null;
     private notificationHandleInterval: number | null = null;
     private displayingRebuyAddonNotification = false;
-
+    private authInformation: IAuthenticationInformation;
     /**
      * Indicates that Ante detected during current game.
      */
@@ -258,8 +258,9 @@ export class TableView {
      * @param model View model.
      * @param apiProvider API provider for performing operation.
      */
-    constructor(public tableId: number, public model: GameTableModel, private apiProvider: IApiProvider) {
+    constructor(public tableId: number, public model: GameTableModel, private apiProvider: IApiProvider, private authInfo: IAuthenticationInformation) {
         const self = this;
+        this.authInformation = authInfo;
         this.tableId = tableId;
         this.tableName = ko.observable(model === null ? "0" : model.TableName);
         this.connecting = ko.observable(true);
@@ -345,7 +346,7 @@ export class TableView {
         }, this).extend({ notify: "always" });
 
         this.myPlayer.subscribe(function (value) {
-            if (value !== null && authManager.loginId() === value.PlayerId()) {
+            if (value !== null && self.authInformation.loginId() === value.PlayerId()) {
                 value.needCardsOverlay(true);
             }
         });
@@ -364,9 +365,9 @@ export class TableView {
             return (myself.Cards() !== null) && (myself.Cards().length !== 0);
         }, this);
 
-        this.currentLogin = ko.observable(authManager.login());
+        this.currentLogin = ko.observable(self.authInformation.login());
         authManager.registerAuthenticationChangedHandler(function (value) {
-            self.currentLogin(authManager.login());
+            self.currentLogin(self.authInformation.login());
         });
 
         this.timeLeft = ko.computed(function () {
@@ -1391,7 +1392,7 @@ export class TableView {
             this.onGameStartedCore(gameId, players, actions, dealerSeat);
             this.handHistory.onGameStarted(gameId, players, actions, dealerSeat, this.gameType());
         });
-        const isInGame = players.some((player) => player.PlayerId === authManager.loginId());
+        const isInGame = players.some((player) => player.PlayerId === this.authInformation.loginId());
         if (!isInGame) {
             this.startDealCards();
         }
@@ -1550,7 +1551,7 @@ export class TableView {
         } else {
             this.queue.pushCallback(() => {
                 if (!self.cardsReceived) {
-                    if (playerId === authManager.loginId()) {
+                    if (playerId === self.authInformation.loginId()) {
                         self.startDealCards();
                         this.queue.pushCallback(() => {
                             self.onPlayerCardsCore(playerId, cards);
@@ -2178,7 +2179,7 @@ export class TableView {
     public toggleCards() {
         const my = this.myPlayer();
         if (!my) {
-            console.error(`Player ${authManager.loginId()} does not sit on the table ${this.tableId}.`);
+            console.error(`Player ${this.authInformation.loginId()} does not sit on the table ${this.tableId}.`);
             return;
         }
 
@@ -2641,7 +2642,7 @@ export class TableView {
             this.actionBlock.updateAdditionalButtons();
         }
 
-        if (nextPlayerId === authManager.loginId()) {
+        if (nextPlayerId === this.authInformation.loginId()) {
             this.logGameEvent("Player turn approached");
             this.tablePlaces.placesRefreshTrigger();
         }
@@ -2737,7 +2738,7 @@ export class TableView {
         this.lastRaise(this.bigBlind());
 
         this.actionBlock.resetAutomaticAction();
-        if (players.some((player) => player.PlayerId === authManager.loginId())) {
+        if (players.some((player) => player.PlayerId === this.authInformation.loginId())) {
             // Reset Wait BB status since player currently join the game.
             this.actionBlock.resetWaitBB();
         }
@@ -2884,7 +2885,7 @@ export class TableView {
             if (p.PlayerId() === playerId) {
                 const saveMask = 16;
                 p.Status(status | (p.Status() & saveMask));
-                if (playerId === authManager.loginId()) {
+                if (playerId === self.authInformation.loginId()) {
                     if (p.IsSitoutStatus()) {
                         self.actionBlock.processing(false);
                     }

@@ -7,7 +7,7 @@ import {
 } from "@poker/api-server";
 import * as ko from "knockout";
 import { DefaultApiProvider, IApiProvider } from "poker/api";
-import { authManager } from "poker/authmanager";
+import { authManager, AuthManager } from "poker/authmanager";
 import { ICommandManager } from "poker/commandmanager";
 import { TablePlaceModel } from "poker/table/tabpleplacemodel";
 import * as signals from "signals";
@@ -341,7 +341,7 @@ export class TableManager {
         }
     }
     public addTable(tableId: number, model: GameTableModel) {
-        const table = new TableView(tableId, model, this.apiProvider);
+        const table = new TableView(tableId, model, this.apiProvider, new AuthManager());
         this.tables.push(table);
         table.onMyTurn.add(this.onMyTurn, this);
         table.onGamefinished.add(this.onGameFinished, this);
@@ -523,7 +523,7 @@ export class TableManager {
             MaxPlayers: 10,
             PotLimitType: 2,
         };
-        return new TableView(0, nonExistingTableModel, this.apiProvider);
+        return new TableView(0, nonExistingTableModel, this.apiProvider, new AuthManager());
     }
     private onPlayerCardsDealed(tableId: number) {
         const tableView = this.getTableById(tableId);
