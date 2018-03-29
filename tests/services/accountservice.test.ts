@@ -1,4 +1,5 @@
 import { PersonalAccountData } from "@poker/api-server";
+import { getTestAuthManagerNonAuthenticated } from "tests/authHelper";
 import { AccountService } from "../../js/services/accountservice";
 
 function defineMockResponse(response: ApiResult<PersonalAccountData>) {
@@ -34,7 +35,7 @@ describe("account service", function () {
                 LastRequestNumber: 99990,
             },
         });
-        const sut = new AccountService(true, true);
+        const sut = new AccountService(true, true, getTestAuthManagerNonAuthenticated());
         const result = await sut.getAccount();
         expect(result.accounts).not.toBeNull();
         expect(result.accounts.length).toEqual(2);
@@ -71,7 +72,7 @@ describe("account service", function () {
                 LastRequestNumber: 99990,
             },
         });
-        const sut = new AccountService(true, true);
+        const sut = new AccountService(true, true, getTestAuthManagerNonAuthenticated());
         const result = await sut.getAccount();
         expect(result.accounts).not.toBeNull();
         expect(result.accounts.length).toEqual(2);
@@ -108,7 +109,7 @@ describe("account service", function () {
                 LastRequestNumber: 99990,
             },
         });
-        const sut = new AccountService(true, false);
+        const sut = new AccountService(true, false, getTestAuthManagerNonAuthenticated());
         const result = await sut.getAccount();
         expect(result.accounts).not.toBeNull();
         expect(result.accounts.length).toEqual(1);
@@ -142,7 +143,7 @@ describe("account service", function () {
                 LastRequestNumber: 99990,
             },
         });
-        const sut = new AccountService(false, true);
+        const sut = new AccountService(false, true, getTestAuthManagerNonAuthenticated());
         const result = await sut.getAccount();
         expect(result.accounts).not.toBeNull();
         expect(result.accounts.length).toEqual(1);
