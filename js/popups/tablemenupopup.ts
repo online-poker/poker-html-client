@@ -1,7 +1,7 @@
 /* tslint:disable:no-bitwise */
 import { PersonalAccountData, TournamentOptionsEnum } from "@poker/api-server";
 import * as ko from "knockout";
-import { authManager } from "poker/authmanager";
+import { IAuthenticationInformation } from "poker/authmanager";
 import { ICommandExecutor } from "poker/commandmanager";
 import { _ } from "poker/languagemanager";
 import { SimplePopup } from "poker/popups/index";
@@ -63,10 +63,17 @@ export class TableMenuPopup {
      */
     public ratingSupported = ko.observable(appConfig.game.hasRating);
 
+    /**
+     * Provides information about authentication status for application user.
+     */
+    private authInformation: IAuthenticationInformation;
+
     constructor(
         private currentTableProvider: ICurrentTableProvider,
         private commandExecutor: ICommandExecutor,
-        private accountManager: IAccountManager) {
+        private accountManager: IAccountManager,
+        private authInfo: IAuthenticationInformation) {
+        this.authInformation = authInfo;
         this.soundEnabled = ko.computed<boolean>({
             owner: this,
             read() {
@@ -145,7 +152,7 @@ export class TableMenuPopup {
         this.addMoneyAllowed(currentTable.couldAddChips());
         this.handHistoryAllowed(playerIsInGame && currentTable.lastHandHistory() != null);
         this.leaveAllowed(myPlayer != null && !currentTable.myPlayerInGame() && myPlayer.IsSitoutStatus());
-        this.accountStatusAllowed(authManager.authenticated());
+        this.accountStatusAllowed(this.authInformation.authenticated());
 
         const tournamentView = currentTable.tournament();
         this.isTournamentTable(tournamentView != null);
