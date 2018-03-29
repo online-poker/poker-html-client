@@ -28,6 +28,13 @@ export interface IAuthenticationInformation {
      * Returns authentication status of the application user.
      */
     authenticated(): boolean;
+
+    /**
+     * Register handler function for the authentication state change.
+     * @param handler Function which would be called when authentication state is changed.
+     * @returns Object which allow disposing of the subscription
+     */
+    registerAuthenticationChangedHandler(handler: (authenticated: boolean) => void): IDisposable;
 }
 
 /**
@@ -50,13 +57,6 @@ export interface IAuthenticationManager {
      * Initiate login as guest request to server.
      */
     loginAsGuest(): Promise<string>;
-
-    /**
-     * Register handler function for the authentication state change.
-     * @param handler Function which would be called when authentication state is changed.
-     * @returns Object which allow disposing of the subscription
-     */
-    registerAuthenticationChangedHandler(handler: (authenticated: boolean) => void): IDisposable;
 }
 
 export class AuthManager implements IAuthenticationInformation, IAuthenticationManager {
