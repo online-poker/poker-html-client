@@ -8,3 +8,12 @@ export const notAuthenticated: IAuthenticationInformation = {
         return;
     },
 };
+
+export const Authenticated: IAuthenticationInformation = {
+    login: () => "player1",
+    loginId: () => 1,
+    authenticated: () => true,
+    registerAuthenticationChangedHandler(handler: (authenticated: boolean) => void): IDisposable {
+        return;
+    },
+};
