@@ -363,7 +363,7 @@ export class TournamentLobbyPage extends PageBase {
                 return false;
             }
 
-            const tdata: TournamentDefinition = this.tournamentData();
+            const tdata = this.tournamentData();
             if (tdata === null) {
                 return false;
             }
