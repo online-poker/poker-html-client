@@ -115,7 +115,7 @@ describe("tableSlider", function () {
                 return x - 100;
             });
             tableSlider.setParameters(100, 20, 0, 100);
-            const evt = document.createEvent("TouchEvent");
+            const evt: TouchEvent = document.createEvent("TouchEvent");
             evt.initEvent("click", false, true);
             evt.originalEvent = evt;
             evt.originalEvent.gesture = {
@@ -133,7 +133,7 @@ describe("tableSlider", function () {
                 return x - 100;
             });
             tableSlider.setParameters(100, 20, 0, 100);
-            const evt = document.createEvent("TouchEvent");
+            const evt: TouchEvent = document.createEvent("TouchEvent");
             evt.initEvent("click", false, true);
             evt.originalEvent = evt;
             evt.originalEvent.gesture = undefined;
