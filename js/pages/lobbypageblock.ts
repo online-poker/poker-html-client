@@ -1,4 +1,5 @@
 ﻿import { TournamentDefinition } from "@poker/api-server";
+import { authManager } from "poker/authmanager";
 import { UIManager } from "poker/services/uimanager";
 import { App } from "../app";
 import { PageBlock } from "../pageblock";
@@ -6,7 +7,6 @@ import { LobbyPage } from "./lobbypage";
 import { TablesListPage } from "./tableslistpage";
 import { TournamentLobbyPage } from "./tournamentlobbypage";
 import { TournamentsListPage } from "./tournamentslistpage";
-import { authManager } from "poker/authmanager";
 
 declare var app: App;
 
