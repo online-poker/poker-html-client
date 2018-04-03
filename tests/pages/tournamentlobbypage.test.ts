@@ -7,6 +7,7 @@ import {
 import { authManager } from "poker/authmanager";
 import * as metadataManager from "poker/metadatamanager";
 import { TournamentLobbyPage } from "poker/pages/tournamentlobbypage";
+import { Authenticated, notAuthenticated } from "tests/authHelper";
 
 const baseTournament: TournamentDefinition = {
     TournamentId: 1,
@@ -76,22 +77,19 @@ describe("Tournament lobby page", function () {
     });
     describe("Registration button", function () {
         it("Unauthenticted could not register", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.login(null);
+            const tlobbyPage = new TournamentLobbyPage(authManager);
 
             expect(tlobbyPage.couldRegister()).toEqual(false);
         });
         it("When data is not received could not register", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(authManager);
 
             tlobbyPage.tournamentData(null);
 
             expect(tlobbyPage.couldRegister()).toEqual(false);
         });
         it("Could not register if already registered", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(authManager);
 
             const tournament = Object.assign(baseTournament, { IsRegistered: true });
             tlobbyPage.tournamentData(tournament);
@@ -99,8 +97,7 @@ describe("Tournament lobby page", function () {
             expect(tlobbyPage.couldRegister()).toEqual(false);
         });
         it("Could not register if status is Cancelled", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(Authenticated);
             const tournament = Object.assign(notRegisteredTournament, { IsRegistered: false, Status: TournamentStatus.Cancelled });
 
             tlobbyPage.tournamentData(tournament);
@@ -108,8 +105,7 @@ describe("Tournament lobby page", function () {
             expect(tlobbyPage.couldRegister()).toEqual(false);
         });
         it("Could not register if status is Completed", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(Authenticated);
             const tournament = Object.assign(notRegisteredTournament, { IsRegistered: false, Status: TournamentStatus.Completed });
 
             tlobbyPage.tournamentData(tournament);
@@ -117,8 +113,7 @@ describe("Tournament lobby page", function () {
             expect(tlobbyPage.couldRegister()).toEqual(false);
         });
         it("Could not register if status is RegistrationCancelled", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(Authenticated);
             const tournament = Object.assign(notRegisteredTournament, { IsRegistered: false, Status: TournamentStatus.RegistrationCancelled });
 
             tlobbyPage.tournamentData(tournament);
@@ -126,8 +121,7 @@ describe("Tournament lobby page", function () {
             expect(tlobbyPage.couldRegister()).toEqual(false);
         });
         it("Could not register if status is Pending", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(Authenticated);
             const tournament = Object.assign(notRegisteredTournament, { IsRegistered: false, Status: TournamentStatus.Pending });
 
             tlobbyPage.tournamentData(tournament);
@@ -135,8 +129,7 @@ describe("Tournament lobby page", function () {
             expect(tlobbyPage.couldRegister()).toEqual(false);
         });
         it("Could register if status is RegistrationStarted", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(Authenticated);
             const tournament = Object.assign(notRegisteredTournament, { IsRegistered: false, Status: TournamentStatus.RegistrationStarted });
 
             tlobbyPage.tournamentData(tournament);
@@ -144,8 +137,7 @@ describe("Tournament lobby page", function () {
             expect(tlobbyPage.couldRegister()).toEqual(true);
         });
         it("Could register if status is LateRegistration", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(Authenticated);
             const tournament = Object.assign(notRegisteredTournament, { IsRegistered: false, Status: TournamentStatus.LateRegistration });
 
             tlobbyPage.tournamentData(tournament);
@@ -155,46 +147,40 @@ describe("Tournament lobby page", function () {
     });
     describe("Cancel registration button", function () {
         it("Could not cancel registration if not authenticated", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.login(null);
+            const tlobbyPage = new TournamentLobbyPage(notAuthenticated);
 
             expect(tlobbyPage.couldUnregister()).toEqual(false);
         });
         it("Could not cancel registration if not registered", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(Authenticated);
             const tournament = Object.assign(notRegisteredTournament);
             tlobbyPage.tournamentData(tournament);
 
             expect(tlobbyPage.couldUnregister()).toEqual(false);
         });
         it("Could not cancel registration if status is LateRegistration", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(Authenticated);
             const tournament = Object.assign(registeredTournament, { IsRegistered: true, Status: TournamentStatus.LateRegistration });
             tlobbyPage.tournamentData(tournament);
 
             expect(tlobbyPage.couldUnregister()).toEqual(false);
         });
         it("Could not cancel registration if status is Cancelled", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(Authenticated);
             const tournament = Object.assign(registeredTournament, { IsRegistered: true, Status: TournamentStatus.Cancelled });
             tlobbyPage.tournamentData(tournament);
 
             expect(tlobbyPage.couldUnregister()).toEqual(false);
         });
         it("Could not cancel registration if status is RegistrationCancelled", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(Authenticated);
             const tournament = Object.assign(registeredTournament, { IsRegistered: true, Status: TournamentStatus.RegistrationCancelled });
             tlobbyPage.tournamentData(tournament);
 
             expect(tlobbyPage.couldUnregister()).toEqual(false);
         });
         it("Could cancel registration if status is RegistrationStarted", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(Authenticated);
             const tournament = Object.assign(registeredTournament, { IsRegistered: true, Status: TournamentStatus.RegistrationStarted });
             tlobbyPage.tournamentData(tournament);
 
@@ -203,21 +189,18 @@ describe("Tournament lobby page", function () {
     });
     describe("Continue game button", function () {
         it("Could not continue if not authenticated", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(false);
+            const tlobbyPage = new TournamentLobbyPage(notAuthenticated);
 
             expect(tlobbyPage.couldContinueGame()).toEqual(false);
         });
         it("Could not continue if data does not received", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(Authenticated);
             tlobbyPage.tournamentData(null);
 
             expect(tlobbyPage.couldContinueGame()).toEqual(false);
         });
         it("Could not continue if tournament does not started", function () {
-            const tlobbyPage = new TournamentLobbyPage();
-            authManager.authenticated(true);
+            const tlobbyPage = new TournamentLobbyPage(Authenticated);
             const tournament = Object.assign(registeredTournament, { IsRegistered: true, Status: TournamentStatus.RegistrationStarted });
             tlobbyPage.tournamentData(tournament);
 
@@ -225,9 +208,7 @@ describe("Tournament lobby page", function () {
         });
         [TournamentStatus.Started, TournamentStatus.LateRegistration].forEach((testedStatus) => {
             it(`Could continue if tournament started with status ${testedStatus} and in game`, function () {
-                const tlobbyPage = new TournamentLobbyPage();
-                authManager.authenticated(true);
-                authManager.loginId(1);
+                const tlobbyPage = new TournamentLobbyPage(Authenticated);
                 const tournament = Object.assign(registeredTournament, {
                     IsRegistered: true,
                     Status: testedStatus,
@@ -249,9 +230,7 @@ describe("Tournament lobby page", function () {
                 expect(tlobbyPage.couldContinueGame()).toEqual(true);
             });
             it(`Could not continue if tournament started with status ${testedStatus} and player lose`, function () {
-                const tlobbyPage = new TournamentLobbyPage();
-                authManager.authenticated(true);
-                authManager.loginId(1);
+                const tlobbyPage = new TournamentLobbyPage(Authenticated);
                 const tournament = Object.assign(registeredTournament, {
                     IsRegistered: true,
                     Status: testedStatus,
@@ -275,9 +254,7 @@ describe("Tournament lobby page", function () {
         });
         describe("Prize amount type", function () {
             it(`Guaranteed plus collections from players`, function () {
-                const tlobbyPage = new TournamentLobbyPage();
-                authManager.authenticated(true);
-                authManager.loginId(1);
+                const tlobbyPage = new TournamentLobbyPage(Authenticated);
                 const tournament = Object.assign(registeredTournament, {
                     PrizeAmountType: 0,
                     PrizeAmount: 12345,
@@ -288,9 +265,7 @@ describe("Tournament lobby page", function () {
                 expect(tlobbyPage.totalPrize()).toEqual(35801);
             });
             it(`Guaranteed or collections from players`, function () {
-                const tlobbyPage = new TournamentLobbyPage();
-                authManager.authenticated(true);
-                authManager.loginId(1);
+                const tlobbyPage = new TournamentLobbyPage(Authenticated);
                 const tournament = Object.assign(registeredTournament, {
                     PrizeAmountType: 1,
                     PrizeAmount: 12345,
@@ -301,9 +276,7 @@ describe("Tournament lobby page", function () {
                 expect(tlobbyPage.totalPrize()).toEqual(23456);
             });
             it(`Guaranteed or collections from players 2`, function () {
-                const tlobbyPage = new TournamentLobbyPage();
-                authManager.authenticated(true);
-                authManager.loginId(1);
+                const tlobbyPage = new TournamentLobbyPage(Authenticated);
                 const tournament = Object.assign(registeredTournament, {
                     PrizeAmountType: 1,
                     PrizeAmount: 23456,
@@ -314,9 +287,7 @@ describe("Tournament lobby page", function () {
                 expect(tlobbyPage.totalPrize()).toEqual(23456);
             });
             it(`Guaranteed only`, function () {
-                const tlobbyPage = new TournamentLobbyPage();
-                authManager.authenticated(true);
-                authManager.loginId(1);
+                const tlobbyPage = new TournamentLobbyPage(Authenticated);
                 const tournament = Object.assign(registeredTournament, {
                     PrizeAmountType: 2,
                     PrizeAmount: 12345,

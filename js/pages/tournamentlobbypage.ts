@@ -13,7 +13,7 @@ import {
 } from "@poker/api-server";
 import * as ko from "knockout";
 import * as moment from "moment";
-import { authManager } from "poker/authmanager";
+import { IAuthenticationInformation } from "poker/authmanager";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
@@ -73,9 +73,11 @@ export class TournamentLobbyPage extends PageBase {
     public totalPrize: KnockoutComputed<number>;
     public prizesCount: KnockoutComputed<number>;
     public scrollTrigger: KnockoutComputed<number>;
+    private authInformation: IAuthenticationInformation;
 
-    constructor() {
+    constructor(authInformation: IAuthenticationInformation) {
         super();
+        this.authInformation = authInformation;
         const self = this;
         this.tournamentData = ko.observable<TournamentDefinition>(null);
         this.tablesData = ko.observableArray<TournamentTableListView>([]);
@@ -112,8 +114,8 @@ export class TournamentLobbyPage extends PageBase {
         });
         this.loading = ko.observable(true);
         this.currentView = ko.observable(1);
-        authManager.registerAuthenticationChangedHandler(function(newValue) {
-            self.refreshTournament();
+        this.authInformation.registerAuthenticationChangedHandler((newValue) => {
+            this.refreshTournament()
         });
         this.lateRegistrationAllowed = ko.computed(function() {
             const data = self.tournamentData();
@@ -274,8 +276,8 @@ export class TournamentLobbyPage extends PageBase {
 
             return players;
         }, this);
-        this.authenticated = ko.computed(function() {
-            const value = authManager.authenticated();
+        this.authenticated = ko.computed(() => {
+            const value = this.authInformation.authenticated();
             return value;
         }, this);
         this.tablesAvailable = ko.computed(function() {
@@ -335,18 +337,18 @@ export class TournamentLobbyPage extends PageBase {
             return tdata.IsRegistered
                 && tdata.Status === TournamentStatus.RegistrationStarted;
         }, this);
-        this.couldContinueGame = ko.computed(function() {
-            if (!self.authenticated()) {
+        this.couldContinueGame = ko.computed(() => {
+            if (!this.authenticated()) {
                 return false;
             }
 
-            const tdata = self.tournamentData();
+            const tdata = this.tournamentData();
             if (tdata === null) {
                 return false;
             }
 
-            const tplayer = tdata.TournamentPlayers.filter(function(item) {
-                return item.PlayerId === authManager.loginId();
+            const tplayer = tdata.TournamentPlayers.filter((item) => {
+                return item.PlayerId === this.authInformation.loginId();
             });
 
             if (tplayer.length === 0 || tplayer[0].Status !== TournamentPlayerStatus.Playing) {
@@ -356,18 +358,18 @@ export class TournamentLobbyPage extends PageBase {
             return tdata.Status === TournamentStatus.LateRegistration
                 || tdata.Status === TournamentStatus.Started;
         }, this);
-        this.couldView = ko.computed(function() {
-            if (!self.authenticated()) {
+        this.couldView = ko.computed(() => {
+            if (!this.authenticated()) {
                 return false;
             }
 
-            const tdata = self.tournamentData();
+            const tdata: TournamentDefinition = this.tournamentData();
             if (tdata === null) {
                 return false;
             }
 
-            const tplayer = tdata.TournamentPlayers.filter(function(item) {
-                return item.PlayerId === authManager.loginId();
+            const tplayer = tdata.TournamentPlayers.filter((item) => {
+                return item.PlayerId === this.authInformation.loginId();
             });
 
             if (tplayer.length === 0) {

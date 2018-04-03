@@ -6,6 +6,7 @@ import { LobbyPage } from "./lobbypage";
 import { TablesListPage } from "./tableslistpage";
 import { TournamentLobbyPage } from "./tournamentlobbypage";
 import { TournamentsListPage } from "./tournamentslistpage";
+import { authManager } from "poker/authmanager";
 
 declare var app: App;
 
@@ -26,7 +27,7 @@ export class LobbyPageBlock extends PageBlock {
         this.lobbyPage = lobbyPage;
         this.tablesListPage = new TablesListPage();
         this.addSecondary("tablesList", this.tablesListPage);
-        this.tournamentLobbyPage = new TournamentLobbyPage();
+        this.tournamentLobbyPage = new TournamentLobbyPage(authManager);
         UIManager.addTabBarItemMapping("lobby", "tournamentLobby");
         this.addSecondary("tournamentLobby", this.tournamentLobbyPage);
         this.tournamentsListPage = new TournamentsListPage();
