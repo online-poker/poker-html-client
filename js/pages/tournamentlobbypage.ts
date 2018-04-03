@@ -122,7 +122,7 @@ export class TournamentLobbyPage extends PageBase {
         this.loading = ko.observable(true);
         this.currentView = ko.observable(1);
         this.authInformation.registerAuthenticationChangedHandler((newValue) => {
-            this.refreshTournament()
+            this.refreshTournament();
         });
         this.lateRegistrationAllowed = ko.computed(function() {
             const data = self.tournamentData();
