@@ -222,7 +222,7 @@ describe("Table menu", function () {
                     });
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.isRebuyCurrentlyAllowed()).toEqual(true);
             expect(tableMenuPopup.isSufficientMoneyForRebuy()).toEqual(true);
@@ -430,7 +430,7 @@ describe("Table menu", function () {
                     });
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.isDoubleRebuyCurrentlyAllowed()).toEqual(true);
             expect(tableMenuPopup.isSufficientMoneyForDoubleRebuy()).toEqual(true);
@@ -643,7 +643,7 @@ describe("Table menu", function () {
                     });
                 },
             };
-            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager, notAuthenticated);
             await tableMenuPopup.shown();
             expect(tableMenuPopup.isAddonCurrentlyAllowed()).toEqual(true);
             expect(tableMenuPopup.isSufficientMoneyForAddon()).toEqual(true);
