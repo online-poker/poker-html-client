@@ -2456,7 +2456,7 @@ export class TableView {
             // This time should be 500ms bigger then the actual time specified
             // on the server, to accomodate for the 500ms update period.
             this.displayingRebuyAddonNotification = true;
-            const totalDuration = 10.5;
+            const totalDuration = 20.5;
             let i = 0;
             let messageTemplate: string;
             let popupCaption: string;
