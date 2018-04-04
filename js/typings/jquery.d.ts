@@ -1,3 +1,3 @@
-﻿interface TouchEvent {
+﻿interface Event {
     originalEvent: any;
 }
