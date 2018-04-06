@@ -788,6 +788,10 @@ export class App {
                 return;
             }
 
+            if (currentTable.tableId === 0) {
+                return;
+            }
+
             app.executeCommand("app.selectTable", [currentTable.model]);
             app.showSubPage("tables");
         });
