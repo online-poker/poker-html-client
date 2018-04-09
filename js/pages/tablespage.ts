@@ -52,7 +52,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         this.slideWidth = ko.observable(0);
         this.isConnectionSlow = ko.observable(false);
         this.calculateLandscapeWidth();
-        this.progressBackgroundColor = ko.observable($(".progress-background").css("background-color"));
+        this.progressBackgroundColor = ko.observable(appConfig.ui.progressBackgroundInitialColor);
         this.currentIndex = ko.computed<number>({
             read() {
                 return tableManager.currentIndex();
@@ -229,10 +229,10 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         app.tabBar.visible(true);
         app.tabBar.select("tables", false);
         app.processing(true);
-        $(".progress-background").css("background-color", "black");
+        this.progressBackgroundColor("black");
         timeService.setTimeout(() => {
             app.processing(false);
-            $(".progress-background").css("background-color", this.progressBackgroundColor());
+            this.progressBackgroundColor(appConfig.ui.progressBackgroundInitialColor);
         }, 500);
         /* tslint:disable:no-string-literal no-unused-expression */
         window["StatusBar"] && StatusBar.show();

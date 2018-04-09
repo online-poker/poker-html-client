@@ -66,6 +66,9 @@ export class AppConfig {
         hasInfoPages: false,
         hasSupportPages: false,
     };
+    public ui = {
+        progressBackgroundInitialColor: "rgba(0,0,0,0.75)",
+    };
 }
 /**
  * Simple object check.
