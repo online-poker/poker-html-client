@@ -15,6 +15,7 @@ import { PageBase } from "../ui/pagebase";
 
 declare var app: App;
 
+/** Home Page */
 export class HomePage extends PageBase {
     public online: KnockoutObservable<string>;
     public registered: KnockoutObservable<string>;

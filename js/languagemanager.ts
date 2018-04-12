@@ -1,5 +1,6 @@
 declare var messages: any;
 
+/** This manager is responsible for all text operations */
 export class LanguageManager {
     public currentLang: string;
     constructor() {
@@ -63,6 +64,12 @@ export class LanguageManager {
 }
 
 export const l = new LanguageManager();
+
+/**
+ * Returns message value for current language
+ * @param message name of needed message
+ * @param parameters (optional) dynamic values that shoud be written in message
+ */
 export function _(message: string, parameters: any = null) {
     return l.getMessage(message, parameters);
 }

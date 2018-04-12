@@ -28,6 +28,7 @@ interface AccountPagePlayerModel {
     stars: number;
 }
 
+/** Account Page */
 export class AccountPage extends PageBase {
     public cashierCaption: KnockoutObservable<string>;
     public loading: KnockoutObservable<boolean>;

@@ -1,5 +1,6 @@
 ﻿import { ActionBlock } from "../../../table/actionBlock";
 
+/** Action Block Component */
 export class ActionBlockComponent {
     private actionBlock: ActionBlock;
 

@@ -43,6 +43,7 @@ interface TournamentTableListView {
     players: TournamentTablePlayerView[];
 }
 
+/** Lobby page for tournaments */
 export class TournamentLobbyPage extends PageBase {
     public loading: KnockoutObservable<boolean>;
     public tournamentId = 0;

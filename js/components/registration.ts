@@ -28,6 +28,7 @@ function getTemplateDefinition(name: string) {
     return window["PokerComponents"][name];
 }
 
+/** Register knockoutjs components */
 export function registerComponents() {
     /**
      * Tournament lobby sub-components

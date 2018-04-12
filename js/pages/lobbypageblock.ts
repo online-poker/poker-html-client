@@ -9,6 +9,7 @@ import { TournamentsListPage } from "./tournamentslistpage";
 
 declare var app: App;
 
+/** Lobby Page Block */
 export class LobbyPageBlock extends PageBlock {
     public sngListPage: TournamentsListPage;
     public tournamentsListPage: TournamentsListPage;

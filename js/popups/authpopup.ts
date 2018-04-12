@@ -9,6 +9,7 @@ import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 
+/** Authentication popup */
 export class AuthPopup extends PopupBase {
     public login: KnockoutObservable<string>;
     public password: KnockoutObservable<string>;

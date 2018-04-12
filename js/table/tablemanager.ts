@@ -34,6 +34,7 @@ export enum CardsDealedCodes {
     RiverDealed = 3,
 }
 
+/** Manages player tables */
 export class TableManager {
     public tables: KnockoutObservableArray<TableView>;
     public currentIndex: KnockoutObservable<number>;

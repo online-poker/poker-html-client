@@ -2,6 +2,9 @@
 import * as runtimeSettings from "../table/runtimesettings";
 import { wait } from "./timedeferred";
 
+/** Manager that playes app sounds depending
+ * on current configurations
+ */
 export class SoundManager {
     public enabled = ko.observable(false);
     public tableSoundsEnabled = ko.observable(false);

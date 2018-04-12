@@ -19,6 +19,7 @@ export interface ICommandManager extends ICommandExecutor {
     registerCommand(commandName: string, handler: CommandHandler): void;
 }
 
+/** Register and executes commands */
 export class CommandManager implements ICommandManager {
     public commands: any[] = [];
 

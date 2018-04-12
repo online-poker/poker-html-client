@@ -1,6 +1,7 @@
 import { authManager } from "poker/authmanager";
 import { AccountManager } from "./accountManager";
 
+/** Account Service */
 export class AccountService {
     private realMoneySupported: boolean;
     private gameMoneySupported: boolean;

@@ -17,6 +17,7 @@ class GameActionBlock {
     public hasSecondaryPanel = true;
 }
 
+/** Local app configurations */
 export class AppConfig {
     public auth = {
         automaticLogin: true,
@@ -103,6 +104,10 @@ export type PartialConfiguration<T> = {
     [P in keyof T]?: Partial<T[P]>;
 };
 
+/**
+ * This function overrides local configuration
+ * @param localConfiguration
+ */
 export function overrideConfiguration(localConfiguration: PartialConfiguration<AppConfig>) {
     appConfig = mergeDeep(appConfig, localConfiguration);
 }

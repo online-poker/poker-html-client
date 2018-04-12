@@ -14,6 +14,7 @@ interface TapEvent {
     originalEvent: Event & TapGestureEvent;
 }
 
+/** TableSlider */
 export class TableSlider {
     public current: KnockoutObservable<number>;
     public currentValue: KnockoutComputed<string>;

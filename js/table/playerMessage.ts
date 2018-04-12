@@ -1,6 +1,7 @@
 import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
 
+/** Player chat messages */
 export class PlayerMessage {
     public messageId: number;
     public sender: string;

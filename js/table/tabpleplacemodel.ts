@@ -13,6 +13,7 @@ interface CardsRepresentation {
     Suits: number[];
 }
 
+/** Model for table place */
 export class TablePlaceModel {
     /**
      * Default avatar for unspecified images, and

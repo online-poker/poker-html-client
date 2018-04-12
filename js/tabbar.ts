@@ -16,6 +16,7 @@ class TabBarItem {
     }
 }
 
+/** App tabbar */
 export class TabBar {
     public items: KnockoutObservableArray<TabBarItem>;
     public visible: KnockoutObservable<boolean>;

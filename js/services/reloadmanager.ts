@@ -1,5 +1,6 @@
 ﻿import { debugSettings } from "../debugsettings";
 
+/** Reload Manager */
 export class ReloadManager {
     private callback: () => void;
     public setReloadCallback(callback: () => void) {

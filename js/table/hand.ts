@@ -72,6 +72,10 @@
         return rankCountBitMask - isSameSuit * ((rankBitMask === 0x7c00) ? -5 : 1);
     }
 
+    /**
+     * Get cards string value from its byte representation
+     * @param v  Card byte value
+     */
     export function cardValue(v: number) {
         if (v === 14) {
             return "A";
@@ -92,6 +96,10 @@
         return v.toString();
     }
 
+    /**
+     * Get current combination type
+     * @param hand Current hand representation
+     */
     export function getHandTypeEx(hand: HandRepresentation) {
         if (hand.Suits.length !== 5 || hand.Cards.length !== 5) {
             throw new Error("Should be passed 5 cards for extended interpretation.");
@@ -335,6 +343,10 @@
             | tempCards[4];
     }
 
+    /**
+     * Convert string to internal representation.
+     * @param str String representation of the hand which should be converted.
+     */
     export function parseHand(str: string): HandParseResult {
         /// <summary>Convert string to internal representation.</summary>
         /// <param name="str" type="String">String representation of the hand which should be converted.</param>

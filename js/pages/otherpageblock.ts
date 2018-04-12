@@ -7,6 +7,7 @@ import { ChatPage } from "./chatpage";
 import { RatingPage } from "./ratingpage";
 import { SettingsPage } from "./settingspage";
 
+/** Page block for changePassword, more, rating, chat and accout pages  */
 export class OtherPageBlock extends PageBlock {
     public changePasswordPage: ChangePasswordPage;
     public morePage: SettingsPage;

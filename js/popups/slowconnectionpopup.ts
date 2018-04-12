@@ -6,6 +6,7 @@ import * as runtimeSettings from "../table/runtimesettings";
 import * as timeService from "../timeservice";
 import { PopupBase } from "../ui/popupbase";
 
+/** Popup for indicating slow internet connection */
 export class SlowConnectionPopup extends PopupBase {
     public allowRetry: KnockoutObservable<boolean>;
     public caption: KnockoutObservable<string>;

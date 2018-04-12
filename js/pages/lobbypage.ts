@@ -21,6 +21,7 @@ import { PageBase } from "../ui/pagebase";
 
 declare var app: App;
 
+/** Filter options for cash table */
 export class CashOptions {
     public currency: KnockoutObservable<number>;
     public limits: KnockoutObservable<number>;
@@ -74,6 +75,7 @@ export class CashOptions {
     }
 }
 
+/** Filter options for tournaments */
 export class TournamentOptions {
     public currency: KnockoutObservable<number>;
     public buyin: KnockoutObservable<number>;
@@ -132,6 +134,7 @@ interface LobbyTournamentItemEx extends LobbyTournamentItem {
     duration: string;
 }
 
+/** Page for players lobby */
 export class LobbyPage extends PageBase {
     public online: KnockoutObservable<string>;
     public registered: KnockoutObservable<string>;

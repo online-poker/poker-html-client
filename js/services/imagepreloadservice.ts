@@ -1,5 +1,6 @@
 ﻿import { debugSettings } from "../debugsettings";
 
+/** Image Preload Service */
 export class ImagePreloadService {
     public preload(url: string, useAbsolute = true) {
         const absoluteUrl = useAbsolute ? this.getAbsoluteUrl(url) : url;

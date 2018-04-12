@@ -13,6 +13,7 @@ enum HandHistoryDisplayMode {
     Detailed,
 }
 
+/** Popup for showing of previous game history */
 export class HandHistoryPopup extends PopupBase {
     public detailedOperations: KnockoutObservableArray<string>;
     public shortOperations: KnockoutObservableArray<string>;

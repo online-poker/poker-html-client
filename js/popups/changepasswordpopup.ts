@@ -9,6 +9,7 @@ import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 
+/** Popup for password change */
 export class ChangePasswordPopup extends PopupBase {
     public oldPassword = ko.observable<string>().extend({ required: true });
     public password: KnockoutObservable<string>;

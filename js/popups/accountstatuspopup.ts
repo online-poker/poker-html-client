@@ -9,6 +9,7 @@ import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 
+/** Account Status Popup */
 export class AccountStatusPopup extends PopupBase {
     public loading: KnockoutObservable<boolean>;
     public information: KnockoutObservable<AccountServiceInformation>;

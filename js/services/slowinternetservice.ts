@@ -6,6 +6,7 @@ declare var app: App;
 
 type RetryHandler = () => void;
 
+/** Service that handles slow internet connection */
 export class SlowInternetService {
     public static popupName = "slowConnection";
     public manualDisconnect: boolean;

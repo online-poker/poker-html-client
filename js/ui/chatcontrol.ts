@@ -5,6 +5,7 @@ import { connectionService } from "poker/services";
 import { ConnectionWrapper } from "poker/services/connectionwrapper";
 import * as timeService from "../timeservice";
 
+/** Control class of players chat */
 export class ChatControl {
     public currentMessage: KnockoutObservable<string>;
     public messages: KnockoutObservableArray<string>;

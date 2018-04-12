@@ -26,6 +26,10 @@ function isRunningStandalone() {
         || ("standalone" in window.navigator && window.navigator["standalone"] === true));
 }
 
+/**
+ * Applies app configuration
+ * @param localConfiguration local saved configurations
+ */
 export function bootstrap(localConfiguration?: Partial<AppConfig>) {
     overrideConfiguration(localConfiguration || {});
 

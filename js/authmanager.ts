@@ -59,6 +59,7 @@ export interface IAuthenticationManager {
     loginAsGuest(): Promise<string>;
 }
 
+/** Manager that handles authentication */
 export class AuthManager implements IAuthenticationInformation, IAuthenticationManager {
     /**
      * Returns authentication status of the application user.

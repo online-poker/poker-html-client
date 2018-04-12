@@ -6,6 +6,7 @@ import { PageBase } from "../ui/pagebase";
 
 declare var app: App;
 
+/** Withdrawal Page */
 export class WithdrawalPage extends PageBase {
     public player: KnockoutObservable<any>;
     public withdrawalMethods: KnockoutObservableArray<any>;

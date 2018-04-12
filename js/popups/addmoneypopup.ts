@@ -11,6 +11,7 @@ import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 
+/** Popup for adding money */
 export class AddMoneyPopup {
     public buyin: KnockoutObservable<number>;
     public minBuyin: KnockoutObservable<number>;

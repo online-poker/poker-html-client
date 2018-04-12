@@ -3,6 +3,7 @@ import { AccountManager } from "../services/accountManager";
 
 declare var app: App;
 
+/** RatingPage  */
 export class RatingPage implements Page {
     public ratings = ko.observableArray<UserRatingModel>();
     public loading = ko.observable(false);

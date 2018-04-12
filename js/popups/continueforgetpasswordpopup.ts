@@ -7,6 +7,7 @@ import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 
+/** Continue Forget Password Popup */
 export class ContinueForgetPasswordPopup extends PopupBase {
     public token: KnockoutObservable<string>;
     public password: KnockoutObservable<string>;

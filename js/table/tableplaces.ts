@@ -1,6 +1,7 @@
 ﻿import * as ko from "knockout";
 import { TablePlaceModel } from "./tabpleplacemodel";
 
+/** Base class for table places */
 export class TablePlaces {
     public placesRefreshTrigger: KnockoutObservable<{}>;
 

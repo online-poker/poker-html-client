@@ -9,6 +9,7 @@ import { PageBase } from "../ui/pagebase";
 declare var host: string;
 declare var app: App;
 
+/** Support page */
 export class SupportPage extends PageBase implements KnockoutValidationGroup {
     public displayFullName = false;
     public displaySubject = false;

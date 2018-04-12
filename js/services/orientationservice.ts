@@ -1,5 +1,6 @@
 ﻿/// <reference path="../typings/cordova.d.ts" />
 
+/** Service that applies needed orientation for current page */
 export class OrientationService {
     private lastOrientation: string = null;
     private disableRotation = false;

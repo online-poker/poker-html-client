@@ -22,6 +22,7 @@ import { version } from "../version";
 
 declare var app: App;
 
+/** Seat page of the player */
 export class SeatPage extends PageBase {
     public currentTable: KnockoutComputed<TableView>;
     public selectedTables: KnockoutComputed<TableView[]>;

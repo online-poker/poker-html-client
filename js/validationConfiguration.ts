@@ -1,6 +1,7 @@
 import * as ko from "knockout";
 import * as kov from "knockout.validation";
 
+/** Get form validation messages */
 export function updateDefaultMessages() {
     // tslint:disable-next-line:no-unused-expression
     kov;

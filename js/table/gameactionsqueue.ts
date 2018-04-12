@@ -2,6 +2,7 @@
 
 type QueueWorker = () => Promise<any>;
 
+/** Handle app qued tasks */
 export class GameActionsQueue {
     public static logging: boolean = false;
     public static waitDisabled = false;

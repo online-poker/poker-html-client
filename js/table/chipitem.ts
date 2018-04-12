@@ -11,6 +11,7 @@ interface ChipStackCalcIntermediate {
     index: number;
 }
 
+/** Chip Item */
 export class ChipItem {
     public baseAmount: KnockoutObservable<number>;
     private maxStackCount = 5;

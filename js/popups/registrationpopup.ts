@@ -10,6 +10,7 @@ import { SimplePopup } from "./simplepopup";
 
 declare var app: App;
 
+/** Registration Popup */
 export class RegistrationPopup extends PopupBase {
     public login: KnockoutObservable<string>;
     public email: KnockoutObservable<string>;

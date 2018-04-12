@@ -5,6 +5,7 @@ import { App } from "../app";
 
 declare var app: App;
 
+/** Simple popup for confirm or cancel of current operation */
 export class OkCancelPopup {
     public title: KnockoutObservable<string>;
     public messages: KnockoutObservableArray<string>;

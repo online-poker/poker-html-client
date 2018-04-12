@@ -5,6 +5,7 @@ import { PopupBase } from "../ui/popupbase";
 
 type PromiseOrVoid = void | Promise<void>;
 
+/** Custom Popup */
 export class CustomPopup extends PopupBase {
     public title: KnockoutObservable<string>;
     public messages: KnockoutObservableArray<string>;

@@ -7,6 +7,7 @@ import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 
+/** Simple popup for confirm of current operation */
 export class SimplePopup extends PopupBase {
     public static display(title: string, message: string | string[]): Promise<PopupResult> {
         app.simplePopup.title(title);

@@ -4,6 +4,7 @@ import { appConfig } from "../appconfig";
 
 declare var host: string;
 
+/** App Reload Service */
 export class AppReloadService {
     public async getReload(tableId: number) {
         const api = this.getApi();

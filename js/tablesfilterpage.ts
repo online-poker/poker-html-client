@@ -1,6 +1,7 @@
 ﻿import * as ko from "knockout";
 import { PageBase } from "./ui/pagebase";
 
+/** TablesFilterPage */
 export class TablesFilterPage extends PageBase {
     public oldpassword: KnockoutObservable<string>;
     public password: KnockoutObservable<string>;

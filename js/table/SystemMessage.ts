@@ -1,5 +1,6 @@
 import * as ko from "knockout";
 
+/** System messages */
 export class SystemMessage {
     public messageId: number;
     public message: KnockoutObservable<string>;

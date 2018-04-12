@@ -8,6 +8,7 @@ import { CancelToken } from "./cancelToken";
 import { ConnectionService } from "./connectionservice";
 import { connectionService, slowInternetService } from "./index";
 
+/** Connection Wrapper  */
 export class ConnectionWrapper {
     public terminated = false;
     private refreshHandle: number | null = null;

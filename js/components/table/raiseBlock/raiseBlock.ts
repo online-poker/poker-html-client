@@ -6,6 +6,7 @@ export interface IRaiseBlockComponentParameters {
     updateTranslator: () => void;
 }
 
+/** Raise Block Component */
 export class RaiseBlockComponent {
     private tableSlider: TableSlider;
 
