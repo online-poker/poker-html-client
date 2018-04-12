@@ -1,6 +1,7 @@
 import * as ko from "knockout";
 import { PopupBase } from "../ui/popupbase";
 
+/** News Popup */
 export class NewsPopup extends PopupBase {
     public link = ko.observable<string>();
     public url = ko.observable<string>();

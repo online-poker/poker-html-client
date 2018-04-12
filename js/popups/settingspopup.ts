@@ -5,6 +5,7 @@ import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 
+/** Settings Popup */
 export class SettingsPopup {
     public loading: KnockoutObservable<boolean>;
     public checkedRadio: KnockoutObservable<string>;

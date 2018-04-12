@@ -5,6 +5,7 @@ export interface IAccountManager {
     getAccount(): Promise<ApiResult<PersonalAccountData>>;
 }
 
+/** Manager for account operations */
 export class AccountManager implements IAccountManager {
     public async getAccount() {
         const api = new Account(host);

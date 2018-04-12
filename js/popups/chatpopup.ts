@@ -11,6 +11,7 @@ import { ChatControl } from "../ui/chatcontrol";
 
 declare var app: App;
 
+/** Chat popup */
 export class ChatPopup {
     public control: ChatControl;
     public caption: KnockoutObservable<string>;

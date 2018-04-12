@@ -73,6 +73,9 @@ export interface LoginPromptResult {
 
 declare const host: string;
 
+/**
+ * Main class that initializes app.
+ */
 export class App {
     public currentPopup: string = null;
     public homePage: HomePage;

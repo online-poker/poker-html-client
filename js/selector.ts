@@ -6,6 +6,7 @@ export interface SelectorItem {
     selected: boolean;
 }
 
+/** App selector */
 export class Selector {
     public caption: KnockoutObservable<string>;
     public items: KnockoutObservableArray<SelectorItem>;

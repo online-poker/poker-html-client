@@ -2,6 +2,7 @@ import { CancelError } from "./cancelError";
 
 type CancelAction = (reason?: string) => void;
 
+/** Cancel Token */
 export class CancelToken {
     /**
      * Returns an object that contains a new `CancelToken` and a function that, when called,

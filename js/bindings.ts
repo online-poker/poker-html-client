@@ -14,6 +14,7 @@ import * as timeService from "./timeservice";
 
 declare var app: App;
 
+/** Registers knokcoutjs bindings */
 export function registerBindings() {
     // Binding set loading variable for short amount of time.
     ko.bindingHandlers["loading"] = {

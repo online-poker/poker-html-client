@@ -3,6 +3,7 @@
 import * as ko from "knockout";
 import { SelectorItem } from "./selector";
 
+/** Register knockoutjs extenders */
 export function registerExtenders() {
     ko.extenders["options"] = (target: KnockoutObservable<any>, option: { caption: string; items: SelectorItem[]}) => {
         target.options = option.items;

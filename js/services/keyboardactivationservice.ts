@@ -8,6 +8,7 @@ import { uiManager } from "./uimanager";
 
 declare var app: App;
 
+/** Keyboard Activation Service */
 export class KeyboardActivationService {
     public static keyboardShowModifier = "keyboard-shown";
     private lastPage: string = null;

@@ -22,6 +22,7 @@ import { PageBase } from "../ui/pagebase";
 
 declare var app: App;
 
+/** Tables Page */
 export class TablesPage extends PageBase implements ICurrentTableProvider {
     public currentTable: KnockoutComputed<TableView>;
     public selectedTables: KnockoutComputed<TableView[]>;

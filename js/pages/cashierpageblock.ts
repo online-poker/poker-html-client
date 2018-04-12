@@ -7,6 +7,7 @@ import { OperationsHistoryPage } from "./operationshistorypage";
 import { RatingPage } from "./ratingpage";
 import { WithdrawalPage } from "./withdrawalpage";
 
+/** Cashier Page Block */
 export class CashierPageBlock extends PageBlock {
     public accountPage: AccountPage;
     public ratingPage: RatingPage;

@@ -9,6 +9,7 @@ import { slowInternetService } from "./index";
 
 type CancelConnectionCallback = (reason: string) => void;
 
+/** Connection Service */
 export class ConnectionService {
     public static stateConversion = {
         0: "connecting",

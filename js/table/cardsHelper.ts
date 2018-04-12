@@ -9,6 +9,7 @@ export const allBacksClassesTwoCards = ["cards back", "cards back"];
 export const allNoneClassesTwoCards = ["cards none", "cards none"];
 
 // tslint:disable-next-line:no-unused-variable
+/** Expose cards value constants */
 export function exposeCardsConstants() {
     // tslint:disable-next-line:no-string-literal
     window["allBacks"] = allBacks;
@@ -24,6 +25,10 @@ export function exposeCardsConstants() {
     window["allNoneClassesTwoCards"] = allNoneClassesTwoCards;
 }
 
+/**
+ * Get card displayed value from its byte representation
+ * @param card A byte value of the card
+ */
 export function cardValue(card: number) {
     /// <signature>
     ///   <summary>Get card string</summary>
@@ -165,6 +170,10 @@ export function decodeCardsArray(cardsData: string | null): number[] {
     return cards;
 }
 
+/**
+ * Get cards displayed value from its byte representation
+ * @param data Array with cards byte representation
+ */
 export function convertToCards(data: number[]): string[] {
     if (data == null) {
         return null;
@@ -175,6 +184,10 @@ export function convertToCards(data: number[]): string[] {
     });
 }
 
+/**
+ * Get card string
+ * @param cardsData rray of the cards
+ */
 export function cardsArray(cardsData: string): string[] {
     /// <signature>
     ///   <summary>Get card string</summary>

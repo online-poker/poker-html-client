@@ -5,6 +5,7 @@ import { PageBase } from "../ui/pagebase";
 
 declare var app: App;
 
+/** Info Page */
 export class InfoPage extends PageBase {
     constructor() {
         super();

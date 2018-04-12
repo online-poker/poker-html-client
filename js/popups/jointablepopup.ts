@@ -10,6 +10,7 @@ import { SimplePopup } from "./simplepopup";
 
 declare var app: App;
 
+/** Join Table Popup */
 export class JoinTablePopup {
     public buyin: KnockoutObservable<number>;
     public ticketCode: KnockoutObservable<string>;

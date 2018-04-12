@@ -1,4 +1,5 @@
-﻿export class DuplicateFinder {
+﻿/** DuplicateFinder */
+export class DuplicateFinder {
     private dataEvents: any[][];
 
     constructor() {

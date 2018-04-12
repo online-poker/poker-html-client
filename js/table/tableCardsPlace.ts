@@ -2,6 +2,7 @@
 import { convertToCards } from "./cardsHelper";
 import * as runtimeSettings from "./runtimesettings";
 
+/** Place table cards */
 export class TableCardsPlace {
     public tableCards: KnockoutObservableArray<string>;
     public tableCardsData: KnockoutObservableArray<number>;

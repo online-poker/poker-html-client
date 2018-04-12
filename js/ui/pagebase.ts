@@ -2,6 +2,7 @@
 import * as ko from "knockout";
 import { debugSettings } from "../debugsettings";
 
+/** Interface for the pages base */
 export class PageBase implements Page {
     /**
      * Indicating whether page is currently visible

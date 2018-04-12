@@ -18,6 +18,12 @@ import {
     TableView,
 } from "../../js/table/tableview";
 
+/**
+ * Sit players on the table
+ * @param view Current table view.
+ * @param gameType Current game type.
+ * @param money Players money.
+ */
 export async function simpleSit(view: TableView, gameType: number, money: number[]) {
     view.currentLogin("Player1");
     view.onTableStatusInfo([], [], null, 2, 10, 10, 30, 0, 1, 0, 1, true, 0, false, true, null, null, gameType);
@@ -30,6 +36,13 @@ export async function simpleSit(view: TableView, gameType: number, money: number
     return data;
 }
 
+/**
+ * Initialize new game
+ * @param view Current table view.
+ * @param gameType Current game type.
+ * @param money Players money.
+ * @param dealer Dealers seat number.
+ */
 export async function simpleInitialization(view: TableView, gameType: number, money: number[], dealer: number | null = null) {
     const data = await simpleSit(view, gameType, money);
 
@@ -44,6 +57,7 @@ export async function simpleInitialization(view: TableView, gameType: number, mo
     view.onGameStarted(1, data, [], dealer);
 }
 
+/** Returns game table object */
 export function getTable() {
     return {
         TableId: 1,
@@ -64,6 +78,7 @@ const statusResponse = (status: string) => {
     return Promise.resolve({ Status: status });
 };
 const successStatus = statusResponse("Ok");
+
 export const noopAccountApi: IAccount = {
     logout: () => successStatus,
     authenticate: (login: string, password: string, rememberMe: boolean) => Promise.resolve({
@@ -140,6 +155,7 @@ export const noopApiProvider: IApiProvider = {
     getTournament: () => noopTournamentApi,
 };
 
+/** Get tableview for tests */
 export function getTestTableView(): TableView {
     const tableModel = getTable();
     return new TableView(1, tableModel, noopApiProvider);
@@ -191,6 +207,10 @@ export const baseTournament: TournamentDefinition = {
     MaxPlayers: 1000,
 };
 
+/**
+ * Get tournament table view for tests.
+ * @param tournamentDataOverride
+ */
 export function getTestTournamentTableView(tournamentDataOverride?: Partial<TournamentDefinition>): TableView {
     const tableModel = getTable();
     const view = new TableView(1, tableModel, noopApiProvider);
@@ -212,6 +232,10 @@ export async function drainQueue(queue: GameActionsQueue) {
     }
 }
 
+/**
+ * Log all tableView places
+ * @param tableView
+ */
 export function printTableView(tableView: TableView) {
     console.log(tableView.places().filter((_) => _).map((_) => {
         return {

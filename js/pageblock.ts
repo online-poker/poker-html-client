@@ -2,6 +2,7 @@
 import * as ko from "knockout";
 import { Signal } from "signals";
 
+/** Forms app pages */
 export class PageBlock {
     public static useDoubleView: boolean = false;
     public shown: Signal;

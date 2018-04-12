@@ -1,6 +1,7 @@
 import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";
 
+/** Settings page */
 export class SettingsPage implements Page {
     public online: KnockoutObservable<string>;
     public registered: KnockoutObservable<string>;

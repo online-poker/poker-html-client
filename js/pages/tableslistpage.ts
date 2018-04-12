@@ -12,6 +12,7 @@ import { PageBase } from "../ui/pagebase";
 declare var host: string;
 declare var app: App;
 
+/** Page that displyes tables list */
 export class TablesListPage extends PageBase {
     public tablesCaption: KnockoutComputed<string>;
     public tables: KnockoutObservableArray<any>;

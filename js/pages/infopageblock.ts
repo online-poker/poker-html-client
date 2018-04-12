@@ -2,6 +2,7 @@
 import { InfoPage } from "./infopage";
 import { SupportPage } from "./supportpage";
 
+/** Info Page Block */
 export class InfoPageBlock extends PageBlock {
     constructor() {
         super("info", "pagesList", new InfoPage());

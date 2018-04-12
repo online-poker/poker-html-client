@@ -6,6 +6,7 @@ import { PageBlock } from "../pageblock";
 
 declare var app: App;
 
+/** Manager that handles pages visibility */
 export class UIManager {
     public static getTabBarItemForPage(pageName: string): string {
         if (UIManager.pageMappings[pageName]) {

@@ -19,6 +19,7 @@ import { TablePlaceModel } from "./tabpleplacemodel";
 declare var host: string;
 declare var app: App;
 
+/** Players game action block */
 export class ActionBlock {
     public tableSlider: TableSlider;
     public dealsAllowed: KnockoutObservable<boolean>;

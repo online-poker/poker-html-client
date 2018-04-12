@@ -4,6 +4,7 @@ import { SimplePopup } from "../popups/simplepopup";
 import { AccountManager } from "../services/accountManager";
 import { PopupBase } from "../ui/popupbase";
 
+/** Forget Password Popup */
 export class ForgetPasswordPopup extends PopupBase {
     public login: KnockoutObservable<string>;
     public email: KnockoutObservable<string>;

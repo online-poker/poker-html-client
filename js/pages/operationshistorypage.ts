@@ -7,6 +7,7 @@ import { PageBase } from "../ui/pagebase";
 
 declare var app: App;
 
+/** Operations History Page */
 export class OperationsHistoryPage extends PageBase implements KnockoutValidationGroup {
     public from: KnockoutObservable<string>;
     public to: KnockoutObservable<string>;

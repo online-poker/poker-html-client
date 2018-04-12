@@ -11,6 +11,7 @@ import { settings } from "../settings";
 declare var host: string;
 declare var app: App;
 
+/** More Popup */
 export class MorePopup {
     public authenticated: KnockoutObservable<boolean>;
     public login: KnockoutComputed<string>;

@@ -16,6 +16,7 @@ import { tableManager } from "./tablemanager";
 declare var host: string;
 declare var app: App;
 
+/** Class for opened tournament view */
 export class TournamentView {
     public tournamentData = ko.observable<TournamentDefinition>();
     public loading = ko.observable(false);

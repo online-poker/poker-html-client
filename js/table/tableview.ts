@@ -41,6 +41,7 @@ interface CardsRepresentation {
     Suits: number[];
 }
 
+/** Main class for opened table view */
 export class TableView {
     public static MaxMessagesCount: number = 100;
     public tableName: KnockoutObservable<string>;

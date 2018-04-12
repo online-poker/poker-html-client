@@ -6,6 +6,7 @@ class SliderItem {
     public action: (() => void) | null;
 }
 
+/** App slider */
 export class Slider {
     public currentIndex: KnockoutObservable<number>;
     public currentIndex1: KnockoutComputed<number>;

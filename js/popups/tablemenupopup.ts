@@ -13,6 +13,7 @@ import { TournamentView } from "../table/tournamentview";
 
 declare var app: App;
 
+/** Table Menu Popup */
 export class TableMenuPopup {
     public soundEnabled: KnockoutComputed<boolean>;
     public autoSwitchTables: KnockoutComputed<boolean>;

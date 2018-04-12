@@ -4,6 +4,7 @@ import { debugSettings } from "../debugsettings";
 
 declare var app: App;
 
+/** Interface for the popups base */
 export class PopupBase {
     public visible: KnockoutObservable<boolean>;
 

@@ -1,6 +1,7 @@
 ﻿import * as signals from "signals";
 import { TournamentView } from "./tournamentview";
 
+/** Tournament Manager */
 class TournamentManager {
     /**
      * Tournaments in which player registered.

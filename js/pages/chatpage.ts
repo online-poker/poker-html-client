@@ -10,6 +10,7 @@ import * as timeService from "../timeservice";
 declare var host: string;
 declare var app: App;
 
+/** Chat Page */
 export class ChatPage implements Page {
     public currentMessage: KnockoutObservable<string>;
     public messages: KnockoutObservableArray<PlayerMessage>;

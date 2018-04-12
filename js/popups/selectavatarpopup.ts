@@ -6,6 +6,7 @@ import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 
+/** Select Avatar Popup */
 export class SelectAvatarPopup extends PopupBase {
     public avatars = ko.observableArray<string>();
     public selectedAvatar = ko.observable<string>();
