@@ -32,11 +32,11 @@ export class TableMenuPopup {
     public addonAllowed: KnockoutComputed<boolean>;
 
     public isRebuyCurrentlyAllowed: KnockoutObservable<boolean>;
-    public isDoublerebuyCurrentlyAllowed: KnockoutObservable<boolean>;
+    public isDoubleRebuyCurrentlyAllowed: KnockoutObservable<boolean>;
     public isAddonCurrentlyAllowed: KnockoutObservable<boolean>;
 
     public isSufficientMoneyForRebuy: KnockoutObservable<boolean>;
-    public isSufficientMoneyForDoublerebuy: KnockoutObservable<boolean>;
+    public isSufficientMoneyForDoubleRebuy: KnockoutObservable<boolean>;
     public isSufficientMoneyForAddon: KnockoutObservable<boolean>;
 
     public isTournamentTable: KnockoutObservable<boolean>;
@@ -104,17 +104,17 @@ export class TableMenuPopup {
 
         this.isAddonCurrentlyAllowed = ko.observable(false);
         this.isRebuyCurrentlyAllowed = ko.observable(false);
-        this.isDoublerebuyCurrentlyAllowed = ko.observable(false);
+        this.isDoubleRebuyCurrentlyAllowed = ko.observable(false);
 
         this.isSufficientMoneyForAddon = ko.observable(false);
         this.isSufficientMoneyForRebuy = ko.observable(false);
-        this.isSufficientMoneyForDoublerebuy = ko.observable(false);
+        this.isSufficientMoneyForDoubleRebuy = ko.observable(false);
 
         this.rebuyAllowed = ko.computed(() =>
             this.isSufficientMoneyForRebuy() && this.isRebuyCurrentlyAllowed(),
         );
         this.doublerebuyAllowed = ko.computed(() =>
-            this.isSufficientMoneyForDoublerebuy() && this.isDoublerebuyCurrentlyAllowed(),
+            this.isSufficientMoneyForDoubleRebuy() && this.isDoubleRebuyCurrentlyAllowed(),
         );
         this.addonAllowed = ko.computed(() =>
             this.isSufficientMoneyForAddon() && this.isAddonCurrentlyAllowed(),
@@ -168,11 +168,11 @@ export class TableMenuPopup {
                 this.isRebuyCurrentlyAllowed(tournamentView.rebuyAllowed()
                     && moneyInGame <= tdata.MaximumAmountForRebuy
                     && !currentTable.hasPendingMoney());
-                this.isDoublerebuyCurrentlyAllowed(tournamentView.rebuyAllowed()
+                this.isDoubleRebuyCurrentlyAllowed(tournamentView.rebuyAllowed()
                     && moneyInGame === 0);
                 // Set isSufficientMoney status temporary to current allowed status
                 // until data is loaded.
-                this.isSufficientMoneyForDoublerebuy(this.isDoublerebuyCurrentlyAllowed());
+                this.isSufficientMoneyForDoubleRebuy(this.isDoubleRebuyCurrentlyAllowed());
                 this.isSufficientMoneyForAddon(this.isAddonCurrentlyAllowed());
                 this.isSufficientMoneyForRebuy(this.isRebuyCurrentlyAllowed());
 
@@ -184,7 +184,7 @@ export class TableMenuPopup {
                     const rebuyPrice = tdata.RebuyFee + tdata.RebuyPrice;
                     self.isSufficientMoneyForAddon(addonPrice <= currentMoney);
                     self.isSufficientMoneyForRebuy(rebuyPrice <= currentMoney);
-                    self.isSufficientMoneyForDoublerebuy((2 * rebuyPrice) <= currentMoney);
+                    self.isSufficientMoneyForDoubleRebuy((2 * rebuyPrice) <= currentMoney);
                 }
             }
         } else {
@@ -192,7 +192,7 @@ export class TableMenuPopup {
             this.tournamentHasAddon(false);
 
             this.isRebuyCurrentlyAllowed(false);
-            this.isDoublerebuyCurrentlyAllowed(false);
+            this.isDoubleRebuyCurrentlyAllowed(false);
             this.isAddonCurrentlyAllowed(false);
         }
     }
@@ -257,11 +257,11 @@ export class TableMenuPopup {
         currentTable.showRebuyPrompt();
     }
     public doubleRebuy() {
-        if (!this.isDoublerebuyCurrentlyAllowed()) {
+        if (!this.isDoubleRebuyCurrentlyAllowed()) {
             return;
         }
 
-        if (!this.isSufficientMoneyForDoublerebuy()) {
+        if (!this.isSufficientMoneyForDoubleRebuy()) {
             this.showInsufficientFundsPrompt("table.doubleRebuyPromptCaption");
             return;
         }

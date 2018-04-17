@@ -239,8 +239,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
-            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(false);
-            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(false);
+            expect(tableMenuPopup.isDoubleRebuyCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForDoubleRebuy()).toEqual(false);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
         it("double rebuy button don't visible when player does not sit on table", async function () {
@@ -253,8 +253,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
-            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(false);
-            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(false);
+            expect(tableMenuPopup.isDoubleRebuyCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForDoubleRebuy()).toEqual(false);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
         it("double rebuy button don't visible if tournament does not support rebuy", async function () {
@@ -269,8 +269,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
-            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(false);
-            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(false);
+            expect(tableMenuPopup.isDoubleRebuyCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForDoubleRebuy()).toEqual(false);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
         it("double rebuy button don't visible if tournament does support rebuy, but table is not yet opened", async function () {
@@ -287,8 +287,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
-            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(false);
-            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(false);
+            expect(tableMenuPopup.isDoubleRebuyCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForDoubleRebuy()).toEqual(false);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
         it("double rebuy button don't visible if tournament does support rebuy, but table is not yet opened", async function () {
@@ -305,8 +305,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
-            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(false);
-            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(false);
+            expect(tableMenuPopup.isDoubleRebuyCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForDoubleRebuy()).toEqual(false);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
         it("double rebuy button initially visible if tournament support rebuy and player has 0 in game", async function () {
@@ -327,8 +327,8 @@ describe("Table menu", function () {
             const accountManager = {
                 getAccount: async () => {
                     isGetAccountCalled = true;
-                    expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(true);
-                    expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(true);
+                    expect(tableMenuPopup.isDoubleRebuyCurrentlyAllowed()).toEqual(true);
+                    expect(tableMenuPopup.isSufficientMoneyForDoubleRebuy()).toEqual(true);
                     expect(tableMenuPopup.doublerebuyAllowed()).toEqual(true);
                     return await getAccount();
                 },
@@ -367,8 +367,8 @@ describe("Table menu", function () {
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
-            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(true);
-            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(false);
+            expect(tableMenuPopup.isDoubleRebuyCurrentlyAllowed()).toEqual(true);
+            expect(tableMenuPopup.isSufficientMoneyForDoubleRebuy()).toEqual(false);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
         it("double rebuy button visible if player has money to bought it", async function () {
@@ -399,8 +399,8 @@ describe("Table menu", function () {
             };
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
-            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(true);
-            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(true);
+            expect(tableMenuPopup.isDoubleRebuyCurrentlyAllowed()).toEqual(true);
+            expect(tableMenuPopup.isSufficientMoneyForDoubleRebuy()).toEqual(true);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(true);
         });
         it("double rebuy button visible if player has just as much money as he need to buy it", async function () {
@@ -431,8 +431,8 @@ describe("Table menu", function () {
             };
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
-            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(true);
-            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(true);
+            expect(tableMenuPopup.isDoubleRebuyCurrentlyAllowed()).toEqual(true);
+            expect(tableMenuPopup.isSufficientMoneyForDoubleRebuy()).toEqual(true);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(true);
         });
     });
