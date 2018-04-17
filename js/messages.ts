@@ -508,6 +508,7 @@ let messages: any = {
         rebuySuccess: 'Ребай сделан успешно',
         doublerebuySuccess: 'Двойной ребай слелан успешно',
         addonSuccess: 'Аддон сделан успешно',
+        insufficientFunds: "Недостаточно средств на вашем счёте.",
     },
     operationsHistory: {
         pageCaption: 'История счета',
