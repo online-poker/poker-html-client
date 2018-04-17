@@ -3,6 +3,8 @@ import { PersonalAccountData, TournamentOptionsEnum } from "@poker/api-server";
 import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
 import { ICommandExecutor } from "poker/commandmanager";
+import { _ } from "poker/languagemanager";
+import { SimplePopup } from "poker/popups/index";
 import { ICurrentTableProvider } from "poker/services";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
@@ -140,16 +142,6 @@ export class TableMenuPopup {
                     && !currentTable.hasPendingMoney());
                 this.doublerebuyAllowed(tournamentView.rebuyAllowed()
                     && moneyInGame === 0);
-                if (tournamentView.addonAllowed() || tournamentView.rebuyAllowed()) {
-                    const data = await this.accountManager.getAccount();
-                    const personalAccount = data.Data;
-                    const currentMoney = self.getCurrentMoney(tournamentView, personalAccount);
-                    const addonPrice = tdata.AddonPrice + tdata.AddonFee;
-                    const rebuyPrice = tdata.RebuyFee + tdata.RebuyPrice;
-                    self.addonAllowed(self.addonAllowed() && addonPrice < currentMoney);
-                    self.rebuyAllowed(self.rebuyAllowed() && (rebuyPrice < currentMoney));
-                    self.doublerebuyAllowed(self.doublerebuyAllowed() && ((2 * rebuyPrice) < currentMoney));
-                }
             }
         } else {
             this.tournamentHasRebuy(false);
@@ -207,24 +199,42 @@ export class TableMenuPopup {
         app.tablesPage.deactivate();
         this.confirm();
     }
-    public rebuy() {
+    public async rebuy() {
         if (!this.rebuyAllowed()) {
+            return;
+        }
+
+        const enoughMoneyForRebuy = await this.checkIfEnoughMoneyForRebuy();
+        if (!enoughMoneyForRebuy) {
+            this.showInsufficientFundsPrompt("table.rebuyPromptCaption");
             return;
         }
 
         const currentTable = this.currentTableProvider.currentTable();
         currentTable.showRebuyPrompt();
     }
-    public doubleRebuy() {
+    public async doubleRebuy() {
         if (!this.doublerebuyAllowed()) {
+            return;
+        }
+
+        const enoughMoneyForDoubleRebuy = await this.checkIfEnoughMoneyForRebuy(true);
+        if (!enoughMoneyForDoubleRebuy) {
+            this.showInsufficientFundsPrompt("table.doubleRebuyPromptCaption");
             return;
         }
 
         const currentTable = this.currentTableProvider.currentTable();
         currentTable.showDoubleRebuyPrompt();
     }
-    public addon() {
+    public async addon() {
         if (!this.addonAllowed()) {
+            return;
+        }
+
+        const enoughMoneyForAddon = await this.checkIfEnoughMoneyForAddon();
+        if (!enoughMoneyForAddon) {
+            this.showInsufficientFundsPrompt("table.addonPromptCaption");
             return;
         }
 
@@ -262,7 +272,37 @@ export class TableMenuPopup {
             tableView.showStandupPrompt();
         }
     }
-    private getCurrentMoney(tournament: TournamentView, personalAccount: PersonalAccountData) {
+    public async checkIfEnoughMoneyForRebuy(doubleRebuy?: boolean) {
+        const currentTable = this.currentTableProvider.currentTable();
+        const tournamentView = currentTable.tournament();
+        const tdata = tournamentView.tournamentData();
+        const currentMoney = await this.getCurrentMoney();
+        const rebuyPrice = tdata.RebuyFee + tdata.RebuyPrice;
+
+        if (doubleRebuy) {
+            return (2 * rebuyPrice) < currentMoney;
+        }
+
+        return rebuyPrice < currentMoney;
+    }
+
+    public async checkIfEnoughMoneyForAddon() {
+        const currentTable = this.currentTableProvider.currentTable();
+        const tournamentView = currentTable.tournament();
+        const tdata = tournamentView.tournamentData();
+        const currentMoney = await this.getCurrentMoney();
+        const addonPrice = tdata.AddonPrice + tdata.AddonFee;
+        const enoughMoneyForAddon = addonPrice < currentMoney;
+        return enoughMoneyForAddon;
+    }
+
+    private async getCurrentMoney() {
+        const data = await this.accountManager.getAccount();
+        const personalAccount = data.Data;
         return personalAccount.RealMoney;
+    }
+
+    private showInsufficientFundsPrompt(promptTitle: string) {
+        SimplePopup.display(_(promptTitle), _("tableMenu.insufficientFunds"));
     }
 }
