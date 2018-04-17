@@ -3,6 +3,8 @@ import { PersonalAccountData, TournamentOptionsEnum } from "@poker/api-server";
 import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
 import { ICommandExecutor } from "poker/commandmanager";
+import { _ } from "poker/languagemanager";
+import { SimplePopup } from "poker/popups/index";
 import { ICurrentTableProvider } from "poker/services";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
@@ -24,9 +26,19 @@ export class TableMenuPopup {
     public leaveAllowed: KnockoutObservable<boolean>;
     public accountStatusAllowed: KnockoutObservable<boolean>;
     public tournamentInformationAllowed: KnockoutObservable<boolean>;
-    public rebuyAllowed: KnockoutObservable<boolean>;
-    public doublerebuyAllowed: KnockoutObservable<boolean>;
-    public addonAllowed: KnockoutObservable<boolean>;
+
+    public rebuyAllowed: KnockoutComputed<boolean>;
+    public doublerebuyAllowed: KnockoutComputed<boolean>;
+    public addonAllowed: KnockoutComputed<boolean>;
+
+    public isRebuyCurrentlyAllowed: KnockoutObservable<boolean>;
+    public isDoublerebuyCurrentlyAllowed: KnockoutObservable<boolean>;
+    public isAddonCurrentlyAllowed: KnockoutObservable<boolean>;
+
+    public isSufficientMoneyForRebuy: KnockoutObservable<boolean>;
+    public isSufficientMoneyForDoublerebuy: KnockoutObservable<boolean>;
+    public isSufficientMoneyForAddon: KnockoutObservable<boolean>;
+
     public isTournamentTable: KnockoutObservable<boolean>;
     public allowUsePersonalAccount: KnockoutObservable<boolean>;
     public allowTickets: KnockoutObservable<boolean>;
@@ -89,10 +101,27 @@ export class TableMenuPopup {
         this.leaveAllowed = ko.observable(false);
         this.accountStatusAllowed = ko.observable(false);
         this.tournamentInformationAllowed = ko.observable(false);
-        this.rebuyAllowed = ko.observable(false);
-        this.doublerebuyAllowed = ko.observable(false);
-        this.addonAllowed = ko.observable(false);
+
+        this.isAddonCurrentlyAllowed = ko.observable(false);
+        this.isRebuyCurrentlyAllowed = ko.observable(false);
+        this.isDoublerebuyCurrentlyAllowed = ko.observable(false);
+
+        this.isSufficientMoneyForAddon = ko.observable(false);
+        this.isSufficientMoneyForRebuy = ko.observable(false);
+        this.isSufficientMoneyForDoublerebuy = ko.observable(false);
+
+        this.rebuyAllowed = ko.computed(() =>
+            this.isSufficientMoneyForRebuy() && this.isRebuyCurrentlyAllowed(),
+        );
+        this.doublerebuyAllowed = ko.computed(() =>
+            this.isSufficientMoneyForDoublerebuy() && this.isDoublerebuyCurrentlyAllowed(),
+        );
+        this.addonAllowed = ko.computed(() =>
+            this.isSufficientMoneyForAddon() && this.isAddonCurrentlyAllowed(),
+        );
+
         this.isTournamentTable = ko.observable(false);
+
         this.allowUsePersonalAccount = ko.observable(appConfig.joinTable.allowUsePersonalAccount);
         this.allowTickets = ko.observable(appConfig.joinTable.allowTickets);
         this.standupText = ko.pureComputed(() => {
@@ -134,30 +163,37 @@ export class TableMenuPopup {
             if ((this.tournamentHasRebuy() || this.tournamentHasAddon())
                 && playerIsInGame) {
                 const moneyInGame = myPlayer.TotalBet() + myPlayer.Money();
-                this.addonAllowed(tournamentView.addonAllowed() && tournamentView.addonCount() === 0);
-                this.rebuyAllowed(tournamentView.rebuyAllowed()
+
+                this.isAddonCurrentlyAllowed(tournamentView.addonAllowed() && tournamentView.addonCount() === 0);
+                this.isRebuyCurrentlyAllowed(tournamentView.rebuyAllowed()
                     && moneyInGame <= tdata.MaximumAmountForRebuy
                     && !currentTable.hasPendingMoney());
-                this.doublerebuyAllowed(tournamentView.rebuyAllowed()
+                this.isDoublerebuyCurrentlyAllowed(tournamentView.rebuyAllowed()
                     && moneyInGame === 0);
+                // Set isSufficientMoney status temporary to current allowed status
+                // until data is loaded.
+                this.isSufficientMoneyForDoublerebuy(this.isDoublerebuyCurrentlyAllowed());
+                this.isSufficientMoneyForAddon(this.isAddonCurrentlyAllowed());
+                this.isSufficientMoneyForRebuy(this.isRebuyCurrentlyAllowed());
+
                 if (tournamentView.addonAllowed() || tournamentView.rebuyAllowed()) {
                     const data = await this.accountManager.getAccount();
                     const personalAccount = data.Data;
                     const currentMoney = self.getCurrentMoney(tournamentView, personalAccount);
                     const addonPrice = tdata.AddonPrice + tdata.AddonFee;
                     const rebuyPrice = tdata.RebuyFee + tdata.RebuyPrice;
-                    self.addonAllowed(self.addonAllowed() && addonPrice < currentMoney);
-                    self.rebuyAllowed(self.rebuyAllowed() && (rebuyPrice < currentMoney));
-                    self.doublerebuyAllowed(self.doublerebuyAllowed() && ((2 * rebuyPrice) < currentMoney));
+                    self.isSufficientMoneyForAddon(addonPrice <= currentMoney);
+                    self.isSufficientMoneyForRebuy(rebuyPrice <= currentMoney);
+                    self.isSufficientMoneyForDoublerebuy((2 * rebuyPrice) <= currentMoney);
                 }
             }
         } else {
             this.tournamentHasRebuy(false);
             this.tournamentHasAddon(false);
 
-            this.addonAllowed(false);
-            this.rebuyAllowed(false);
-            this.doublerebuyAllowed(false);
+            this.isRebuyCurrentlyAllowed(false);
+            this.isDoublerebuyCurrentlyAllowed(false);
+            this.isAddonCurrentlyAllowed(false);
         }
     }
     public confirm() {
@@ -208,7 +244,12 @@ export class TableMenuPopup {
         this.confirm();
     }
     public rebuy() {
-        if (!this.rebuyAllowed()) {
+        if (!this.isRebuyCurrentlyAllowed()) {
+            return;
+        }
+
+        if (!this.isSufficientMoneyForRebuy()) {
+            this.showInsufficientFundsPrompt("table.rebuyPromptCaption");
             return;
         }
 
@@ -216,7 +257,12 @@ export class TableMenuPopup {
         currentTable.showRebuyPrompt();
     }
     public doubleRebuy() {
-        if (!this.doublerebuyAllowed()) {
+        if (!this.isDoublerebuyCurrentlyAllowed()) {
+            return;
+        }
+
+        if (!this.isSufficientMoneyForDoublerebuy()) {
+            this.showInsufficientFundsPrompt("table.doubleRebuyPromptCaption");
             return;
         }
 
@@ -224,7 +270,12 @@ export class TableMenuPopup {
         currentTable.showDoubleRebuyPrompt();
     }
     public addon() {
-        if (!this.addonAllowed()) {
+        if (!this.isAddonCurrentlyAllowed()) {
+            return;
+        }
+
+        if (!this.isSufficientMoneyForAddon()) {
+            this.showInsufficientFundsPrompt("table.addonPromptCaption");
             return;
         }
 
@@ -264,5 +315,9 @@ export class TableMenuPopup {
     }
     private getCurrentMoney(tournament: TournamentView, personalAccount: PersonalAccountData) {
         return personalAccount.RealMoney;
+    }
+
+    private showInsufficientFundsPrompt(promptTitle: string) {
+        SimplePopup.display(_(promptTitle), _("tableMenu.insufficientFunds"));
     }
 }

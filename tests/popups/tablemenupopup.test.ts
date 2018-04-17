@@ -78,6 +78,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isRebuyCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForRebuy()).toEqual(false);
             expect(tableMenuPopup.rebuyAllowed()).toEqual(false);
         });
         it("rebuy button don't visible if tournament does support rebuy, but table is not yet opened", async function () {
@@ -94,6 +96,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isRebuyCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForRebuy()).toEqual(false);
             expect(tableMenuPopup.rebuyAllowed()).toEqual(false);
         });
         it("rebuy button initially visible if tournament support rebuy and player has less then max amount in the game", async function () {
@@ -115,6 +119,8 @@ describe("Table menu", function () {
             const accountManager = {
                 getAccount: async () => {
                     isGetAccountCalled = true;
+                    expect(tableMenuPopup.isRebuyCurrentlyAllowed()).toEqual(true);
+                    expect(tableMenuPopup.isSufficientMoneyForRebuy()).toEqual(true);
                     expect(tableMenuPopup.rebuyAllowed()).toEqual(true);
                     return await getAccount();
                 },
@@ -123,7 +129,7 @@ describe("Table menu", function () {
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
         });
-        it("double rebuy button don't visible if player has no money to bought it", async function () {
+        it("rebuy button don't visible if player has no money to bought it", async function () {
             const view = getTestTournamentTableView({
                 IsRebuyAllowed: true,
                 Options: TournamentOptionsEnum.HasRebuy,
@@ -153,6 +159,8 @@ describe("Table menu", function () {
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
+            expect(tableMenuPopup.isRebuyCurrentlyAllowed()).toEqual(true);
+            expect(tableMenuPopup.isSufficientMoneyForRebuy()).toEqual(false);
             expect(tableMenuPopup.rebuyAllowed()).toEqual(false);
         });
         it("rebuy button visible if player has money to bought it", async function () {
@@ -183,6 +191,40 @@ describe("Table menu", function () {
             };
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isRebuyCurrentlyAllowed()).toEqual(true);
+            expect(tableMenuPopup.isSufficientMoneyForRebuy()).toEqual(true);
+            expect(tableMenuPopup.rebuyAllowed()).toEqual(true);
+        });
+        it("rebuy button visible if player has just as much money as he need to buy it", async function () {
+            const view = getTestTournamentTableView({
+                IsRebuyAllowed: true,
+                Options: TournamentOptionsEnum.HasRebuy,
+                RebuyFee: 1000,
+                RebuyPrice: 0,
+            });
+            await simpleInitialization(view, 1, [400, 200]);
+            view.currentLogin("Player1");
+            view.myPlayer().TotalBet(0);
+            view.myPlayer().Money(0);
+            view.opened(true);
+            const currentTablePovider = {
+                currentTable: () => view,
+            };
+            let isGetAccountCalled = false;
+            const accountManager = {
+                getAccount: async () => {
+                    isGetAccountCalled = true;
+                    expect(tableMenuPopup.rebuyAllowed()).toEqual(true);
+                    return await getAccount({
+                        RealMoney: 1000,
+                        GameMoney: 0,
+                    });
+                },
+            };
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            await tableMenuPopup.shown();
+            expect(tableMenuPopup.isRebuyCurrentlyAllowed()).toEqual(true);
+            expect(tableMenuPopup.isSufficientMoneyForRebuy()).toEqual(true);
             expect(tableMenuPopup.rebuyAllowed()).toEqual(true);
         });
     });
@@ -197,6 +239,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(false);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
         it("double rebuy button don't visible when player does not sit on table", async function () {
@@ -209,6 +253,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(false);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
         it("double rebuy button don't visible if tournament does not support rebuy", async function () {
@@ -223,6 +269,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(false);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
         it("double rebuy button don't visible if tournament does support rebuy, but table is not yet opened", async function () {
@@ -239,6 +287,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(false);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
         it("double rebuy button don't visible if tournament does support rebuy, but table is not yet opened", async function () {
@@ -255,6 +305,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(false);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
         it("double rebuy button initially visible if tournament support rebuy and player has 0 in game", async function () {
@@ -275,6 +327,8 @@ describe("Table menu", function () {
             const accountManager = {
                 getAccount: async () => {
                     isGetAccountCalled = true;
+                    expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(true);
+                    expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(true);
                     expect(tableMenuPopup.doublerebuyAllowed()).toEqual(true);
                     return await getAccount();
                 },
@@ -313,6 +367,8 @@ describe("Table menu", function () {
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
             expect(isGetAccountCalled).toBeTruthy();
+            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(true);
+            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(false);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(false);
         });
         it("double rebuy button visible if player has money to bought it", async function () {
@@ -343,6 +399,40 @@ describe("Table menu", function () {
             };
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(true);
+            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(true);
+            expect(tableMenuPopup.doublerebuyAllowed()).toEqual(true);
+        });
+        it("double rebuy button visible if player has just as much money as he need to buy it", async function () {
+            const view = getTestTournamentTableView({
+                IsRebuyAllowed: true,
+                Options: TournamentOptionsEnum.HasRebuy,
+                RebuyFee: 1000,
+                RebuyPrice: 0,
+            });
+            await simpleInitialization(view, 1, [400, 200]);
+            view.currentLogin("Player1");
+            view.myPlayer().TotalBet(0);
+            view.myPlayer().Money(0);
+            view.opened(true);
+            const currentTablePovider = {
+                currentTable: () => view,
+            };
+            let isGetAccountCalled = false;
+            const accountManager = {
+                getAccount: async () => {
+                    isGetAccountCalled = true;
+                    expect(tableMenuPopup.doublerebuyAllowed()).toEqual(true);
+                    return await getAccount({
+                        RealMoney: 2000,
+                        GameMoney: 0,
+                    });
+                },
+            };
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            await tableMenuPopup.shown();
+            expect(tableMenuPopup.isDoublerebuyCurrentlyAllowed()).toEqual(true);
+            expect(tableMenuPopup.isSufficientMoneyForDoublerebuy()).toEqual(true);
             expect(tableMenuPopup.doublerebuyAllowed()).toEqual(true);
         });
     });
@@ -357,6 +447,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isAddonCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForAddon()).toEqual(false);
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
         it("addon button don't visible when player does not sit on table", async function () {
@@ -369,6 +461,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isAddonCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForAddon()).toEqual(false);
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
         it("addon button don't visible if tournament does not support addon", async function () {
@@ -383,6 +477,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isAddonCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForAddon()).toEqual(false);
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
         it("addon button don't visible if tournament does support addon, but table is not yet opened", async function () {
@@ -399,6 +495,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isAddonCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForAddon()).toEqual(false);
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
         it("addon button initially visible if tournament support addon", async function () {
@@ -419,6 +517,8 @@ describe("Table menu", function () {
             const accountManager = {
                 getAccount: async () => {
                     isGetAccountCalled = true;
+                    expect(tableMenuPopup.isAddonCurrentlyAllowed()).toEqual(true);
+                    expect(tableMenuPopup.isSufficientMoneyForAddon()).toEqual(true);
                     expect(tableMenuPopup.addonAllowed()).toEqual(true);
                     return await getAccount();
                 },
@@ -444,6 +544,8 @@ describe("Table menu", function () {
             const accountManager = getAccountManager();
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isAddonCurrentlyAllowed()).toEqual(false);
+            expect(tableMenuPopup.isSufficientMoneyForAddon()).toEqual(false);
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
         it("addon button don't visible if player has no money to bought it", async function () {
@@ -475,6 +577,8 @@ describe("Table menu", function () {
             };
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isAddonCurrentlyAllowed()).toEqual(true);
+            expect(tableMenuPopup.isSufficientMoneyForAddon()).toEqual(false);
             expect(tableMenuPopup.addonAllowed()).toEqual(false);
         });
         it("addon button visible if player has money to bought it", async function () {
@@ -506,6 +610,42 @@ describe("Table menu", function () {
             };
             const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
             await tableMenuPopup.shown();
+            expect(tableMenuPopup.isAddonCurrentlyAllowed()).toEqual(true);
+            expect(tableMenuPopup.isSufficientMoneyForAddon()).toEqual(true);
+            expect(tableMenuPopup.addonAllowed()).toEqual(true);
+        });
+
+        it("addon button visible if player has just as much money as he need to buy it", async function () {
+            const view = getTestTournamentTableView({
+                IsAddonAllowed: true,
+                Options: TournamentOptionsEnum.HasAddon,
+                AddonFee: 1000,
+                AddonPrice: 0,
+            });
+            await simpleInitialization(view, 1, [400, 200]);
+            view.currentLogin("Player1");
+            view.myPlayer().TotalBet(10000);
+            view.myPlayer().Money(10000);
+            view.tournament().addonCount(0);
+            view.opened(true);
+            const currentTablePovider = {
+                currentTable: () => view,
+            };
+            let isGetAccountCalled = false;
+            const accountManager = {
+                getAccount: async () => {
+                    isGetAccountCalled = true;
+                    expect(tableMenuPopup.addonAllowed()).toEqual(true);
+                    return await getAccount({
+                        RealMoney: 1000,
+                        GameMoney: 0,
+                    });
+                },
+            };
+            const tableMenuPopup = new TableMenuPopup(currentTablePovider, dummyCommandExecutor, accountManager);
+            await tableMenuPopup.shown();
+            expect(tableMenuPopup.isAddonCurrentlyAllowed()).toEqual(true);
+            expect(tableMenuPopup.isSufficientMoneyForAddon()).toEqual(true);
             expect(tableMenuPopup.addonAllowed()).toEqual(true);
         });
     });
