@@ -107,7 +107,7 @@ export class HomePage extends PageBase {
         app.showPageBlock("lobby");
         app.showSubPage("lobby");
     }
-    public login() {
+    public async login() {
         const username = this.username();
         const password = this.password();
         if (username === null || username.trim() === "") {
@@ -127,24 +127,25 @@ export class HomePage extends PageBase {
         keyboardActivationService.forceHideKeyboard();
 
         app.processing(true);
-        authManager.authenticate(username, password, this.rememberMe())
-            .then((status: string) => {
-                app.processing(false);
-                if (status === "Ok") {
-                    this.errorMessage(null);
-                    this.username("");
-                    this.password("");
-                    app.lobbyPageBlock.showLobby();
+        try {
+            const authStatus = await authManager.authenticate(username, password, this.rememberMe());
+            app.processing(false);
+            if (authStatus === "Ok") {
+                this.errorMessage(null);
+                this.username("");
+                this.password("");
+                app.lobbyPageBlock.showLobby();
+            } else {
+                if (authStatus) {
+                    this.errorMessage(_("errors." + authStatus));
                 } else {
-                    if (status) {
-                        this.errorMessage(_("errors." + status));
-                    } else {
-                        this.errorMessage(_("auth.unspecifiedError"));
-                    }
+                    this.errorMessage(_("auth.unspecifiedError"));
                 }
-            }, function () {
-                app.processing(false);
-            });
+            }
+        } catch (e) {
+            app.processing(false);
+            console.error("An error occurred while trying to open lobby page after authentication " + e);
+        }
     }
     public logout() {
         // do nothing.
