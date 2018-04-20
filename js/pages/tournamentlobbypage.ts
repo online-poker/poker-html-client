@@ -439,7 +439,7 @@ export class TournamentLobbyPage extends PageBase {
                     : (a.MaxPlayer < b.MaxPlayer ? -1 : 0);
             });
             const filteredPrizes = sortedPrizes.filter(function(a) {
-                return a.MaxPlayer >= currentPlayers;
+                return a.MaxPlayer > currentPlayers;
             });
             let currentPrize: TournamentPrizeStructure;
             if (filteredPrizes.length === 0) {
