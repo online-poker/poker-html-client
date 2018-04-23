@@ -63,7 +63,7 @@ export class TournamentLobbyPage extends PageBase {
     public parentView: string;
     public currentView: KnockoutObservable<number>;
     public getBetStructure: KnockoutComputed<TournamentBetStructure[]>;
-    public getPrizeStructureInformation: KnockoutComputed<TournamentPrizeStructureView[]>;
+    public prizeStructureInformation: KnockoutComputed<TournamentPrizeStructureView[]>;
     public playersSortOrder = ko.observable("asc");
     public playersColumnOrder = ko.observable("Login");
     public getTournamentPlayers: KnockoutComputed<TournamentPlayerDefinition[]>;
@@ -235,8 +235,8 @@ export class TournamentLobbyPage extends PageBase {
             });
             return sortedPrizes;
         }, this);
-        this.getPrizeStructureInformation = ko.computed(function () {
-            const data = self.tournamentData();
+        this.prizeStructureInformation = ko.computed(() => {
+            const data = this.tournamentData();
             if (data == null) {
                 return [];
             }
@@ -259,7 +259,7 @@ export class TournamentLobbyPage extends PageBase {
             }
 
             const result = [] as TournamentPrizeStructureView[];
-            const totalPrize = self.totalPrize() || 0;
+            const totalPrize = this.totalPrize() || 0;
             currentPrize.PrizeLevel.forEach(function (item, index) {
                 result.push({
                     place: index + 1,
@@ -268,7 +268,7 @@ export class TournamentLobbyPage extends PageBase {
                 });
             });
             return result;
-        }, this);
+        });
         this.getTournamentPlayers = ko.computed(() => {
             const tdata = self.tournamentData();
             if (tdata === null || tdata === undefined) {
