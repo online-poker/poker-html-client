@@ -46,7 +46,6 @@ export function registerComponents() {
     });
     ko.components.register("tournament-prizes", {
         template: getTemplateDefinition("lobby/tournament/prizes.html"),
-        viewModel: { require: "app/components/lobby/tournament/prizes" },
     });
     ko.components.register("checkbox", {
         template: getTemplateDefinition("shared/checkbox/checkbox.html"),

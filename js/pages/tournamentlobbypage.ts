@@ -43,6 +43,12 @@ interface TournamentTableListView {
     players: TournamentTablePlayerView[];
 }
 
+interface TournamentPrizeStructureView {
+    place: number;
+    amount: number;
+    percent: number;
+}
+
 export class TournamentLobbyPage extends PageBase {
     public loading: KnockoutObservable<boolean>;
     public tournamentId = 0;
@@ -57,6 +63,7 @@ export class TournamentLobbyPage extends PageBase {
     public parentView: string;
     public currentView: KnockoutObservable<number>;
     public getBetStructure: KnockoutComputed<TournamentBetStructure[]>;
+    public prizeStructureInformation: KnockoutComputed<TournamentPrizeStructureView[]>;
     public playersSortOrder = ko.observable("asc");
     public playersColumnOrder = ko.observable("Login");
     public getTournamentPlayers: KnockoutComputed<TournamentPlayerDefinition[]>;
@@ -228,6 +235,40 @@ export class TournamentLobbyPage extends PageBase {
             });
             return sortedPrizes;
         }, this);
+        this.prizeStructureInformation = ko.computed(() => {
+            const data = this.tournamentData();
+            if (data == null) {
+                return [];
+            }
+
+            const currentPlayers = data.JoinedPlayers;
+            const prizeStructure = metadataManager.prizes[data.WellKnownPrizeStructure];
+            const sortedPrizes = prizeStructure.sort(function (a, b) {
+                return a.MaxPlayer > b.MaxPlayer
+                    ? 1
+                    : (a.MaxPlayer < b.MaxPlayer ? -1 : 0);
+            });
+            const filteredPrizes = sortedPrizes.filter(function (a) {
+                return a.MaxPlayer >= currentPlayers;
+            });
+            let currentPrize: TournamentPrizeStructure;
+            if (filteredPrizes.length === 0) {
+                currentPrize = sortedPrizes[0];
+            } else {
+                currentPrize = filteredPrizes[0];
+            }
+
+            const result = [] as TournamentPrizeStructureView[];
+            const totalPrize = this.totalPrize() || 0;
+            currentPrize.PrizeLevel.forEach(function (item, index) {
+                result.push({
+                    place: index + 1,
+                    amount: totalPrize * item / 100,
+                    percent: item,
+                });
+            });
+            return result;
+        });
         this.getTournamentPlayers = ko.computed(() => {
             const tdata = self.tournamentData();
             if (tdata === null || tdata === undefined) {
