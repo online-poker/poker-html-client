@@ -1,13 +1,15 @@
-import { authManager } from "poker/authmanager";
+import { IAuthenticationInformation } from "poker/authmanager";
 import { AccountManager } from "./accountManager";
 
 export class AccountService {
     private realMoneySupported: boolean;
     private gameMoneySupported: boolean;
+    private authInformation: IAuthenticationInformation;
 
-    constructor(realMoneySupported: boolean, gameMoneySupported: boolean) {
+    constructor(realMoneySupported: boolean, gameMoneySupported: boolean, authInformation: IAuthenticationInformation) {
         this.realMoneySupported = realMoneySupported;
         this.gameMoneySupported = gameMoneySupported;
+        this.authInformation = authInformation;
     }
     public async getAccount() {
         const api = new AccountManager();
@@ -40,7 +42,7 @@ export class AccountService {
         return {
             accounts: accountsData,
             lastTransaction: transactionInfo,
-            login: authManager.login(),
+            login: this.authInformation.login(),
         };
     }
 }

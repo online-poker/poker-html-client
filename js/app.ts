@@ -143,7 +143,7 @@ export class App {
         this.settingsPopup = new SettingsPopup();
         this.rulesPopup = new RulesPopup();
         this.sweepstakesRulesPopup = new SweepstakesRulesPopup();
-        this.tableMenuPopup = new TableMenuPopup(this.tablesPage, this.commandManager, new AccountManager());
+        this.tableMenuPopup = new TableMenuPopup(this.tablesPage, this.commandManager, new AccountManager(), authManager);
         this.addMoneyPopup = new AddMoneyPopup();
         this.slowConnectionPopup = new SlowConnectionPopup();
         this.tableChatPopup = new ChatPopup();
