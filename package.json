@@ -11,7 +11,7 @@
     "tslint": "tslint",
     "configure-ci": "node build/configure-ci.js",
     "build": "npm run webpack && npm run lint",
-    "webpack": "webpack",
+    "webpack": "webpack --mode=none",
     "test": "jest",
     "test:watch": "jest --watch",
     "prepack": "npm run build",
@@ -101,7 +101,8 @@
     "tslint": "^5.8.0",
     "typescript": "^2.8.1",
     "url-loader": "^0.6.2",
-    "webpack": "^3.8.1"
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.0.15"
   },
   "dependencies": {
     "@poker/api-server": "0.1.0-dev.20180406123347",
