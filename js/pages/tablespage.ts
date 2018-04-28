@@ -170,7 +170,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         if (currentWidth >= 736 || currentWidth === 414) {
             viewportLandscapeWidth = 736;
         }
-            
+
         if (currentWidth >= 1024 || (currentWidth === 768 && $("body").height() === 0)) {
             viewportLandscapeWidth = 1024;
             if (currentWidth >= 1280) {
