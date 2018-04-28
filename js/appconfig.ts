@@ -42,7 +42,7 @@ export class AppConfig {
         hasPageReload: false,
         soundTheme: "poker",
         hasHumanVoice: true,
-        cardsOverlaySupported: true,
+        cardsOverlaySupported: document.body.classList.contains("poker-feature-cards-overlay"),
     };
     public tournament = {
         enabled: false,
