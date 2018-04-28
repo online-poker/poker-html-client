@@ -376,7 +376,10 @@ export class TableView {
 
             let pass = self.timePass();
             pass = pass === null ? 0 : pass;
-            return runtimeSettings.game.moveTime - pass;
+            const moveTime = appConfig.timeSettings.moveTime !== undefined ?
+                appConfig.timeSettings.moveTime :
+                runtimeSettings.game.moveTime;
+            return moveTime - pass;
         });
         this.currentRaise = ko.computed<number>({
             owner: this,
