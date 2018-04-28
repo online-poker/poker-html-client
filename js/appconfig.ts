@@ -18,7 +18,7 @@ class GameActionBlock {
 }
 
 export interface TimeSettings {
-    moveTime: undefined | number;
+    moveTime?: number | undefined;
 }
 
 export class AppConfig {
@@ -71,7 +71,6 @@ export class AppConfig {
         hasSupportPages: false,
     };
     public timeSettings: TimeSettings = {
-        moveTime: undefined,
     };
 }
 /**
