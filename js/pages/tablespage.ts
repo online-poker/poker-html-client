@@ -163,11 +163,11 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
 
         let viewportLandscapeWidth = 640;
         const currentWidth = $("body").width();
-        if (currentWidth >= 667) {
+        if (currentWidth >= 667 || currentWidth === 375) {
             viewportLandscapeWidth = 667;
         }
 
-        if (currentWidth >= 736) {
+        if (currentWidth >= 736 || currentWidth === 414) {
             viewportLandscapeWidth = 736;
         }
             
