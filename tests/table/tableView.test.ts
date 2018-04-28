@@ -1,5 +1,6 @@
 /** global process */
 import * as ko from "knockout";
+import { appConfig } from "poker/appconfig";
 import { authManager } from "poker/authmanager";
 import { debugSettings } from "../../js/debugsettings";
 import { allBacksClassesFourCards } from "../../js/table/cardsHelper";
@@ -1062,6 +1063,150 @@ describe("Table view", () => {
             tableView.addSystemMessage(2, "Cover you bases!");
             expect(tableView.systemMessages().length).toEqual(1);
             expect(tableView.systemMessages()[0].message()).toEqual("Cover you bases!");
+        });
+    });
+    describe("Time left", () => {
+        beforeAll(() => {
+            GameActionsQueue.waitDisabled = true;
+            GameActionsQueue.drainQueuePause = 0;
+            debugSettings.tableView.trace = false;
+            appConfig.timeSettings.moveTime = undefined;
+        });
+        afterAll(() => {
+            GameActionsQueue.waitDisabled = false;
+            GameActionsQueue.drainQueuePause = 100;
+        });
+        it("Default time for turn is 60 sec", async () => {
+            global.messages = {
+            };
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            }, noopApiProvider);
+            const players: GamePlayerStartInformation[] = [{
+                PlayerId: 1,
+                Money: 10000,
+            }, {
+                PlayerId: 2,
+                Money: 10000,
+            }, {
+                PlayerId: 3,
+                Money: 10000,
+            }, {
+                PlayerId: 4,
+                Money: 10000,
+            }];
+            const actions: GameActionStartInformation[] = [];
+            login("player4");
+            loginId(4);
+            authenticated(true);
+            const tableSatusPlayers = [
+                getSeatPlayer(1, 10000),
+                getSeatPlayer(2, 10000),
+                getSeatPlayer(3, 10000),
+                getSeatPlayer(4, 10000),
+            ];
+            tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, null, true, 0, false, true, null, 0, 2);
+            tableView.onGameStarted(1, players, actions, 4);
+            appConfig.timeSettings.moveTime = undefined;
+            tableView.timePass(10);
+            expect(tableView.timeLeft()).toEqual(50);
+        });
+        it("Use custom configuration for time", async () => {
+            global.messages = {
+            };
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            }, noopApiProvider);
+            const players: GamePlayerStartInformation[] = [{
+                PlayerId: 1,
+                Money: 10000,
+            }, {
+                PlayerId: 2,
+                Money: 10000,
+            }, {
+                PlayerId: 3,
+                Money: 10000,
+            }, {
+                PlayerId: 4,
+                Money: 10000,
+            }];
+            const actions: GameActionStartInformation[] = [];
+            login("player4");
+            loginId(4);
+            authenticated(true);
+            const tableSatusPlayers = [
+                getSeatPlayer(1, 10000),
+                getSeatPlayer(2, 10000),
+                getSeatPlayer(3, 10000),
+                getSeatPlayer(4, 10000),
+            ];
+            tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, null, true, 0, false, true, null, 0, 2);
+            tableView.onGameStarted(1, players, actions, 4);
+            appConfig.timeSettings.moveTime = 30;
+            tableView.timePass(10);
+            expect(tableView.timeLeft()).toEqual(20);
+        });
+        it("Frozen tables does not support time left calculations", async () => {
+            global.messages = {
+            };
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            }, noopApiProvider);
+            const players: GamePlayerStartInformation[] = [{
+                PlayerId: 1,
+                Money: 10000,
+            }, {
+                PlayerId: 2,
+                Money: 10000,
+            }, {
+                PlayerId: 3,
+                Money: 10000,
+            }, {
+                PlayerId: 4,
+                Money: 10000,
+            }];
+            const actions: GameActionStartInformation[] = [];
+            login("player4");
+            loginId(4);
+            authenticated(true);
+            const tableSatusPlayers = [
+                getSeatPlayer(1, 10000),
+                getSeatPlayer(2, 10000),
+                getSeatPlayer(3, 10000),
+                getSeatPlayer(4, 10000),
+            ];
+            tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, null, true, 0, false, true, null, 0, 2);
+            tableView.onGameStarted(1, players, actions, 4);
+            tableView.frozen(true);
+            tableView.timePass(10);
+            expect(tableView.timeLeft()).toEqual(-1);
         });
     });
 });
