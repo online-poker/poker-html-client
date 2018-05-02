@@ -177,6 +177,7 @@ export class SoundManager {
                 media.release();
             });
             media.play();
+            return;
         }
 
         if (window["Audio"] != null) {
