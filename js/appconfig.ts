@@ -72,6 +72,9 @@ export class AppConfig {
     };
     public timeSettings: TimeSettings = {
     };
+    public ui = {
+        isDesktopApp: false,
+    };
 }
 /**
  * Simple object check.
