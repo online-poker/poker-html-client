@@ -24,6 +24,9 @@ export class DeviceEventService {
      */
     public initialize() {
         document.addEventListener("deviceready", () => this.onDeviceReady(), false);
+    }
+    private onDeviceReady() {
+        this.ready.dispatch();
         if (debugSettings.ios.hasMultitasking) {
             document.addEventListener("resign", () => this.onResign(), false);
             document.addEventListener("active", () => this.onActive(), false);
@@ -31,9 +34,6 @@ export class DeviceEventService {
 
         document.addEventListener("pause", () => this.onPause(), false);
         document.addEventListener("resume", () => this.onResume(), false);
-    }
-    private onDeviceReady() {
-        this.ready.dispatch();
     }
     private onResign() {
         this.resignActive.dispatch();
