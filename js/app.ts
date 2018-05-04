@@ -242,14 +242,9 @@ export class App {
     // Bind any events that are required on startup. Common events are:
     // "load", "deviceready", "offline", and "online".
     public bindEvents() {
-        document.addEventListener("deviceready", this.onDeviceReady, false);
-        if (debugSettings.ios.hasMultitasking) {
-            document.addEventListener("resign", this.onResign, false);
-            document.addEventListener("active", this.onActive, false);
-        }
-
-        document.addEventListener("pause", this.onPause, false);
-        document.addEventListener("resume", this.onResume, false);
+        deviceEvents.ready.add(this.onDeviceReady, this);
+        deviceEvents.pause.add(this.onPause, this);
+        deviceEvents.resume.add(this.onResume, this);
         deviceEvents.initialize();
         deviceEvents.ready.addOnce(function() {
             console.log("Device ready fired");
