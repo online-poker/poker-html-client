@@ -20,6 +20,7 @@ export class MorePopup {
     public hasMessages = ko.observable(false);
     public visible = ko.observable(false);
     public ratingSupported = ko.observable(appConfig.game.hasRating);
+    public isDesktopApp = ko.observable(appConfig.ui.isDesktopApp);
     public infoPagesSupported = ko.observable(appConfig.info.hasInfoPages);
     public supportPagesSupported = ko.observable(appConfig.info.hasSupportPages);
     public registrationSupported = ko.observable(appConfig.auth.allowSelfRegistration);
