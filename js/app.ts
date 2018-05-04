@@ -730,7 +730,7 @@ export class App {
             // We don't authenticated, so display authentication popup.
             const authenticate = await authManager.loginAsGuest();
             if (authenticate !== "Ok") {
-                this.prompt(_("auth.guestPlay"), [_(`errors.${authenticate}`)]);
+                await SimplePopup.display(_("auth.guestPlay"), [_(`errors.${authenticate}`)]);
             }
 
             return {
