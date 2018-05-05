@@ -381,7 +381,9 @@ export class App {
                 } else {
                     tournamentLobbyAdjustment = 81;
                     lobbyAdjustment = -30;
-                    app.setupMenu();
+                    if (platformInfo.hasMenu()) {
+                        app.setupMenu();
+                    }
                 }
             }
 
