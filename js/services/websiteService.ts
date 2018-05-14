@@ -68,7 +68,7 @@ export class WebsiteService {
      * Navigates to the update APK url.
      */
     public navigateUpdateApk() {
-        this.open(this.getBase() + "update/");
+        // this.open(this.getBase() + "update/");
     }
 
     private open(url: string) {
