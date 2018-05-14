@@ -111,7 +111,7 @@ export class MorePopup {
         const data = await manager.getAccount();
         if (data.Status === "Ok") {
             const personalAccountData = data.Data;
-            const total = settings.isGuest() ? personalAccountData.GameMoney : personalAccountData.RealMoney;
+            const total = personalAccountData.RealMoney;
             self.amount(total);
             self.points(personalAccountData.Points);
         } else {
