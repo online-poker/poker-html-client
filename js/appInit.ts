@@ -2,7 +2,7 @@ import * as $ from "jquery";
 import ko = require("knockout");
 import * as moment from "moment";
 import { App } from "./app";
-import { AppConfig, overrideConfiguration } from "./appconfig";
+import { AppConfig, appConfig, overrideConfiguration } from "./appconfig";
 import { registerBindings } from "./bindings";
 import { registerComponents } from "./components/registration";
 import { debugSettings } from "./debugsettings";
@@ -26,6 +26,17 @@ function isRunningStandalone() {
         || ("standalone" in window.navigator && window.navigator["standalone"] === true));
 }
 
+function configureBindings() {
+    // tslint:disable:no-string-literal
+    if (appConfig.ui.realMoneyCurrencySymbol) {
+        ko.bindingHandlers["currencySymbol"].moneySymbol = appConfig.ui.realMoneyCurrencySymbol;
+    }
+
+    if (appConfig.ui.gameMoneySymbol) {
+        ko.bindingHandlers["currencySymbol"].chipsSymbol = appConfig.ui.gameMoneySymbol;
+    }
+}
+
 export function bootstrap(localConfiguration?: Partial<AppConfig>) {
     overrideConfiguration(localConfiguration || {});
 
@@ -39,6 +50,7 @@ export function bootstrap(localConfiguration?: Partial<AppConfig>) {
     Hammer(document);
 
     registerBindings();
+    configureBindings();
     registerExtenders();
     registerComponents();
     updateDefaultMessages();

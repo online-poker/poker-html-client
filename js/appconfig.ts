@@ -74,6 +74,8 @@ export class AppConfig {
     };
     public ui = {
         isDesktopApp: false,
+        realMoneyCurrencySymbol: "$",
+        gameMoneySymbol: "",
     };
 }
 /**
