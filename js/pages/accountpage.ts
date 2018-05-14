@@ -80,8 +80,8 @@ export class AccountPage extends PageBase {
         }
 
         const self = this;
-        const realMoneySupported = !settings.isGuest();
-        const gameMoneySupported = settings.isGuest();
+        const realMoneySupported = true;
+        const gameMoneySupported = false;
         const pointsSupported = true;
         this.loading(true);
         this.requestData(realMoneySupported, gameMoneySupported, pointsSupported).then(
