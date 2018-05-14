@@ -1,3 +1,4 @@
+import { App } from "poker/app";
 import { appConfig } from "poker/appconfig";
 import { UIManager } from "poker/services/uimanager";
 import { PageBlock } from "../pageblock";
@@ -6,6 +7,8 @@ import { ChangePasswordPage } from "./changepasswordpage";
 import { ChatPage } from "./chatpage";
 import { RatingPage } from "./ratingpage";
 import { SettingsPage } from "./settingspage";
+
+declare var app: App;
 
 export class OtherPageBlock extends PageBlock {
     public changePasswordPage: ChangePasswordPage;
@@ -38,5 +41,13 @@ export class OtherPageBlock extends PageBlock {
 
         this.addSecondary("chat", this.chatPage, true);
         this.addSecondary("changePassword", this.changePasswordPage);
+    }
+    public showChat() {
+        app.executeCommand("pageblock.other");
+        app.otherPageBlock.showSecondary("chat");
+    }
+    public showRating() {
+        app.executeCommand("pageblock.other");
+        app.otherPageBlock.showSecondary("rating");
     }
 }

@@ -62,12 +62,10 @@ export class MorePopup {
         app.executeCommand("pageblock.cashier");
     }
     public showRating() {
-        app.executeCommand("pageblock.other");
-        app.otherPageBlock.showSecondary("rating");
+        app.otherPageBlock.showRating();
     }
     public showChat() {
-        app.executeCommand("pageblock.other");
-        app.otherPageBlock.showSecondary("chat");
+        app.otherPageBlock.showChat();
     }
     public showMessages() {
         const websiteService = new WebsiteService(host);
