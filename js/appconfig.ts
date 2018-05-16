@@ -51,6 +51,7 @@ export class AppConfig {
     public tournament = {
         enabled: false,
         openTableAutomatically: true,
+        enableTournamentOnly: false,
     };
     public joinTable = {
         allowUsePersonalAccount: false,
@@ -65,6 +66,9 @@ export class AppConfig {
     };
     public lobby = {
         openTableRequireAuthentication: true,
+        cashTablesEnabled: true,
+        tournamentTablesEnabled: true,
+        sngTablesEnabled: true,
     };
     public info = {
         hasInfoPages: false,
