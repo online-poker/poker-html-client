@@ -1,5 +1,5 @@
-import { App } from "poker/app";
 import { appConfig } from "poker/appconfig";
+import { CommandManager } from "poker/commandmanager";
 import { UIManager } from "poker/services/uimanager";
 import { PageBlock } from "../pageblock";
 import { AccountPage } from "./accountpage";
@@ -8,20 +8,22 @@ import { ChatPage } from "./chatpage";
 import { RatingPage } from "./ratingpage";
 import { SettingsPage } from "./settingspage";
 
-declare var app: App;
-
 export class OtherPageBlock extends PageBlock {
     public changePasswordPage: ChangePasswordPage;
     public morePage: SettingsPage;
     public ratingPage: RatingPage;
     public chatPage: ChatPage;
     public accountPage: AccountPage;
+    private commandManager: CommandManager;
 
-    constructor() {
-        const accountPage = new AccountPage();
+    constructor(commandManager: CommandManager) {
+        const chatPage = new ChatPage();
+        UIManager.addTabBarItemMapping("more", "chat");
+        super("other", "chat", chatPage);
+        this.chatPage = chatPage;
+        this.accountPage = new AccountPage();
         UIManager.addTabBarItemMapping("cashier", "account");
-        super("other", "account", accountPage);
-        this.accountPage = accountPage;
+        this.commandManager = commandManager;
         this.morePage = new SettingsPage();
         UIManager.addTabBarItemMapping("more", "settings");
         UIManager.addTabBarItemMapping("more", "other");
@@ -30,24 +32,22 @@ export class OtherPageBlock extends PageBlock {
         UIManager.addTabBarItemMapping("more", "rating");
         this.changePasswordPage = new ChangePasswordPage();
         UIManager.addTabBarItemMapping("more", "changePassword");
-        this.chatPage = new ChatPage();
-        UIManager.addTabBarItemMapping("more", "chat");
+
         this.requireAuthentication = true;
-        this.currentPage = "account";
+        this.currentPage = "chat";
         this.addSecondary("more", this.morePage);
         if (appConfig.game.hasRating) {
             this.addSecondary("rating", this.ratingPage);
         }
 
-        this.addSecondary("chat", this.chatPage, true);
         this.addSecondary("changePassword", this.changePasswordPage);
     }
     public showChat() {
-        app.executeCommand("pageblock.other");
-        app.otherPageBlock.showSecondary("chat");
+        this.commandManager.executeCommand("pageblock.other");
+        this.showSecondary("chat");
     }
     public showRating() {
-        app.executeCommand("pageblock.other");
-        app.otherPageBlock.showSecondary("rating");
+        this.commandManager.executeCommand("pageblock.other");
+        this.showSecondary("rating");
     }
 }
