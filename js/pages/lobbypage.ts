@@ -156,6 +156,10 @@ export class LobbyPage extends PageBase {
     public login: KnockoutComputed<string>;
     public amount: KnockoutObservable<number>;
 
+    public cashTablesEnabled: KnockoutObservable<boolean>;
+    public tournamentTablesEnabled: KnockoutObservable<boolean>;
+    public sngTablesEnabled: KnockoutObservable<boolean>;
+
     constructor() {
         super();
         const self = this;
@@ -187,8 +191,19 @@ export class LobbyPage extends PageBase {
         this.slider.addOption(_("lobby.cashGames"), "cash", null);
         this.slider.addOption(_("lobby.tournaments"), "tournaments", null);
         this.slider.addOption(_("lobby.sitAndGo"), "sng", null);
+        this.cashTablesEnabled = ko.observable(appConfig.lobby.cashTablesEnabled);
+        this.tournamentTablesEnabled = ko.observable(appConfig.lobby.tournamentTablesEnabled);
+        this.sngTablesEnabled = ko.observable(appConfig.lobby.sngTablesEnabled);
+
         if (!appConfig.tournament.enabled) {
             this.slider.enabled(false);
+            this.tournamentTablesEnabled(false);
+            this.sngTablesEnabled(false);
+        }
+
+        if (appConfig.tournament.enableTournamentOnly) {
+            this.slider.enabled(false);
+            this.slider.currentIndex(1);
         }
 
         this.loading = ko.observable(false);
