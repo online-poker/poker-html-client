@@ -367,6 +367,11 @@ let messages: any = {
             check: 'Чек',
             call: 'Колл',
             allin: 'Олл-ин',
+            callAny: 'Колл любую ставку',
+            checkFold: 'Чек/Фолд',
+            callAnyCheck: 'Колл любую ставку/Чек',
+            allinAmount: 'Олл-ин #amount',
+            callAmount: 'Колл #amount',
         },
         combination: {
             c1: 'Старшая; ##c1',
