@@ -63,6 +63,8 @@ export class AppConfig {
         requirePhoneNumber: false,
         requireFirstName: false,
         requireLastName: false,
+        firstNameVisible: true,
+        lastNameVisible: true,
     };
     public lobby = {
         openTableRequireAuthentication: true,
