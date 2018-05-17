@@ -231,9 +231,9 @@ export class ActionBlock {
         this.supportDirectAmount = ko.observable(false);
         this.supportAny = ko.observable(false);
         this.foldOnRaise = ko.observable(false);
-        this.supportDirectAmountCaption = ko.observable("Чек");
-        this.supportAnyCaption = ko.observable("Колл любую");
-        this.foldOnRaiseCaption = ko.observable("Чек/Фолд");
+        this.supportDirectAmountCaption = ko.observable(_("actiontext.check"));
+        this.supportAnyCaption = ko.observable(_("actiontext.callAny"));
+        this.foldOnRaiseCaption = ko.observable(_("actiontext.checkFold"));
         this.amountSupported = ko.observable(-1);
         this.maxAmountOfMoneyForOtherActivePlayers = ko.observable<number>();
         this.myPlayer = ko.observable<TablePlaceModel>();
@@ -745,14 +745,14 @@ export class ActionBlock {
     }
     public updateAutomaticActionsText(playerMoney: number, requiredBet: number) {
         if (requiredBet === 0) {
-            this.supportDirectAmountCaption("Чек");
+            this.supportDirectAmountCaption(_("actiontext.check"));
         } else {
             if (playerMoney <= requiredBet) {
                 this.supportDirectAmountCaption(
-                    "Олл-ин #amount".replace("#amount", withCommas(playerMoney.toFixed(), ",")));
+                    _("actiontext.allinAmount").replace("#amount", withCommas(playerMoney.toFixed(), ",")));
             } else {
                 const callAmount = (this.tableView.maximumBet() - this.tableView.myBet()).toFixed();
-                this.supportDirectAmountCaption("Колл #amount".replace("#amount", withCommas(callAmount, ",")));
+                this.supportDirectAmountCaption(_("actiontext.callAmount").replace("#amount", withCommas(callAmount, ",")));
             }
         }
 
@@ -764,15 +764,15 @@ export class ActionBlock {
         }
 
         if (requiredBet > 0) {
-            this.foldOnRaiseCaption("Фолд");
+            this.foldOnRaiseCaption(_("actiontext.fold"));
         } else {
-            this.foldOnRaiseCaption("Чек/Фолд");
+            this.foldOnRaiseCaption(_("actiontext.checkFold"));
         }
 
         if (requiredBet > 0) {
-            this.supportAnyCaption("Колл любую ставку");
+            this.supportAnyCaption(_("actiontext.callAny"));
         } else {
-            this.supportAnyCaption("Колл любую ставку/Чек");
+            this.supportAnyCaption(_("actiontext.callAnyCheck"));
         }
     }
     public updateSupportDirectAmountStatus(requiredBet: number) {
