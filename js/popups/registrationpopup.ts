@@ -17,6 +17,8 @@ export class RegistrationPopup extends PopupBase {
     public firstName: KnockoutObservable<string>;
     public lastName: KnockoutObservable<string>;
     public patronymicName: KnockoutObservable<string>;
+    public firstNameVisible: KnockoutObservable<boolean>;
+    public lastNameVisible: KnockoutObservable<boolean>;
     public city: KnockoutObservable<string>;
     public password: KnockoutObservable<string>;
     public confirmPassword: KnockoutObservable<string>;
@@ -38,6 +40,8 @@ export class RegistrationPopup extends PopupBase {
         this.firstName = ko.observable<string>().extend({ required: appConfig.registration.requireFirstName });
         this.lastName = ko.observable<string>().extend({ required: appConfig.registration.requireLastName });
         this.patronymicName = ko.observable<string>();
+        this.firstNameVisible = ko.observable(appConfig.registration.firstNameVisible);
+        this.lastNameVisible = ko.observable(appConfig.registration.lastNameVisible);
         this.password = ko.observable<string>().extend({ required: true, maxLength: 16 });
         this.confirmPassword = ko.observable<string>().extend({ required: true, equal: this.password });
         this.city = ko.observable<string>();
