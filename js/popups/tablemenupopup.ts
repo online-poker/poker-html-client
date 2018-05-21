@@ -314,6 +314,26 @@ export class TableMenuPopup {
             tableView.showStandupPrompt();
         }
     }
+    public toLobby() {
+        const tableView = app.tablesPage.currentTable();
+        const redirectToLobby = () => {
+            app.lobbyPageBlock.showLobby();
+            app.tablesPage.deactivate();
+            app.closePopup();
+        };
+        if (tableView.myPlayer() != null) {
+            redirectToLobby();
+        } else {
+            const removeCurrentTable = () => {
+                // Navigate back to the lobby.
+                if (tableManager.tables().length === 0) {
+                    redirectToLobby();
+                }
+            };
+            const leaved = this.commandExecutor.executeCommand("app.leaveTable", [tableView.tableId]) as JQueryDeferred<() => void>;
+            leaved.then(removeCurrentTable);
+        }
+    }
     private getCurrentMoney(tournament: TournamentView, personalAccount: PersonalAccountData) {
         return personalAccount.RealMoney;
     }
