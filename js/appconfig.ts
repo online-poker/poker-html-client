@@ -82,6 +82,7 @@ export class AppConfig {
         isDesktopApp: false,
         realMoneyCurrencySymbol: "$",
         gameMoneySymbol: "",
+        allowExpandActionBlockGuestureOnlyOnMyTurn: false,
     };
 }
 /**

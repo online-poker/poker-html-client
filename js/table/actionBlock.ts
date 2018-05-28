@@ -890,8 +890,10 @@ export class ActionBlock {
             return;
         }
 
-        if (!this.mainButtonsBlockVisible()) {
-            return;
+        if (appConfig.ui.allowExpandActionBlockGuestureOnlyOnMyTurn) {
+            if (!this.mainButtonsBlockVisible()) {
+                return;
+            }
         }
 
         this.expanded(true);
@@ -905,8 +907,10 @@ export class ActionBlock {
             return;
         }
 
-        if (!this.mainButtonsBlockVisible()) {
-            return;
+        if (appConfig.ui.allowExpandActionBlockGuestureOnlyOnMyTurn) {
+            if (!this.mainButtonsBlockVisible()) {
+                return;
+            }
         }
 
         this.expanded(false);
