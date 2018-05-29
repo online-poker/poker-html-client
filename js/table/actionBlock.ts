@@ -567,7 +567,11 @@ export class ActionBlock {
         this.waitbb(true);
         this.suppressWaitBBNotifications = false;
     }
-    public fold() {
+    public fold(evt?: Event) {
+        if (evt) {
+            this.preventDefaultEvents(evt);
+        }
+
         if (!this.suppressActions) {
             this.tableView.fold();
         }
@@ -575,7 +579,11 @@ export class ActionBlock {
         this.expanded(false);
         this.foldExecuted.dispatch();
     }
-    public async checkOrCall() {
+    public async checkOrCall(evt?: Event) {
+        if (evt) {
+            this.preventDefaultEvents(evt);
+        }
+
         if (!this.suppressActions) {
             if (this.isAllInDuringCheckOrCall()) {
                 const result = await app.promptAsync(_("table.allInConfirmCaption"), [_("table.allInConfirm")]);
@@ -597,7 +605,11 @@ export class ActionBlock {
             this.checkOrCallExecuted.dispatch();
         }
     }
-    public async betOrRaise() {
+    public async betOrRaise(evt?: Event) {
+        if (evt) {
+            this.preventDefaultEvents(evt);
+        }
+
         if (!this.suppressActions) {
             if (this.isAllInDuringBetOrRaise()) {
                 const result = await app.promptAsync(_("table.allInConfirmCaption"), [_("table.allInConfirm")]);
@@ -874,7 +886,8 @@ export class ActionBlock {
     /**
      * Toggles automatic panel.
      */
-    public toggle() {
+    public toggle(evt: Event) {
+        this.preventDefaultEvents(evt);
         if (!appConfig.game.actionBlock.hasSecondaryPanel) {
             return;
         }
@@ -984,6 +997,12 @@ export class ActionBlock {
         if (response.Status !== "Ok" && response.Status !== "PlayerDoesNotSit" && response.Status !== "PlayerIsAlreadyInGame") {
             SimplePopup.display(_("table.changeWaitQueueSettings"), _(`errors.${response.Status}`));
         }
+    }
+    private preventDefaultEvents(evt: Event) {
+        evt.originalEvent.gesture.stopPropagation();
+        evt.originalEvent.gesture.preventDefault();
+        evt.stopPropagation();
+        evt.preventDefault();
     }
     private log(message: string, ...params: any[]) {
         if (debugSettings.actionBlock.traceBlocksVisbility) {
