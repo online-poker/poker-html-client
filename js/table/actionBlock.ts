@@ -248,7 +248,9 @@ export class ActionBlock {
         this.prizesDistributed = ko.observable(true);
 
         this.expanded = ko.observable(false);
-        this.waitbb = ko.observable(true);
+        // HACK: Use rate limit to prevent double trigger of subscribe func.
+        // This hack should be reworked later.
+        this.waitbb = ko.observable(true).extend({ rateLimit: 500 });
         this.skipDeals = ko.observable(false).extend({ rateLimit: 500 });
         this.autoFoldOrCheck = ko.observable(false);
         this.allInCaption = ko.observable("");
