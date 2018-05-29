@@ -208,7 +208,6 @@ export async function drainQueue(queue: GameActionsQueue) {
     await queue.waitCurrentTask();
     while (queue.size() > 0) {
         await queue.execute();
-        await queue.waitCurrentTask();
     }
 }
 

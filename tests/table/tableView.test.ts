@@ -162,11 +162,7 @@ describe("Table view", () => {
             tableView.onPlayerCards(3, [1, 2]);
             tableView.onPlayerCards(4, [1, 2]);
             tableView.onBet(3, 2, 200, 4);
-            await tableView.queue.waitCurrentTask();
-            while (tableView.queue.size() > 0) {
-                await tableView.queue.execute();
-                await tableView.queue.waitCurrentTask();
-            }
+            await drainQueue(tableView.queue);
 
             const currentPlayer = tableView.currentPlayer();
             expect(currentPlayer).not.toBeNull();
@@ -221,11 +217,7 @@ describe("Table view", () => {
             tableView.onPlayerCards(3, [1, 2]);
             tableView.onPlayerCards(4, [1, 2]);
             tableView.onBet(3, 3, 300, 4);
-            await tableView.queue.waitCurrentTask();
-            while (tableView.queue.size() > 0) {
-                await tableView.queue.execute();
-                await tableView.queue.waitCurrentTask();
-            }
+            await drainQueue(tableView.queue);
 
             const currentPlayer = tableView.currentPlayer();
             expect(currentPlayer).not.toBeNull();
