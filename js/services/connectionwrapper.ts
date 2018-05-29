@@ -1,6 +1,5 @@
-﻿/// <reference types="applicationinsights" />
+﻿/// <reference types="applicationinsights-js" />
 declare var baseUrl: string;
-declare var appInsights: Client;
 
 import { debugSettings } from "../debugsettings";
 import * as timeService from "../timeservice";
