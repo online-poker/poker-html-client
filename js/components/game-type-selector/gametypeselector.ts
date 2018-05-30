@@ -14,7 +14,7 @@ interface TimeBlockComponentParameters {
     initial?: number | KnockoutObservable<number>;
 }
 
-class TimeBlockComponent {
+export class GameTypeSelectorComponent {
     private slider = new Slider();
 
     constructor(params: TimeBlockComponentParameters) {
@@ -33,5 +33,3 @@ class TimeBlockComponent {
         }
     }
 }
-
-export = TimeBlockComponent;
