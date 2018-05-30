@@ -41,7 +41,7 @@ describe("gameplay", function () {
             const view1 = getTestTableView();
             loginId(1);
             const actionBlock = view1.actionBlock;
-            simpleInitialization(view1, 1, [400, 400, 400, 400], 2);
+            await simpleInitialization(view1, 1, [400, 400, 400, 400], 2);
             expect(view1.myPlayer() != null).toBeTruthy();
             // blinds
             log("Blinds round started");
