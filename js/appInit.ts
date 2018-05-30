@@ -37,7 +37,7 @@ function configureBindings() {
     }
 }
 
-export function bootstrap(localConfiguration?: Partial<AppConfig>) {
+function bootstrap(localConfiguration?: Partial<AppConfig>) {
     overrideConfiguration(localConfiguration || {});
 
     // tslint:disable:no-string-literal
@@ -135,4 +135,9 @@ export function bootstrap(localConfiguration?: Partial<AppConfig>) {
     }
 }
 
-// bootstrap();
+export = {
+    bootstrap,
+    registerBindings,
+    registerComponents,
+    registerExtenders,
+};
