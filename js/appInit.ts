@@ -14,7 +14,6 @@ import { TableView } from "./table/tableview";
 import { updateDefaultMessages } from "./validationConfiguration";
 
 declare const host: string;
-declare const appInsights: Client;
 
 function isStandaloneSupported() {
     return ("standalone" in window.navigator);

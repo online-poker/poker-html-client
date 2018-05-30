@@ -1,5 +1,4 @@
 ﻿declare var host: string;
-declare var appInsights: Client;
 
 import { Account, setAuthToken } from "@poker/api-server";
 import ko = require("knockout");
