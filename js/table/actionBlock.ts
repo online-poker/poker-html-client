@@ -1001,8 +1001,11 @@ export class ActionBlock {
         }
     }
     private preventDefaultEvents(evt: Event) {
-        evt.originalEvent.gesture.stopPropagation();
-        evt.originalEvent.gesture.preventDefault();
+        if (evt.originalEvent.gesture) {
+            evt.originalEvent.gesture.stopPropagation();
+            evt.originalEvent.gesture.preventDefault();
+        }
+
         evt.stopPropagation();
         evt.preventDefault();
     }
