@@ -10,7 +10,7 @@ interface CheckboxParameters {
     color: string | KnockoutObservable<string>;
 }
 
-class Checkbox {
+export class Checkbox {
     public checked: KnockoutObservable<boolean>;
     public label: KnockoutObservable<string>;
     public right: KnockoutObservable<boolean>;
@@ -60,5 +60,3 @@ class Checkbox {
         return false;
     }
 }
-
-export = Checkbox;

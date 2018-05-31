@@ -1,5 +1,8 @@
-﻿import ko = require("knockout");
-
+﻿import * as ko from "knockout";
+import { GameTypeSelectorComponent } from "poker/components/game-type-selector/gametypeselector";
+import { FilterOptionsComponent } from "poker/components/lobby/filter/options";
+import { Checkbox } from "poker/components/shared/checkbox/checkbox";
+import { TimeBlockComponent } from "poker/components/timeblock/timeblock";
 import * as table from "./table";
 
 const trivialViewModelFactory = function (params: { data: any }, componentInfo: KnockoutComponentTypes.ComponentConfig) {
@@ -21,7 +24,7 @@ function getTemplateDefinition(name: string) {
     // tslint:disable-next-line:no-string-literal
     const useRequire = window["PokerComponents"] === undefined;
     if (useRequire) {
-        return { require: "text!app/components/" + name };
+        throw new Error(`Component ${name} does not have template.`);
     }
 
     // tslint:disable-next-line:no-string-literal
@@ -49,7 +52,7 @@ export function registerComponents() {
     });
     ko.components.register("checkbox", {
         template: getTemplateDefinition("shared/checkbox/checkbox.html"),
-        viewModel: { require: "app/components/shared/checkbox/checkbox" },
+        viewModel: Checkbox,
     });
     ko.components.register("tournament-blinds", {
         template: getTemplateDefinition("lobby/tournament/blinds.html"),
@@ -83,15 +86,15 @@ export function registerComponents() {
     });
     ko.components.register("cash-options", {
         template: getTemplateDefinition("lobby/filter/cash-options.html"),
-        viewModel: { require: "app/components/lobby/filter/options" },
+        viewModel: FilterOptionsComponent,
     });
     ko.components.register("tournament-options", {
         template: getTemplateDefinition("lobby/filter/tournament-options.html"),
-        viewModel: { require: "app/components/lobby/filter/options" },
+        viewModel: FilterOptionsComponent,
     });
     ko.components.register("sng-options", {
         template: getTemplateDefinition("lobby/filter/sng-options.html"),
-        viewModel: { require: "app/components/lobby/filter/options" },
+        viewModel: FilterOptionsComponent,
     });
 
     /**
@@ -107,7 +110,7 @@ export function registerComponents() {
      */
     ko.components.register("timeblock", {
         template: getTemplateDefinition("timeblock/timeblock.html"),
-        viewModel: { require: "app/components/timeblock/timeblock" },
+        viewModel: TimeBlockComponent,
     });
 
     /**
@@ -115,7 +118,7 @@ export function registerComponents() {
      */
     ko.components.register("game-type-selector", {
         template: getTemplateDefinition("game-type-selector/game-type-selector.html"),
-        viewModel: { require: "app/components/game-type-selector/gametypeselector" },
+        viewModel: GameTypeSelectorComponent,
     });
 
     /**

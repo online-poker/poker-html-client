@@ -2,7 +2,7 @@
 import ko = require("knockout");
 import * as timeService from "../../timeservice";
 
-class TimeBlockComponent {
+export class TimeBlockComponent {
     private currentTime: KnockoutComputed<string>;
 
     constructor(params: { data: KnockoutObservable<TournamentDefinition> }) {
@@ -11,5 +11,3 @@ class TimeBlockComponent {
         }, this);
     }
 }
-
-export = TimeBlockComponent;

@@ -12,7 +12,7 @@ interface FilterOptionsComponentParameters {
     displayCurrency?: boolean | KnockoutObservable<boolean>;
 }
 
-class FilterOptionsComponent {
+export class FilterOptionsComponent {
     private options: any;
     private displayCurrency = true;
 
@@ -23,5 +23,3 @@ class FilterOptionsComponent {
         }
     }
 }
-
-export = FilterOptionsComponent;
