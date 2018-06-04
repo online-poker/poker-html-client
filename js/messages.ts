@@ -689,5 +689,8 @@ let messages: any = {
         TicketAlreadyUsed: "Билет уже использован",
         InsufficientTables: "Недочтаточно столов",
         OperationNotValidWhenTableFrozen: "Операция недоступна когда стол поставлен на паузу",
+        LoginShouldNotContainWhiteSpace: 'В логине не должен присутствовать пробел.',
+        EmailShouldNotContainWhiteSpace: 'В имейле не должен присутствовать пробел.',
+        PhoneNumberShouldNotContainWhiteSpace: 'В номере телефона не должен присутствовать пробел.',
     },
 };

@@ -60,7 +60,7 @@ export class AuthPopup extends PopupBase {
 
         if (!this.loading()) {
             this.loading(true);
-            const login = this.login();
+            const login = this.login().trim();
             const password = this.password();
             const rememberMe = this.rememberMe();
             self.errorMessage(null);
