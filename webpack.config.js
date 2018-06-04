@@ -22,6 +22,7 @@ module.exports = (env) => {
             knockout: 'knockout',
             signals: 'signals',
             signalr: 'signalr',
+            iscroll: 'iscroll',
             'knockout.validation': 'knockout.validation',
         },
         output: {

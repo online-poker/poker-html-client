@@ -38,3 +38,7 @@ declare class IScroll {
 	// Events
 	on: (type: string, fn: () => void) => void;
 }
+
+declare module "iscroll" {
+	export = IScroll;
+}

@@ -1,5 +1,6 @@
 /* tslint:disable:no-string-literal */
 
+import IScroll = require("iscroll");
 import * as $ from "jquery";
 import ko = require("knockout");
 import * as moment from "moment";
