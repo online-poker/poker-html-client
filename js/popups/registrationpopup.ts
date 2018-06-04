@@ -131,10 +131,10 @@ export class RegistrationPopup extends PopupBase {
 
         try {
             const data = await accountManager.register(
-                this.login(),
-                this.email(),
+                this.login().trim(),
+                this.email().trim(),
                 this.password(),
-                this.phoneNumber(),
+                this.phoneNumber().trim(),
                 this.firstName(),
                 this.lastName(),
                 this.patronymicName(),

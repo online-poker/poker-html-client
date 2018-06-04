@@ -110,7 +110,7 @@ export class HomePage extends PageBase {
     public async login() {
         const username = this.username();
         const password = this.password();
-        if (username === null || username.trim() === "") {
+        if (!username || username.trim() === "") {
             this.errorMessage(_("homePage.userRequired"));
             return;
         }
@@ -127,6 +127,7 @@ export class HomePage extends PageBase {
         keyboardActivationService.forceHideKeyboard();
 
         app.processing(true);
+        username.trim();
         try {
             const authStatus = await authManager.authenticate(username, password, this.rememberMe());
             app.processing(false);
