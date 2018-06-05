@@ -7,7 +7,7 @@ notifications:
 node_js:
   - 10
 script:
-  - travis_wait 30 npm run test
+  - npm run test -- --runInBand
   - npm run lint:test
   - npm run compile:test -- --noEmit
 before_install:
