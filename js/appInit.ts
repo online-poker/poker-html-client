@@ -36,13 +36,16 @@ function configureBindings() {
     }
 }
 
+function registerTableView() {
+    window["TableView"] = TableView;
+    window["ActionBlock"] = ActionBlock;
+}
+
 function bootstrap(localConfiguration?: Partial<AppConfig>) {
     overrideConfiguration(localConfiguration || {});
 
     // tslint:disable:no-string-literal
     window["ko"] = ko;
-    window["TableView"] = TableView;
-    window["ActionBlock"] = ActionBlock;
     // tslint:enable:no-string-literal
 
     // Enable hammer events on whole document
@@ -136,6 +139,7 @@ function bootstrap(localConfiguration?: Partial<AppConfig>) {
 
 export = {
     bootstrap,
+    registerTableView,
     registerBindings,
     registerComponents,
     registerExtenders,
