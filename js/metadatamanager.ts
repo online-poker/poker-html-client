@@ -63,8 +63,8 @@ class MetadataManager {
             }
 
             self.log("Informaton about players online received: " + JSON.stringify(onlinePlayersData.Data));
-            self.registered(onlinePlayersData.Data[1].toString());
-            self.online(onlinePlayersData.Data[0].toString());
+            self.registered(onlinePlayersData.Data[0].toString());
+            self.online(onlinePlayersData.Data[1].toString());
 
             self.log("Informaton about prize structure received: " + JSON.stringify(prizeStructureData.Data));
             self.prizes = prizeStructureData.Data;
@@ -105,8 +105,8 @@ class MetadataManager {
         const self = this;
         const metadataApi = new Information(host);
         const onlinePlayers = await metadataApi.getOnlinePlayers();
-        self.registered(onlinePlayers.Data[1].toString());
-        self.online(onlinePlayers.Data[0].toString());
+        self.registered(onlinePlayers.Data[0].toString());
+        self.online(onlinePlayers.Data[1].toString());
         return onlinePlayers;
     }
 
