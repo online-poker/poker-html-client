@@ -124,7 +124,7 @@ export class App {
         this.loadPromises = [];
         // register pages.
         this.homePage = new HomePage();
-        this.otherPageBlock = new OtherPageBlock();
+        this.otherPageBlock = new OtherPageBlock(this.commandManager);
         this.infoPageBlock = new InfoPageBlock();
         this.lobbyPageBlock = new LobbyPageBlock();
         this.cashierPageBlock = new CashierPageBlock();
