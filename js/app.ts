@@ -1,5 +1,6 @@
 import { getAuthToken, setAuthToken } from "@poker/api-server";
 import * as $ from "jquery";
+import { appConfig } from "poker/appconfig";
 import { authManager } from "poker/authmanager";
 import { CommandManager } from "poker/commandmanager";
 import { AccountManager } from "poker/services/accountManager";
@@ -278,7 +279,7 @@ export class App {
             platformInfo.isTablet = true;
         }
 
-        app.tablesPage.calculateLandscapeWidth();
+        app.tablesPage.calculateWidth();
         pushService.register();
 
         tableManager.maxTablesReached.add(function(continuation: () => void) {
@@ -349,7 +350,7 @@ export class App {
         }
 
         this.setDesiredOrientation();
-        if (platformInfo.isTablet) {
+        if (platformInfo.isTablet || appConfig.ui.usePortraitModeOnly) {
             orientationService.suppressRotation();
         }
 
