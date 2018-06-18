@@ -83,6 +83,7 @@ export class AppConfig {
         realMoneyCurrencySymbol: "$",
         gameMoneySymbol: "",
         allowExpandActionBlockGuestureOnlyOnMyTurn: false,
+        usePortraitModeOnly: false,
     };
 }
 /**

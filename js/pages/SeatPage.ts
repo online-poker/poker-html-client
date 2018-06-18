@@ -51,7 +51,7 @@ export class SeatPage extends PageBase {
         const self = this;
         this.slideWidth = ko.observable(0);
         this.isConnectionSlow = ko.observable(false);
-        this.calculateLandscapeWidth();
+        this.calculateWidth();
         this.currentIndex = ko.computed<number>({
             read() {
                 return tableManager.currentIndex();
@@ -156,34 +156,13 @@ export class SeatPage extends PageBase {
             }
         });
     }
-    public calculateLandscapeWidth() {
-        // When running not within browser, skip calculations.
-        if (typeof window === "undefined") {
+    public calculateWidth() {
+        if (appConfig.ui.usePortraitModeOnly) {
+            this.calculatePortraitWidth();
             return;
         }
 
-        let viewportLandscapeWidth = 640;
-        const currentWidth = $("body").width()!;
-        if (currentWidth >= 1024 || (currentWidth === 768 && $("body").height() === 0)) {
-            viewportLandscapeWidth = 1024;
-            if (currentWidth >= 1920) {
-                viewportLandscapeWidth = 1920;
-            }
-
-            if (currentWidth >= 3840) {
-                viewportLandscapeWidth = 3840;
-            }
-        }
-
-        if (currentWidth < 360) {
-            if (window.innerHeight > 500) {
-                viewportLandscapeWidth = 568;
-            } else {
-                viewportLandscapeWidth = 480;
-            }
-        }
-
-        this.slideWidth(viewportLandscapeWidth);
+        this.calculateLandscapeWidth();
     }
     public recordConnection() {
         this.lastConnecton = navigator.connection.type;
@@ -336,6 +315,58 @@ export class SeatPage extends PageBase {
      */
     public reload(): void {
         window.location.reload();
+    }
+    private calculatePortraitWidth() {
+        // When running not within browser, skip calculations.
+        if (typeof window === "undefined") {
+            return;
+        }
+
+        let viewportPortraitWidth = 320;
+        const currentWidth = $("body").width()!;
+
+        if (currentWidth >= 375) {
+            viewportPortraitWidth = 375;
+        }
+
+        if (currentWidth >= 414) {
+            viewportPortraitWidth = 414;
+        }
+
+        if (currentWidth >= 768) {
+            viewportPortraitWidth = 768;
+        }
+
+        this.slideWidth(viewportPortraitWidth);
+    }
+    private calculateLandscapeWidth() {
+        // When running not within browser, skip calculations.
+        if (typeof window === "undefined") {
+            return;
+        }
+
+        let viewportLandscapeWidth = 640;
+        const currentWidth = $("body").width()!;
+        if (currentWidth >= 1024 || (currentWidth === 768 && $("body").height() === 0)) {
+            viewportLandscapeWidth = 1024;
+            if (currentWidth >= 1920) {
+                viewportLandscapeWidth = 1920;
+            }
+
+            if (currentWidth >= 3840) {
+                viewportLandscapeWidth = 3840;
+            }
+        }
+
+        if (currentWidth < 360) {
+            if (window.innerHeight > 500) {
+                viewportLandscapeWidth = 568;
+            } else {
+                viewportLandscapeWidth = 480;
+            }
+        }
+
+        this.slideWidth(viewportLandscapeWidth);
     }
     private onConnectionSlow() {
         const self = this;

@@ -50,7 +50,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         const self = this;
         this.slideWidth = ko.observable(0);
         this.isConnectionSlow = ko.observable(false);
-        this.calculateLandscapeWidth();
+        this.calculateWidth();
         this.currentIndex = ko.computed<number>({
             read() {
                 return tableManager.currentIndex();
@@ -155,50 +155,13 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
             }
         });
     }
-    public calculateLandscapeWidth() {
-        // When running not within browser, skip calculations.
-        if (typeof window === "undefined") {
+    public calculateWidth() {
+        if (appConfig.ui.usePortraitModeOnly) {
+            this.calculatePortraitWidth();
             return;
         }
 
-        let viewportLandscapeWidth = 640;
-        const currentWidth = $("body").width();
-        if (currentWidth >= 667 || currentWidth === 375) {
-            viewportLandscapeWidth = 667;
-        }
-
-        if (currentWidth >= 736 || currentWidth === 414) {
-            viewportLandscapeWidth = 736;
-        }
-
-        if (currentWidth >= 1024 || (currentWidth === 768 && $("body").height() === 0)) {
-            viewportLandscapeWidth = 1024;
-            if (currentWidth >= 1280) {
-                viewportLandscapeWidth = 1280;
-            }
-
-            if (currentWidth >= 1680) {
-                viewportLandscapeWidth = 1680;
-            }
-
-            if (currentWidth >= 1920) {
-                viewportLandscapeWidth = 1920;
-            }
-
-            if (currentWidth >= 3840) {
-                viewportLandscapeWidth = 3840;
-            }
-        }
-
-        if (currentWidth < 360) {
-            if (window.innerHeight > 500) {
-                viewportLandscapeWidth = 568;
-            } else {
-                viewportLandscapeWidth = 480;
-            }
-        }
-
-        this.slideWidth(viewportLandscapeWidth);
+        this.calculateLandscapeWidth();
     }
     public recordConnection() {
         this.lastConnecton = navigator.connection.type;
@@ -259,7 +222,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         this.disconnectedHandler = connectionService.disconnected.add(this.onResetConnectionSlow, this);
         uiManager.showPage("table");
         app.tabBar.visible(false);
-        orientationService.setOrientation("landscape");
+        this.setOrientation();
         timeService.setTimeout(() => {
             orientationService.lock();
         }, 200);
@@ -355,6 +318,82 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
             return tournament.finishedPlaying();
         });
         finishedTournamentTables.forEach((tournamentTable: TableView) => tableManager.remove(tournamentTable));
+    }
+    private calculatePortraitWidth() {
+        // When running not within browser, skip calculations.
+        if (typeof window === "undefined") {
+            return;
+        }
+
+        let viewportPortraitWidth = 320;
+        const currentWidth = $("body").width()!;
+
+        if (currentWidth >= 375) {
+            viewportPortraitWidth = 375;
+        }
+
+        if (currentWidth >= 414) {
+            viewportPortraitWidth = 414;
+        }
+
+        if (currentWidth >= 768) {
+            viewportPortraitWidth = 768;
+        }
+
+        this.slideWidth(viewportPortraitWidth);
+    }
+    private calculateLandscapeWidth() {
+        // When running not within browser, skip calculations.
+        if (typeof window === "undefined") {
+            return;
+        }
+
+        let viewportLandscapeWidth = 640;
+        const currentWidth = $("body").width();
+        if (currentWidth >= 667 || currentWidth === 375) {
+            viewportLandscapeWidth = 667;
+        }
+
+        if (currentWidth >= 736 || currentWidth === 414) {
+            viewportLandscapeWidth = 736;
+        }
+
+        if (currentWidth >= 1024 || (currentWidth === 768 && $("body").height() === 0)) {
+            viewportLandscapeWidth = 1024;
+            if (currentWidth >= 1280) {
+                viewportLandscapeWidth = 1280;
+            }
+
+            if (currentWidth >= 1680) {
+                viewportLandscapeWidth = 1680;
+            }
+
+            if (currentWidth >= 1920) {
+                viewportLandscapeWidth = 1920;
+            }
+
+            if (currentWidth >= 3840) {
+                viewportLandscapeWidth = 3840;
+            }
+        }
+
+        if (currentWidth < 360) {
+            if (window.innerHeight > 500) {
+                viewportLandscapeWidth = 568;
+            } else {
+                viewportLandscapeWidth = 480;
+            }
+        }
+
+        this.slideWidth(viewportLandscapeWidth);
+    }
+    private setOrientation() {
+        if (appConfig.ui.usePortraitModeOnly) {
+            orientationService.setOrientation("portrait");
+            return;
+        }
+
+        orientationService.setOrientation("landscape");
     }
     private onConnectionSlow() {
         const self = this;
