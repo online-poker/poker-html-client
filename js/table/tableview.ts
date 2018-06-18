@@ -2309,6 +2309,15 @@ export class TableView {
             self.reportApiError(data.Status);
         }
     }
+
+    public toggleSkipDeals(skipDeals: boolean) {
+        if (skipDeals) {
+            this.sitOut();
+            return;
+        }
+
+        this.comeBack();
+    }
     /**
      * Set new table betting parameters.
      * @param smallBlind Small blind

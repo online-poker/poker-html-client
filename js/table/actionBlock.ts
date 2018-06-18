@@ -554,12 +554,7 @@ export class ActionBlock {
                 return;
             }
 
-            const gameApi = new Game(host);
-            if (value) {
-                gameApi.sitOut(this.tableView.tableId);
-            } else {
-                gameApi.comeBack(this.tableView.tableId);
-            }
+            this.tableView.toggleSkipDeals(value);
 
             this.expanded(false);
         });
