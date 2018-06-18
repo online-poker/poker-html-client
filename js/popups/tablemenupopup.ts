@@ -62,6 +62,10 @@ export class TableMenuPopup {
      * Indicate that rating is supported.
      */
     public ratingSupported = ko.observable(appConfig.game.hasRating);
+    /**
+     * Indicate whether sitout status set.
+     */
+    public skipDeals: KnockoutObservable<boolean>;
 
     constructor(
         private currentTableProvider: ICurrentTableProvider,
@@ -134,6 +138,7 @@ export class TableMenuPopup {
             const hasWin = player.Money() > 0 || currentTable.myPlayerInGame();
             return hasWin ? "table.takeWin" : "table.leave";
         });
+        this.skipDeals = ko.observable(false).extend({ rateLimit: 500 });
     }
 
     public async shown() {
@@ -147,6 +152,7 @@ export class TableMenuPopup {
         this.handHistoryAllowed(playerIsInGame && currentTable.lastHandHistory() != null);
         this.leaveAllowed(myPlayer != null && !currentTable.myPlayerInGame() && myPlayer.IsSitoutStatus());
         this.accountStatusAllowed(this.authInformation.authenticated());
+        this.skipDeals(currentTable.isSitOut());
 
         const tournamentView = currentTable.tournament();
         this.isTournamentTable(tournamentView != null);
@@ -333,6 +339,11 @@ export class TableMenuPopup {
             const leaved = this.commandExecutor.executeCommand("app.leaveTable", [tableView.tableId]) as JQueryDeferred<() => void>;
             leaved.then(removeCurrentTable);
         }
+    }
+    private toggleSkipDeals() {
+        this.skipDeals(!this.skipDeals());
+        const currentTable = this.currentTableProvider.currentTable();
+        currentTable.toggleSkipDeals(this.skipDeals());
     }
     private getCurrentMoney(tournament: TournamentView, personalAccount: PersonalAccountData) {
         return personalAccount.RealMoney;
