@@ -1,17 +1,32 @@
-﻿export class AnimationSettings {
+﻿import { mergeDeep } from "poker/helpers";
+
+export class AnimationSettings {
 
     public static platform = "default";
 
-    public static getSettings() {
-        if (AnimationSettings.platform === "android") {
-            return AnimationSettings.androidSettings();
+    public static setOverride(configuration: Partial<AnimationSettings>): void {
+        AnimationSettings.configurationOverride = configuration;
+    }
+
+    public static getSettings(): AnimationSettings {
+        let settings: AnimationSettings;
+        switch (AnimationSettings.platform) {
+            case "android":
+                settings = AnimationSettings.androidSettings();
+                break;
+            case "tablet":
+                settings = AnimationSettings.tabletSettings();
+                break;
+            default:
+                settings = AnimationSettings.defaultSettings();
+                break;
         }
 
-        if (AnimationSettings.platform === "tablet") {
-            return AnimationSettings.tabletSettings();
+        if (AnimationSettings.configurationOverride) {
+            settings = mergeDeep(settings, AnimationSettings.configurationOverride);
         }
 
-        return AnimationSettings.defaultSettings();
+        return settings;
     }
 
     public static defaultSettings() {
@@ -28,6 +43,8 @@
         settings.dealCardsTime = 500;
         return settings;
     }
+
+    private static configurationOverride?: Partial<AnimationSettings>;
 
     public dealCardsTime: number = 300;
     public finishGamePrePause: number = 100;

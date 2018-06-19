@@ -1,6 +1,7 @@
 import * as $ from "jquery";
 import ko = require("knockout");
 import * as moment from "moment";
+import { AnimationSettings } from "poker/table/animationsettings";
 import { App } from "./app";
 import { AppConfig, appConfig, overrideConfiguration } from "./appconfig";
 import { registerBindings } from "./bindings";
@@ -41,8 +42,9 @@ function registerTableView() {
     window["ActionBlock"] = ActionBlock;
 }
 
-function bootstrap(localConfiguration?: Partial<AppConfig>) {
+function bootstrap(localConfiguration?: Partial<AppConfig>, animationSettingsOverride?: Partial<AnimationSettings>) {
     overrideConfiguration(localConfiguration || {});
+    AnimationSettings.setOverride(animationSettingsOverride || {});
 
     // tslint:disable:no-string-literal
     window["ko"] = ko;
