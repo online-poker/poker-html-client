@@ -1585,7 +1585,7 @@ export class TableView {
                 return;
             }
 
-            this.foldCardsForPlayer(currentPlayer, true, this.animationSettings.foldAnimationTimeout / 2);
+            this.foldCardsForPlayer(currentPlayer, this.animationSettings.foldAnimationTimeout / 2);
         });
     }
     public onBet(playerId: number, type: number, amount: number, nextPlayerId: number) {
@@ -3015,7 +3015,7 @@ export class TableView {
         }
 
         if (type === 4) {
-            this.foldCardsForPlayer(currentPlayer, false, this.animationSettings.foldAnimationTimeout);
+            this.foldCardsForPlayer(currentPlayer, this.animationSettings.foldAnimationTimeout);
             // Mark player as not in game.
             // During the new game this flag should be set automatically.
             currentPlayer.IsInGameStatus(false);
@@ -3098,7 +3098,7 @@ export class TableView {
             }
         }
     }
-    private foldCardsForPlayer(currentPlayer: TablePlaceModel, forceAnimation: boolean, duration: number) {
+    private foldCardsForPlayer(currentPlayer: TablePlaceModel, duration: number) {
         if (currentPlayer === null) {
             // tslint:disable-next-line:no-console
             console.warn("Attempt to fold cards for the player");
@@ -3113,9 +3113,8 @@ export class TableView {
         // Current player is not active, but it not yet folded cards.
         const activePlayersCount = this.activePlayersCount() - 1;
         const displayFoldedCards = myself !== null
-            && currentPlayer.PlayerId() === myself.PlayerId()
-            // && activePlayersCount > 1
-            && !forceAnimation;
+            && currentPlayer.PlayerId() === myself.PlayerId();
+
         const modeSupportShowingFoldedCards = appConfig.game.seatMode;
         if (displayFoldedCards || modeSupportShowingFoldedCards) {
             currentPlayer.FoldedCards(currentCards);
