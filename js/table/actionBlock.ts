@@ -119,6 +119,7 @@ export class ActionBlock {
     public button3Visible = ko.observable(false);
     public needBB: KnockoutObservable<boolean>;
     public myPlayer: KnockoutObservable<TablePlaceModel>;
+    public isPortraitMode = ko.computed(() => appConfig.ui.usePortraitModeOnly);
     /**
      * Indicates that prizes distributed in the game.
      */
