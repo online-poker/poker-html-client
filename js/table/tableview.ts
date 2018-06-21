@@ -345,7 +345,7 @@ export class TableView {
         }, this).extend({ notify: "always" });
 
         this.myPlayer.subscribe(function (value) {
-            if (value !== null && authManager.loginId() === value.PlayerId()) {
+            if (value !== null && authManager.loginId() === value.PlayerId() && appConfig.game.cardsOverlaySupported) {
                 value.needCardsOverlay(true);
             }
         });
