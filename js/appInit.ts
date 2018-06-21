@@ -141,6 +141,7 @@ function bootstrap(localConfiguration?: Partial<AppConfig>, animationSettingsOve
 
 export = {
     bootstrap,
+    overrideConfiguration,
     registerTableView,
     registerBindings,
     registerComponents,
