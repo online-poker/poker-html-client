@@ -150,7 +150,8 @@ export class TableMenuPopup {
         this.addMoneyAvailable(currentTable.tournament() == null && currentTable.opened());
         this.addMoneyAllowed(currentTable.couldAddChips());
         this.handHistoryAllowed(playerIsInGame && currentTable.lastHandHistory() != null);
-        this.leaveAllowed(myPlayer != null && !currentTable.myPlayerInGame() && myPlayer.IsSitoutStatus());
+        const leaveAllowed = myPlayer != null && !currentTable.myPlayerInGame() && myPlayer.IsSitoutStatus();
+        this.leaveAllowed(!appConfig.game.seatMode || leaveAllowed);
         this.accountStatusAllowed(this.authInformation.authenticated());
         this.skipDeals(currentTable.isSitOut());
 
@@ -314,10 +315,24 @@ export class TableMenuPopup {
         window.location.reload();
     }
     public leave() {
-        if (this.leaveAllowed()) {
-            const index = tableManager.currentIndex();
-            const tableView = tableManager.tables()[index];
+        const index = tableManager.currentIndex();
+        const tableView = tableManager.tables()[index];
+
+        if (this.leaveAllowed() && appConfig.game.seatMode) {
             tableView.showStandupPrompt();
+        }
+
+        if (!appConfig.game.seatMode) {
+            const removeCurrentTable = () => {
+                // Navigate back to the lobby.
+                if (tableManager.tables().length === 0) {
+                    app.lobbyPageBlock.showLobby();
+                    app.tablesPage.deactivate();
+                    app.closePopup();
+                }
+            };
+            const leaved = this.commandExecutor.executeCommand("app.leaveTable", [tableView.tableId]) as JQueryDeferred<() => void>;
+            leaved.then(removeCurrentTable);
         }
     }
     public toLobby() {
