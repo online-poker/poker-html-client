@@ -24,6 +24,7 @@ export class TableMenuPopup {
     public addMoneyAllowed: KnockoutObservable<boolean>;
     public handHistoryAllowed: KnockoutObservable<boolean>;
     public leaveAllowed: KnockoutObservable<boolean>;
+    public toggleSkipDealsAllowed: KnockoutObservable<boolean>;
     public accountStatusAllowed: KnockoutObservable<boolean>;
     public tournamentInformationAllowed: KnockoutObservable<boolean>;
 
@@ -104,6 +105,7 @@ export class TableMenuPopup {
         this.addMoneyAllowed = ko.observable(false);
         this.handHistoryAllowed = ko.observable(false);
         this.leaveAllowed = ko.observable(false);
+        this.toggleSkipDealsAllowed = ko.observable(false);
         this.accountStatusAllowed = ko.observable(false);
         this.tournamentInformationAllowed = ko.observable(false);
 
@@ -147,6 +149,7 @@ export class TableMenuPopup {
         const currentTable = this.currentTableProvider.currentTable();
         const myPlayer = currentTable.myPlayer();
         const playerIsInGame = myPlayer != null;
+        this.toggleSkipDealsAllowed(playerIsInGame);
         this.addMoneyAvailable(currentTable.tournament() == null && currentTable.opened());
         this.addMoneyAllowed(currentTable.couldAddChips());
         this.handHistoryAllowed(playerIsInGame && currentTable.lastHandHistory() != null);
@@ -359,6 +362,7 @@ export class TableMenuPopup {
         this.skipDeals(!this.skipDeals());
         const currentTable = this.currentTableProvider.currentTable();
         currentTable.toggleSkipDeals(this.skipDeals());
+        this.confirm();
     }
     private getCurrentMoney(tournament: TournamentView, personalAccount: PersonalAccountData) {
         return personalAccount.RealMoney;
