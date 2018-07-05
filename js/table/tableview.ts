@@ -1342,8 +1342,10 @@ export class TableView {
             this.minimalBuyIn(baseBuyIn);
             this.pots(pots || []);
             this.refreshPlaces();
-            this.clearTimer();
-            this.startTimer(timePass);
+            if (this.myPlayerInGame()) {
+                this.clearTimer();
+                this.startTimer(timePass);
+            }
             this.cardsReceived = true;
 
             if (cards != null) {
