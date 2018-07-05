@@ -1342,10 +1342,13 @@ export class TableView {
             this.minimalBuyIn(baseBuyIn);
             this.pots(pots || []);
             this.refreshPlaces();
-            this.clearTimer();
-            this.startTimer(timePass);
             this.cardsReceived = true;
-
+            const myself = this.myPlayer();
+            if (myself.PlayerId() === currentPlayerId && this.myPlayerInGame()) {
+                this.clearTimer();
+                this.startTimer(timePass);
+            }
+            
             if (cards != null) {
                 if (cards.length === 0) {
                     lastRaise = Math.max(lastRaise, this.bigBlind());
@@ -1360,7 +1363,6 @@ export class TableView {
             this.actionBlock.resetWaitBB();
             this.actionBlock.processing(false);
             this.actionBlock.updateBlocks();
-            const myself = this.myPlayer();
             if (myself != null) {
                 this.actionBlock.updateAutomaticActionsText(myself.Money(), this.maximumBet() - this.myBet());
             }
