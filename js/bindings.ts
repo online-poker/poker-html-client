@@ -6,7 +6,7 @@ import ko = require("knockout");
 import * as moment from "moment";
 import { App } from "./app";
 import { debugSettings } from "./debugsettings";
-import { withCommas } from "./helpers";
+import { siFormatter, withCommas } from "./helpers";
 import { _ } from "./languagemanager";
 import { PageBlock } from "./pageblock";
 import { SelectorItem } from "./selector";
@@ -557,7 +557,11 @@ export function registerBindings() {
         },
     };
     ko.bindingHandlers["scroll"] = scrollHandler as any;
-    ko.bindingHandlers["bet"] = {
+    const betHandler = {
+        useShortMoneyRepresentationForBets: false,
+        minConvertibleValue: 10000,
+        moneySeparator: ",",
+        moneyFractionalSeparator: ".",
         update(
             element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
             viewModel: any, bindingContext: KnockoutBindingContext) {
@@ -594,11 +598,17 @@ export function registerBindings() {
                 element.appendChild(container);
                 const label = document.createElement("div");
                 label.setAttribute("class", "label");
-                label.innerText = withCommas(value.toFixed(0), ",");
+                if (betHandler.useShortMoneyRepresentationForBets) {
+                    label.innerText = siFormatter(value, 2, betHandler.moneySeparator, betHandler.moneyFractionalSeparator, betHandler.minConvertibleValue);
+                } else {
+                    label.innerText = withCommas(value.toFixed(0), ",");
+                }
+
                 element.appendChild(label);
             }
         },
     };
+    ko.bindingHandlers["bet"] = betHandler;
     ko.bindingHandlers["forceFocus"] = {
         init(
             element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,

@@ -86,6 +86,10 @@ export class AppConfig {
         gameMoneySymbol: "",
         allowExpandActionBlockGuestureOnlyOnMyTurn: false,
         usePortraitModeOnly: false,
+        useShortMoneyRepresentationForBets: false,
+        minConvertibleToSIBetValue: 10000,
+        moneySeparator: ",",
+        moneyFractionalSeparator: ".",
     };
 }
 

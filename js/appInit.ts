@@ -35,6 +35,29 @@ function configureBindings() {
     if (appConfig.ui.gameMoneySymbol) {
         ko.bindingHandlers["currencySymbol"].chipsSymbol = appConfig.ui.gameMoneySymbol;
     }
+
+    const betHandler = ko.bindingHandlers["bet"];
+    if (appConfig.ui.useShortMoneyRepresentationForBets) {
+        betHandler.useShortMoneyRepresentationForBets = true;
+    }
+
+    if (appConfig.ui.minConvertibleToSIBetValue) {
+        betHandler.minConvertibleValue = appConfig.ui.minConvertibleToSIBetValue;
+    }
+
+    if (appConfig.ui.moneyFractionalSeparator) {
+        betHandler.moneyFractionalSeparator = appConfig.ui.moneyFractionalSeparator;
+    }
+
+    if (appConfig.ui.moneySeparator) {
+        betHandler.moneySeparator = appConfig.ui.moneySeparator;
+    }
+
+    const numericTextHandler: any = ko.bindingHandlers["numericText"];
+    numericTextHandler.defaultPositions = 0;
+    if (appConfig.ui.moneySeparator) {
+        numericTextHandler.separator = appConfig.ui.moneySeparator;
+    }
 }
 
 function registerTableView() {
@@ -72,10 +95,6 @@ function bootstrap(localConfiguration?: Partial<AppConfig>, animationSettingsOve
     $.connection.hub.url = baseUrl + "/signalr";
     $.connection.hub.logging = false;
     // GameActionsQueue.waitDisabled = true;
-    // tslint:disable-next-line:no-string-literal
-    const numericTextHandler: any = ko.bindingHandlers["numericText"];
-    numericTextHandler.defaultPositions = 0;
-    numericTextHandler.separator = ",";
     moment.locale("ru");
 
     // This function prevents the rotation from
@@ -142,6 +161,7 @@ function bootstrap(localConfiguration?: Partial<AppConfig>, animationSettingsOve
 export = {
     bootstrap,
     overrideConfiguration,
+    configureBindings,
     registerTableView,
     registerBindings,
     registerComponents,
