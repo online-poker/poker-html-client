@@ -1343,11 +1343,6 @@ export class TableView {
             this.pots(pots || []);
             this.refreshPlaces();
             this.cardsReceived = true;
-            const myself = this.myPlayer();
-            this.clearTimer();
-            if (myself.PlayerId() === currentPlayerId && this.myPlayerInGame()) {
-                this.startTimer(timePass);
-            }
             
             if (cards != null) {
                 if (cards.length === 0) {
@@ -1363,7 +1358,13 @@ export class TableView {
             this.actionBlock.resetWaitBB();
             this.actionBlock.processing(false);
             this.actionBlock.updateBlocks();
+            const myself = this.myPlayer();
+            this.clearTimer();
             if (myself != null) {
+                if (myself.PlayerId() === currentPlayerId && this.myPlayerInGame()) {
+                    this.startTimer(timePass);
+                }
+                
                 this.actionBlock.updateAutomaticActionsText(myself.Money(), this.maximumBet() - this.myBet());
             }
 
