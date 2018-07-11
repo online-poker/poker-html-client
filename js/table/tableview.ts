@@ -1344,8 +1344,8 @@ export class TableView {
             this.refreshPlaces();
             this.cardsReceived = true;
             const myself = this.myPlayer();
+            this.clearTimer();
             if (myself.PlayerId() === currentPlayerId && this.myPlayerInGame()) {
-                this.clearTimer();
                 this.startTimer(timePass);
             }
             
