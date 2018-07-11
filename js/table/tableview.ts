@@ -1343,7 +1343,7 @@ export class TableView {
             this.pots(pots || []);
             this.refreshPlaces();
             this.cardsReceived = true;
-            
+
             if (cards != null) {
                 if (cards.length === 0) {
                     lastRaise = Math.max(lastRaise, this.bigBlind());
@@ -1364,7 +1364,7 @@ export class TableView {
                 if (myself.PlayerId() === currentPlayerId && this.myPlayerInGame()) {
                     this.startTimer(timePass);
                 }
-                
+
                 this.actionBlock.updateAutomaticActionsText(myself.Money(), this.maximumBet() - this.myBet());
             }
 
