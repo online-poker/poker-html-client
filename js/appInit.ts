@@ -53,6 +53,10 @@ function configureBindings() {
         betHandler.moneySeparator = appConfig.ui.moneySeparator;
     }
 
+    if (appConfig.ui.fractionalDigitsCount) {
+        betHandler.fractionalDigitsCount = appConfig.ui.fractionalDigitsCount;
+    }
+
     const numericTextHandler: any = ko.bindingHandlers["numericText"];
     numericTextHandler.defaultPositions = 0;
     if (appConfig.ui.moneySeparator) {

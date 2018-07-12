@@ -89,6 +89,7 @@ export class AppConfig {
         useShortMoneyRepresentationForBets: false,
         minConvertibleToSIBetValue: 10000,
         moneySeparator: ",",
+        fractionalDigitsCount: 2,
         moneyFractionalSeparator: ".",
     };
 }

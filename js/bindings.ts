@@ -562,6 +562,7 @@ export function registerBindings() {
         minConvertibleValue: 10000,
         moneySeparator: ",",
         moneyFractionalSeparator: ".",
+        fractionalDigitsCount: 2,
         update(
             element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
             viewModel: any, bindingContext: KnockoutBindingContext) {
@@ -599,7 +600,7 @@ export function registerBindings() {
                 const label = document.createElement("div");
                 label.setAttribute("class", "label");
                 if (betHandler.useShortMoneyRepresentationForBets) {
-                    label.innerText = siFormatter(value, 2, betHandler.moneySeparator, betHandler.moneyFractionalSeparator, betHandler.minConvertibleValue);
+                    label.innerText = siFormatter(value, betHandler.fractionalDigitsCount, betHandler.moneySeparator, betHandler.moneyFractionalSeparator, betHandler.minConvertibleValue);
                 } else {
                     label.innerText = withCommas(value.toFixed(0), ",");
                 }
