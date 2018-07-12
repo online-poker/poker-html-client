@@ -1342,6 +1342,8 @@ export class TableView {
             this.minimalBuyIn(baseBuyIn);
             this.pots(pots || []);
             this.refreshPlaces();
+            this.clearTimer();
+            this.startTimer(timePass);
             this.cardsReceived = true;
 
             if (cards != null) {
@@ -1359,12 +1361,7 @@ export class TableView {
             this.actionBlock.processing(false);
             this.actionBlock.updateBlocks();
             const myself = this.myPlayer();
-            this.clearTimer();
             if (myself != null) {
-                if (myself.PlayerId() === currentPlayerId && this.myPlayerInGame()) {
-                    this.startTimer(timePass);
-                }
-
                 this.actionBlock.updateAutomaticActionsText(myself.Money(), this.maximumBet() - this.myBet());
             }
 
