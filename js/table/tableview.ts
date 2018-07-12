@@ -85,6 +85,13 @@ export class TableView {
     public gamePlayers: KnockoutObservableArray<number>;
     public places: KnockoutComputed<TablePlaceModel[]>;
     public pots: KnockoutObservableArray<number>;
+
+    /**
+     * Indicates whether show all side pots or only 4
+     * show limited quantity of pots for small screens.
+     */
+    public showLimitedQuantityOfSidePots: KnockoutComputed<boolean>;
+
     public tableCards: TableCardsPlace;
     public messages: KnockoutObservableArray<PlayerMessage>;
     public systemMessages: KnockoutObservableArray<SystemMessage>;
@@ -265,6 +272,7 @@ export class TableView {
         this.connecting = ko.observable(true);
         this.gamePlayers = ko.observableArray<number>([]);
         this.pots = ko.observableArray<number>([]);
+        this.showLimitedQuantityOfSidePots = ko.computed(() => appConfig.ui.showLimitedQuantityOfSidePots);
         this.tableCards = new TableCardsPlace();
         this.messages = ko.observableArray<PlayerMessage>([]);
         this.systemMessages = ko.observableArray<SystemMessage>([]);
@@ -1348,7 +1356,7 @@ export class TableView {
             if (myself.PlayerId() === currentPlayerId && this.myPlayerInGame()) {
                 this.startTimer(timePass);
             }
-            
+
             if (cards != null) {
                 if (cards.length === 0) {
                     lastRaise = Math.max(lastRaise, this.bigBlind());
