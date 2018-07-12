@@ -761,7 +761,7 @@ export class TableView {
         const tableCards = this.tableCards.tableCardsData();
         return my.getCombination(tableCards);
     }
-    public startTimer(startTime: number = 1) {
+    public startTimer(startTime: number = 1, playSound: boolean = true) {
         const self: TableView = this;
         if (this.frozen()) {
             return;
@@ -774,12 +774,12 @@ export class TableView {
                 self.timePass(time + 1);
                 if (self.timeLeft() === 7) {
                     if (self.currentPlayer() === self.myPlayer()) {
-                        if (self.soundEnabled) {
+                        if (self.soundEnabled && playSound) {
                             const soundManager = getSoundManager();
                             soundManager.playTurnReminder();
                         }
                     } else {
-                        if (self.soundEnabled) {
+                        if (self.soundEnabled && playSound) {
                             const soundManager = getSoundManager();
                             soundManager.playTurnReminderForAll();
                         }
@@ -1343,7 +1343,8 @@ export class TableView {
             this.pots(pots || []);
             this.refreshPlaces();
             this.clearTimer();
-            this.startTimer(timePass);
+            const playSound = this.isInGame() && !gameFinished;
+            this.startTimer(timePass, playSound);
             this.cardsReceived = true;
 
             if (cards != null) {
