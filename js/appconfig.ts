@@ -90,6 +90,7 @@ export class AppConfig {
         minConvertibleToSIBetValue: 10000,
         moneySeparator: ",",
         moneyFractionalSeparator: ".",
+        showLimitedQuantityOfSidePots: false,
     };
 }
 
