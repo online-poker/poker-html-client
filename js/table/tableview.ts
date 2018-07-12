@@ -761,7 +761,7 @@ export class TableView {
         const tableCards = this.tableCards.tableCardsData();
         return my.getCombination(tableCards);
     }
-    public startTimer(startTime: number = 1) {
+    public startTimer(startTime: number = 1, playSound: boolean = true) {
         const self: TableView = this;
         if (this.frozen()) {
             return;
@@ -774,12 +774,12 @@ export class TableView {
                 self.timePass(time + 1);
                 if (self.timeLeft() === 7) {
                     if (self.currentPlayer() === self.myPlayer()) {
-                        if (self.soundEnabled) {
+                        if (self.soundEnabled && playSound) {
                             const soundManager = getSoundManager();
                             soundManager.playTurnReminder();
                         }
                     } else {
-                        if (self.soundEnabled) {
+                        if (self.soundEnabled && playSound) {
                             const soundManager = getSoundManager();
                             soundManager.playTurnReminderForAll();
                         }
@@ -1342,6 +1342,9 @@ export class TableView {
             this.minimalBuyIn(baseBuyIn);
             this.pots(pots || []);
             this.refreshPlaces();
+            this.clearTimer();
+            const playSound = this.isInGame() && !gameFinished;
+            this.startTimer(timePass, playSound);
             this.cardsReceived = true;
 
             if (cards != null) {
@@ -1359,12 +1362,7 @@ export class TableView {
             this.actionBlock.processing(false);
             this.actionBlock.updateBlocks();
             const myself = this.myPlayer();
-            this.clearTimer();
             if (myself != null) {
-                if (myself.PlayerId() === currentPlayerId && this.myPlayerInGame()) {
-                    this.startTimer(timePass);
-                }
-
                 this.actionBlock.updateAutomaticActionsText(myself.Money(), this.maximumBet() - this.myBet());
             }
 
