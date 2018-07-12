@@ -38,7 +38,7 @@ export function siFormatter(value: number, digits: number, separator: string, fr
     }
     const x = (value / si[i].value).toString().split(".");
     const x1 = x[0];
-    const x2 = x.length > 1 ? fractionalSeparator + x[1].substr(0, digits) : "";
+    const x2 = x.length > 1 ? ( digits > 0 ? fractionalSeparator + x[1].substr(0, digits) : "" ) : "";
     const formattedNumber = x1 + x2 + si[i].symbol;
 
     return formattedNumber;

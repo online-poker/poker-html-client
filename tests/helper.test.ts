@@ -36,4 +36,8 @@ describe("Money si formatting", () => {
     it("Values bigger then million will be formatted", () => {
         expect(siFormatter(1286020.1, 2, ",", ".", 10000)).toBe("1.28M");
     });
+
+    it("If zero digits passed value should be non fractional", () => {
+        expect(siFormatter(1286020.1, 0, ",", ".", 10000)).toBe("1M");
+    });
 });
