@@ -235,19 +235,34 @@ export function registerBindings() {
             }, allBindings, viewModel, bindingContext);
         },
     };
+    function preventDefaultEvents(evt: Event) {
+        if (evt.originalEvent.gesture) {
+            evt.originalEvent.gesture.stopPropagation();
+            evt.originalEvent.gesture.preventDefault();
+        }
+
+        evt.stopPropagation();
+        evt.preventDefault();
+    }
     ko.bindingHandlers["command"] = {
         init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
             let value = valueAccessor();
             value = ko.unwrap(value);
             let isFast = false;
             let commandTag = value;
+            let preventDefault = false;
             if (typeof value === "object") {
                 isFast = value.fast || false;
+                preventDefault = value.preventDefault || false;
                 commandTag = value.command;
             }
 
             let wrapperValueAccessor: () => any;
             const handler = function(viewMovel: any, event: Event) {
+                if (preventDefault) {
+                    preventDefaultEvents(event);
+                }
+
                 if (typeof commandTag === "string") {
                     app.executeCommand(commandTag);
                 } else if (typeof commandTag === "function") {
