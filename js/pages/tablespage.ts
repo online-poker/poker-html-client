@@ -156,7 +156,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         });
     }
     public calculateWidth() {
-        if (appConfig.ui.usePortraitModeOnly) {
+        if (appConfig.ui.usePortraitModeOnly && !PageBlock.useDoubleView) {
             this.calculatePortraitWidth();
             return;
         }

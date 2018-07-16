@@ -350,7 +350,7 @@ export class App {
         }
 
         this.setDesiredOrientation();
-        if (platformInfo.isTablet || appConfig.ui.usePortraitModeOnly) {
+        if (!platformInfo.isTablet && appConfig.ui.usePortraitModeOnly) {
             orientationService.suppressRotation();
         }
 
