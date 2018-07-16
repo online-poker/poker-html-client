@@ -13,6 +13,7 @@ class Settings {
     public lastTime = ko.observable<number>(0);
     public isGuest = ko.observable<boolean>(false);
     public cardsVariant = ko.observable<string>();
+    public orientation = ko.observable<string>();
 
     constructor() {
         this.login = ko.observable<string>();
@@ -36,6 +37,7 @@ class Settings {
         this.lastPage(this.getItemString("reload.lastPage", "main"));
         this.authToken(this.getItemString("reload.authToken", null));
         this.cardsVariant(this.getItemString("cardsVariant", "down"));
+        this.orientation(this.getItemString("orientation", "landscape"));
     }
     public saveSettings() {
         this.setItemString("auth.login", this.login());
@@ -50,6 +52,7 @@ class Settings {
         this.setItemString("reload.authToken", this.authToken(), null);
         this.setItemNumber("reload.lastTime", this.lastTime(), 0);
         this.setItemString("cardsVariant", this.cardsVariant());
+        this.setItemString("orientation", this.orientation());
     }
     private getItemBoolean(name: string, defaultValue: boolean = false) {
         const item = localStorage.getItem(name) as string;
