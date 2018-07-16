@@ -44,6 +44,8 @@ export class TableMenuPopup {
     public allowUsePersonalAccount: KnockoutObservable<boolean>;
     public allowTickets: KnockoutObservable<boolean>;
     public standupText: KnockoutComputed<string>;
+    public allowSettings: KnockoutComputed<boolean>;
+    public settingsCaption: KnockoutComputed<string>;
     /**
      * Tournament has rebuys.
      */
@@ -141,6 +143,20 @@ export class TableMenuPopup {
             return hasWin ? "table.takeWin" : "table.leave";
         });
         this.skipDeals = ko.observable(false).extend({ rateLimit: 500 });
+        this.allowSettings = ko.computed(() =>
+            this.allowTickets() || appConfig.ui.usePortraitAndLandscapeOrientationModes,
+        );
+        this.settingsCaption = ko.pureComputed(() => {
+            if (this.allowTickets() && !appConfig.ui.usePortraitAndLandscapeOrientationModes) {
+                return "settings.cardsVariantCaption";
+            }
+
+            if (!this.allowTickets() && appConfig.ui.usePortraitAndLandscapeOrientationModes) {
+                return "settings.orientationModeCaption";
+            }
+
+            return "settings.caption";
+        });
     }
 
     public async shown() {
