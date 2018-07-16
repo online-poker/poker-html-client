@@ -92,6 +92,7 @@ export class AppConfig {
         moneySeparator: ",",
         fractionalDigitsCount: 2,
         moneyFractionalSeparator: ".",
+        showLimitedQuantityOfSidePots: false,
     };
 }
 
