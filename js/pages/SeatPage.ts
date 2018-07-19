@@ -157,7 +157,7 @@ export class SeatPage extends PageBase {
         });
     }
     public calculateWidth() {
-        if (appConfig.ui.usePortraitModeOnly) {
+        if (orientationService.isTargetOrientation("portrait")) {
             this.calculatePortraitWidth();
             return;
         }

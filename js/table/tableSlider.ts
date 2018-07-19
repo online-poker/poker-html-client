@@ -21,13 +21,15 @@ export class TableSlider {
     public maximum: KnockoutObservable<number>;
     public position: KnockoutComputed<number>;
     private step: number;
-    private minRelative: number;
-    private maxRelative: number;
+    private minRelative: KnockoutObservable<number>;
+    private maxRelative: KnockoutObservable<number>;
     private translator: (x: number) => number;
 
     constructor() {
         const self = this;
         this.current = ko.observable<number>(null);
+        this.minRelative = ko.observable<number>(null);
+        this.maxRelative = ko.observable<number>(null);
         this.currentValue = ko.computed<string>({
             read() {
                 const ivalue = self.current();
@@ -58,33 +60,33 @@ export class TableSlider {
         this.maximum = ko.observable<number>();
         this.position = ko.computed<number>({
             read() {
-                const pixelDistance = self.maxRelative - self.minRelative;
+                const pixelDistance = self.maxRelative() - self.minRelative();
                 if (pixelDistance === 0) {
-                    return self.maxRelative;
+                    return self.maxRelative();
                 }
 
                 const delta = self.maximum() - self.minimum();
                 if (delta === 0) {
-                    return self.maxRelative;
+                    return self.maxRelative();
                 }
 
                 const ratio = pixelDistance / delta;
                 const currentRelative = Math.floor(ratio * (self.current() - self.minimum()));
 
-                return self.minRelative + currentRelative;
+                return self.minRelative() + currentRelative;
             },
             write(value) {
-                if (value >= self.maxRelative) {
+                if (value >= self.maxRelative()) {
                     self.current(self.maximum());
                     return;
                 }
 
-                if (value <= self.minRelative) {
+                if (value <= self.minRelative()) {
                     self.current(self.minimum());
                     return;
                 }
 
-                const pixelDistance = self.maxRelative - self.minRelative;
+                const pixelDistance = self.maxRelative() - self.minRelative();
                 if (pixelDistance === 0) {
                     self.current(self.minimum());
                     return;
@@ -97,7 +99,7 @@ export class TableSlider {
                 }
 
                 const ratio = delta / pixelDistance;
-                let currentAbsolute = Math.floor(ratio * (value - self.minRelative));
+                let currentAbsolute = Math.floor(ratio * (value - self.minRelative()));
                 // Round currentAbsolute to step
                 const currentAbsoluteAligned = Math.floor(currentAbsolute / self.step) * self.step;
                 if ((currentAbsolute - currentAbsoluteAligned) < (currentAbsoluteAligned + self.step - currentAbsolute)) {
@@ -127,8 +129,8 @@ export class TableSlider {
      * @param translator Function Function which translate the page coordinates to the relative coordinates.
      */
     public setBounds(minRelative: number, maxRelative: number, translator: (x: number) => number) {
-        this.minRelative = minRelative;
-        this.maxRelative = maxRelative;
+        this.minRelative(minRelative);
+        this.maxRelative(maxRelative);
         this.translator = translator;
     }
     public setParameters(value: number, step: number, min: number, max: number) {
@@ -194,8 +196,8 @@ export class TableSlider {
         }
     }
     public setPosition(relativePosition: number) {
-        relativePosition = Math.max(relativePosition, this.minRelative);
-        relativePosition = Math.min(relativePosition, this.maxRelative);
+        relativePosition = Math.max(relativePosition, this.minRelative());
+        relativePosition = Math.min(relativePosition, this.maxRelative());
         this.position(relativePosition);
     }
 }

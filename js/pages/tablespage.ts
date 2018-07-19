@@ -44,13 +44,13 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
     public nextGameTypeInformation: KnockoutComputed<string>;
     public splashShown = ko.observable(false);
     public tablesShown = ko.observable(true);
+    public orientationWillBeChanged = ko.observable(false);
 
     constructor(private commandExecutor: ICommandExecutor) {
         super();
         const self = this;
         this.slideWidth = ko.observable(0);
         this.isConnectionSlow = ko.observable(false);
-        this.calculateWidth();
         this.currentIndex = ko.computed<number>({
             read() {
                 return tableManager.currentIndex();
@@ -154,9 +154,19 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
                 value.animationSuppressed(false);
             }
         });
+        settings.orientation.subscribe((value) => {
+            if (orientationService.isScreenOrientationSupported()) {
+                this.orientationWillBeChanged(true);
+                this.setOrientation();
+                timeService.setTimeout(() => {
+                    this.currentTable().actionBlock.updateBounds();
+                    this.calculateWidth();
+                }, 300);
+            }
+        });
     }
     public calculateWidth() {
-        if (appConfig.ui.usePortraitModeOnly) {
+        if (orientationService.isTargetOrientation("portrait")) {
             this.calculatePortraitWidth();
             return;
         }
@@ -215,6 +225,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
     }
     public activate() {
         super.activate();
+        this.calculateWidth();
         this.activeHandler = deviceEvents.active.add(this.setConnecting, this);
         this.resignHandler = deviceEvents.resignActive.add(this.recordConnection, this);
         this.slowConnectionHandler = connectionService.connectionSlow.add(this.onConnectionSlow, this);
@@ -341,6 +352,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         }
 
         this.slideWidth(viewportPortraitWidth);
+        this.orientationWillBeChanged(false);
     }
     private calculateLandscapeWidth() {
         // When running not within browser, skip calculations.
@@ -386,9 +398,10 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         }
 
         this.slideWidth(viewportLandscapeWidth);
+        this.orientationWillBeChanged(false);
     }
     private setOrientation() {
-        if (appConfig.ui.usePortraitModeOnly) {
+        if (orientationService.isTargetOrientation("portrait") && !PageBlock.useDoubleView) {
             orientationService.setOrientation("portrait");
             return;
         }
