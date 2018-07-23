@@ -1,4 +1,5 @@
 import * as ko from "knockout";
+import { ScreenOrientation } from "poker/services/orientationservice";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import { settings } from "../settings";
@@ -11,12 +12,12 @@ export class SettingsPopup {
     public selectCardsVariantAllowed: KnockoutComputed<boolean>;
     public selectOrientationModeAllowed: KnockoutComputed<boolean>;
     public cardsVariantRadio: KnockoutObservable<string>;
-    public orientationModeRadio: KnockoutObservable<string>;
+    public orientationModeRadio: KnockoutObservable<ScreenOrientation>;
 
     constructor() {
         this.loading = ko.observable<boolean>(false);
         this.cardsVariantRadio = ko.observable("down");
-        this.orientationModeRadio = ko.observable("landscape");
+        this.orientationModeRadio = ko.observable<ScreenOrientation>("landscape");
         this.selectOrientationModeAllowed = ko.computed(() =>
             appConfig.ui.usePortraitAndLandscapeOrientationModes,
         );
@@ -30,7 +31,8 @@ export class SettingsPopup {
      * Executed on popup shown
      */
     public shown(): void {
-        // Do nothing
+        this.orientationModeRadio(settings.orientation());
+        this.cardsVariantRadio(settings.cardsVariant());
     }
 
     public confirm() {

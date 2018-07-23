@@ -4,6 +4,7 @@ import * as ko from "knockout";
 import { IAuthenticationInformation } from "poker/authmanager";
 import { ICommandExecutor } from "poker/commandmanager";
 import { _ } from "poker/languagemanager";
+import { PageBlock } from "poker/pageblock";
 import { SimplePopup } from "poker/popups/index";
 import { ICurrentTableProvider } from "poker/services";
 import { App } from "../app";
@@ -143,8 +144,8 @@ export class TableMenuPopup {
             return hasWin ? "table.takeWin" : "table.leave";
         });
         this.skipDeals = ko.observable(false).extend({ rateLimit: 500 });
-        this.allowSettings = ko.computed(() =>
-            this.allowTickets() || appConfig.ui.usePortraitAndLandscapeOrientationModes,
+        this.allowSettings = ko.pureComputed(() =>
+            this.allowTickets() || (appConfig.ui.usePortraitAndLandscapeOrientationModes && !PageBlock.useDoubleView),
         );
         this.settingsCaption = ko.pureComputed(() => {
             if (this.allowTickets() && !appConfig.ui.usePortraitAndLandscapeOrientationModes) {

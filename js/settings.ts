@@ -1,4 +1,5 @@
 ﻿import * as ko from "knockout";
+import { ScreenOrientation } from "poker/services/orientationservice";
 
 class Settings {
     public login: KnockoutObservable<string>;
@@ -13,7 +14,7 @@ class Settings {
     public lastTime = ko.observable<number>(0);
     public isGuest = ko.observable<boolean>(false);
     public cardsVariant = ko.observable<string>();
-    public orientation = ko.observable<string>();
+    public orientation = ko.observable<ScreenOrientation>();
 
     constructor() {
         this.login = ko.observable<string>();
@@ -37,7 +38,7 @@ class Settings {
         this.lastPage(this.getItemString("reload.lastPage", "main"));
         this.authToken(this.getItemString("reload.authToken", null));
         this.cardsVariant(this.getItemString("cardsVariant", "down"));
-        this.orientation(this.getItemString("orientation", "landscape"));
+        this.orientation(this.getItemString("orientation", "landscape") as ScreenOrientation);
     }
     public saveSettings() {
         this.setItemString("auth.login", this.login());

@@ -279,7 +279,6 @@ export class App {
             platformInfo.isTablet = true;
         }
 
-        app.tablesPage.calculateWidth();
         pushService.register();
 
         tableManager.maxTablesReached.add(function(continuation: () => void) {
@@ -350,7 +349,8 @@ export class App {
         }
 
         this.setDesiredOrientation();
-        if (platformInfo.isTablet || appConfig.ui.usePortraitModeOnly) {
+
+        if (platformInfo.isTablet) {
             orientationService.suppressRotation();
         }
 

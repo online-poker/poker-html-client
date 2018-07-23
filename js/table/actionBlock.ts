@@ -3,6 +3,8 @@
 import { Game } from "@poker/api-server";
 import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
+import { orientationService } from "poker/services";
+import { settings } from "poker/settings";
 import * as signals from "signals";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
@@ -119,7 +121,7 @@ export class ActionBlock {
     public button3Visible = ko.observable(false);
     public needBB: KnockoutObservable<boolean>;
     public myPlayer: KnockoutObservable<TablePlaceModel>;
-    public isPortraitMode = ko.computed(() => appConfig.ui.usePortraitModeOnly);
+    public isPortraitMode = ko.computed(() => orientationService.isTargetOrientation("portrait"));
     /**
      * Indicates that prizes distributed in the game.
      */

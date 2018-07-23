@@ -85,7 +85,6 @@ export class AppConfig {
         realMoneyCurrencySymbol: "$",
         gameMoneySymbol: "",
         allowExpandActionBlockGuestureOnlyOnMyTurn: false,
-        usePortraitModeOnly: false,
         usePortraitAndLandscapeOrientationModes: false,
         useShortMoneyRepresentationForBets: false,
         minConvertibleToSIBetValue: 10000,
