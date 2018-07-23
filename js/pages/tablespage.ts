@@ -225,7 +225,6 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
     }
     public activate() {
         super.activate();
-        this.calculateWidth();
         this.activeHandler = deviceEvents.active.add(this.setConnecting, this);
         this.resignHandler = deviceEvents.resignActive.add(this.recordConnection, this);
         this.slowConnectionHandler = connectionService.connectionSlow.add(this.onConnectionSlow, this);
@@ -234,6 +233,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         uiManager.showPage("table");
         app.tabBar.visible(false);
         this.setOrientation();
+        this.calculateWidth();
         timeService.setTimeout(() => {
             orientationService.lock();
         }, 200);
