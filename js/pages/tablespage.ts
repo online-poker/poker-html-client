@@ -232,8 +232,14 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         this.disconnectedHandler = connectionService.disconnected.add(this.onResetConnectionSlow, this);
         uiManager.showPage("table");
         app.tabBar.visible(false);
+        // As swiperjs module can not handle slideWidth updates
+        // we should rerender hole swipe module.
+        // Delete swipe node from DOM
+        this.orientationWillBeChanged(true);
         this.setOrientation();
         this.calculateWidth();
+        // Render swipe node with new slideWidth
+        this.orientationWillBeChanged(false);
         timeService.setTimeout(() => {
             orientationService.lock();
         }, 200);
