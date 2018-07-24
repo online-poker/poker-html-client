@@ -237,10 +237,8 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         // Delete swipe node from DOM
         this.orientationWillBeChanged(true);
         this.setOrientation();
-        this.calculateWidth();
-        // Render swipe node with new slideWidth
-        this.orientationWillBeChanged(false);
         timeService.setTimeout(() => {
+            this.calculateWidth();
             orientationService.lock();
         }, 200);
         const currentTable = this.currentTable();
@@ -358,6 +356,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         }
 
         this.slideWidth(viewportPortraitWidth);
+        // Render swipe node with new slideWidth
         this.orientationWillBeChanged(false);
     }
     private calculateLandscapeWidth() {
@@ -404,6 +403,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         }
 
         this.slideWidth(viewportLandscapeWidth);
+        // Render swipe node with new slideWidth
         this.orientationWillBeChanged(false);
     }
     private setOrientation() {

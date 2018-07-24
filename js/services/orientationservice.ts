@@ -18,10 +18,10 @@ export class OrientationService {
                 await this.screen.orientation.lock(orientation);
             } catch {
                 // If DOMException happens, do nothing.
+            } finally {
+                this.lastOrientation = orientation;
             }
         }
-
-        this.lastOrientation = orientation;
     }
 
     public suppressRotation() {
