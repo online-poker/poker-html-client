@@ -343,7 +343,10 @@ export class App {
         }
 
         this.logEvent("Received Event: " + id);
-        if (window.innerWidth > 640) {
+
+        // Use double view for tablets and pc
+        // 812 is width for iphone X
+        if (window.innerWidth > 736 && window.innerWidth !== 812) {
             PageBlock.useDoubleView = true;
             AnimationSettings.platform = "tablet";
         }
