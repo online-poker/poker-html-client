@@ -60,6 +60,9 @@ export function registerComponents() {
     ko.components.register("rotate-phone-block", {
         template: getTemplateDefinition("rotate-phone-block/rotate-phone-block.html"),
     });
+    ko.components.register("screen-overlay-block", {
+        template: getTemplateDefinition("screen-overlay-block/screen-overlay-block.html"),
+    });
 
     /**
      * Lobby components

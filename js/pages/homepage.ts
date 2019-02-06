@@ -40,10 +40,26 @@ export class HomePage extends PageBase {
         Link: "",
     });
     public bannerIntervalHandle: number | null = null;
+    public showScreenOverlay: KnockoutComputed<boolean>;
     private intervalHandle: number | null = null;
 
     constructor() {
         super();
+        this.showScreenOverlay = ko.computed(() => {
+            if (!appConfig.ui.enableScreenOverlay) {
+                return false;
+            }
+
+            if ((/iphone|ipod|ipad/gi).test(navigator.platform)) {
+                if (!navigator.standalone) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
+        });
         this.online = metadataManager.online;
         this.registered = metadataManager.registered;
         this.captionLabel = ko.computed(() => {
