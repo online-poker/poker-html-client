@@ -159,11 +159,26 @@ export class LobbyPage extends PageBase {
     public cashTablesEnabled: KnockoutObservable<boolean>;
     public tournamentTablesEnabled: KnockoutObservable<boolean>;
     public sngTablesEnabled: KnockoutObservable<boolean>;
+    public showScreenOverlay: KnockoutComputed<boolean>;
 
     constructor() {
         super();
         const self = this;
+        this.showScreenOverlay = ko.computed(() => {
+            if (!appConfig.ui.enableScreenOverlay) {
+                return false;
+            }
 
+            if ((/iphone|ipod|ipad/gi).test(navigator.platform)) {
+                if (!navigator.standalone) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
+        });
         this.currentTime = ko.computed(function () {
             return timeService.currentTime();
         }, this);

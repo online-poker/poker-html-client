@@ -4,3 +4,7 @@
     trace(): void;
     count(label?: string): void;
 }
+
+interface Navigator {
+    standalone?: boolean;
+}
