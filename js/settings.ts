@@ -1,5 +1,7 @@
 ﻿import * as ko from "knockout";
 import { ScreenOrientation } from "poker/services/orientationservice";
+import { appConfig } from "./appconfig";
+import { PageBlock } from "./pageblock";
 
 class Settings {
     public login: KnockoutObservable<string>;
@@ -38,7 +40,9 @@ class Settings {
         this.lastPage(this.getItemString("reload.lastPage", "main"));
         this.authToken(this.getItemString("reload.authToken", null));
         this.cardsVariant(this.getItemString("cardsVariant", "down"));
-        this.orientation(this.getItemString("orientation", "landscape") as ScreenOrientation);
+
+        const defaultOrientation = PageBlock.useDoubleView ? "landscape" : appConfig.ui.defaultOrientation;
+        this.orientation(this.getItemString("orientation", defaultOrientation) as ScreenOrientation);
     }
     public saveSettings() {
         this.setItemString("auth.login", this.login());
