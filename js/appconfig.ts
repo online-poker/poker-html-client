@@ -49,6 +49,8 @@ export class AppConfig {
         soundTheme: "poker",
         hasHumanVoice: true,
         cardsOverlaySupported: true,
+        messageDisplaySize: 17,
+        messageDisplayDuration: 2000,
     };
     public tournament = {
         enabled: false,
