@@ -1,6 +1,7 @@
 ﻿/* tslint:disable:no-bitwise */
 
 import * as ko from "knockout";
+import { appConfig } from "poker/appconfig";
 import { withCommas } from "../helpers";
 import { _ } from "../languagemanager";
 import * as timeService from "../timeservice";
@@ -260,7 +261,7 @@ export class TablePlaceModel {
                 return null;
             }
 
-            return self.LastChatMessage().substr(0, 17) + "\u2026";
+            return self.LastChatMessage().substr(0, appConfig.game.messageDisplaySize || 17) + "\u2026";
         });
     }
     public prepareForNewGame() {
@@ -353,7 +354,7 @@ export class TablePlaceModel {
      */
     public startAction(action: string) {
         this.CurrentAction(action);
-        this.CurrentActionTimer = timeService.setTimeout(() => this.clearAction(), 2000);
+        this.CurrentActionTimer = timeService.setTimeout(() => this.clearAction(), appConfig.game.messageDisplayDuration || 2000);
     }
 
     /**
