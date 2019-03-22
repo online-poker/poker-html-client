@@ -354,7 +354,7 @@ export class TablePlaceModel {
      */
     public startAction(action: string) {
         this.CurrentAction(action);
-        this.CurrentActionTimer = timeService.setTimeout(() => this.clearAction(), appConfig.game.messageDisplayDuration || 2000);
+        this.CurrentActionTimer = timeService.setTimeout(() => this.clearAction(), appConfig.game.clearActionDuration || 2000);
     }
 
     /**
@@ -370,7 +370,7 @@ export class TablePlaceModel {
      */
     public displayChatMessage(message: string) {
         this.LastChatMessage(message);
-        this.LastChatMessageTimer = timeService.setTimeout(() => this.clearChatMessage(), 2000);
+        this.LastChatMessageTimer = timeService.setTimeout(() => this.clearChatMessage(), appConfig.game.messageDisplayDuration || 2000);
     }
 
     /**
