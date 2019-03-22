@@ -51,6 +51,7 @@ export class AppConfig {
         cardsOverlaySupported: true,
         messageDisplaySize: 17,
         messageDisplayDuration: 2000,
+        clearActionDuration: 2000,
     };
     public tournament = {
         enabled: false,
