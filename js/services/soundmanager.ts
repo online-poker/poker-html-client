@@ -203,26 +203,26 @@ export class SoundManager {
     }
     private webAudioTouchUnlock(context: AudioContext) {
         return new Promise<boolean>(function (resolve, reject) {
+            /* tslint:disable:no-string-literal */
             if (!context["state"]) {
                 resolve(false);
                 return;
             }
+            /* tslint:enable:no-string-literal */
 
-            if (context.state === 'suspended' && 'ontouchstart' in window) {
-                var unlock = function () {
+            if (context.state === "suspended" && "ontouchstart" in window) {
+                const unlock = function () {
                     context.resume().then(function () {
-                        document.body.removeEventListener('touchstart', unlock);
-                        document.body.removeEventListener('touchend', unlock);
+                        document.body.removeEventListener("touchstart", unlock);
+                        document.body.removeEventListener("touchend", unlock);
 
                         resolve(true);
                     }, reject);
                 };
 
-                document.body.addEventListener('touchstart', unlock, false);
-                document.body.addEventListener('touchend', unlock, false);
-            }
-            else
-            {
+                document.body.addEventListener("touchstart", unlock, false);
+                document.body.addEventListener("touchend", unlock, false);
+            } else {
                 resolve(false);
             }
         });
