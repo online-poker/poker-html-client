@@ -167,6 +167,17 @@ export class SoundManager {
     }
     private quickPlay(fileName: string) {
         /* tslint:disable:no-string-literal */
+        if (window["Audio"] != null) {
+            return new Promise(function (resolve, reject) {
+                const audio = new Audio();
+                audio.preload = "auto";
+                audio.autoplay = true;
+                audio.onerror = reject;
+                audio.onended = resolve;
+                audio.src = fileName;
+            });
+        }
+
         if (window["Media"] != null) {
             const platformPrefix = platformInfo.mediaRoot;
             const media = new Media(platformPrefix + fileName, () => {
@@ -178,17 +189,6 @@ export class SoundManager {
             });
             media.play();
             return;
-        }
-
-        if (window["Audio"] != null) {
-            return new Promise(function(resolve, reject) {
-                const audio = new Audio();
-                audio.preload = "auto";
-                audio.autoplay = true;
-                audio.onerror = reject;
-                audio.onended = resolve;
-                audio.src = fileName;
-            });
         }
         /* tslint:enable:no-string-literal */
     }
