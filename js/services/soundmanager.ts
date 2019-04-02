@@ -203,6 +203,11 @@ export class SoundManager {
     }
     private webAudioTouchUnlock(context: AudioContext) {
         return new Promise<boolean>(function (resolve, reject) {
+            if (!context["state"]) {
+                resolve(false);
+                return;
+            }
+
             if (context.state === 'suspended' && 'ontouchstart' in window) {
                 var unlock = function () {
                     context.resume().then(function () {
