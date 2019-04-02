@@ -5,13 +5,19 @@ import { wait } from "./timedeferred";
 export class SoundManager {
     public enabled = ko.observable(false);
     public tableSoundsEnabled = ko.observable(false);
+    private context: AudioContext;
 
     /**
      * Initialize a new instance of the @see SoundManager class
      * @param variant Variant of the sound set.
      * @param variantHasHumanVoice Whether play human voices, or not.
      */
-    constructor (public variant: string, private variantHasHumanVoice: boolean) {
+    constructor(public variant: string, private variantHasHumanVoice: boolean) {
+        /* tslint:disable:no-string-literal */
+        this.context = window["AudioContext"] || window["webkitAudioContext"];
+        /* tslint:enable:no-string-literal */
+
+        this.webAudioTouchUnlock(this.context);
     }
     public playFold() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -195,4 +201,26 @@ export class SoundManager {
     private hasHumanVoice(): boolean {
         return this.variantHasHumanVoice;
     }
+    private webAudioTouchUnlock(context: AudioContext) {
+        return new Promise<boolean>(function (resolve, reject) {
+            if (context.state === 'suspended' && 'ontouchstart' in window) {
+                var unlock = function () {
+                    context.resume().then(function () {
+                        document.body.removeEventListener('touchstart', unlock);
+                        document.body.removeEventListener('touchend', unlock);
+
+                        resolve(true);
+                    }, reject);
+                };
+
+                document.body.addEventListener('touchstart', unlock, false);
+                document.body.addEventListener('touchend', unlock, false);
+            }
+            else
+            {
+                resolve(false);
+            }
+        });
+    }
+
 }
