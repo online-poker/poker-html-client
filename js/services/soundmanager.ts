@@ -204,7 +204,7 @@ export class SoundManager {
     private webAudioTouchUnlock(context: AudioContext) {
         return new Promise<boolean>(function (resolve, reject) {
             /* tslint:disable:no-string-literal */
-            if (!context["state"]) {
+            if (!context || !context["state"]) {
                 resolve(false);
                 return;
             }
