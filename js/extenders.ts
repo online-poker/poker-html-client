@@ -3,6 +3,14 @@
 import * as ko from "knockout";
 import { SelectorItem } from "./selector";
 
+declare global {
+    interface KnockoutObservable<T> {
+        options?: SelectorItem[];
+        caption?: string;
+        currentValue?: KnockoutObservable<string>;
+    }
+}
+
 export function registerExtenders() {
     ko.extenders["options"] = (target: KnockoutObservable<any>, option: { caption: string; items: SelectorItem[]}) => {
         target.options = option.items;
