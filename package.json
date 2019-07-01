@@ -31,42 +31,6 @@
   "bugs": {
     "url": "https://github.com/online-poker/poker-html-client/issues"
   },
-  "jest": {
-    "globals": {
-      "ts-jest": {
-        "tsConfigFile": "test-tsconfig.json"
-      }
-    },
-    "transform": {
-      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
-    },
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "setupFiles": [
-      "./tests/jest-setup.js"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "moduleNameMapper": {
-      "^poker/(.*)": "<rootDir>/js/$1",
-      "^tests/(.*)": "<rootDir>/tests/$1"
-    },
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/tests/"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 35,
-        "functions": 42,
-        "lines": 48,
-        "statements": 48
-      }
-    },
-    "collectCoverage": true
-  },
   "files": [
     "dist/poker-html-client.js",
     "CHANGELOG.md",
