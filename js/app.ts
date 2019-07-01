@@ -700,6 +700,8 @@ export class App {
         /// Checks that given orientation currently supported
         /// For now this is works in iOS.
         type WorkerFunc = (intefaceOrientation: any) => boolean;
+
+        /* tslint:disable-next-line:no-string-literal */
         const worker: WorkerFunc | undefined = ScreenOrientation["shouldRotateToOrientation"];
         if (worker) {
             return worker(interfaceOrientation);
