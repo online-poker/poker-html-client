@@ -1248,7 +1248,7 @@ export class TableManager {
 
     private requestTournamentsInformation(tournaments: TournamentPlayerStateDefinition[]) {
         const self = this;
-        const deferreds = [] as Array<Promise<TournamentDefinition>>;
+        const deferreds = [] as Promise<TournamentDefinition>[];
         for (let i = 0; i < tournaments.length; i++) {
             const tournamentPlayerState = tournaments[i];
             const d = this.buildTournamentInformationRequest(
