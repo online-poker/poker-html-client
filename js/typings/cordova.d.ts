@@ -33,13 +33,6 @@ interface CordovaMenu {
     optionItemClick: (optionId: number) => void;
 }
 
-interface CordovaScreenOrientation {
-    setOrientation(orientation: string): void;
-    lock(): void;
-    unlock(): void;
-    shouldRotateToOrientation(orientation: any): boolean;
-}
-
 interface IScreenOrientation {
     lock(orientation: string): Promise<void>;
 }
@@ -53,7 +46,6 @@ interface Screen extends IScreen {
 }
 
 declare var menu: CordovaMenu;
-declare var ScreenOrientation: CordovaScreenOrientation;
 
 declare module WindowsAzure {
     export module Messaging {
