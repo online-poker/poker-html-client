@@ -41,10 +41,6 @@ interface IScreen {
     orientation: IScreenOrientation;
 }
 
-interface Screen extends IScreen {
-
-}
-
 declare var menu: CordovaMenu;
 
 declare module WindowsAzure {

@@ -264,7 +264,7 @@
         const result: number[][] = [];
         const combination: number[] = [];
 
-        function next_comb(comb: number[], k1: number, n1: number) {
+        function nextCombination(comb: number[], k1: number, n1: number) {
             let i: number;
             if (comb.length === 0) {
                 for (i = 0; i < k1; ++i) {
@@ -291,7 +291,7 @@
             return true;
         }
 
-        while (next_comb(combination, k, n)) {
+        while (nextCombination(combination, k, n)) {
             const nextPermutation = combination.slice(null);
             result.push(nextPermutation);
         }

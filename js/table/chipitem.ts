@@ -128,7 +128,7 @@ export class ChipItem {
         let target: {
             amount: number;
             chipsAmount: number;
-            difference: number
+            difference: number;
         }[];
         if (allowOveradd) {
             target = effectiveChipsAmount.map(function(item) {

@@ -2,7 +2,7 @@ import { OrientationService } from "poker/services/orientationservice";
 
 const screenNotSupportedEntirely: IScreen = { } as any;
 
-let lastOrientation: string = "";
+let lastOrientation = "";
 let lockCallCount = 0;
 const screenOrientationSupported: IScreen = {
     orientation: {
