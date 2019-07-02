@@ -66,6 +66,7 @@ import { tableManager } from "./table/tablemanager";
 import * as timeService from "./timeservice";
 
 type PromiseOrVoid = void | Promise<void>;
+type ProviseOrVoidFactory = () => PromiseOrVoid;
 
 export interface LoginPromptResult {
     authenticated: boolean;
@@ -765,7 +766,7 @@ export class App {
         popupObject.customStyle("");
         return deferred;
     }
-    public promptEx(title: string, messages: string[], buttons: string[], actions: Array<() => PromiseOrVoid>) {
+    public promptEx(title: string, messages: string[], buttons: string[], actions: ProviseOrVoidFactory[]) {
         this.showPopup("custom");
         const popupObject = this.customPopup;
         const deferred = popupObject.deferred;

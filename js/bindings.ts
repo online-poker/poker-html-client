@@ -711,6 +711,7 @@ export function registerBindings() {
             viewModel: any, bindingContext: KnockoutBindingContext) {
             const value = valueAccessor();
             const functionValue = value as () => number;
+            // eslint-disable-next-line @typescript-eslint/camelcase
             const hammer = Hammer(element, { drag_block_horizontal: true, drag_lock_to_axis: true });
             const parent = element.parentElement;
             hammer.on("drag", function(event) {

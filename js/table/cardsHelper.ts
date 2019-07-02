@@ -209,7 +209,7 @@ export function cardsArray(cardsData: string): string[] {
     }
 
     const cardsString = window.atob(cardsData);
-    const cards = new Array();
+    const cards = [];
     for (let i = 0; i < cardsString.length; i++) {
         cards.push(cardValue(cardsString.charCodeAt(i)));
     }
