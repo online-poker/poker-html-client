@@ -1312,31 +1312,31 @@ export class App {
         });
     }
     private preloadTableImages() {
-        imagePreloadService.preloadResource("img/lobby/table2-empty");
-        imagePreloadService.preloadResource("img/lobby/table2-s1");
-        imagePreloadService.preloadResource("img/lobby/table2-s2");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table2-empty");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table2-s1");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table2-s2");
 
-        imagePreloadService.preloadResource("img/lobby/table6-empty");
-        imagePreloadService.preloadResource("img/lobby/table6-s1");
-        imagePreloadService.preloadResource("img/lobby/table6-s2");
-        imagePreloadService.preloadResource("img/lobby/table6-s3");
-        imagePreloadService.preloadResource("img/lobby/table6-s4");
-        imagePreloadService.preloadResource("img/lobby/table6-s5");
-        imagePreloadService.preloadResource("img/lobby/table6-s6");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-empty");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-s1");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-s2");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-s3");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-s4");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-s5");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-s6");
 
-        imagePreloadService.preloadResource("img/lobby/table10-empty");
-        imagePreloadService.preloadResource("img/lobby/table10-s1");
-        imagePreloadService.preloadResource("img/lobby/table10-s2");
-        imagePreloadService.preloadResource("img/lobby/table10-s3");
-        imagePreloadService.preloadResource("img/lobby/table10-s4");
-        imagePreloadService.preloadResource("img/lobby/table10-s5");
-        imagePreloadService.preloadResource("img/lobby/table10-s6");
-        imagePreloadService.preloadResource("img/lobby/table10-s7");
-        imagePreloadService.preloadResource("img/lobby/table10-s8");
-        imagePreloadService.preloadResource("img/lobby/table10-s9");
-        imagePreloadService.preloadResource("img/lobby/table10-s10");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-empty");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s1");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s2");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s3");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s4");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s5");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s6");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s7");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s8");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s9");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s10");
 
-        imagePreloadService.preloadDeviceSpecificResource("img/images/tableImages/poker_table");
+        imagePreloadService.preloadDeviceSpecificResource(appConfig.ui.deploymentPath + "img/images/tableImages/poker_table");
     }
     private logEvent(message: string) {
         if (debugSettings.device.events) {
