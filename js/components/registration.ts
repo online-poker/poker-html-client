@@ -52,7 +52,7 @@ export function registerComponents() {
     });
     ko.components.register("checkbox", {
         template: getTemplateDefinition("shared/checkbox/checkbox.html"),
-        viewModel: (params) => new Checkbox(params),
+        viewModel: (params?: any) => new Checkbox(params),
     });
     ko.components.register("tournament-blinds", {
         template: getTemplateDefinition("lobby/tournament/blinds.html"),
@@ -89,15 +89,15 @@ export function registerComponents() {
     });
     ko.components.register("cash-options", {
         template: getTemplateDefinition("lobby/filter/cash-options.html"),
-        viewModel: (params) => new FilterOptionsComponent(params),
+        viewModel: (params?: any) => new FilterOptionsComponent(params),
     });
     ko.components.register("tournament-options", {
         template: getTemplateDefinition("lobby/filter/tournament-options.html"),
-        viewModel: (params) => new FilterOptionsComponent(params),
+        viewModel: (params?: any) => new FilterOptionsComponent(params),
     });
     ko.components.register("sng-options", {
         template: getTemplateDefinition("lobby/filter/sng-options.html"),
-        viewModel: (params) => new FilterOptionsComponent(params),
+        viewModel: (params?: any) => new FilterOptionsComponent(params),
     });
 
     /**
@@ -113,7 +113,7 @@ export function registerComponents() {
      */
     ko.components.register("timeblock", {
         template: getTemplateDefinition("timeblock/timeblock.html"),
-        viewModel: (params) => new TimeBlockComponent(params),
+        viewModel: (params?: any) => new TimeBlockComponent(params),
     });
 
     /**
@@ -121,7 +121,7 @@ export function registerComponents() {
      */
     ko.components.register("game-type-selector", {
         template: getTemplateDefinition("game-type-selector/game-type-selector.html"),
-        viewModel: (params) => new GameTypeSelectorComponent(params),
+        viewModel: (params?: any) => new GameTypeSelectorComponent(params),
     });
 
     /**
@@ -129,20 +129,20 @@ export function registerComponents() {
      */
     ko.components.register("table-action-block", {
         template: getTemplateDefinition("table/actionBlock/actionBlock.html"),
-        viewModel: (params) => new table.ActionBlockComponent(params),
+        viewModel: (params?: any) => new table.ActionBlockComponent(params),
     });
     ko.components.register("table-secondary-action-block", {
         template: getTemplateDefinition("table/actionBlock/secondaryActionBlock.html"),
-        viewModel: (params) => new table.ActionBlockComponent(params),
+        viewModel: (params?: any) => new table.ActionBlockComponent(params),
     });
     ko.components.register("table-raise-block", {
         template: getTemplateDefinition("table/raiseBlock/raiseBlock.html"),
-        viewModel: (params) => new table.RaiseBlockComponent(params),
+        viewModel: (params?: any) => new table.RaiseBlockComponent(params),
     });
 
     ko.components.register("table-menu", {
         template: getTemplateDefinition("table/menu/menu.html"),
-        viewModel: (params) => new table.TableMenuComponent(params),
+        viewModel: (params?: any) => new table.TableMenuComponent(params),
     });
     ko.components.register("tournament-status-indicator", {
         template: getTemplateDefinition("table/tournament-status-indicator/tournament-status-indicator.html"),

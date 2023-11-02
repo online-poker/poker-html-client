@@ -11,22 +11,22 @@ import { SimplePopup } from "./simplepopup";
 declare var app: App;
 
 export class JoinTablePopup {
-    public buyin: KnockoutObservable<number>;
-    public ticketCode: KnockoutObservable<string>;
-    public minBuyin: KnockoutObservable<number>;
-    public maxBuyin: KnockoutObservable<number>;
-    public minBet: KnockoutObservable<number>;
-    public maxBet: KnockoutObservable<number>;
-    public accountTotal: KnockoutObservable<number>;
-    public tableName: KnockoutObservable<string>;
+    public buyin: ko.Observable<number>;
+    public ticketCode: ko.Observable<string>;
+    public minBuyin: ko.Observable<number>;
+    public maxBuyin: ko.Observable<number>;
+    public minBet: ko.Observable<number>;
+    public maxBet: ko.Observable<number>;
+    public accountTotal: ko.Observable<number>;
+    public tableName: ko.Observable<string>;
     public errors: KnockoutValidationErrors;
-    public errorMessage: KnockoutObservable<string>;
-    public seatNumber: KnockoutObservable<number>;
-    public tableView: KnockoutObservable<TableView>;
-    public loading: KnockoutObservable<boolean>;
-    public allowUsePersonalAccount: KnockoutObservable<boolean>;
-    public allowTickets: KnockoutObservable<boolean>;
-    private validationModel: KnockoutObservable<JoinTablePopup>;
+    public errorMessage: ko.Observable<string>;
+    public seatNumber: ko.Observable<number>;
+    public tableView: ko.Observable<TableView>;
+    public loading: ko.Observable<boolean>;
+    public allowUsePersonalAccount: ko.Observable<boolean>;
+    public allowTickets: ko.Observable<boolean>;
+    private validationModel: ko.Observable<JoinTablePopup>;
 
     public constructor() {
         this.buyin = ko.observable<number>()

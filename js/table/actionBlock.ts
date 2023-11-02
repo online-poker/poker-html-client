@@ -23,109 +23,109 @@ declare var app: App;
 
 export class ActionBlock {
     public tableSlider: TableSlider;
-    public dealsAllowed: KnockoutObservable<boolean>;
-    public buttonsEnabled: KnockoutObservable<boolean>;
-    public showCardsEnabled: KnockoutObservable<boolean> = ko.observable(false);
+    public dealsAllowed: ko.Observable<boolean>;
+    public buttonsEnabled: ko.Observable<boolean>;
+    public showCardsEnabled: ko.Observable<boolean> = ko.observable(false);
 
     /**
      * Indicates that user could show first hole card.
      */
-    public showHoleCard1Enabled: KnockoutObservable<boolean> = ko.observable(false);
+    public showHoleCard1Enabled: ko.Observable<boolean> = ko.observable(false);
 
     /**
      * Indicates that user could show second hole card.
      */
-    public showHoleCard2Enabled: KnockoutObservable<boolean> = ko.observable(false);
-    public processing: KnockoutObservable<boolean>;
-    public turnEnabled: KnockoutObservable<boolean>;
-    public isSitOut: KnockoutObservable<boolean>;
-    public inGame: KnockoutObservable<boolean>;
+    public showHoleCard2Enabled: ko.Observable<boolean> = ko.observable(false);
+    public processing: ko.Observable<boolean>;
+    public turnEnabled: ko.Observable<boolean>;
+    public isSitOut: ko.Observable<boolean>;
+    public inGame: ko.Observable<boolean>;
     /**
      * Indicating whether authenticated player is playing in the game
      */
-    public myPlayerInGame: KnockoutObservable<boolean>;
-    public isCheck: KnockoutObservable<boolean>;
+    public myPlayerInGame: ko.Observable<boolean>;
+    public isCheck: ko.Observable<boolean>;
 
     /**
      * Indicating whether current check/call amount will lead to all-in condition.
      */
-    public isAllInDuringCheckOrCall: KnockoutComputed<boolean>;
-    public isRaise: KnockoutObservable<boolean>;
+    public isAllInDuringCheckOrCall: ko.Computed<boolean>;
+    public isRaise: ko.Observable<boolean>;
 
     /**
      * Indicating whether current raise amount will lead to all-in condition.
      */
-    public isAllInDuringBetOrRaise: KnockoutComputed<boolean>;
+    public isAllInDuringBetOrRaise: ko.Computed<boolean>;
 
     /**
      * Messages in the chat
      */
-    public messages: KnockoutObservableArray<PlayerMessage>;
+    public messages: ko.ObservableArray<PlayerMessage>;
 
     /**
      * Messages from system in the chat
      */
-    public systemMessages: KnockoutObservableArray<SystemMessage>;
+    public systemMessages: ko.ObservableArray<SystemMessage>;
 
     /**
      * Indicating thether player will support same amount which
      * he should suport currently to stay in the game.
      */
-    public supportDirectAmount: KnockoutObservable<boolean>;
+    public supportDirectAmount: ko.Observable<boolean>;
 
     /**
      * Indicating thether player will support any amount which other players
      * put on the table.
      */
-    public supportAny: KnockoutObservable<boolean>;
+    public supportAny: ko.Observable<boolean>;
 
     /**
      * Indicating whether cards should be folded automatically.
      */
-    public foldOnRaise: KnockoutObservable<boolean>;
+    public foldOnRaise: ko.Observable<boolean>;
 
     /**
      * Text which would indicate amount of some specific amount is supported.
      */
-    public supportDirectAmountCaption: KnockoutObservable<string>;
-    public supportAnyCaption: KnockoutObservable<string>;
-    public foldOnRaiseCaption: KnockoutObservable<string>;
-    public amountSupported: KnockoutObservable<number>;
+    public supportDirectAmountCaption: ko.Observable<string>;
+    public supportAnyCaption: ko.Observable<string>;
+    public foldOnRaiseCaption: ko.Observable<string>;
+    public amountSupported: ko.Observable<number>;
 
-    public expanded: KnockoutObservable<boolean>;
-    public waitbb: KnockoutObservable<boolean>;
+    public expanded: ko.Observable<boolean>;
+    public waitbb: ko.Observable<boolean>;
     public suppressWaitBBNotifications = false;
-    public skipDeals: KnockoutObservable<boolean>;
-    public autoFoldOrCheck: KnockoutObservable<boolean>;
-    public allInCaption: KnockoutObservable<string>;
-    public halfPotCaption: KnockoutObservable<string>;
-    public potCaption: KnockoutObservable<string>;
-    public maxAmountOfMoneyForOtherActivePlayers: KnockoutObservable<number>;
+    public skipDeals: ko.Observable<boolean>;
+    public autoFoldOrCheck: ko.Observable<boolean>;
+    public allInCaption: ko.Observable<string>;
+    public halfPotCaption: ko.Observable<string>;
+    public potCaption: ko.Observable<string>;
+    public maxAmountOfMoneyForOtherActivePlayers: ko.Observable<number>;
 
-    public callAmount: KnockoutObservable<number>;
-    public playerMoney: KnockoutObservable<number>;
-    public couldRaise: KnockoutComputed<boolean>;
-    public checkCallButtonCaption: KnockoutComputed<string>;
-    public raiseBetButtonCaption: KnockoutComputed<string>;
-    public checkOrCallAmount: KnockoutObservable<number>;
-    public notMyTurn: KnockoutObservable<boolean>;
-    public isInGame: KnockoutObservable<boolean>;
-    public button1Caption: KnockoutObservable<string>;
-    public button2Caption: KnockoutObservable<string>;
-    public button3Caption: KnockoutObservable<string>;
-    public button1Amount: KnockoutObservable<number>;
-    public button2Amount: KnockoutObservable<number>;
-    public button3Amount: KnockoutObservable<number>;
+    public callAmount: ko.Observable<number>;
+    public playerMoney: ko.Observable<number>;
+    public couldRaise: ko.Computed<boolean>;
+    public checkCallButtonCaption: ko.Computed<string>;
+    public raiseBetButtonCaption: ko.Computed<string>;
+    public checkOrCallAmount: ko.Observable<number>;
+    public notMyTurn: ko.Observable<boolean>;
+    public isInGame: ko.Observable<boolean>;
+    public button1Caption: ko.Observable<string>;
+    public button2Caption: ko.Observable<string>;
+    public button3Caption: ko.Observable<string>;
+    public button1Amount: ko.Observable<number>;
+    public button2Amount: ko.Observable<number>;
+    public button3Amount: ko.Observable<number>;
     public button1Visible = ko.observable(false);
     public button2Visible = ko.observable(false);
     public button3Visible = ko.observable(false);
-    public needBB: KnockoutObservable<boolean>;
-    public myPlayer: KnockoutObservable<TablePlaceModel>;
+    public needBB: ko.Observable<boolean>;
+    public myPlayer: ko.Observable<TablePlaceModel>;
     public isPortraitMode = ko.computed(() => orientationService.isTargetOrientation("portrait"));
     /**
      * Indicates that prizes distributed in the game.
      */
-    public prizesDistributed: KnockoutObservable<boolean>;
+    public prizesDistributed: ko.Observable<boolean>;
     public tableView: TableView;
 
     /**
@@ -151,22 +151,22 @@ export class ActionBlock {
     /**
      * Value indicating whether chat block is visible.
      */
-    public chatVisible: KnockoutComputed<boolean>;
+    public chatVisible: ko.Computed<boolean>;
 
     /**
      * Value indicating whether SitOut block is visible.
      */
-    public sitoutBlockVisible: KnockoutComputed<boolean>;
+    public sitoutBlockVisible: ko.Computed<boolean>;
 
     /**
      * Value indicating whether Start block is visible.
      */
-    public startBlockVisible: KnockoutComputed<boolean>;
+    public startBlockVisible: ko.Computed<boolean>;
 
     /**
      * Value indicating whether Observer block is visible.
      */
-    public observerModeBlockVisible: KnockoutComputed<boolean>;
+    public observerModeBlockVisible: ko.Computed<boolean>;
 
     /**
      * Value indicating whether Wait for BB checkbox is visible
@@ -176,22 +176,22 @@ export class ActionBlock {
     /**
      * Value indicating whether Main buttons block is visible.
      */
-    public mainButtonsBlockVisible: KnockoutComputed<boolean>;
+    public mainButtonsBlockVisible: ko.Computed<boolean>;
 
     /**
      * Value indicating whether Auto buttons block is visible.
      */
-    public autoButtonsBlockVisible: KnockoutComputed<boolean>;
+    public autoButtonsBlockVisible: ko.Computed<boolean>;
 
     /**
      * Value indicating whether Raise block is visible.
      */
-    public raiseBlockVisible: KnockoutComputed<boolean>;
+    public raiseBlockVisible: ko.Computed<boolean>;
 
     /**
      * Value indicating that raise block is collapsed.
      */
-    public raiseBlockCollapsed: KnockoutObservable<boolean>;
+    public raiseBlockCollapsed: ko.Computed<boolean>;
 
     /**
      * Indicate whether this action block in pot-limit mode.
@@ -211,11 +211,11 @@ export class ActionBlock {
     /**
      * Indicates that game finished.
      */
-    public gameFinished: KnockoutObservable<boolean>;
+    public gameFinished: ko.Observable<boolean>;
 
     public cardsOverlayVisible = ko.observable(true);
 
-    private myPlayerWasInGame: KnockoutObservable<boolean>;
+    private myPlayerWasInGame: ko.Observable<boolean>;
     private suppressSetSitoutStatus: boolean;
 
     constructor() {

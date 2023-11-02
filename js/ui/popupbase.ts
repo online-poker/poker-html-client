@@ -5,7 +5,7 @@ import { debugSettings } from "../debugsettings";
 declare var app: App;
 
 export class PopupBase {
-    public visible: KnockoutObservable<boolean>;
+    public visible: ko.Observable<boolean>;
 
     constructor() {
         this.visible = ko.observable(false);

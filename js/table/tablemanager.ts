@@ -35,16 +35,16 @@ export enum CardsDealedCodes {
 }
 
 export class TableManager {
-    public tables: KnockoutObservableArray<TableView>;
-    public currentIndex: KnockoutObservable<number>;
-    public hasTurn: KnockoutComputed<boolean>;
+    public tables: ko.ObservableArray<TableView>;
+    public currentIndex: ko.Observable<number>;
+    public hasTurn: ko.Computed<boolean>;
     public maxTablesReached: Signal;
     public duplicateEventFound: Signal = new signals.Signal();
 
     /**
      * Tournaments in which player registered.
      */
-    public tournaments: KnockoutObservableArray<TournamentView>;
+    public tournaments: ko.ObservableArray<TournamentView>;
 
     private duplicators: DuplicateFinder[];
     private reserveTablesForTournaments = false;

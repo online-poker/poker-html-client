@@ -11,9 +11,9 @@ declare var host: string;
 declare var app: App;
 
 export class ChatPage implements Page {
-    public currentMessage: KnockoutObservable<string>;
-    public messages: KnockoutObservableArray<PlayerMessage>;
-    public loading: KnockoutObservable<boolean>;
+    public currentMessage: ko.Observable<string>;
+    public messages: ko.ObservableArray<PlayerMessage>;
+    public loading: ko.Observable<boolean>;
     public timeoutHandler: number = 0;
 
     constructor() {

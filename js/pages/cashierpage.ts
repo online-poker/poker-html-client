@@ -8,10 +8,10 @@ declare var host: string;
 declare var app: App;
 
 class CashierPage extends PageBase {
-    public cashierCaption: KnockoutObservable<string>;
-    public player: KnockoutObservable<AccountServiceInformation>;
+    public cashierCaption: ko.Observable<string>;
+    public player: ko.Observable<AccountServiceInformation>;
     public requireAuthentication: boolean = true;
-    public loading: KnockoutObservable<boolean>;
+    public loading: ko.Observable<boolean>;
 
     constructor() {
         super();

@@ -12,11 +12,11 @@ declare var host: string;
 declare var app: App;
 
 export class MorePopup {
-    public authenticated: KnockoutObservable<boolean>;
-    public login: KnockoutComputed<string>;
-    public amount: KnockoutObservable<number>;
+    public authenticated: ko.Computed<boolean>;
+    public login: ko.Computed<string>;
+    public amount: ko.Observable<number>;
     public points = ko.observable<number>(0);
-    public loading: KnockoutObservable<boolean>;
+    public loading: ko.Observable<boolean>;
     public hasMessages = ko.observable(false);
     public visible = ko.observable(false);
     public ratingSupported = ko.observable(appConfig.game.hasRating);

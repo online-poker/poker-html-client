@@ -8,7 +8,7 @@ declare var host: string;
 
 class TimeService {
     private static MillisecondsInMinutes = 60 * 1000;
-    public currentTime: KnockoutObservable<string>;
+    public currentTime: ko.Observable<string>;
     public timeDiff: number = 0;
     private handle: number = 0;
     private timeouts: number[] = [];

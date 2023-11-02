@@ -29,6 +29,21 @@ describe("gameplay", function () {
     };
 
     beforeEach(function () {
+        global.host = "";
+        global.authToken = "";
+        global.fetch = jest.fn().mockImplementation(() => {
+            const p = new Promise((resolve, reject) => {
+              resolve({
+                ok: true,
+                Id: "123",
+                json() {
+                    return Promise.resolve({});
+                },
+              });
+            });
+
+            return p;
+        });
         GameActionsQueue.waitDisabled = true;
         logEnabled = false;
         debugSettings.tableView.trace = false;

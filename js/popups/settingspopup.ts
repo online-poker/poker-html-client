@@ -8,11 +8,11 @@ import { PopupBase } from "../ui/popupbase";
 declare var app: App;
 
 export class SettingsPopup {
-    public loading: KnockoutObservable<boolean>;
-    public selectCardsVariantAllowed: KnockoutComputed<boolean>;
-    public selectOrientationModeAllowed: KnockoutComputed<boolean>;
-    public cardsVariantRadio: KnockoutObservable<string>;
-    public orientationModeRadio: KnockoutObservable<ScreenOrientation>;
+    public loading: ko.Observable<boolean>;
+    public selectCardsVariantAllowed: ko.Computed<boolean>;
+    public selectOrientationModeAllowed: ko.Computed<boolean>;
+    public cardsVariantRadio: ko.Observable<string>;
+    public orientationModeRadio: ko.Observable<ScreenOrientation>;
 
     constructor() {
         this.loading = ko.observable<boolean>(false);

@@ -24,84 +24,84 @@ export class TablePlaceModel {
     /**
      * Id of the player
      */
-    public PlayerId: KnockoutObservable<number>;
+    public PlayerId: ko.Observable<number>;
 
     /**
      * Player's login
      */
-    public PlayerName: KnockoutObservable<string>;
-    public PlayerUrl: KnockoutObservable<string>;
-    public IsCurrent: KnockoutObservable<boolean>;
-    public IsDealer: KnockoutObservable<boolean>;
-    public IsBigBlind: KnockoutObservable<boolean>;
-    public IsSmallBlind: KnockoutObservable<boolean>;
-    public Money: KnockoutObservable<number>;
-    public Seat: KnockoutObservable<number>;
+    public PlayerName: ko.Observable<string>;
+    public PlayerUrl: ko.Observable<string>;
+    public IsCurrent: ko.Observable<boolean>;
+    public IsDealer: ko.Observable<boolean>;
+    public IsBigBlind: ko.Observable<boolean>;
+    public IsSmallBlind: ko.Observable<boolean>;
+    public Money: ko.Observable<number>;
+    public Seat: ko.Observable<number>;
 
     /**
      * Cards which player has as displayed in the UI
      */
-    public Cards: KnockoutObservableArray<string>;
+    public Cards: ko.ObservableArray<string>;
 
     /**
      * Cards which would be displayed as currenly back cards
      */
-    public BackCards: KnockoutObservableArray<string>;
+    public BackCards: ko.ObservableArray<string>;
 
     /*
      * Actual  hand cards which player has in this game.
      */
-    public HandCards: KnockoutObservableArray<string>;
+    public HandCards: ko.ObservableArray<string>;
 
     /*
      * Actual hand cards which player has in this game.
      */
-    public DisplayedHandCards: KnockoutObservableArray<string>;
+    public DisplayedHandCards: ko.ObservableArray<string>;
 
     /*
      * Folded hand cards which player has in this game.
      */
-    public FoldedCards: KnockoutObservableArray<string>;
+    public FoldedCards: ko.ObservableArray<string>;
 
     /**
      * Cards which player has as displayed in the UI
      */
-    public RawCards: KnockoutObservableArray<number>;
-    public Bet: KnockoutObservable<number>;
+    public RawCards: ko.ObservableArray<number>;
+    public Bet: ko.Observable<number>;
 
     /**
      * Count of points for the player.
      */
-    public Points: KnockoutObservable<number>;
+    public Points: ko.Observable<number>;
 
     /**
      * Count of stars for the player.
      */
-    public Stars: KnockoutObservable<number>;
+    public Stars: ko.Observable<number>;
 
-    public IsBronse: KnockoutComputed<boolean>;
-    public IsSilver: KnockoutComputed<boolean>;
-    public IsGold: KnockoutComputed<boolean>;
-    public IsBetPlaced: KnockoutComputed<boolean>;
-    public IsBetAnimationLocked: KnockoutObservable<boolean>;
-    public IsMovingBetToPot: KnockoutObservable<boolean>;
-    public IsDealCards: KnockoutObservable<boolean>;
+    public IsBronse: ko.Computed<boolean>;
+    public IsSilver: ko.Computed<boolean>;
+    public IsGold: ko.Computed<boolean>;
+    public IsBetPlaced: ko.Computed<boolean>;
+    public IsBetAnimationLocked: ko.Observable<boolean>;
+    public IsMovingBetToPot: ko.Observable<boolean>;
+    public IsDealCards: ko.Observable<boolean>;
 
     /**
      * Indicates that animation show for cards fold.
      */
-    public IsFoldCards: KnockoutObservable<boolean>;
-    public IsCardsAnimating: KnockoutComputed<boolean>;
-    public Status: KnockoutObservable<number>;
-    public WinAmount: KnockoutObservable<number>;
-    public TotalBet: KnockoutObservable<number>;
-    public WasInGame: KnockoutObservable<boolean>;
-    public IsCardsFolded: KnockoutObservable<boolean>;
-    public Card1Hightlighted: KnockoutObservable<boolean>;
-    public Card2Hightlighted: KnockoutObservable<boolean>;
-    public Card3Hightlighted: KnockoutObservable<boolean>;
-    public Card4Hightlighted: KnockoutObservable<boolean>;
-    public CardsHightlighted: KnockoutObservable<boolean>;
+    public IsFoldCards: ko.Observable<boolean>;
+    public IsCardsAnimating: ko.Computed<boolean>;
+    public Status: ko.Observable<number>;
+    public WinAmount: ko.Observable<number>;
+    public TotalBet: ko.Observable<number>;
+    public WasInGame: ko.Observable<boolean>;
+    public IsCardsFolded: ko.Observable<boolean>;
+    public Card1Hightlighted: ko.Observable<boolean>;
+    public Card2Hightlighted: ko.Observable<boolean>;
+    public Card3Hightlighted: ko.Observable<boolean>;
+    public Card4Hightlighted: ko.Observable<boolean>;
+    public CardsHightlighted: ko.Observable<boolean>;
     public IsCardsOpened = ko.observable(false);
 
     /**
@@ -117,19 +117,19 @@ export class TablePlaceModel {
     /**
      * Indicates current action which player performs now
      */
-    public CurrentAction: KnockoutObservable<string>;
+    public CurrentAction: ko.Observable<string>;
 
-    public IsSitoutStatus: KnockoutComputed<boolean>;
-
-    /**
-     * Indicates that player has in game status.
-     */
-    public IsParticipatingStatus: KnockoutComputed<boolean>;
+    public IsSitoutStatus: ko.Computed<boolean>;
 
     /**
      * Indicates that player has in game status.
      */
-    public IsInGameStatus: KnockoutComputed<boolean>;
+    public IsParticipatingStatus: ko.Computed<boolean>;
+
+    /**
+     * Indicates that player has in game status.
+     */
+    public IsInGameStatus: ko.Computed<boolean>;
 
     /**
      * Last message in the chat which this player shows
@@ -139,7 +139,7 @@ export class TablePlaceModel {
     /**
      * Last message in the chat which this player shows
      */
-    public LastChatMessageTrimed: KnockoutComputed<string | null>;
+    public LastChatMessageTrimed: ko.Computed<string | null>;
 
     /**
      * Combination of cards for the winner.

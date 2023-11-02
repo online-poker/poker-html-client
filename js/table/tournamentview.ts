@@ -78,7 +78,7 @@ export class TournamentView {
     /**
      * Total prize.
      */
-    public totalPrize: KnockoutComputed<number | null>;
+    public totalPrize: ko.Computed<number | null>;
 
     constructor(public tournamentId: number, data: TournamentDefinition) {
         const self = this;

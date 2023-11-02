@@ -11,26 +11,26 @@ import { SimplePopup } from "./simplepopup";
 declare var app: App;
 
 export class RegistrationPopup extends PopupBase {
-    public login: KnockoutObservable<string>;
-    public email: KnockoutObservable<string>;
-    public phoneNumber: KnockoutObservable<string>;
-    public firstName: KnockoutObservable<string>;
-    public lastName: KnockoutObservable<string>;
-    public patronymicName: KnockoutObservable<string>;
-    public firstNameVisible: KnockoutObservable<boolean>;
-    public lastNameVisible: KnockoutObservable<boolean>;
-    public city: KnockoutObservable<string>;
-    public password: KnockoutObservable<string>;
-    public confirmPassword: KnockoutObservable<string>;
-    public country: KnockoutObservable<number>;
-    public ageValid: KnockoutObservable<boolean>;
-    public agreeEula: KnockoutObservable<boolean>;
-    public imageUrl: KnockoutObservable<string>;
+    public login: ko.Observable<string>;
+    public email: ko.Observable<string>;
+    public phoneNumber: ko.Observable<string>;
+    public firstName: ko.Observable<string>;
+    public lastName: ko.Observable<string>;
+    public patronymicName: ko.Observable<string>;
+    public firstNameVisible: ko.Observable<boolean>;
+    public lastNameVisible: ko.Observable<boolean>;
+    public city: ko.Observable<string>;
+    public password: ko.Observable<string>;
+    public confirmPassword: ko.Observable<string>;
+    public country: ko.Observable<number>;
+    public ageValid: ko.Observable<boolean>;
+    public agreeEula: ko.Observable<boolean>;
+    public imageUrl: ko.Observable<string>;
     public imageFile = ko.observable<string>();
-    public loading: KnockoutObservable<boolean>;
+    public loading: ko.Observable<boolean>;
     public errors: KnockoutValidationErrors;
-    public allowSelectUserAvatar: KnockoutObservable<boolean>;
-    private validationModel: KnockoutObservable<RegistrationPopup>;
+    public allowSelectUserAvatar: ko.Observable<boolean>;
+    private validationModel: ko.Observable<RegistrationPopup>;
 
     constructor() {
         super();
@@ -152,7 +152,7 @@ export class RegistrationPopup extends PopupBase {
                 const dataEntryError = data.Status === "LoginAlreadyUsed"
                     || data.Status === "EmailAlreadyUsed"
                     || data.Status === "PhoneAlreadyUsed";
-                let observable: KnockoutObservable<string> | undefined;
+                let observable: ko.Observable<string> | undefined;
                 switch (data.Status) {
                     case "LoginAlreadyUsed":
                         observable = self.login;
