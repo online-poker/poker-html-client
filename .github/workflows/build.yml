@@ -22,13 +22,17 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        registry-url: 'https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/'
+        #registry-url: 'https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/'
 
     - name: Safe install dependencies
       run: |
         printf "@poker:registry=https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/\n" >> $NPM_CONFIG_USERCONFIG
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:username=pokerkz\n" >> $NPM_CONFIG_USERCONFIG
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:email=npm >> $NPM_CONFIG_USERCONFIG
         printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:_password=${NPM_TOKEN}\n" >> $NPM_CONFIG_USERCONFIG
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:username=pokerkz\n" >> $NPM_CONFIG_USERCONFIG
         printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:_password=${NPM_TOKEN}\n" >> $NPM_CONFIG_USERCONFIG
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:email=npm >> $NPM_CONFIG_USERCONFIG
         printf "always-auth=true\n" >> $NPM_CONFIG_USERCONFIG
         npm ci --ignore-scripts
       env:
