@@ -7,11 +7,11 @@ import * as timeService from "../timeservice";
 import { PopupBase } from "../ui/popupbase";
 
 export class SlowConnectionPopup extends PopupBase {
-    public allowRetry: KnockoutObservable<boolean>;
-    public caption: KnockoutObservable<string>;
-    public message: KnockoutObservable<string>;
-    public index: KnockoutObservable<number>;
-    public retryCaption: KnockoutObservable<string>;
+    public allowRetry: ko.Observable<boolean>;
+    public caption: ko.Computed<string>;
+    public message: ko.Observable<string>;
+    public index: ko.Observable<number>;
+    public retryCaption: ko.Observable<string>;
     public onretry: () => void;
     public handle: number = null;
 

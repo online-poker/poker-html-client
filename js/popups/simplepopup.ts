@@ -38,8 +38,8 @@ export class SimplePopup extends PopupBase {
 
         return promise;
     }
-    public title: KnockoutObservable<string>;
-    public messages: KnockoutObservableArray<string>;
+    public title: ko.Observable<string>;
+    public messages: ko.ObservableArray<string>;
 
     constructor() {
         super();

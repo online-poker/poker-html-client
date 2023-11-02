@@ -22,10 +22,10 @@ import { PageBase } from "../ui/pagebase";
 declare var app: App;
 
 export class CashOptions {
-    public currency: KnockoutObservable<number>;
-    public limits: KnockoutObservable<number>;
-    public bets: KnockoutObservable<number>;
-    public maxPlayers: KnockoutObservable<number>;
+    public currency: ko.Observable<number>;
+    public limits: ko.Observable<number>;
+    public bets: ko.Observable<number>;
+    public maxPlayers: ko.Observable<number>;
 
     constructor() {
         // require("extenders");
@@ -75,10 +75,10 @@ export class CashOptions {
 }
 
 export class TournamentOptions {
-    public currency: KnockoutObservable<number>;
-    public buyin: KnockoutObservable<number>;
-    public speed: KnockoutObservable<number>;
-    public maxPlayers: KnockoutObservable<number>;
+    public currency: ko.Observable<number>;
+    public buyin: ko.Observable<number>;
+    public speed: ko.Observable<number>;
+    public maxPlayers: ko.Observable<number>;
 
     constructor() {
         // require("extenders");
@@ -133,33 +133,33 @@ interface LobbyTournamentItemEx extends LobbyTournamentItem {
 }
 
 export class LobbyPage extends PageBase {
-    public online: KnockoutObservable<string>;
-    public registered: KnockoutObservable<string>;
-    public captionLabel: KnockoutComputed<string>;
+    public online: ko.Observable<string>;
+    public registered: ko.Observable<string>;
+    public captionLabel: ko.Computed<string>;
     public slider: Slider;
     public cashOptions: CashOptions;
     public tournamentOptions: TournamentOptions;
     public sngOptions: TournamentOptions;
-    public showFilterSlider: KnockoutObservable<boolean>;
-    public showItemsListSlider: KnockoutObservable<boolean>;
-    public filterLocked: KnockoutObservable<boolean>;
+    public showFilterSlider: ko.Observable<boolean>;
+    public showItemsListSlider: ko.Observable<boolean>;
+    public filterLocked: ko.Observable<boolean>;
 
-    public tournamentsCaption: KnockoutComputed<string>;
-    public selectionCaption: KnockoutComputed<string>;
-    public tournaments: KnockoutObservableArray<LobbyTournamentItemEx>;
-    public sngs: KnockoutObservableArray<LobbyTournamentItemEx>;
-    public tables: KnockoutObservableArray<any>;
-    public loading: KnockoutObservable<boolean>;
-    public currentTime: KnockoutComputed<string>;
+    public tournamentsCaption: ko.Computed<string>;
+    public selectionCaption: ko.Computed<string>;
+    public tournaments: ko.ObservableArray<LobbyTournamentItemEx>;
+    public sngs: ko.ObservableArray<LobbyTournamentItemEx>;
+    public tables: ko.ObservableArray<any>;
+    public loading: ko.Observable<boolean>;
+    public currentTime: ko.Computed<string>;
 
-    public authenticated: KnockoutObservable<boolean>;
-    public login: KnockoutComputed<string>;
-    public amount: KnockoutObservable<number>;
+    public authenticated: ko.Observable<boolean>;
+    public login: ko.Computed<string>;
+    public amount: ko.Observable<number>;
 
-    public cashTablesEnabled: KnockoutObservable<boolean>;
-    public tournamentTablesEnabled: KnockoutObservable<boolean>;
-    public sngTablesEnabled: KnockoutObservable<boolean>;
-    public showScreenOverlay: KnockoutComputed<boolean>;
+    public cashTablesEnabled: ko.Observable<boolean>;
+    public tournamentTablesEnabled: ko.Observable<boolean>;
+    public sngTablesEnabled: ko.Observable<boolean>;
+    public showScreenOverlay: ko.Computed<boolean>;
 
     constructor() {
         super();

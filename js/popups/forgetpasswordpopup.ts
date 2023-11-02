@@ -5,12 +5,12 @@ import { AccountManager } from "../services/accountManager";
 import { PopupBase } from "../ui/popupbase";
 
 export class ForgetPasswordPopup extends PopupBase {
-    public login: KnockoutObservable<string>;
-    public email: KnockoutObservable<string>;
+    public login: ko.Observable<string>;
+    public email: ko.Observable<string>;
     public errors: KnockoutValidationErrors;
-    public errorMessage: KnockoutObservable<string>;
-    public loading: KnockoutObservable<boolean>;
-    private validationModel: KnockoutObservable<ForgetPasswordPopup>;
+    public errorMessage: ko.Observable<string>;
+    public loading: ko.Observable<boolean>;
+    private validationModel: ko.Observable<ForgetPasswordPopup>;
 
     constructor() {
         super();

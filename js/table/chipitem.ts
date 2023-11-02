@@ -12,7 +12,7 @@ interface ChipStackCalcIntermediate {
 }
 
 export class ChipItem {
-    public baseAmount: KnockoutObservable<number>;
+    public baseAmount: ko.Observable<number>;
     private maxStackCount = 5;
 
     constructor(base: number) {

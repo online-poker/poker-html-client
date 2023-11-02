@@ -2,9 +2,9 @@ import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";
 
 export class SettingsPage implements Page {
-    public online: KnockoutObservable<string>;
-    public registered: KnockoutObservable<string>;
-    public captionLabel: KnockoutComputed<string>;
+    public online: ko.Observable<string>;
+    public registered: ko.Observable<string>;
+    public captionLabel: ko.Computed<string>;
 
     constructor() {
         this.online = metadataManager.online;

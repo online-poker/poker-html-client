@@ -6,11 +6,11 @@ import { ConnectionWrapper } from "poker/services/connectionwrapper";
 import * as timeService from "../timeservice";
 
 export class ChatControl {
-    public currentMessage: KnockoutObservable<string>;
-    public messages: KnockoutObservableArray<string>;
-    public loading: KnockoutObservable<boolean>;
+    public currentMessage: ko.Observable<string>;
+    public messages: ko.ObservableArray<string>;
+    public loading: ko.Observable<boolean>;
     private timeoutHandler: number = 0;
-    private tableId: KnockoutObservable<number>;
+    private tableId: ko.Observable<number>;
 
     constructor() {
         this.currentMessage = ko.observable<string>();

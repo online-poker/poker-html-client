@@ -13,9 +13,9 @@ declare var host: string;
 declare var app: App;
 
 export class TablesListPage extends PageBase {
-    public tablesCaption: KnockoutComputed<string>;
-    public tables: KnockoutObservableArray<any>;
-    public loading: KnockoutObservable<boolean>;
+    public tablesCaption: ko.Computed<string>;
+    public tables: ko.ObservableArray<any>;
+    public loading: ko.Observable<boolean>;
 
     constructor() {
         super();

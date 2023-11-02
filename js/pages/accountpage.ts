@@ -29,9 +29,9 @@ interface AccountPagePlayerModel {
 }
 
 export class AccountPage extends PageBase {
-    public cashierCaption: KnockoutObservable<string>;
-    public loading: KnockoutObservable<boolean>;
-    public player: KnockoutObservable<AccountPagePlayerModel>;
+    public cashierCaption: ko.Observable<string>;
+    public loading: ko.Observable<boolean>;
+    public player: ko.Observable<AccountPagePlayerModel>;
     public ratingSupported = ko.observable(appConfig.game.hasRating);
 
     constructor() {

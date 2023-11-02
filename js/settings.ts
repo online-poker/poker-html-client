@@ -4,12 +4,12 @@ import { appConfig } from "./appconfig";
 import { PageBlock } from "./pageblock";
 
 class Settings {
-    public login: KnockoutObservable<string>;
-    public password: KnockoutObservable<string>;
-    public autoSwitchTables: KnockoutObservable<boolean>;
-    public autoHideCards: KnockoutObservable<boolean>;
-    public soundEnabled: KnockoutObservable<boolean>;
-    public lastBannerId: KnockoutObservable<number>;
+    public login: ko.Observable<string>;
+    public password: ko.Observable<string>;
+    public autoSwitchTables: ko.Observable<boolean>;
+    public autoHideCards: ko.Observable<boolean>;
+    public soundEnabled: ko.Observable<boolean>;
+    public lastBannerId: ko.Observable<number>;
 
     public authToken = ko.observable<string>();
     public lastPage = ko.observable<string>();

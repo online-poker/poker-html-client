@@ -16,22 +16,22 @@ import { PageBase } from "../ui/pagebase";
 declare var app: App;
 
 export class HomePage extends PageBase {
-    public online: KnockoutObservable<string>;
-    public registered: KnockoutObservable<string>;
+    public online: ko.Observable<string>;
+    public registered: ko.Observable<string>;
     public news = ko.observableArray<string>([]);
     public currentNews = ko.observable("");
-    public username: KnockoutObservable<string>;
-    public password: KnockoutObservable<string>;
-    public errorMessage: KnockoutObservable<string>;
-    public rememberMe: KnockoutObservable<boolean>;
-    public allowSelfRegistration: KnockoutObservable<boolean>;
-    public allowRememberMe: KnockoutObservable<boolean>;
-    public allowPasswordRecovery: KnockoutObservable<boolean>;
-    public allowGuest: KnockoutObservable<boolean>;
+    public username: ko.Observable<string>;
+    public password: ko.Observable<string>;
+    public errorMessage: ko.Observable<string>;
+    public rememberMe: ko.Observable<boolean>;
+    public allowSelfRegistration: ko.Observable<boolean>;
+    public allowRememberMe: ko.Observable<boolean>;
+    public allowPasswordRecovery: ko.Observable<boolean>;
+    public allowGuest: ko.Observable<boolean>;
 
-    public captionLabel: KnockoutComputed<string>;
-    public authenticatedUser: KnockoutComputed<string>;
-    public authenticated: KnockoutComputed<boolean>;
+    public captionLabel: ko.Computed<string>;
+    public authenticatedUser: ko.Computed<string>;
+    public authenticated: ko.Computed<boolean>;
     public banners = ko.observableArray<BannerData>([]);
     public currentBanner = ko.observable<BannerData>({
         Id: 0,

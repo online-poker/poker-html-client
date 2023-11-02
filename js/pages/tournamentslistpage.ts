@@ -17,9 +17,9 @@ import { TournamentOptions } from "./lobbypage";
 declare var app: App;
 
 export class TournamentsListPage extends PageBase {
-    public tournamentsCaption: KnockoutComputed<string>;
-    public tournaments: KnockoutObservableArray<LobbyTournamentItem>;
-    public loading: KnockoutObservable<boolean>;
+    public tournamentsCaption: ko.Computed<string>;
+    public tournaments: ko.ObservableArray<LobbyTournamentItem>;
+    public loading: ko.Observable<boolean>;
     public options: TournamentOptions;
     public tournamentType: number;
     public slider: Slider;

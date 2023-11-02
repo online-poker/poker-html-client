@@ -7,11 +7,11 @@ import { PageBase } from "../ui/pagebase";
 declare var app: App;
 
 export class WithdrawalPage extends PageBase {
-    public player: KnockoutObservable<any>;
-    public withdrawalMethods: KnockoutObservableArray<any>;
-    public withdrawalMethod: KnockoutObservable<number>;
-    public withdrawalAmount: KnockoutObservable<number>;
-    public accountNumber: KnockoutObservable<number>;
+    public player: ko.Observable<any>;
+    public withdrawalMethods: ko.ObservableArray<any>;
+    public withdrawalMethod: ko.Observable<number>;
+    public withdrawalAmount: ko.Observable<number>;
+    public accountNumber: ko.Observable<number>;
 
     constructor() {
         super();

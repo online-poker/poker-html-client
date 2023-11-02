@@ -4,10 +4,10 @@
  * Parameters for the timeblock component
  */
 interface CheckboxParameters {
-    checked: boolean | KnockoutObservable<boolean>;
-    label: string | KnockoutObservable<string>;
-    right: boolean | KnockoutObservable<boolean>;
-    color: string | KnockoutObservable<string>;
+    checked: boolean | ko.Observable<boolean>;
+    label: string | ko.Observable<string>;
+    right: boolean | ko.Observable<boolean>;
+    color: string | ko.Observable<string>;
 }
 
 export class Checkbox {

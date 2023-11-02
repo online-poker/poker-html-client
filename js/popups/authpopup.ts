@@ -10,19 +10,19 @@ import { PopupBase } from "../ui/popupbase";
 declare var app: App;
 
 export class AuthPopup extends PopupBase {
-    public login: KnockoutObservable<string>;
-    public password: KnockoutObservable<string>;
+    public login: ko.Observable<string>;
+    public password: ko.Observable<string>;
     public validationLogin = ko.observable<string>().extend({ required: true, maxLength: 12 });
     public validationPassword = ko.observable<string>().extend({ required: true, maxLength: 16 });
-    public errorMessage: KnockoutObservable<string>;
-    public rememberMe: KnockoutObservable<boolean>;
-    public allowSelfRegistration: KnockoutObservable<boolean>;
-    public allowRememberMe: KnockoutObservable<boolean>;
-    public allowPasswordRecovery: KnockoutObservable<boolean>;
+    public errorMessage: ko.Observable<string>;
+    public rememberMe: ko.Observable<boolean>;
+    public allowSelfRegistration: ko.Observable<boolean>;
+    public allowRememberMe: ko.Observable<boolean>;
+    public allowPasswordRecovery: ko.Observable<boolean>;
 
     public errors: KnockoutValidationErrors;
-    public loading: KnockoutObservable<boolean>;
-    private validationModel: KnockoutObservable<AuthPopup>;
+    public loading: ko.Observable<boolean>;
+    private validationModel: ko.Observable<AuthPopup>;
 
     constructor() {
         super();

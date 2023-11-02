@@ -17,36 +17,36 @@ import { TournamentView } from "../table/tournamentview";
 declare var app: App;
 
 export class TableMenuPopup {
-    public soundEnabled: KnockoutComputed<boolean>;
-    public autoSwitchTables: KnockoutComputed<boolean>;
-    public autoHideCards: KnockoutComputed<boolean>;
-    public showInRating: KnockoutObservable<boolean>;
+    public soundEnabled: ko.Computed<boolean>;
+    public autoSwitchTables: ko.Computed<boolean>;
+    public autoHideCards: ko.Computed<boolean>;
+    public showInRating: ko.Observable<boolean>;
     public addMoneyAvailable = ko.observable(false);
-    public addMoneyAllowed: KnockoutObservable<boolean>;
-    public handHistoryAllowed: KnockoutObservable<boolean>;
-    public leaveAllowed: KnockoutObservable<boolean>;
-    public toggleSkipDealsAllowed: KnockoutObservable<boolean>;
-    public accountStatusAllowed: KnockoutObservable<boolean>;
-    public tournamentInformationAllowed: KnockoutObservable<boolean>;
+    public addMoneyAllowed: ko.Observable<boolean>;
+    public handHistoryAllowed: ko.Observable<boolean>;
+    public leaveAllowed: ko.Observable<boolean>;
+    public toggleSkipDealsAllowed: ko.Observable<boolean>;
+    public accountStatusAllowed: ko.Observable<boolean>;
+    public tournamentInformationAllowed: ko.Observable<boolean>;
 
-    public rebuyAllowed: KnockoutComputed<boolean>;
-    public doublerebuyAllowed: KnockoutComputed<boolean>;
-    public addonAllowed: KnockoutComputed<boolean>;
+    public rebuyAllowed: ko.Computed<boolean>;
+    public doublerebuyAllowed: ko.Computed<boolean>;
+    public addonAllowed: ko.Computed<boolean>;
 
-    public isRebuyCurrentlyAllowed: KnockoutObservable<boolean>;
-    public isDoubleRebuyCurrentlyAllowed: KnockoutObservable<boolean>;
-    public isAddonCurrentlyAllowed: KnockoutObservable<boolean>;
+    public isRebuyCurrentlyAllowed: ko.Observable<boolean>;
+    public isDoubleRebuyCurrentlyAllowed: ko.Observable<boolean>;
+    public isAddonCurrentlyAllowed: ko.Observable<boolean>;
 
-    public isSufficientMoneyForRebuy: KnockoutObservable<boolean>;
-    public isSufficientMoneyForDoubleRebuy: KnockoutObservable<boolean>;
-    public isSufficientMoneyForAddon: KnockoutObservable<boolean>;
+    public isSufficientMoneyForRebuy: ko.Observable<boolean>;
+    public isSufficientMoneyForDoubleRebuy: ko.Observable<boolean>;
+    public isSufficientMoneyForAddon: ko.Observable<boolean>;
 
-    public isTournamentTable: KnockoutObservable<boolean>;
-    public allowUsePersonalAccount: KnockoutObservable<boolean>;
-    public allowTickets: KnockoutObservable<boolean>;
-    public standupText: KnockoutComputed<string>;
-    public allowSettings: KnockoutComputed<boolean>;
-    public settingsCaption: KnockoutComputed<string>;
+    public isTournamentTable: ko.Observable<boolean>;
+    public allowUsePersonalAccount: ko.Observable<boolean>;
+    public allowTickets: ko.Observable<boolean>;
+    public standupText: ko.PureComputed<"table.takeWin" | "table.leave">;
+    public allowSettings: ko.Computed<boolean>;
+    public settingsCaption: ko.PureComputed<"settings.cardsVariantCaption" | "settings.orientationModeCaption" | "settings.caption">;
     /**
      * Tournament has rebuys.
      */
@@ -69,7 +69,7 @@ export class TableMenuPopup {
     /**
      * Indicate whether sitout status set.
      */
-    public skipDeals: KnockoutObservable<boolean>;
+    public skipDeals: ko.Observable<boolean>;
 
     constructor(
         private currentTableProvider: ICurrentTableProvider,
@@ -143,7 +143,7 @@ export class TableMenuPopup {
             const hasWin = player.Money() > 0 || currentTable.myPlayerInGame();
             return hasWin ? "table.takeWin" : "table.leave";
         });
-        this.skipDeals = ko.observable(false).extend({ rateLimit: 500 });
+        this.skipDeals = ko.observable<boolean>(false).extend({ rateLimit: 500 });
         this.allowSettings = ko.pureComputed(() =>
             this.allowTickets() || (appConfig.ui.usePortraitAndLandscapeOrientationModes && !PageBlock.useDoubleView),
         );

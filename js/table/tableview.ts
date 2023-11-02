@@ -43,159 +43,159 @@ interface CardsRepresentation {
 
 export class TableView {
     public static MaxMessagesCount: number = 100;
-    public tableName: KnockoutObservable<string>;
+    public tableName: ko.Observable<string>;
 
     /**
      * Current login which sitting on this view.
      */
-    public currentLogin: KnockoutObservable<string>;
+    public currentLogin: ko.Observable<string>;
 
     /**
      * Represents the value indicating that information
      * about the table is retreiving.
      */
-    public connecting: KnockoutObservable<boolean>;
+    public connecting: ko.Observable<boolean>;
 
     /**
      * Request which performs connecting to the table.
      */
     public connectingRequest: JQueryDeferred<any> | null = null;
 
-    public smallBlind: KnockoutObservable<number>;
-    public bigBlind: KnockoutObservable<number>;
-    public ante: KnockoutObservable<number>;
+    public smallBlind: ko.Observable<number>;
+    public bigBlind: ko.Observable<number>;
+    public ante: ko.Observable<number>;
     public changeBetParametersNextGame = ko.observable(false);
     public changeGameTypeNextGame = ko.observable(false);
-    public nextGameSmallBlind: KnockoutObservable<number> = ko.observable(0);
-    public nextGameBigBlind: KnockoutObservable<number> = ko.observable(0);
-    public nextGameType: KnockoutObservable<number> = ko.observable(0);
-    public nextGameAnte: KnockoutObservable<number> = ko.observable(0);
-    public nextGameInformation: KnockoutComputed<string>;
-    public nextGameTypeInformation: KnockoutComputed<string>;
-    public currentCombinationVisible: KnockoutComputed<boolean>;
+    public nextGameSmallBlind: ko.Observable<number> = ko.observable(0);
+    public nextGameBigBlind: ko.Observable<number> = ko.observable(0);
+    public nextGameType: ko.Observable<number> = ko.observable(0);
+    public nextGameAnte: ko.Observable<number> = ko.observable(0);
+    public nextGameInformation: ko.Computed<string>;
+    public nextGameTypeInformation: ko.Computed<string>;
+    public currentCombinationVisible: ko.Computed<boolean>;
     /**
      * Minimal amount of money which currently authenticated player
      * could bring on the table if he stand up from the table lately.
      */
-    public minimalPlayerBuyIn: KnockoutObservable<number>;
+    public minimalPlayerBuyIn: ko.Observable<number>;
     /**
      * Minimal base amount of buy-in in BB to bring on the table.
      */
-    public minimalBuyIn: KnockoutObservable<number>;
-    public gamePlayers: KnockoutObservableArray<number>;
-    public places: KnockoutComputed<TablePlaceModel[]>;
-    public pots: KnockoutObservableArray<number>;
+    public minimalBuyIn: ko.Observable<number>;
+    public gamePlayers: ko.ObservableArray<number>;
+    public places: ko.Computed<TablePlaceModel[]>;
+    public pots: ko.ObservableArray<number>;
     public tableCards: TableCardsPlace;
-    public messages: KnockoutObservableArray<PlayerMessage>;
-    public systemMessages: KnockoutObservableArray<SystemMessage>;
-    public lastRaise: KnockoutObservable<number>;
-    public timePass: KnockoutObservable<number>;
+    public messages: ko.ObservableArray<PlayerMessage>;
+    public systemMessages: ko.ObservableArray<SystemMessage>;
+    public lastRaise: ko.Observable<number>;
+    public timePass: ko.Observable<number>;
     /**
      * Count of actual actions which was performed by the players during the current game
      */
-    public actionsCount: KnockoutObservable<number>;
+    public actionsCount: ko.Observable<number>;
     /**
      * Indicating whether authenticated player is playing in the game
      */
-    public myPlayerInGame: KnockoutComputed<boolean>;
+    public myPlayerInGame: ko.Computed<boolean>;
     /**
      * Indicating whether authenticated player was playing in the game
      */
-    public myPlayerWasInGame: KnockoutComputed<boolean>;
+    public myPlayerWasInGame: ko.Computed<boolean>;
     /**
      * Id of the current game on the table.
      */
-    public gameId: KnockoutObservable<number>;
-    public currentGameId: KnockoutObservable<number>;
+    public gameId: ko.Observable<number>;
+    public currentGameId: ko.Observable<number>;
     /**
      * Indicates that game finished.
      */
-    public gameFinished: KnockoutObservable<boolean>;
+    public gameFinished: ko.Observable<boolean>;
     /**
      * Indicates that prizes distributed in the game.
      */
-    public prizesDistributed: KnockoutObservable<boolean>;
+    public prizesDistributed: ko.Observable<boolean>;
     /**
      * Indicates that game started.
      */
-    public gameStarted: KnockoutObservable<boolean>;
+    public gameStarted: ko.Observable<boolean>;
     /**
      * Count of active players in the game
      */
-    public activePlayersCount: KnockoutComputed<number>;
+    public activePlayersCount: ko.Computed<number>;
     /**
      * Value indicating whether all bets are rounded.
      */
-    public allBetsRounded: KnockoutObservable<boolean>;
+    public allBetsRounded: ko.Computed<boolean>;
     /**
      * Value indicating whether use cards variant up
      */
-    public cardsVariantUp: KnockoutObservable<boolean>;
+    public cardsVariantUp: ko.Observable<boolean>;
     /**
      * Value indicating whether use cards variant down
      */
-    public cardsVariantDown: KnockoutObservable<boolean>;
+    public cardsVariantDown: ko.Observable<boolean>;
     /**
      * Css rules for table-container
      */
-    public containerCss: KnockoutObservable<any>;
+    public containerCss: ko.Computed<any>;
 
     /**
      * Indicate game type
      */
-    public gameType: KnockoutObservable<number>;
-    public has2Cards: KnockoutComputed<boolean>;
-    public has4Cards: KnockoutComputed<boolean>;
+    public gameType: ko.Observable<number>;
+    public has2Cards: ko.Computed<boolean>;
+    public has4Cards: ko.Computed<boolean>;
 
-    public timeLeft: KnockoutComputed<number>;
+    public timeLeft: ko.Computed<number>;
     public timerInterval: number = 0;
     public chipWidth: number;
 
-    public chatMessage: KnockoutObservable<string>;
-    public combinations: KnockoutObservableArray<string>;
-    public currentPlayer: KnockoutComputed<TablePlaceModel | null>;
-    public myPlayer: KnockoutComputed<TablePlaceModel | null>;
-    public mainButtonsEnabled: KnockoutObservable<boolean>;
-    public playerActions: KnockoutObservable<any>;
-    public turnEnabled: KnockoutComputed<boolean>;
-    public isMyTurn: KnockoutComputed<boolean>;
-    public notMyTurn: KnockoutComputed<boolean>;
-    public isInGame: KnockoutComputed<boolean>;
-    public checkOrCallAmount: KnockoutComputed<number>;
+    public chatMessage: ko.Observable<string>;
+    public combinations: ko.ObservableArray<string>;
+    public currentPlayer: ko.Computed<TablePlaceModel | null>;
+    public myPlayer: ko.Computed<TablePlaceModel | null>;
+    public mainButtonsEnabled: ko.Observable<boolean>;
+    public playerActions: ko.Observable<any>;
+    public turnEnabled: ko.Computed<boolean>;
+    public isMyTurn: ko.Computed<boolean>;
+    public notMyTurn: ko.Computed<boolean>;
+    public isInGame: ko.Computed<boolean>;
+    public checkOrCallAmount: ko.Computed<number>;
 
     /**
      * Bet amount for currently active player.
      */
-    public currentBet: KnockoutComputed<number>;
+    public currentBet: ko.Computed<number>;
 
     /**
      * Bet amount for player.
      */
-    public myBet: KnockoutComputed<number>;
-    public currentTotalBet: KnockoutComputed<number>;
-    public maximumBet: KnockoutComputed<number>;
-    public currentRaise: KnockoutComputed<number>;
-    public minimumRaiseAmount: KnockoutComputed<number | null>;
-    public maximumRaiseAmount: KnockoutComputed<number | null>;
-    public amountSupported: KnockoutObservable<number>;
-    public maxAmountOfMoneyForOtherActivePlayers: KnockoutObservable<number>;
-    public isSitOut: KnockoutComputed<boolean>;
-    public totalPot: KnockoutComputed<number>;
-    public totalPotCaption: KnockoutComputed<string>;
+    public myBet: ko.Computed<number>;
+    public currentTotalBet: ko.Computed<number>;
+    public maximumBet: ko.Computed<number>;
+    public currentRaise: ko.Computed<number>;
+    public minimumRaiseAmount: ko.Computed<number | null>;
+    public maximumRaiseAmount: ko.Computed<number | null>;
+    public amountSupported: ko.Observable<number>;
+    public maxAmountOfMoneyForOtherActivePlayers: ko.Computed<number>;
+    public isSitOut: ko.Computed<boolean>;
+    public totalPot: ko.Computed<number>;
+    public totalPotCaption: ko.Computed<string>;
     public currentCombination = ko.observable("");
     public actionBlock: ActionBlock;
     public onMyTurn: Signal;
     public onGamefinished: Signal;
     public tablePlaces: TablePlaces;
-    public lastHandHistory: KnockoutObservable<HandHistory>;
-    public hasPreviousHand: KnockoutComputed<boolean>;
-    public tableBetsCaption: KnockoutComputed<string>;
-    public currentHandCaption: KnockoutComputed<string>;
-    public previousHandCaption: KnockoutComputed<string>;
+    public lastHandHistory: ko.Observable<HandHistory>;
+    public hasPreviousHand: ko.Computed<boolean>;
+    public tableBetsCaption: ko.Computed<string>;
+    public currentHandCaption: ko.Computed<string>;
+    public previousHandCaption: ko.Computed<string>;
 
-    public roundNotification: KnockoutObservable<string>;
-    public roundNotificationCaption: KnockoutComputed<string>;
-    public isRoundNotificationShown: KnockoutComputed<boolean>;
+    public roundNotification: ko.Observable<string>;
+    public roundNotificationCaption: ko.Computed<string>;
+    public isRoundNotificationShown: ko.Computed<boolean>;
     public onPlayerCardsDealed: Signal;
     public onFlopDealed: Signal;
     public onTurnDealed: Signal;
@@ -229,7 +229,7 @@ export class TableView {
     public hasPendingMoney = ko.observable(false);
     public hasNotification = ko.observable(false);
     public notification = ko.observable("");
-    public couldAddChips: KnockoutComputed<boolean>;
+    public couldAddChips: ko.Computed<boolean>;
 
     /* If of the last message Id starting from which messages could be displayed */
     public lastMessageId = 0;
@@ -1180,8 +1180,14 @@ export class TableView {
         this.actionBlock.updateNeedBB();
         this.actionBlock.updateBlocks();
         if (playerName === this.currentLogin()) {
-            const api = this.apiProvider.getGame();
-            await api.setTableParameters(this.tableId, !settings.autoHideCards());
+            try {
+                const api = this.apiProvider.getGame();
+                await api.setTableParameters(this.tableId, !settings.autoHideCards());
+            }
+            catch {
+                // Ignore failre to set table parameters.
+                this.log("Cannot set table parameters. Most likely internet connection.");
+            }
         }
     }
     public onStandup(playerId: number) {

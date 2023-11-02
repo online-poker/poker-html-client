@@ -15,14 +15,14 @@ interface TapEvent {
 }
 
 export class TableSlider {
-    public current: KnockoutObservable<number>;
-    public currentValue: KnockoutComputed<string>;
-    public minimum: KnockoutObservable<number>;
-    public maximum: KnockoutObservable<number>;
-    public position: KnockoutComputed<number>;
+    public current: ko.Observable<number>;
+    public currentValue: ko.Computed<string>;
+    public minimum: ko.Observable<number>;
+    public maximum: ko.Observable<number>;
+    public position: ko.Computed<number>;
     private step: number;
-    private minRelative: KnockoutObservable<number>;
-    private maxRelative: KnockoutObservable<number>;
+    private minRelative: ko.Observable<number>;
+    private maxRelative: ko.Observable<number>;
     private translator: (x: number) => number;
 
     constructor() {

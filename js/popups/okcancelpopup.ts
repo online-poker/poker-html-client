@@ -6,8 +6,8 @@ import { App } from "../app";
 declare var app: App;
 
 export class OkCancelPopup {
-    public title: KnockoutObservable<string>;
-    public messages: KnockoutObservableArray<string>;
+    public title: ko.Observable<string>;
+    public messages: ko.ObservableArray<string>;
     public buttons = ko.observableArray<string>([]);
     public deferred: JQueryDeferred<() => void>;
     public customStyle = ko.observable("");

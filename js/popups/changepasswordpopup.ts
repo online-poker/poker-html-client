@@ -11,12 +11,12 @@ declare var app: App;
 
 export class ChangePasswordPopup extends PopupBase {
     public oldPassword = ko.observable<string>().extend({ required: true });
-    public password: KnockoutObservable<string>;
-    public confirmPassword: KnockoutObservable<string>;
-    public errorMessage: KnockoutObservable<string>;
+    public password: ko.Observable<string>;
+    public confirmPassword: ko.Observable<string>;
+    public errorMessage: ko.Observable<string>;
     public errors: KnockoutValidationErrors;
-    public loading: KnockoutObservable<boolean>;
-    private validationModel: KnockoutObservable<ChangePasswordPopup>;
+    public loading: ko.Observable<boolean>;
+    private validationModel: ko.Observable<ChangePasswordPopup>;
 
     constructor() {
         super();

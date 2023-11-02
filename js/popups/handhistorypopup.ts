@@ -14,19 +14,19 @@ enum HandHistoryDisplayMode {
 }
 
 export class HandHistoryPopup extends PopupBase {
-    public detailedOperations: KnockoutObservableArray<string>;
-    public shortOperations: KnockoutObservableArray<string>;
-    public tableView: KnockoutObservable<TableView>;
-    public mode: KnockoutObservable<HandHistoryDisplayMode>;
-    public cards: KnockoutObservableArray<string>;
-    public playersData: KnockoutObservableArray<PlayerWinInformation>;
+    public detailedOperations: ko.ObservableArray<string>;
+    public shortOperations: ko.ObservableArray<string>;
+    public tableView: ko.Observable<TableView>;
+    public mode: ko.Observable<HandHistoryDisplayMode>;
+    public cards: ko.ObservableArray<string>;
+    public playersData: ko.ObservableArray<PlayerWinInformation>;
     public displayLoginSeparately: boolean;
     public showHistoryModeSelector = ko.observable(true);
-    public isShortMode: KnockoutComputed<boolean>;
-    public isDetailedMode: KnockoutComputed<boolean>;
-    public lastHandTitle: KnockoutObservable<string>;
-    public has2Cards: KnockoutObservable<boolean>;
-    public has4Cards: KnockoutObservable<boolean>;
+    public isShortMode: ko.Computed<boolean>;
+    public isDetailedMode: ko.Computed<boolean>;
+    public lastHandTitle: ko.Observable<string>;
+    public has2Cards: ko.Observable<boolean>;
+    public has4Cards: ko.Observable<boolean>;
 
     constructor() {
         super();
@@ -34,9 +34,9 @@ export class HandHistoryPopup extends PopupBase {
         this.shortOperations = ko.observableArray<string>([]);
         this.tableView = ko.observable<TableView>();
         if (appConfig.game.handHistory.showPictureHistory) {
-            this.mode = ko.observable(HandHistoryDisplayMode.Short);
+            this.mode = ko.observable<HandHistoryDisplayMode>(HandHistoryDisplayMode.Short);
         } else {
-            this.mode = ko.observable(HandHistoryDisplayMode.Detailed);
+            this.mode = ko.observable<HandHistoryDisplayMode>(HandHistoryDisplayMode.Detailed);
         }
 
         this.isShortMode = ko.computed(() => {

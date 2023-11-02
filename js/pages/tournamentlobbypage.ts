@@ -39,7 +39,7 @@ interface TournamentTableListView {
     id: number;
     name: string;
     isClosed: boolean;
-    selected: KnockoutObservable<boolean>;
+    selected: ko.Observable<boolean>;
     players: TournamentTablePlayerView[];
 }
 
@@ -50,36 +50,36 @@ interface TournamentPrizeStructureView {
 }
 
 export class TournamentLobbyPage extends PageBase {
-    public loading: KnockoutObservable<boolean>;
+    public loading: ko.Observable<boolean>;
     public tournamentId = 0;
-    public tournamentData: KnockoutObservable<TournamentDefinition>;
-    public tournamentCaption: KnockoutComputed<string>;
-    public authenticated: KnockoutComputed<boolean>;
-    public tablesAvailable: KnockoutComputed<boolean>;
-    public lateRegistrationAllowed: KnockoutComputed<boolean>;
-    public stackInformation: KnockoutComputed<string>;
-    public participantsInformation: KnockoutComputed<string>;
-    public betLevelInformation: KnockoutComputed<string>;
+    public tournamentData: ko.Observable<TournamentDefinition>;
+    public tournamentCaption: ko.Computed<string>;
+    public authenticated: ko.Computed<boolean>;
+    public tablesAvailable: ko.Computed<boolean>;
+    public lateRegistrationAllowed: ko.Computed<boolean>;
+    public stackInformation: ko.Computed<string>;
+    public participantsInformation: ko.Computed<string>;
+    public betLevelInformation: ko.Computed<string>;
     public parentView: string;
-    public currentView: KnockoutObservable<number>;
-    public getBetStructure: KnockoutComputed<TournamentBetStructure[]>;
-    public prizeStructureInformation: KnockoutComputed<TournamentPrizeStructureView[]>;
+    public currentView: ko.Observable<number>;
+    public getBetStructure: ko.Computed<TournamentBetStructure[]>;
+    public prizeStructureInformation: ko.Computed<TournamentPrizeStructureView[]>;
     public playersSortOrder = ko.observable("asc");
     public playersColumnOrder = ko.observable("Login");
-    public getTournamentPlayers: KnockoutComputed<TournamentPlayerDefinition[]>;
-    public tablesData: KnockoutObservable<TournamentTableListView[]>;
-    public getSelectedTablePlayers: KnockoutComputed<TournamentTablePlayerView[]>;
-    public couldRegister: KnockoutComputed<boolean>;
-    public couldUnregister: KnockoutComputed<boolean>;
-    public couldContinueGame: KnockoutComputed<boolean>;
-    public couldView: KnockoutComputed<boolean>;
-    public currentTime: KnockoutComputed<string>;
-    public duration: KnockoutComputed<string>;
-    public lateRegistrationLeft: KnockoutComputed<string>;
-    public lateRegistrationRunning: KnockoutComputed<boolean>;
-    public totalPrize: KnockoutComputed<number>;
-    public prizesCount: KnockoutComputed<number>;
-    public scrollTrigger: KnockoutComputed<number>;
+    public getTournamentPlayers: ko.Computed<TournamentPlayerDefinition[]>;
+    public tablesData: ko.Observable<TournamentTableListView[]>;
+    public getSelectedTablePlayers: ko.Computed<TournamentTablePlayerView[]>;
+    public couldRegister: ko.Computed<boolean>;
+    public couldUnregister: ko.Computed<boolean>;
+    public couldContinueGame: ko.Computed<boolean>;
+    public couldView: ko.Computed<boolean>;
+    public currentTime: ko.Computed<string>;
+    public duration: ko.Computed<string>;
+    public lateRegistrationLeft: ko.Computed<string>;
+    public lateRegistrationRunning: ko.Computed<boolean>;
+    public totalPrize: ko.Computed<number>;
+    public prizesCount: ko.Computed<number>;
+    public scrollTrigger: ko.Computed<number>;
     private authInformation: IAuthenticationInformation;
 
     constructor(authInformation: IAuthenticationInformation) {
