@@ -29,9 +29,9 @@ jobs:
         printf "@poker:registry=https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/\n" >> ~/.npmrc
         printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:username=pokerkz\n" >> ~/.npmrc
         printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:email=npm >> ~/.npmrc
-        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:_password=${NPM_TOKEN}\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:_password=${{ secrets.NPM_TOKEN }}\n" >> ~/.npmrc
         printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:username=pokerkz\n" >> ~/.npmrc
-        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:_password=${NPM_TOKEN}\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:_password=${{ secrets.NPM_TOKEN }}\n" >> ~/.npmrc
         printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:email=npm >> ~/.npmrc
         printf "always-auth=true\n" >> ~/.npmrc
         npm ci --ignore-scripts
