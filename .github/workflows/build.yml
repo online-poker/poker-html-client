@@ -1,0 +1,52 @@
+name: NodeJS with Webpack
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x,14.x, 16.x, 18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        #registry-url: 'https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/'
+
+    - name: Safe install dependencies
+      run: |
+        printf "@poker:registry=https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:username=pokerkz\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:email=npm >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:_password=${{ secrets.NPM_TOKEN }}\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:username=pokerkz\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:_password=${{ secrets.NPM_TOKEN }}\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:email=npm >> ~/.npmrc
+        printf "always-auth=true\n" >> ~/.npmrc
+        npm ci --ignore-scripts
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: Full install dependencies
+      run: npm rebuild && npm run prepare --if-present
+
+    - name: Build
+      run: |
+        npm run test -- --runInBand
+        npm run lint:test
+        npm run compile:test -- --noEmit
+
+    - name: Report coverage
+      run: |
+        npm run report-coverage
