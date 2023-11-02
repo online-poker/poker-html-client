@@ -96,6 +96,7 @@ export class AppConfig {
         fractionalDigitsCount: 2,
         moneyFractionalSeparator: ".",
         enableScreenOverlay: false,
+        deploymentPath: "",
     };
 }
 
