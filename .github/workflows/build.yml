@@ -22,7 +22,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        registry-url: 'https://pokerkz.pkgs.visualstudio.com/_packaging/50dc0ca2-b4b7-4773-922d-1f1486f9c8c8/npm/registry/'
+        registry-url: 'https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/'
 
     - name: Safe install dependencies
       run: |
