@@ -26,9 +26,13 @@ jobs:
 
     - name: Safe install dependencies
       run: |
+        printf "@poker:registry=https://pokerkz.pkgs.visualstudio.com/_packaging/50dc0ca2-b4b7-4773-922d-1f1486f9c8c8/npm/registry/\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/50dc0ca2-b4b7-4773-922d-1f1486f9c8c8/npm/registry/:_authToken=${NPM_TOKEN}\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/50dc0ca2-b4b7-4773-922d-1f1486f9c8c8/npm/:_authToken=${NPM_TOKEN}\n" >> ~/.npmrc
+        printf "always-auth=true\n" >> ~/.npmrc
         npm ci --ignore-scripts
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Full install dependencies
       run: npm rebuild && npm run prepare --if-present
