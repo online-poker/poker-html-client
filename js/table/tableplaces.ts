@@ -2,7 +2,7 @@
 import { TablePlaceModel } from "./tabpleplacemodel";
 
 export class TablePlaces {
-    public placesRefreshTrigger: ko.Observable<{}>;
+    public placesRefreshTrigger: ko.Observable<void>;
 
     public place1: ko.Observable<TablePlaceModel>;
     public place2: ko.Observable<TablePlaceModel>;
@@ -157,7 +157,7 @@ export class TablePlaces {
             throw new Error("Invalid seat number: " + seat);
         }
 
-        const seatVar = this["place" + seat] as ko.Observable<TablePlaceModel>;
+        const seatVar = this[("place" + seat) as keyof this] as ko.Observable<TablePlaceModel>;
         seatVar(player);
     }
     public standup(seat: number) {
@@ -165,11 +165,11 @@ export class TablePlaces {
             throw new Error("Invalid seat number: " + seat);
         }
 
-        const seatVar = this["place" + seat] as ko.Observable<TablePlaceModel>;
+        const seatVar = this[("place" + seat) as keyof this] as ko.Observable<TablePlaceModel>;
         seatVar(null);
     }
     public getPlaceBySeat(seat: number) {
-        const seatVar = this["place" + seat] as ko.Observable<TablePlaceModel>;
+        const seatVar = this[("place" + seat) as keyof this] as ko.Observable<TablePlaceModel>;
         return seatVar();
     }
     public getPlaceByPlayerId(playerId: number) {

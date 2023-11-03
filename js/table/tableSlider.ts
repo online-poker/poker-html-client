@@ -26,99 +26,98 @@ export class TableSlider {
     private translator: (x: number) => number;
 
     constructor() {
-        const self = this;
         this.current = ko.observable<number>(null);
         this.minRelative = ko.observable<number>(null);
         this.maxRelative = ko.observable<number>(null);
         this.currentValue = ko.computed<string>({
-            read() {
-                const ivalue = self.current();
+            read: () => {
+                const ivalue = this.current();
                 if (ivalue === null) {
                     return "";
                 }
 
                 return ivalue.toString();
             },
-            write(value) {
+            write: (value) => {
                 let ivalue = parseInt(value, 10);
                 if (isNaN(ivalue) || !isFinite(ivalue)) {
                     return;
                 }
 
-                if (ivalue >= self.maximum()) {
-                    ivalue = self.maximum();
+                if (ivalue >= this.maximum()) {
+                    ivalue = this.maximum();
                 }
 
-                if (ivalue <= self.minimum()) {
-                    ivalue = self.minimum();
+                if (ivalue <= this.minimum()) {
+                    ivalue = this.minimum();
                 }
 
-                self.current(ivalue);
+                this.current(ivalue);
             },
         });
         this.minimum = ko.observable<number>();
         this.maximum = ko.observable<number>();
         this.position = ko.computed<number>({
-            read() {
-                const pixelDistance = self.maxRelative() - self.minRelative();
+            read: () => {
+                const pixelDistance = this.maxRelative() - this.minRelative();
                 if (pixelDistance === 0) {
-                    return self.maxRelative();
+                    return this.maxRelative();
                 }
 
-                const delta = self.maximum() - self.minimum();
+                const delta = this.maximum() - this.minimum();
                 if (delta === 0) {
-                    return self.maxRelative();
+                    return this.maxRelative();
                 }
 
                 const ratio = pixelDistance / delta;
-                const currentRelative = Math.floor(ratio * (self.current() - self.minimum()));
+                const currentRelative = Math.floor(ratio * (this.current() - this.minimum()));
 
-                return self.minRelative() + currentRelative;
+                return this.minRelative() + currentRelative;
             },
-            write(value) {
-                if (value >= self.maxRelative()) {
-                    self.current(self.maximum());
+            write: (value) => {
+                if (value >= this.maxRelative()) {
+                    this.current(this.maximum());
                     return;
                 }
 
-                if (value <= self.minRelative()) {
-                    self.current(self.minimum());
+                if (value <= this.minRelative()) {
+                    this.current(this.minimum());
                     return;
                 }
 
-                const pixelDistance = self.maxRelative() - self.minRelative();
+                const pixelDistance = this.maxRelative() - this.minRelative();
                 if (pixelDistance === 0) {
-                    self.current(self.minimum());
+                    this.current(this.minimum());
                     return;
                 }
 
-                const delta = self.maximum() - self.minimum();
+                const delta = this.maximum() - this.minimum();
                 if (delta === 0) {
-                    self.current(self.minimum());
+                    this.current(this.minimum());
                     return;
                 }
 
                 const ratio = delta / pixelDistance;
-                let currentAbsolute = Math.floor(ratio * (value - self.minRelative()));
+                let currentAbsolute = Math.floor(ratio * (value - this.minRelative()));
                 // Round currentAbsolute to step
-                const currentAbsoluteAligned = Math.floor(currentAbsolute / self.step) * self.step;
-                if ((currentAbsolute - currentAbsoluteAligned) < (currentAbsoluteAligned + self.step - currentAbsolute)) {
+                const currentAbsoluteAligned = Math.floor(currentAbsolute / this.step) * this.step;
+                if ((currentAbsolute - currentAbsoluteAligned) < (currentAbsoluteAligned + this.step - currentAbsolute)) {
                     currentAbsolute = currentAbsoluteAligned;
                 } else {
-                    currentAbsolute = currentAbsoluteAligned + self.step;
+                    currentAbsolute = currentAbsoluteAligned + this.step;
                 }
 
-                if (currentAbsolute + self.minimum() > self.maximum()) {
-                    self.current(self.maximum());
+                if (currentAbsolute + this.minimum() > this.maximum()) {
+                    this.current(this.maximum());
                     return;
                 }
 
-                if (currentAbsolute + self.minimum() < self.minimum()) {
-                    self.current(self.minimum());
+                if (currentAbsolute + this.minimum() < this.minimum()) {
+                    this.current(this.minimum());
                     return;
                 }
 
-                self.current(currentAbsolute + self.minimum());
+                this.current(currentAbsolute + this.minimum());
             },
         });
     }
@@ -168,14 +167,13 @@ export class TableSlider {
         return false;
     }
     public fixupValue() {
-        const self = this;
         if (this.current() !== null && this.current() !== undefined) {
             this.currentValue(this.current().toFixed());
 
-            timeService.setTimeout(function() {
-                const c = self.current();
-                self.current(0);
-                self.current(c);
+            timeService.setTimeout(() => {
+                const c = this.current();
+                this.current(0);
+                this.current(c);
             }, 10);
         }
     }

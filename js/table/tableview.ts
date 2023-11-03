@@ -259,7 +259,6 @@ export class TableView {
      * @param apiProvider API provider for performing operation.
      */
     constructor(public tableId: number, public model: GameTableModel, private apiProvider: IApiProvider) {
-        const self = this;
         this.tableId = tableId;
         this.tableName = ko.observable(model === null ? "0" : model.TableName);
         this.connecting = ko.observable(true);
@@ -307,8 +306,8 @@ export class TableView {
         this.has2Cards = ko.computed(() => this.gameType() === 1);
         this.has4Cards = ko.computed(() => this.gameType() === 2);
 
-        this.places = ko.computed(function () {
-            return self.tablePlaces.places();
+        this.places = ko.computed(() => {
+            return this.tablePlaces.places();
         }, this);
         this.gameType.subscribe((gameType) => {
             this.places().forEach((place) => {
@@ -332,10 +331,10 @@ export class TableView {
             }
         }
 
-        this.myPlayer = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const p = self.places().filter((item) => {
-                return item.PlayerName() === self.currentLogin();
+        this.myPlayer = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const p = this.places().filter((item) => {
+                return item.PlayerName() === this.currentLogin();
             });
             if (p.length > 0) {
                 return p[0];
@@ -350,13 +349,13 @@ export class TableView {
             }
         });
 
-        this.myPlayerInGame = ko.computed(function () {
-            const gid = self.gameId();
+        this.myPlayerInGame = ko.computed(() => {
+            const gid = this.gameId();
             if (gid === null || gid === 0) {
                 return false;
             }
 
-            const myself = self.myPlayer();
+            const myself = this.myPlayer();
             if (myself === null) {
                 return false;
             }
@@ -365,32 +364,32 @@ export class TableView {
         }, this);
 
         this.currentLogin = ko.observable(authManager.login());
-        authManager.registerAuthenticationChangedHandler(function (value) {
-            self.currentLogin(authManager.login());
+        authManager.registerAuthenticationChangedHandler((value) => {
+            this.currentLogin(authManager.login());
         });
 
-        this.timeLeft = ko.computed(function () {
-            if (self.frozen()) {
+        this.timeLeft = ko.computed(() => {
+            if (this.frozen()) {
                 return -1;
             }
 
-            let pass = self.timePass();
+            let pass = this.timePass();
             pass = pass === null ? 0 : pass;
             const moveTime = appConfig.timeSettings.moveTime || runtimeSettings.game.moveTime;
             return moveTime - pass;
         });
         this.currentRaise = ko.computed<number>({
             owner: this,
-            read() {
-                return self.actionBlock.tableSlider.current();
+            read: () => {
+                return this.actionBlock.tableSlider.current();
             },
-            write(value) {
-                self.actionBlock.tableSlider.current(value);
+            write: (value) => {
+                this.actionBlock.tableSlider.current(value);
             },
         });
-        this.currentPlayer = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const p = self.places().filter((item) => {
+        this.currentPlayer = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const p = this.places().filter((item) => {
                 return item.IsCurrent();
             });
             if (p.length > 0) {
@@ -400,18 +399,18 @@ export class TableView {
             return null;
         }, this);
 
-        this.activePlayersCount = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const activePlayersCount = self.places().reduce((prev: number, value: TablePlaceModel) => {
+        this.activePlayersCount = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const activePlayersCount = this.places().reduce((prev: number, value: TablePlaceModel) => {
                 const isActive = value.WasInGame() && (value.Cards() !== null);
                 return prev + (isActive ? 1 : 0);
             }, 0);
             return activePlayersCount;
         }, this);
 
-        this.myPlayerWasInGame = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const myself = self.myPlayer();
+        this.myPlayerWasInGame = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const myself = this.myPlayer();
             if (myself === null) {
                 return false;
             }
@@ -420,8 +419,8 @@ export class TableView {
         }, this);
 
         this.turnEnabled = ko.computed(() => {
-            self.tablePlaces.placesRefreshTrigger();
-            const cp = self.currentPlayer();
+            this.tablePlaces.placesRefreshTrigger();
+            const cp = this.currentPlayer();
             if (cp === null) {
                 return false;
             }
@@ -430,17 +429,17 @@ export class TableView {
                 const isActive = value.WasInGame() && (value.Cards() !== null);
                 return prev + (isActive ? 1 : 0);
             }, 0);
-            return (cp.PlayerName() === self.currentLogin()) && activePlayersCount > 1;
+            return (cp.PlayerName() === this.currentLogin()) && activePlayersCount > 1;
         }, this);
 
-        this.isMyTurn = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const cp = self.myPlayer();
+        this.isMyTurn = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const cp = this.myPlayer();
             if (cp === null || !cp.IsInGameStatus()) {
                 return false;
             }
 
-            if (!self.gameStarted()) {
+            if (!this.gameStarted()) {
                 return false;
             }
 
@@ -451,9 +450,9 @@ export class TableView {
             return cp.IsCurrent();
         }, this);
 
-        this.notMyTurn = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const cp = self.myPlayer();
+        this.notMyTurn = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const cp = this.myPlayer();
             if (cp === null || !cp.IsInGameStatus()) {
                 return false;
             }
@@ -465,9 +464,9 @@ export class TableView {
             return !cp.IsCurrent();
         }, this);
 
-        this.isInGame = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const cp = self.myPlayer();
+        this.isInGame = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const cp = this.myPlayer();
             if (cp === null || !cp.IsInGameStatus()) {
                 return false;
             }
@@ -475,32 +474,32 @@ export class TableView {
             return true;
         });
 
-        this.maximumBet = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
+        this.maximumBet = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
             let result = 0;
-            result = self.places().reduce(function (previousValue: number, currentValue: TablePlaceModel) {
+            result = this.places().reduce(function (previousValue: number, currentValue: TablePlaceModel) {
                 return Math.max(previousValue, currentValue.Bet());
             }, 0);
             return result;
         }, this);
 
-        this.allBetsRounded = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const playersInGame = self.places().filter((value) => value.WasInGame()).length;
-            const activePlayers = self.places().filter((value) => value.WasInGame() && (value.Cards() !== null));
-            const maxBet = self.maximumBet();
+        this.allBetsRounded = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const playersInGame = this.places().filter((value) => value.WasInGame()).length;
+            const activePlayers = this.places().filter((value) => value.WasInGame() && (value.Cards() !== null));
+            const maxBet = this.maximumBet();
             const allRounded = activePlayers.filter((player) => (player.Bet() === maxBet)
                 || (player.Money() === 0)).length === activePlayers.length;
-            if (allRounded && (self.actionsCount() >= playersInGame)) {
+            if (allRounded && (this.actionsCount() >= playersInGame)) {
                 return true;
             }
 
             return false;
         }, this);
 
-        this.currentBet = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const result = self.places().reduce(function (previousValue: number, currentValue: TablePlaceModel) {
+        this.currentBet = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const result = this.places().reduce(function (previousValue: number, currentValue: TablePlaceModel) {
                 if (currentValue.IsCurrent()) {
                     return currentValue.Bet();
                 }
@@ -510,9 +509,9 @@ export class TableView {
             return result;
         }, this);
 
-        this.myBet = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const myPlayer = self.myPlayer();
+        this.myBet = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const myPlayer = this.myPlayer();
             if (myPlayer === null) {
                 return 0;
             }
@@ -520,9 +519,9 @@ export class TableView {
             return myPlayer.Bet();
         }, this);
 
-        this.currentTotalBet = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const result = self.places().reduce(function (previousValue: number, currentValue: TablePlaceModel) {
+        this.currentTotalBet = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const result = this.places().reduce(function (previousValue: number, currentValue: TablePlaceModel) {
                 if (currentValue.IsCurrent()) {
                     return currentValue.TotalBet();
                 }
@@ -532,50 +531,48 @@ export class TableView {
             return result;
         }, this);
 
-        this.checkOrCallAmount = ko.computed(function () {
-            return self.maximumBet() - self.currentBet();
-        }, this);
+        this.checkOrCallAmount = ko.computed(() => this.maximumBet() - this.currentBet(), this);
 
-        this.minimumRaiseAmount = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const currentPlayer = self.myPlayer();
+        this.minimumRaiseAmount = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const currentPlayer = this.myPlayer();
             if (currentPlayer === null) {
                 return null;
             }
 
             const oldVersion = false;
             if (oldVersion) {
-                const currentBet = self.currentBet();
-                let mb = 2 * (self.lastRaise() - currentBet) - self.checkOrCallAmount();
+                const currentBet = this.currentBet();
+                let mb = 2 * (this.lastRaise() - currentBet) - this.checkOrCallAmount();
 
                 // No less then big blind.
-                mb = Math.max(mb, self.bigBlind());
+                mb = Math.max(mb, this.bigBlind());
 
                 // No more then current money
                 mb = Math.min(mb, currentPlayer.Money());
-                const addon = currentBet + self.checkOrCallAmount();
+                const addon = currentBet + this.checkOrCallAmount();
                 let raiseAmount = mb + addon;
-                const maxAmountOfMoneyForOtherActivePlayers = self.maxAmountOfMoneyForOtherActivePlayers();
+                const maxAmountOfMoneyForOtherActivePlayers = this.maxAmountOfMoneyForOtherActivePlayers();
                 raiseAmount = Math.min(raiseAmount, maxAmountOfMoneyForOtherActivePlayers);
                 return raiseAmount;
             } else {
-                let basicRaise = self.maximumBet() + self.lastRaise();
+                let basicRaise = this.maximumBet() + this.lastRaise();
 
                 // No less then big blind.
-                basicRaise = Math.max(basicRaise, self.bigBlind());
+                basicRaise = Math.max(basicRaise, this.bigBlind());
 
                 // No more then current money
                 basicRaise = Math.min(basicRaise, currentPlayer.Money() + currentPlayer.Bet());
 
                 // No more then money which other players has.
-                const maxAmountOfMoneyForOtherActivePlayers = self.maxAmountOfMoneyForOtherActivePlayers();
+                const maxAmountOfMoneyForOtherActivePlayers = this.maxAmountOfMoneyForOtherActivePlayers();
                 const raiseAmount = Math.min(basicRaise, maxAmountOfMoneyForOtherActivePlayers);
                 return raiseAmount;
             }
         }, this);
 
         this.isSitOut = ko.computed(() => {
-            self.tablePlaces.placesRefreshTrigger();
+            this.tablePlaces.placesRefreshTrigger();
             const currentPlayer = this.myPlayer();
             if (currentPlayer === null) {
                 return false;
@@ -584,10 +581,10 @@ export class TableView {
             return (currentPlayer.Status() & 1) !== 0;
         }, this);
 
-        this.maxAmountOfMoneyForOtherActivePlayers = ko.computed(function () {
+        this.maxAmountOfMoneyForOtherActivePlayers = ko.computed(() => {
             let result = 0;
-            result = self.places().reduce(function (previousValue: number, currentValue: TablePlaceModel) {
-                if (currentValue.PlayerName() === self.currentLogin()) {
+            result = this.places().reduce((previousValue: number, currentValue: TablePlaceModel) => {
+                if (currentValue.PlayerName() === this.currentLogin()) {
                     return previousValue;
                 }
 
@@ -654,7 +651,7 @@ export class TableView {
                 return null;
             }
 
-            let max = self.maxAmountOfMoneyForOtherActivePlayers();
+            let max = this.maxAmountOfMoneyForOtherActivePlayers();
             if (this.gameType() === 2) {
                 max = Math.min(max, this.actionBlock.getPot());
             }
@@ -664,12 +661,12 @@ export class TableView {
             return Math.min(money + bet, max) - bet;
         }, this).extend({ notify: "always" });
 
-        this.totalPot = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const totalBetsOnTable = self.places().reduce((prev: number, item: TablePlaceModel) => {
+        this.totalPot = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const totalBetsOnTable = this.places().reduce((prev: number, item: TablePlaceModel) => {
                 return prev + item.Bet();
             }, 0);
-            const potsArray = self.pots();
+            const potsArray = this.pots();
             if (potsArray === null) {
                 return totalBetsOnTable;
             }
@@ -681,9 +678,9 @@ export class TableView {
             return totalBetsOnTable + pots;
         }, this);
 
-        this.totalPotCaption = ko.computed(function () {
-            self.tablePlaces.placesRefreshTrigger();
-            const totalPot = self.totalPot();
+        this.totalPotCaption = ko.computed(() => {
+            this.tablePlaces.placesRefreshTrigger();
+            const totalPot = this.totalPot();
             if (totalPot === null || totalPot === 0) {
                 return "";
             }
@@ -692,22 +689,22 @@ export class TableView {
                 .replace("#amount", withCommas(totalPot.toFixed(), ","));
         }, this);
 
-        this.tableBetsCaption = ko.computed(function () {
-            const hasAnte = self.ante() != null;
+        this.tableBetsCaption = ko.computed(() => {
+            const hasAnte = this.ante() != null;
             if (hasAnte) {
-                return _("table.betsWithAnte", { ante: self.ante(), bb: self.bigBlind(), sb: self.smallBlind() });
+                return _("table.betsWithAnte", { ante: this.ante(), bb: this.bigBlind(), sb: this.smallBlind() });
             }
 
-            return _("table.bets", { bb: self.bigBlind(), sb: self.smallBlind() });
+            return _("table.bets", { bb: this.bigBlind(), sb: this.smallBlind() });
         }, this);
 
-        this.couldAddChips = ko.pureComputed(function () {
-            const me = self.myPlayer();
+        this.couldAddChips = ko.pureComputed(() => {
+            const me = this.myPlayer();
             if (me == null) {
                 return false;
             }
 
-            if (self.hasPendingMoney()) {
+            if (this.hasPendingMoney()) {
                 return false;
             }
 
@@ -716,7 +713,7 @@ export class TableView {
             }
 
             const totalBet = (me.TotalBet() == null ? 0 : me.TotalBet());
-            const baseMinimalBuyIn = self.minimalBuyIn() * self.model.BigBlind;
+            const baseMinimalBuyIn = this.minimalBuyIn() * this.model.BigBlind;
             const tableTotal = totalBet + me.Money() + me.Bet();
             return (20 * baseMinimalBuyIn) > tableTotal;
         }, this);
@@ -742,7 +739,7 @@ export class TableView {
                 return;
             }
 
-            myPlayer.DisplayedHandCards(getBackCardsFromGameType(self.gameType()));
+            myPlayer.DisplayedHandCards(getBackCardsFromGameType(this.gameType()));
         });
         this.actionBlock.attach(this);
 
@@ -762,24 +759,23 @@ export class TableView {
         return my.getCombination(tableCards);
     }
     public startTimer(startTime: number = 1, playSound: boolean = true) {
-        const self: TableView = this;
         if (this.frozen()) {
             return;
         }
 
-        self.timePass(startTime);
-        this.timerInterval = timeService.setInterval(function () {
+        this.timePass(startTime);
+        this.timerInterval = timeService.setInterval(() => {
             if (runtimeSettings.updateTimer) {
-                const time = self.timePass();
-                self.timePass(time + 1);
-                if (self.timeLeft() === 7) {
-                    if (self.currentPlayer() === self.myPlayer()) {
-                        if (self.soundEnabled && playSound) {
+                const time = this.timePass();
+                this.timePass(time + 1);
+                if (this.timeLeft() === 7) {
+                    if (this.currentPlayer() === this.myPlayer()) {
+                        if (this.soundEnabled && playSound) {
                             const soundManager = getSoundManager();
                             soundManager.playTurnReminder();
                         }
                     } else {
-                        if (self.soundEnabled && playSound) {
+                        if (this.soundEnabled && playSound) {
                             const soundManager = getSoundManager();
                             soundManager.playTurnReminderForAll();
                         }
@@ -799,7 +795,6 @@ export class TableView {
      * Updates information about the table from the server.
      */
     public async updateTableInformation() {
-        const self = this;
         if (this.connectingRequest !== null && this.connectingRequest.state() === "pending") {
             this.log("Cancelling the connection request process");
             this.cancelUpdateTableInformation();
@@ -835,58 +830,58 @@ export class TableView {
             this.connectingRequest = currentLoadingRequest;
             await startConnection;
             if (wrapper.terminated) {
-                self.log(`Connection  ${hubId} appears to be terminated`);
+                this.log(`Connection  ${hubId} appears to be terminated`);
                 return;
             }
 
             hubId = wrapper.connection.id;
-            self.log("Attempting to connect to table and chat over connection " + hubId);
+            this.log("Attempting to connect to table and chat over connection " + hubId);
 
             const joinTableRequest = this.joinTable(wrapper);
             const joinChatRequest = this.joinChat(wrapper);
             const joinRequest = $.when(joinTableRequest, joinChatRequest);
-            currentLoadingRequest.progress(function (command: string) {
-                self.log("Receiving request to cancel all joining operations");
+            currentLoadingRequest.progress((command: string) => {
+                this.log("Receiving request to cancel all joining operations");
                 joinTableRequest.notify(command);
                 joinChatRequest.notify(command);
             });
-            await joinRequest.then(function () {
+            await joinRequest.then(() => {
                 if (wrapper.terminated) {
                     console.log("Cancel terminated connection.");
                     currentLoadingRequest.reject("Cancelled");
                     return;
                 }
 
-                self.log("Jointing to table finished");
+                this.log("Jointing to table finished");
                 currentLoadingRequest.resolve();
-            }, function (result1, result2) {
-                if (wrapper.terminated) {
-                    self.log("Don't use terminated connection.");
-                    return;
-                }
-
-                let message: string;
-                if (result2 == null) {
-                    let taskFailed;
-                    if (result1[2] === joinTableRequest) {
-                        taskFailed = "join table";
-                    } else {
-                        taskFailed = "join chat";
+            }, (result1, result2) => {
+                    if (wrapper.terminated) {
+                        this.log("Don't use terminated connection.");
+                        return;
                     }
 
-                    message = "Rejecting request due to " + taskFailed + " failure in the connection."
-                        + "Failed request: " + result1[0];
-                } else {
-                    message = "Rejecting request due to one of the error in the connection."
-                        + "First request: " + result1[0]
-                        + "Second request: " + result2[0];
-                }
+                    let message: string;
+                    if (result2 == null) {
+                        let taskFailed;
+                        if (result1[2] === joinTableRequest) {
+                            taskFailed = "join table";
+                        } else {
+                            taskFailed = "join chat";
+                        }
 
-                self.log(message);
-                currentLoadingRequest.reject(message);
-            });
+                        message = "Rejecting request due to " + taskFailed + " failure in the connection."
+                            + "Failed request: " + result1[0];
+                    } else {
+                        message = "Rejecting request due to one of the error in the connection."
+                            + "First request: " + result1[0]
+                            + "Second request: " + result2[0];
+                    }
+
+                    this.log(message);
+                    currentLoadingRequest.reject(message);
+                });
         } catch (message) {
-            self.log("Table connection failed. Error: " + message);
+            this.log("Table connection failed. Error: " + message);
             currentLoadingRequest.reject("Table connection failed. Error: " + message);
         }
     }
@@ -897,7 +892,6 @@ export class TableView {
         }
     }
     public joinTable(wrapper: ConnectionWrapper, maxAttempts = 3) {
-        const self = this;
         const result = $.Deferred();
         if (maxAttempts === 0 || wrapper.terminated) {
             this.log("Stop connecting to table");
@@ -910,19 +904,19 @@ export class TableView {
         this.log("Joining table on connection " + connectionInfo);
         let cancelled = false;
         let subsequentDeferred: JQueryDeferred<any> | null = null;
-        const cancelOperation = function () {
-            self.log("Cancelling join table request");
+        const cancelOperation = () => {
+            this.log("Cancelling join table request");
             result.reject("Cancelled", true);
         };
 
-        wrapper.buildStartConnectionAsync().then(function () {
+        wrapper.buildStartConnectionAsync().then(() => {
             if (wrapper.terminated) {
                 cancelOperation();
                 return;
             }
 
-            self.log(`Executing Game.join on connection ${wrapper.connection.id} in state ${wrapper.connection.state}`);
-            const operation = wrapper.connection.Game.server.join(self.tableId)
+            this.log(`Executing Game.join on connection ${wrapper.connection.id} in state ${wrapper.connection.state}`);
+            const operation = wrapper.connection.Game.server.join(this.tableId)
                 .then(function () {
                     if (wrapper.terminated) {
                         cancelOperation();
@@ -930,28 +924,28 @@ export class TableView {
                     }
 
                     result.resolve();
-                }, function (error: any) {
-                    if (wrapper.terminated || cancelled || error === "Cancelled") {
-                        cancelOperation();
-                        return;
-                    }
+                }, (error: any) => {
+                        if (wrapper.terminated || cancelled || error === "Cancelled") {
+                            cancelOperation();
+                            return;
+                        }
 
-                    const message = "" + error as string;
-                    self.log("Failed to join table " + self.tableId + ", " + connectionInfo + ". Reason: " + message);
-                    if (message.indexOf("Connection was disconnected before invocation result was received.") >= 0) {
-                        self.log("Stopped connecting to table since underlying connection is broken");
-                        slowInternetService.showReconnectFailedPopup();
-                        result.reject("Stopped connecting to table since underlying connection is broken", false);
-                        return;
-                    } else {
-                        subsequentDeferred = self.joinTable(wrapper, maxAttempts - 1);
-                        return subsequentDeferred.then(function () {
-                            result.resolve();
-                        }, function (subsequentError, subsequentCancelled: boolean) {
-                            result.reject(subsequentError, subsequentCancelled);
-                        });
-                    }
-                });
+                        const message = "" + error as string;
+                        this.log("Failed to join table " + this.tableId + ", " + connectionInfo + ". Reason: " + message);
+                        if (message.indexOf("Connection was disconnected before invocation result was received.") >= 0) {
+                            this.log("Stopped connecting to table since underlying connection is broken");
+                            slowInternetService.showReconnectFailedPopup();
+                            result.reject("Stopped connecting to table since underlying connection is broken", false);
+                            return;
+                        } else {
+                            subsequentDeferred = this.joinTable(wrapper, maxAttempts - 1);
+                            return subsequentDeferred.then(function () {
+                                result.resolve();
+                            }, function (subsequentError, subsequentCancelled: boolean) {
+                                result.reject(subsequentError, subsequentCancelled);
+                            });
+                        }
+                    });
 
             result.progress(function (command: string) {
                 cancelled = true;
@@ -967,7 +961,6 @@ export class TableView {
         return result;
     }
     public joinChat(wrapper: ConnectionWrapper, maxAttempts = 3) {
-        const self = this;
         const result = $.Deferred();
         if (maxAttempts === 0 || wrapper.terminated) {
             this.log("Stop connecting to table chat");
@@ -977,19 +970,19 @@ export class TableView {
 
         let cancelled = false;
         let subsequentDeferred: JQueryDeferred<any> | null = null;
-        const cancelOperation = function () {
-            self.log("Cancelling join table request");
+        const cancelOperation = () => {
+            this.log("Cancelling join table request");
             result.reject("Cancelled", true);
         };
 
-        wrapper.buildStartConnection()().then(function () {
+        wrapper.buildStartConnection()().then(() => {
             if (wrapper.terminated) {
                 cancelOperation();
                 return;
             }
 
-            self.log(`Executing Game.join on connection ${wrapper.connection.id} in state ${wrapper.connection.state}`);
-            const operation = wrapper.connection.Chat.server.join(self.tableId)
+            this.log(`Executing Game.join on connection ${wrapper.connection.id} in state ${wrapper.connection.state}`);
+            const operation = wrapper.connection.Chat.server.join(this.tableId)
                 .then(function () {
                     if (wrapper.terminated) {
                         cancelOperation();
@@ -997,21 +990,21 @@ export class TableView {
                     }
 
                     result.resolve();
-                }, function (message: string) {
-                    if (wrapper.terminated || cancelled) {
-                        self.log("Cancelling join table chat request");
-                        result.reject("Cancelled", true);
-                        return;
-                    }
+                }, (message: string) => {
+                        if (wrapper.terminated || cancelled) {
+                            this.log("Cancelling join table chat request");
+                            result.reject("Cancelled", true);
+                            return;
+                        }
 
-                    self.log("Failed to join table " + self.tableId + " chat. Reason: " + message);
-                    subsequentDeferred = self.joinChat(wrapper, maxAttempts - 1);
-                    return subsequentDeferred.then(function () {
-                        result.resolve();
-                    }, function (subsequentError, subsequentCancelled: boolean) {
-                        result.reject(subsequentError, subsequentCancelled);
+                        this.log("Failed to join table " + this.tableId + " chat. Reason: " + message);
+                        subsequentDeferred = this.joinChat(wrapper, maxAttempts - 1);
+                        return subsequentDeferred.then(function () {
+                            result.resolve();
+                        }, function (subsequentError, subsequentCancelled: boolean) {
+                            result.reject(subsequentError, subsequentCancelled);
+                        });
                     });
-                });
 
             result.progress(function (command: string) {
                 cancelled = true;
@@ -1030,7 +1023,6 @@ export class TableView {
         /// <signature>
         ///     <summary>Updates the information about the table from the server</summary>
         /// </signature>
-        const self = this;
         // HACK: Game server should correctly leave from table.
         // Looks like when calling leave status stop receiving player specific
         // notifications. Which is looks like SignalR connection is not correctly
@@ -1413,7 +1405,6 @@ export class TableView {
         ///     </param>
         ///     <param name="rake" type="Number">Amount of rake paid.</param>
         /// </signature>
-        const self = this;
         this.queue.wait(this.animationSettings.finishGamePrePause);
         if (this.pots().length === 0 && winners.length > 0) {
             this.executeMoveMoneyToPot(winners.map((winner) => winner.Amount));
@@ -1422,70 +1413,70 @@ export class TableView {
         if (debugSettings.game.singleSidePots) {
             this.queue.pushCallback(() => {
                 this.logGameEvent("Game finished");
-                self.gameFinished(true);
+                this.gameFinished(true);
                 this.actionBlock.expanded(false);
-                self.gameStarted(false);
-                self.gamePlayers([]);
-                const places = self.places();
-                self.finishAnimation(places);
+                this.gameStarted(false);
+                this.gamePlayers([]);
+                const places = this.places();
+                this.finishAnimation(places);
 
                 const needHightlightCards = true;
                 const activePlayersCount = this.activePlayersCount();
                 this.logGameEvent("Active players count", activePlayersCount);
                 if (needHightlightCards) {
-                    self.tableCards.CardsHightlighted(true);
+                    this.tableCards.CardsHightlighted(true);
                 }
 
                 const c = this.calculateWinnerAmount(places, winners, needHightlightCards);
-                if (self.soundEnabled) {
+                if (this.soundEnabled) {
                     const soundManager = getSoundManager();
                     soundManager.playWinChips();
                 }
 
-                self.combinations(c);
+                this.combinations(c);
 
-                self.setButtons(0);
-                self.cardsReceived = false;
-                self.actionBlock.buttonsEnabled(false);
-                self.actionBlock.dealsAllowed(false);
-                self.setCurrent(0);
-                self.pots([]);
-                self.refreshPlaces();
-                self.clearTimer();
+                this.setButtons(0);
+                this.cardsReceived = false;
+                this.actionBlock.buttonsEnabled(false);
+                this.actionBlock.dealsAllowed(false);
+                this.setCurrent(0);
+                this.pots([]);
+                this.refreshPlaces();
+                this.clearTimer();
 
-                self.gameId(null);
+                this.gameId(null);
 
-                self.handHistory.onGameFinished(gameId, winners, rake);
-                self.saveHandHistory();
+                this.handHistory.onGameFinished(gameId, winners, rake);
+                this.saveHandHistory();
                 this.enableInjectPlayerCards = true;
             });
             this.queue.waitWithInterruption(this.animationSettings.cleanupTableTimeout);
         } else {
             this.queue.pushCallback(() => {
                 this.logGameEvent("Game finished");
-                self.gameFinished(true);
+                this.gameFinished(true);
                 this.actionBlock.expanded(false);
-                self.gameStarted(false);
-                self.gamePlayers([]);
-                const places = self.places();
-                self.finishAnimation(places);
+                this.gameStarted(false);
+                this.gamePlayers([]);
+                const places = this.places();
+                this.finishAnimation(places);
 
                 const activePlayersCount = this.activePlayersCount();
                 this.logGameEvent("Active players count", activePlayersCount);
                 const needHightlightCards = true;
                 if (needHightlightCards) {
-                    self.tableCards.CardsHightlighted(true);
+                    this.tableCards.CardsHightlighted(true);
                 }
 
-                self.setButtons(0);
-                self.actionBlock.buttonsEnabled(false);
-                self.actionBlock.dealsAllowed(false);
-                self.setCurrent(0);
-                self.clearTimer();
-                self.gameId(null);
+                this.setButtons(0);
+                this.actionBlock.buttonsEnabled(false);
+                this.actionBlock.dealsAllowed(false);
+                this.setCurrent(0);
+                this.clearTimer();
+                this.gameId(null);
             });
             this.queue.pushCallback(() => {
-                const places = self.places();
+                const places = this.places();
                 const activePlayersCount = this.activePlayersCount();
                 const needHightlightCards = true;
                 this.logGameEvent("Distribute pots: ", this.pots().slice());
@@ -1528,11 +1519,11 @@ export class TableView {
             this.queue.pushCallback(() => {
                 // tslint:disable-next-line:no-console
                 console.log("Finishing the game");
-                self.cardsReceived = false;
-                self.pots([]);
+                this.cardsReceived = false;
+                this.pots([]);
 
-                self.handHistory.onGameFinished(gameId, winners, rake);
-                self.saveHandHistory();
+                this.handHistory.onGameFinished(gameId, winners, rake);
+                this.saveHandHistory();
                 this.enableInjectPlayerCards = true;
             });
             // this.queue.wait(this.animationSettings.cleanupTableTimeout - 8000);
@@ -1549,7 +1540,6 @@ export class TableView {
         });
     }
     public onPlayerCards(playerId: number, cards: number[]) {
-        const self = this;
         if (this.enableInjectPlayerCards) {
             this.queue.injectCallback(() => {
                 this.onPlayerCardsCore(playerId, cards);
@@ -1557,30 +1547,29 @@ export class TableView {
             });
         } else {
             this.queue.pushCallback(() => {
-                if (!self.cardsReceived) {
+                if (!this.cardsReceived) {
                     if (playerId === authManager.loginId()) {
-                        self.startDealCards();
+                        this.startDealCards();
                         this.queue.pushCallback(() => {
-                            self.onPlayerCardsCore(playerId, cards);
+                            this.onPlayerCardsCore(playerId, cards);
                         });
                     } else {
-                        self.onPlayerCardsCore(playerId, cards);
+                        this.onPlayerCardsCore(playerId, cards);
                     }
                 } else {
-                    self.onPlayerCardsCore(playerId, cards);
+                    this.onPlayerCardsCore(playerId, cards);
                 }
             });
         }
     }
     public onPlayerCardOpened(playerId: number, cardPosition: number, cardValue: number) {
-        const self = this;
         if (this.enableInjectPlayerCards) {
             this.queue.injectCallback(() => {
                 this.onPlayerCardOpenedCore(playerId, cardPosition, cardValue);
             });
         } else {
             this.queue.pushCallback(() => {
-                self.onPlayerCardOpenedCore(playerId, cardPosition, cardValue);
+                this.onPlayerCardOpenedCore(playerId, cardPosition, cardValue);
             });
         }
     }
@@ -1640,38 +1629,36 @@ export class TableView {
     }
     public executeMoveMoneyToPot(amount: number[]) {
         // Trigger animation.
-        const self = this;
         this.actionBlock.buttonsEnabled(false);
         this.queue.wait(this.animationSettings.movingMoneyToPotPrePause);
         this.queue.pushCallback(() => {
-            self.startMovingChipsToPotAnimation();
+            this.startMovingChipsToPotAnimation();
         });
         this.queue.wait(this.animationSettings.movingMoneyToPotAnimationTimeout);
         this.queue.pushCallback(() => {
-            self.logGameEvent("Updating pots");
-            self.setPots(amount);
+            this.logGameEvent("Updating pots");
+            this.setPots(amount);
 
-            self.logGameEvent("Clearing bets");
-            const places = self.places();
-            self.places().forEach(function (value) {
+            this.logGameEvent("Clearing bets");
+            const places = this.places();
+            this.places().forEach(function (value) {
                 value.collectBet();
             });
-            self.refreshPlaces();
+            this.refreshPlaces();
 
-            self.lastRaise(0);
-            self.currentRaise(self.minimumRaiseAmount());
-            self.actionBlock.isRaise(false);
-            self.actionBlock.buttonsEnabled(true);
+            this.lastRaise(0);
+            this.currentRaise(this.minimumRaiseAmount());
+            this.actionBlock.isRaise(false);
+            this.actionBlock.buttonsEnabled(true);
         });
     }
     public onMoneyAdded(playerId: number, amount: number) {
-        const self = this;
         const places = this.places();
-        places.forEach(function (value) {
+        places.forEach((value) => {
             if (value.PlayerId() === playerId) {
                 // Add money only if player not currently eligible to be in game.
                 // And when no game on the table.
-                if (!value.IsInGameStatus() || self.gameId() === null) {
+                if (!value.IsInGameStatus() || this.gameId() === null) {
                     value.Money(value.Money() + amount);
                 }
             }
@@ -1679,13 +1666,12 @@ export class TableView {
         this.refreshPlaces();
     }
     public onMoneyRemoved(playerId: number, amount: number) {
-        const self = this;
         const places = this.places();
-        places.forEach(function (value) {
+        places.forEach((value) => {
             if (value.PlayerId() === playerId) {
                 // Add money only if player not currently eligible to be in game.
                 // And when no game on the table.
-                if (!value.IsInGameStatus() || self.gameId() === null) {
+                if (!value.IsInGameStatus() || this.gameId() === null) {
                     value.Money(value.Money() - amount);
                 }
             }
@@ -1772,15 +1758,14 @@ export class TableView {
         }
     }
     public async rebuy() {
-        const self = this;
         const tournamentView = this.tournament();
         const tapi = this.apiProvider.getTournament();
         try {
             const data = await tapi.rebuy(tournamentView.tournamentId, false);
             if (data.Status === "Ok") {
-                self.hasPendingMoney(true);
-                if (!self.hasPlayersWithoutMoney()) {
-                    // self.clearNotification();
+                this.hasPendingMoney(true);
+                if (!this.hasPlayersWithoutMoney()) {
+                    // this.clearNotification();
                 }
 
                 SimplePopup.display(_("tableMenu.rebuy"), _("tableMenu.rebuySuccess"));
@@ -1792,15 +1777,14 @@ export class TableView {
         }
     }
     public async doubleRebuy() {
-        const self = this;
         const tournamentView = this.tournament();
         const tapi = this.apiProvider.getTournament();
         try {
             const data = await tapi.rebuy(tournamentView.tournamentId, true);
             if (data.Status === "Ok") {
-                self.hasPendingMoney(true);
-                if (!self.hasPlayersWithoutMoney()) {
-                    // self.clearNotification();
+                this.hasPendingMoney(true);
+                if (!this.hasPlayersWithoutMoney()) {
+                    // this.clearNotification();
                 }
 
                 SimplePopup.display(_("tableMenu.doublerebuy"), _("tableMenu.doublerebuySuccess"));
@@ -1812,18 +1796,17 @@ export class TableView {
         }
     }
     public async addon() {
-        const self = this;
         const tournamentView = this.tournament();
         const tapi = this.apiProvider.getTournament();
         try {
             const data = await tapi.addon(tournamentView.tournamentId);
             if (data.Status === "Ok") {
-                self.hasPendingMoney(true);
-                if (!self.hasPlayersWithoutMoney()) {
-                    // self.clearNotification();
+                this.hasPendingMoney(true);
+                if (!this.hasPlayersWithoutMoney()) {
+                    // this.clearNotification();
                 }
 
-                // self.tournament().addonCount(self.tournament().addonCount() + 1);
+                // this.tournament().addonCount(self.tournament().addonCount() + 1);
                 SimplePopup.display(_("tableMenu.addon"), _("tableMenu.addonSuccess"));
             } else {
                 SimplePopup.display(_("tableMenu.addon"), _("errors." + data.Status));
@@ -1878,10 +1861,9 @@ export class TableView {
         await this.addon();
     }
     public async sit(seat: number, amount: number, ticketCode: string) {
-        const self = this;
         const gameApi = this.apiProvider.getGame();
         try {
-            const data = await gameApi.sit(self.tableId, seat, amount, ticketCode);
+            const data = await gameApi.sit(this.tableId, seat, amount, ticketCode);
             // report on successfull seating.
             if (data.Status === "OperationNotValidAtThisTime") {
                 return {
@@ -1947,20 +1929,18 @@ export class TableView {
         }
     }
     public showStandupConfirm() {
-        let messages: string[];
-        messages = [_("table.standupSuccessMessage")];
+        const messages = [_("table.standupSuccessMessage")];
         const title = _("table.standupSuccessTitle");
         SimplePopup.display(title, messages);
     }
     public async standup() {
-        const self = this;
         const gameApi = this.apiProvider.getGame();
         const data = await gameApi.standup(this.tableId);
         // report on successfull seating.
         if (data.Status === "AuthorizationError") {
-            self.reportApiError("Ошибка авторизации");
+            this.reportApiError("Ошибка авторизации");
         } else if (data.Status === "Ok" && appConfig.game.seatMode) {
-            self.showStandupConfirm();
+            this.showStandupConfirm();
         }
     }
 
@@ -2060,7 +2040,6 @@ export class TableView {
     }
 
     public async fold() {
-        const self = this;
         this.actionBlock.buttonsEnabled(false);
         const gameApi = this.apiProvider.getGame();
         if (appConfig.game.useSignalR) {
@@ -2070,26 +2049,25 @@ export class TableView {
             try {
                 const data = await gameApi.fold(this.tableId);
                 if (data.Status === "OperationNotValidAtThisTime") {
-                    self.turnRecovery();
+                    this.turnRecovery();
                     return;
                 }
 
                 if (data.Status === "OperationNotValidWhenTableFrozen") {
-                    self.turnRecovery("table.tableFreezed");
+                    this.turnRecovery("table.tableFreezed");
                     return;
                 }
 
                 if (data.Status !== "Ok") {
-                    self.reportApiError(data.Status);
+                    this.reportApiError(data.Status);
                 }
             } catch (e) {
-                self.turnRecovery();
+                this.turnRecovery();
             }
         }
     }
 
     public async checkOrCall() {
-        const self = this;
         this.actionBlock.buttonsEnabled(false);
         const gameApi = this.apiProvider.getGame();
         if (appConfig.game.useSignalR) {
@@ -2099,26 +2077,25 @@ export class TableView {
             try {
                 const data = await gameApi.checkOrCall(this.tableId);
                 if (data.Status === "OperationNotValidAtThisTime") {
-                    self.turnRecovery();
+                    this.turnRecovery();
                     return;
                 }
 
                 if (data.Status === "OperationNotValidWhenTableFrozen") {
-                    self.turnRecovery("table.tableFreezed");
+                    this.turnRecovery("table.tableFreezed");
                     return;
                 }
 
                 if (data.Status !== "Ok") {
-                    self.reportApiError(data.Status);
+                    this.reportApiError(data.Status);
                 }
             } catch (e) {
-                self.turnRecovery();
+                this.turnRecovery();
             }
         }
     }
 
     public async betOrRaise() {
-        const self = this;
         this.actionBlock.buttonsEnabled(false);
         const gameApi = this.apiProvider.getGame();
         const amount: number = this.currentRaise() - this.currentBet();
@@ -2129,20 +2106,20 @@ export class TableView {
             try {
                 const data = await gameApi.betOrRaise(this.tableId, amount);
                 if (data.Status === "OperationNotValidAtThisTime") {
-                    self.turnRecovery();
+                    this.turnRecovery();
                     return;
                 }
 
                 if (data.Status === "OperationNotValidWhenTableFrozen") {
-                    self.turnRecovery("table.tableFreezed");
+                    this.turnRecovery("table.tableFreezed");
                     return;
                 }
 
                 if (data.Status !== "Ok") {
-                    self.reportApiError(data.Status);
+                    this.reportApiError(data.Status);
                 }
             } catch (e) {
-                self.turnRecovery();
+                this.turnRecovery();
             }
         }
     }
@@ -2233,66 +2210,64 @@ export class TableView {
      * @param cards Cards which was opened on the table.
      */
     public onOpenCards(cards: number[]) {
-        const self = this;
         this.queue.pushCallback(() => {
-            self.actionsCount(0);
-            const currentCardsOpened = self.tableCards.tableCards().length;
+            this.actionsCount(0);
+            const currentCardsOpened = this.tableCards.tableCards().length;
             const myPlayer = this.myPlayer();
             if (myPlayer) {
                 myPlayer.cardsOverlayVisible(true);
             }
 
-            self.tableCards.openCards(cards);
-            self.handHistory.onOpenCards(cards);
+            this.tableCards.openCards(cards);
+            this.handHistory.onOpenCards(cards);
             if (currentCardsOpened === 0 && cards.length === 3) {
-                self.handHistory.onFlop(cards[0], cards[1], cards[2]);
-                self.actionBlock.dealsAllowed(true);
+                this.handHistory.onFlop(cards[0], cards[1], cards[2]);
+                this.actionBlock.dealsAllowed(true);
                 const soundManager = getSoundManager();
                 soundManager.playFlopCards();
-                self.onFlopDealed.dispatch(this.tableId);
+                this.onFlopDealed.dispatch(this.tableId);
             }
             if (currentCardsOpened === 3 && cards.length === 4) {
-                self.handHistory.onTurn(cards[3]);
-                self.actionBlock.dealsAllowed(true);
+                this.handHistory.onTurn(cards[3]);
+                this.actionBlock.dealsAllowed(true);
                 const soundManager = getSoundManager();
                 soundManager.playTurn();
-                self.onTurnDealed.dispatch(this.tableId);
+                this.onTurnDealed.dispatch(this.tableId);
             }
             if (currentCardsOpened === 4 && cards.length === 5) {
-                self.handHistory.onRiver(cards[4]);
-                self.actionBlock.dealsAllowed(true);
+                this.handHistory.onRiver(cards[4]);
+                this.actionBlock.dealsAllowed(true);
                 const soundManager = getSoundManager();
                 soundManager.playRiver();
-                self.onRiverDealed.dispatch(this.tableId);
+                this.onRiverDealed.dispatch(this.tableId);
             }
             if (currentCardsOpened === 3 && cards.length === 5) {
-                self.handHistory.onTurn(cards[3]);
-                self.handHistory.onRiver(cards[4]);
+                this.handHistory.onTurn(cards[3]);
+                this.handHistory.onRiver(cards[4]);
                 // soundManager.playAllIn();
             }
             if (currentCardsOpened === 0 && cards.length === 5) {
-                self.handHistory.onFlop(cards[0], cards[1], cards[2]);
-                self.handHistory.onTurn(cards[3]);
-                self.handHistory.onRiver(cards[4]);
+                this.handHistory.onFlop(cards[0], cards[1], cards[2]);
+                this.handHistory.onTurn(cards[3]);
+                this.handHistory.onRiver(cards[4]);
                 // soundManager.playAllIn();
             }
-            self.actionBlock.resetAutomaticAction();
-            self.actionBlock.updateAdditionalButtons();
+            this.actionBlock.resetAutomaticAction();
+            this.actionBlock.updateAdditionalButtons();
         });
-        if (self.soundEnabled) {
+        if (this.soundEnabled) {
             const soundManager = getSoundManager();
             soundManager.playFlop();
         }
 
         this.queue.wait(this.animationSettings.showCardsTimeout);
         this.queue.pushCallback(() => {
-            self.updateCurrentCombination();
-            self.tableCards.clearAnimation();
+            this.updateCurrentCombination();
+            this.tableCards.clearAnimation();
         });
     }
 
     public async comeBack() {
-        const self = this;
         const gameApi = this.apiProvider.getGame();
         const data = await gameApi.comeBack(this.tableId);
         if (data.Status === "OperationNotValidAtThisTime") {
@@ -2300,12 +2275,11 @@ export class TableView {
         }
 
         if (data.Status !== "Ok") {
-            self.reportApiError(data.Status);
+            this.reportApiError(data.Status);
         }
     }
 
     public async sitOut() {
-        const self = this;
         const gameApi = this.apiProvider.getGame();
         const data = await gameApi.sitOut(this.tableId);
         if (data.Status === "OperationNotValidAtThisTime") {
@@ -2313,7 +2287,7 @@ export class TableView {
         }
 
         if (data.Status !== "Ok") {
-            self.reportApiError(data.Status);
+            this.reportApiError(data.Status);
         }
     }
 
@@ -2389,10 +2363,9 @@ export class TableView {
             return;
         }
 
-        const self = this;
         app.prompt(_("table.changeplace"),
-            [_("table.doyouwantchangeplace")]).then(function () {
-                self.tablePlaces.rotate(offset - currentOffset);
+            [_("table.doyouwantchangeplace")]).then(() => {
+                this.tablePlaces.rotate(offset - currentOffset);
             });
     }
 
@@ -2454,7 +2427,6 @@ export class TableView {
      * if player lose game.
      */
     public displayRebuyOrAddonTime() {
-        const self = this;
         const tournamentView = this.tournament();
 
         // Display notification about rebuy or addon prompt
@@ -2490,11 +2462,11 @@ export class TableView {
 
             this.notificationHandleInterval = timeService.setInterval(() => {
                 const secondsLeft = Math.floor(totalDuration - (i / 2));
-                self.showNotification(_(messageTemplate, { time: secondsLeft }));
+                this.showNotification(_(messageTemplate, { time: secondsLeft }));
                 app.customPopup.title(_(popupCaption, { time: secondsLeft }));
                 i++;
                 if (i >= totalDuration * 2) {
-                    self.clearNotification();
+                    this.clearNotification();
                     if (app.currentPopup === "custom") {
                         app.closePopup();
                     }
@@ -2522,7 +2494,6 @@ export class TableView {
      * Propose buying rebuy or double rebuy
      */
     private proposeBuyRebuy() {
-        const self = this;
         const player = this.myPlayer();
         if (player === null) {
             return;
@@ -2542,13 +2513,13 @@ export class TableView {
                 messages,
                 [_("table.rebuy"), _("table.doubleRebuy"), _("common.cancel")],
                 [() => 1, () => 2, () => { /* nothing */ }])
-                .then(function (value: number) {
+                .then((value: number) => {
                     if (value === 1) {
-                        self.showRebuyPrompt();
+                        this.showRebuyPrompt();
                     }
 
                     if (value === 2) {
-                        self.showDoubleRebuyPrompt();
+                        this.showDoubleRebuyPrompt();
                     }
 
                     result.resolve();
@@ -2562,7 +2533,6 @@ export class TableView {
      * Propose buying addon
      */
     private proposeBuyAddon() {
-        const self = this;
         const player = this.myPlayer();
         if (player == null) {
             // tslint:disable-next-line:no-console
@@ -2583,8 +2553,8 @@ export class TableView {
                 messages,
                 [_("table.addon"), _("common.cancel")],
                 [() => 1, () => { /* nothing */ }])
-                .then(function (value: number) {
-                    self.showAddonPrompt();
+                .then(() => {
+                    this.showAddonPrompt();
                     result.resolve();
                 }, function () {
                     result.reject();
@@ -2760,10 +2730,9 @@ export class TableView {
         }
     }
     private startDealCards() {
-        const self = this;
         this.queue.pushCallback(() => {
-            self.logGameEvent("Deal cards to players");
-            self.places().forEach(function (value) {
+            this.logGameEvent("Deal cards to players");
+            this.places().forEach(function (value) {
                 if (value.WasInGame()) {
                     value.startDealCards();
                 }
@@ -2771,11 +2740,11 @@ export class TableView {
         });
         this.queue.wait(this.animationSettings.dealCardsTime);
         this.queue.pushCallback(() => {
-            self.places().forEach(function (value) {
+            this.places().forEach(function (value) {
                 value.IsDealCards(false);
             });
-            self.clearTimer();
-            self.startTimer();
+            this.clearTimer();
+            this.startTimer();
             this.onPlayerCardsDealed.dispatch(this.tableId);
         });
     }
@@ -2895,7 +2864,6 @@ export class TableView {
     }
     private onPlayerStatusCore(playerId: number, status: number) {
         this.logGameEvent("onPlayerStatus", playerId, status);
-        const self = this;
         const places = this.places();
         places.forEach((p) => {
             if (p.PlayerId() === playerId) {
@@ -2903,7 +2871,7 @@ export class TableView {
                 p.Status(status | (p.Status() & saveMask));
                 if (playerId === authManager.loginId()) {
                     if (p.IsSitoutStatus()) {
-                        self.actionBlock.processing(false);
+                        this.actionBlock.processing(false);
                     }
                 }
             }
@@ -2913,7 +2881,6 @@ export class TableView {
         this.actionBlock.updateBlocks();
     }
     private onPlayerCardsCore(playerId: number, cards: number[]) {
-        const self = this;
         const oldCardsReceived = this.cardsReceived;
         this.cardsReceived = true;
         const myPlayer = this.myPlayer();
@@ -2945,15 +2912,15 @@ export class TableView {
         const places = this.places();
         places.forEach((p) => {
             if (p.PlayerId() === playerId) {
-                const myself = self.currentLogin() === p.PlayerName();
-                let couldDisplayOtherCards = myself || self.combinations().length > 0;
+                const myself = this.currentLogin() === p.PlayerName();
+                let couldDisplayOtherCards = myself || this.combinations().length > 0;
                 couldDisplayOtherCards = true;
                 if (couldDisplayOtherCards) {
                     p.setCards(cards);
-                    if (self.currentCombinationVisible()) {
+                    if (this.currentCombinationVisible()) {
                         p.DisplayedHandCards(p.HandCards());
                     } else {
-                        p.DisplayedHandCards(getBackCardsFromGameType(self.gameType()));
+                        p.DisplayedHandCards(getBackCardsFromGameType(this.gameType()));
                     }
 
                     if (!isHoleCards) {
@@ -3235,18 +3202,17 @@ export class TableView {
      * Initializes the hand history
      */
     private initHandHistory() {
-        const self = this;
         this.handHistory = new HandHistory(this);
         this.lastHandHistory = ko.observable<HandHistory>();
-        this.hasPreviousHand = ko.computed(function () {
-            const lastHand = self.lastHandHistory();
+        this.hasPreviousHand = ko.computed(() => {
+            const lastHand = this.lastHandHistory();
             return lastHand != null
                 && lastHand.id != null;
         }, this);
-        this.currentHandCaption = ko.computed(function () {
-            let currentGame = self.gameId();
+        this.currentHandCaption = ko.computed(() => {
+            let currentGame = this.gameId();
             if (currentGame == null) {
-                currentGame = self.currentGameId();
+                currentGame = this.currentGameId();
                 if (currentGame == null) {
                     return _("table.currentHandEmpty");
                 }
@@ -3256,8 +3222,8 @@ export class TableView {
 
             return _("table.currentHand", { id: currentGame });
         }, this);
-        this.previousHandCaption = ko.computed(function () {
-            const lastHand = self.lastHandHistory();
+        this.previousHandCaption = ko.computed(() => {
+            const lastHand = this.lastHandHistory();
             if (lastHand == null) {
                 return "";
             }

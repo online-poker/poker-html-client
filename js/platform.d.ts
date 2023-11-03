@@ -8,4 +8,4 @@
     hasTouch(): boolean;
 }
 
-declare var platformInfo: PlatformInterface;
+declare const platformInfo: PlatformInterface;

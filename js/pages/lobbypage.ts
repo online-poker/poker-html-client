@@ -1,7 +1,7 @@
 ﻿/* tslint:disable:no-bitwise */
-declare var host: string;
+declare const host: string;
 
-import { Game, LobbyTournamentItem, Tournament, TournamentDefinition } from "@poker/api-server";
+import { Game, GameTableModel, LobbyTournamentItem, Tournament, TournamentDefinition } from "@poker/api-server";
 import * as ko from "knockout";
 import * as moment from "moment";
 import { authManager } from "poker/authmanager";
@@ -19,7 +19,7 @@ import { tableManager } from "../table/tablemanager";
 import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";
 
-declare var app: App;
+declare const app: App;
 
 export class CashOptions {
     public currency: ko.Observable<number>;
@@ -163,7 +163,6 @@ export class LobbyPage extends PageBase {
 
     constructor() {
         super();
-        const self = this;
         this.showScreenOverlay = ko.computed(() => {
             if (!appConfig.ui.enableScreenOverlay) {
                 return false;
@@ -222,23 +221,23 @@ export class LobbyPage extends PageBase {
         }
 
         this.loading = ko.observable(false);
-        this.selectionCaption = ko.computed(function () {
-            if (self.slider.currentIndex() === 0) {
+        this.selectionCaption = ko.computed(() => {
+            if (this.slider.currentIndex() === 0) {
                 return _("tablesList.headerCaption")
-                    .replace("#count", self.tables().length.toString());
+                    .replace("#count", this.tables().length.toString());
             }
 
-            if (self.slider.currentIndex() === 1) {
+            if (this.slider.currentIndex() === 1) {
                 return _("tournamentsList.headerCaption")
-                    .replace("#count", self.tournaments().length.toString());
+                    .replace("#count", this.tournaments().length.toString());
             }
 
             return _("tournamentsList.sngCaption")
-                .replace("#count", self.sngs().length.toString());
+                .replace("#count", this.sngs().length.toString());
         }, this);
 
-        tableManager.tables.subscribe(function () {
-            self.updateOpenedTables();
+        tableManager.tables.subscribe(() => {
+            this.updateOpenedTables();
         });
 
         this.authenticated = ko.computed(function () {
@@ -247,11 +246,11 @@ export class LobbyPage extends PageBase {
         this.login = ko.computed(function () {
             return authManager.login();
         }, this);
-        authManager.registerAuthenticationChangedHandler(function (newValue) {
+        authManager.registerAuthenticationChangedHandler((newValue) => {
             if (authManager.login() === null) {
-                self.amount(0);
+                this.amount(0);
             } else {
-                self.updateAccount();
+                this.updateAccount();
             }
         });
         this.amount = ko.observable(0);
@@ -272,7 +271,6 @@ export class LobbyPage extends PageBase {
             return;
         }
 
-        const self = this;
         this.showFilterSlider(PageBlock.useDoubleView);
         this.showItemsListSlider(!PageBlock.useDoubleView);
         if (pageName === "lobby") {
@@ -283,7 +281,7 @@ export class LobbyPage extends PageBase {
                 }
             }
 
-            reloadManager.setReloadCallback(() => self.update(true));
+            reloadManager.setReloadCallback(() => this.update(true));
         }
 
         this.updateAccount();
@@ -302,12 +300,11 @@ export class LobbyPage extends PageBase {
             return;
         }
 
-        const self = this;
         metadataManager.updateOnline();
 
         // Added reloading of the all information.
-        const resetLoading = function () {
-            self.loading(false);
+        const resetLoading = () => {
+            this.loading(false);
         };
         this.loading(true);
         try {
@@ -371,7 +368,6 @@ export class LobbyPage extends PageBase {
     }
 
     public async refreshTournaments(tournamentType: number) {
-        const self = this;
         const tournamentApi = new Tournament(host);
 
         const options = tournamentType === 2 ? this.tournamentOptions : this.sngOptions;
@@ -381,12 +377,12 @@ export class LobbyPage extends PageBase {
         const buyin = options.buyin();
         const maxPlayers = options.maxPlayers() === 0 ? 0 : 1 << (options.maxPlayers() - 1);
         const data = await tournamentApi.getTournaments(prizeCurrency, tournamentTypeMask, speed, buyin, maxPlayers);
-        if (!self.visible()) {
+        if (!this.visible()) {
             return;
         }
 
         if (data.Status === "Ok") {
-            self.log("Informaton about tournaments received: ", data.Data);
+            this.log("Informaton about tournaments received: ", data.Data);
             const enchance = (item: LobbyTournamentItem) => {
                 const result = item as LobbyTournamentItemEx;
                 const startDate = moment(item.StartDate);
@@ -399,9 +395,9 @@ export class LobbyPage extends PageBase {
                 return result;
             };
             if (tournamentType === 2) {
-                self.tournaments(data.Data.map(enchance));
+                this.tournaments(data.Data.map(enchance));
             } else {
-                self.sngs(data.Data.map(enchance));
+                this.sngs(data.Data.map(enchance));
             }
         }
     }
@@ -508,11 +504,10 @@ export class LobbyPage extends PageBase {
             return;
         }
 
-        const self = this;
         try {
             await this.updateAccountData();
         } catch (e) {
-            self.updateAccount();
+            this.updateAccount();
         }
     }
     public showAccount() {
@@ -522,13 +517,12 @@ export class LobbyPage extends PageBase {
      * Starts request for the account data.
      */
     private async updateAccountData() {
-        const self = this;
         const manager = new AccountManager();
         const data = await manager.getAccount();
         if (data.Status === "Ok") {
             const personalAccountData = data.Data;
             const total = settings.isGuest() ? personalAccountData.GameMoney : personalAccountData.RealMoney;
-            self.amount(total);
+            this.amount(total);
         } else {
             console.error("Error during making call to Account.GetPlayerDefinition in lobby page");
         }

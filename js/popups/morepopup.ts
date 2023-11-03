@@ -8,8 +8,8 @@ import { WebsiteService } from "../services";
 import { AccountManager } from "../services/accountManager";
 import { settings } from "../settings";
 
-declare var host: string;
-declare var app: App;
+declare const host: string;
+declare const app: App;
 
 export class MorePopup {
     public authenticated: ko.Computed<boolean>;
@@ -26,7 +26,6 @@ export class MorePopup {
     public registrationSupported = ko.observable(appConfig.auth.allowSelfRegistration);
 
     constructor() {
-        const self = this;
         this.authenticated = ko.computed(function () {
             return authManager.authenticated();
         }, this);
@@ -34,11 +33,11 @@ export class MorePopup {
             return authManager.login();
         }, this);
         this.loading = ko.observable(false);
-        authManager.registerAuthenticationChangedHandler(function (newValue) {
+        authManager.registerAuthenticationChangedHandler((newValue) => {
             if (authManager.login() === null) {
-                self.amount(0);
+                this.amount(0);
             } else {
-                self.update();
+                this.update();
             }
         });
         this.amount = ko.observable(0);
@@ -48,14 +47,13 @@ export class MorePopup {
             return;
         }
 
-        const self = this;
         this.loading(true);
         try {
             await this.updateAccountData();
             await this.updateMessagesStatus();
-            self.loading(false);
+            this.loading(false);
         } catch (e) {
-            self.update();
+            this.update();
         }
     }
     public showAccount() {
@@ -86,11 +84,9 @@ export class MorePopup {
     public showRegistration() {
         app.showPopup("registration");
     }
-    public showQuitPrompt() {
-        const self = this;
-        app.prompt(_("common.quit"), [_("common.quitApp")]).then(function () {
-            self.quitApp();
-        });
+    public async showQuitPrompt() {
+        await app.prompt(_("common.quit"), [_("common.quitApp")]);
+        this.quitApp();
     }
 
     /**
@@ -104,14 +100,13 @@ export class MorePopup {
      * Starts request for the account data.
      */
     private async updateAccountData() {
-        const self = this;
         const manager = new AccountManager();
         const data = await manager.getAccount();
         if (data.Status === "Ok") {
             const personalAccountData = data.Data;
             const total = personalAccountData.RealMoney;
-            self.amount(total);
-            self.points(personalAccountData.Points);
+            this.amount(total);
+            this.points(personalAccountData.Points);
         } else {
             console.error("Error during making call to Account.GetPlayerDefinition in MorePopup");
         }
@@ -123,14 +118,13 @@ export class MorePopup {
      * Starts requesting message status
      */
     private async updateMessagesStatus() {
-        const self = this;
         const mapi = new Message(host);
         const data = await mapi.getInboxMessages(0, 20, 1 /* Unread */, false);
         if (data.Status === "Ok") {
             if (data.Data.Messages.length > 0) {
-                self.hasMessages(true);
+                this.hasMessages(true);
             } else {
-                self.hasMessages(false);
+                this.hasMessages(false);
             }
         } else {
             console.error("Error during making call to Message.GetInboxMessages in MorePopup");

@@ -22,7 +22,7 @@ export interface IApiProvider {
 
 declare let host: string;
 
-export let DefaultApiProvider: IApiProvider = {
+export const DefaultApiProvider: IApiProvider = {
     getGame: () => new Game(host),
     getTournament: () => new Tournament(host),
     getChat: () => new Chat(host),

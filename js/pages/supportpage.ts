@@ -7,8 +7,8 @@ import { SimplePopup } from "../popups/simplepopup";
 import { keyboardActivationService } from "../services";
 import { PageBase } from "../ui/pagebase";
 
-declare var host: string;
-declare var app: App;
+declare const host: string;
+declare const app: App;
 
 export class SupportPage extends PageBase implements ko.ValidationGroup {
     public displayFullName = false;
@@ -56,7 +56,6 @@ export class SupportPage extends PageBase implements ko.ValidationGroup {
         super.deactivate(pageName);
     }
     public async send() {
-        const self = this;
         const isValid = this.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
@@ -73,19 +72,19 @@ export class SupportPage extends PageBase implements ko.ValidationGroup {
         const api = new Support(host);
         try {
             const data = await api.contactUs(this.fullName(), this.email(), this.subject(), this.body());
-            self.loading(false);
+            this.loading(false);
             if (data.Status === "Ok") {
-                self.fullName("");
-                self.email("");
-                self.subject("");
-                self.body("");
+                this.fullName("");
+                this.email("");
+                this.subject("");
+                this.body("");
                 SimplePopup.display(_("contactUs.contactUsTitle"), _("contactUs.requestSent"));
             } else {
-                self.errorMessage(_("errors." + data.Status));
+                this.errorMessage(_("errors." + data.Status));
             }
         } catch (error) {
-            self.loading(false);
-            self.errorMessage(_("common.unspecifiedError"));
+            this.loading(false);
+            this.errorMessage(_("common.unspecifiedError"));
         }
     }
 }

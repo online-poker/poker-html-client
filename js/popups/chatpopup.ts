@@ -1,6 +1,4 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { connectionService } from "poker/services";
 import { App } from "../app";
 import { _ } from "../languagemanager";
@@ -10,7 +8,7 @@ import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
 import { ChatControl } from "../ui/chatcontrol";
 
-declare var app: App;
+declare const app: App;
 
 export class ChatPopup {
     public control: ChatControl;

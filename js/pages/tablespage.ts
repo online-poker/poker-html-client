@@ -20,7 +20,7 @@ import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";
 
-declare var app: App;
+declare const app: App;
 
 export class TablesPage extends PageBase implements ICurrentTableProvider {
     public currentTable: ko.Computed<TableView>;
@@ -48,24 +48,23 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
 
     constructor(private commandExecutor: ICommandExecutor) {
         super();
-        const self = this;
         this.slideWidth = ko.observable(0);
         this.isConnectionSlow = ko.observable(false);
         this.currentIndex = ko.computed<number>({
             read() {
                 return tableManager.currentIndex();
             },
-            write(value) {
+            write: (value) => {
                 tableManager.currentIndex(value);
-                self.log("Switched to table with index " + value);
+                this.log("Switched to table with index " + value);
             },
         });
         this.currentIndex1 = ko.computed<number>({
-            read() {
-                return self.currentIndex() + 1;
+            read: () => {
+                return this.currentIndex() + 1;
             },
-            write(value) {
-                self.currentIndex(value - 1);
+            write: (value) => {
+                this.currentIndex(value - 1);
             },
             owner: this,
         });
@@ -294,14 +293,13 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         }
     }
     public leave() {
-        const self = this;
         // Unsubscribe from table notifications.
         const tableView = this.currentTable();
         const removeCurrentTable = () => {
             // Navigate back to the lobby.
             if (tableManager.tables().length === 0) {
                 app.lobbyPageBlock.showLobby();
-                self.deactivate();
+                this.deactivate();
             }
         };
         const leaved = this.commandExecutor.executeCommand("app.leaveTable", [tableView.tableId]) as JQueryDeferred<() => void>;
@@ -415,12 +413,11 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         orientationService.setOrientation("landscape");
     }
     private onConnectionSlow() {
-        const self = this;
         this.isConnectionSlow(true);
 
         // Clear message after some time passed by.
         timeService.setTimeout(() => {
-            self.isConnectionSlow(false);
+            this.isConnectionSlow(false);
         }, 3000);
     }
     private onResetConnectionSlow() {

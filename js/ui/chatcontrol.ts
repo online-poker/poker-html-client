@@ -1,6 +1,4 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { connectionService } from "poker/services";
 import { ConnectionWrapper } from "poker/services/connectionwrapper";
 import * as timeService from "../timeservice";

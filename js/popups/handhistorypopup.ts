@@ -6,7 +6,7 @@ import { PlayerWinInformation } from "../table/handhistory";
 import { TableView } from "../table/tableview";
 import { PopupBase } from "../ui/popupbase";
 
-declare var app: App;
+declare const app: App;
 
 enum HandHistoryDisplayMode {
     Short = 1,

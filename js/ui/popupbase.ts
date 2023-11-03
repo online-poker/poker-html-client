@@ -2,7 +2,7 @@
 import { App } from "../app";
 import { debugSettings } from "../debugsettings";
 
-declare var app: App;
+declare const app: App;
 
 export class PopupBase {
     public visible: ko.Observable<boolean>;

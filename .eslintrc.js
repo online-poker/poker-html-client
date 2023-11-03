@@ -3,6 +3,7 @@ module.exports = {
     "parserOptions": {
         "project": "./tsconfig.json"
     },
+    "ignorePatterns": ["js/messages.ts"],
     "extends": [
         "plugin:@typescript-eslint/recommended"
     ],

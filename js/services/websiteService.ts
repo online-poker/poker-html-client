@@ -1,4 +1,4 @@
-﻿declare var authToken: any;
+﻿declare const authToken: any;
 import { l } from "../languagemanager";
 
 /**

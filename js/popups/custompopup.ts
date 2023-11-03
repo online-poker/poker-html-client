@@ -1,6 +1,4 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { PopupBase } from "../ui/popupbase";
 
 type PromiseOrVoid = void | Promise<void>;

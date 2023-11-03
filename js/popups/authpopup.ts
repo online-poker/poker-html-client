@@ -7,7 +7,7 @@ import { keyboardActivationService } from "../services";
 import { settings } from "../settings";
 import { PopupBase } from "../ui/popupbase";
 
-declare var app: App;
+declare const app: App;
 
 export class AuthPopup extends PopupBase {
     public login: ko.Observable<string>;
@@ -45,7 +45,6 @@ export class AuthPopup extends PopupBase {
         super.shown(args);
     }
     public async logon() {
-        const self = this;
         if (authManager.authenticated()) {
             return;
         }
@@ -63,24 +62,24 @@ export class AuthPopup extends PopupBase {
             const login = this.login().trim();
             const password = this.password();
             const rememberMe = this.rememberMe();
-            self.errorMessage(null);
+            this.errorMessage(null);
             try {
                 const result = await authManager.authenticate(login, password, rememberMe);
                 if (result === "Ok") {
-                    self.login(null);
-                    self.password(null);
+                    this.login(null);
+                    this.password(null);
                     keyboardActivationService.forceHideKeyboard();
-                    self.close();
+                    this.close();
                 } else {
                     // Report authentication or authorization errors
                     if (result) {
-                        self.errorMessage(_("errors." + result));
+                        this.errorMessage(_("errors." + result));
                     } else {
-                        self.errorMessage(_("auth.unspecifiedError"));
+                        this.errorMessage(_("auth.unspecifiedError"));
                     }
                 }
             } finally {
-                self.loading(false);
+                this.loading(false);
             }
         }
     }

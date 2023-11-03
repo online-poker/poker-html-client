@@ -1,6 +1,4 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import { _ } from "../languagemanager";
@@ -8,7 +6,7 @@ import { AccountManager } from "../services/accountManager";
 import { TableView } from "../table/tableview";
 import { SimplePopup } from "./simplepopup";
 
-declare var app: App;
+declare const app: App;
 
 export class JoinTablePopup {
     public buyin: ko.Observable<number>;
@@ -49,16 +47,15 @@ export class JoinTablePopup {
         this.allowTickets = ko.observable<boolean>(appConfig.joinTable.allowTickets);
     }
     public async shown() {
-        const self = this;
         const manager = new AccountManager();
-        self.loading(true);
+        this.loading(true);
         if (appConfig.joinTable.allowUsePersonalAccount) {
             try {
                 const data = await manager.getAccount();
-                self.loading(false);
+                this.loading(false);
                 if (data.Status === "Ok") {
                     const personalAccountData = data.Data;
-                    const tableData = self.tableView().model;
+                    const tableData = this.tableView().model;
                     let balance = 0;
                     const currencyId = tableData.CurrencyId;
                     if (currencyId === 1) {
@@ -67,11 +64,11 @@ export class JoinTablePopup {
                         balance = personalAccountData.GameMoney;
                     }
 
-                    self.accountTotal(balance);
-                    self.tableName(tableData.TableName);
-                    self.minBet(tableData.SmallBlind);
-                    self.maxBet(tableData.BigBlind);
-                    self.updateEntries();
+                    this.accountTotal(balance);
+                    this.tableName(tableData.TableName);
+                    this.minBet(tableData.SmallBlind);
+                    this.maxBet(tableData.BigBlind);
+                    this.updateEntries();
                     if (appConfig.game.seatMode) {
                         app.executeCommand("page.seats");
                     }
@@ -79,15 +76,14 @@ export class JoinTablePopup {
                     SimplePopup.display(_("joinTable.caption"), _("errors." + data.Status));
                 }
             } catch (e) {
-                self.loading(false);
+                this.loading(false);
                 SimplePopup.display(_("joinTable.caption"), _("joinTable.joinError"));
             }
         } else {
-            self.loading(false);
+            this.loading(false);
         }
     }
     public async confirm() {
-        const self = this;
         const isValid = this.validationModel.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
@@ -122,35 +118,34 @@ export class JoinTablePopup {
         this.loading(true);
         const result = await this.tableView().sit(seat, amount, ticketCode);
         if (result.success) {
-            self.loading(false);
+            this.loading(false);
             app.closePopup();
-            self.ticketCode(null);
+            this.ticketCode(null);
             return;
         }
 
         const { status, minimalAmount } = result;
-        self.loading(false);
+        this.loading(false);
         if (status === "AmountTooLow") {
-            self.tableView().minimalPlayerBuyIn(minimalAmount);
-            self.updateEntries();
-            self.buyin.setError(_("errors." + status));
+            this.tableView().minimalPlayerBuyIn(minimalAmount);
+            this.updateEntries();
+            this.buyin.setError(_("errors." + status));
         } else {
             SimplePopup.display(_("joinTable.caption"), _("errors." + status));
         }
 
-        self.ticketCode(null);
+        this.ticketCode(null);
     }
     private updateEntries() {
-        const self = this;
-        const tableView = self.tableView();
-        const tableData = self.tableView().model;
+        const tableView = this.tableView();
+        const tableData = this.tableView().model;
         const baseMinimalBuyIn = tableView.minimalBuyIn() * tableData.BigBlind;
-        self.minBuyin(Math.max(baseMinimalBuyIn, tableView.minimalPlayerBuyIn()));
-        self.maxBuyin(20 * baseMinimalBuyIn);
-        self.buyin(Math.max(2 * baseMinimalBuyIn, tableView.minimalPlayerBuyIn()));
-        if (self.maxBuyin() < tableView.minimalPlayerBuyIn()) {
-            self.maxBuyin(tableView.minimalPlayerBuyIn());
-            self.buyin(tableView.minimalPlayerBuyIn());
+        this.minBuyin(Math.max(baseMinimalBuyIn, tableView.minimalPlayerBuyIn()));
+        this.maxBuyin(20 * baseMinimalBuyIn);
+        this.buyin(Math.max(2 * baseMinimalBuyIn, tableView.minimalPlayerBuyIn()));
+        if (this.maxBuyin() < tableView.minimalPlayerBuyIn()) {
+            this.maxBuyin(tableView.minimalPlayerBuyIn());
+            this.buyin(tableView.minimalPlayerBuyIn());
         }
     }
 }

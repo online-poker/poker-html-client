@@ -1,5 +1,3 @@
-/// <reference path="../poker.commanding.api.ts" />
-
 import * as ko from "knockout";
 import { _ } from "../languagemanager";
 import * as runtimeSettings from "../table/runtimesettings";

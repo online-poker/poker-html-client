@@ -1,13 +1,11 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { App } from "../app";
 import { _ } from "../languagemanager";
 import { SimplePopup } from "../popups/simplepopup";
 import { AccountManager } from "../services/accountManager";
 import { PopupBase } from "../ui/popupbase";
 
-declare var app: App;
+declare const app: App;
 
 export class ChangePasswordPopup extends PopupBase {
     public oldPassword = ko.observable<string>().extend({ required: true });
@@ -35,7 +33,6 @@ export class ChangePasswordPopup extends PopupBase {
         super.shown(args);
     }
     public async confirm() {
-        const self = this;
         const isValid = this.validationModel.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
@@ -43,20 +40,20 @@ export class ChangePasswordPopup extends PopupBase {
         }
 
         if (!this.loading()) {
-            self.loading(true);
-            self.errorMessage(null);
+            this.loading(true);
+            this.errorMessage(null);
             const accountApi = new AccountManager();
             const data = await accountApi.changePasword(this.oldPassword(), this.password());
             if (data.Status === "Ok") {
-                self.loading(false);
-                self.oldPassword(null);
-                self.password(null);
-                self.confirmPassword(null);
+                this.loading(false);
+                this.oldPassword(null);
+                this.password(null);
+                this.confirmPassword(null);
                 app.closePopup();
                 SimplePopup.display(_("auth.changePassword"), _("auth.passwordChangedSuccess"));
             } else {
                 // Report authentication or authorization errors
-                self.errorMessage(_("errors." + data.Status));
+                this.errorMessage(_("errors." + data.Status));
             }
         }
     }

@@ -1,6 +1,4 @@
 ﻿/// <reference types="applicationinsights-js" />
-declare var baseUrl: string;
-
 import { debugSettings } from "../debugsettings";
 import * as timeService from "../timeservice";
 import { CancelToken } from "./cancelToken";
@@ -240,8 +238,8 @@ export class ConnectionWrapper {
         return await tryConnection(30);
     }
     private onConnectionStateChanged(state: SignalR.StateChanged) {
-        this.logEvent("SignalR state changed from: " + ConnectionService.stateConversion[state.oldState]
-            + " to: " + ConnectionService.stateConversion[state.newState]);
+        this.logEvent("SignalR state changed from: " + ConnectionService.stateConversion[state.oldState as 0|1|2|4]
+            + " to: " + ConnectionService.stateConversion[state.newState as 0|1|2|4]);
 
         if (state.newState === 4) {
             connectionService.isDisconnected = true;

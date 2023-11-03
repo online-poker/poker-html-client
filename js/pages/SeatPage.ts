@@ -20,7 +20,7 @@ import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";
 import { version } from "../version";
 
-declare var app: App;
+declare const app: App;
 
 export class SeatPage extends PageBase {
     public currentTable: ko.Computed<TableView>;
@@ -48,7 +48,6 @@ export class SeatPage extends PageBase {
 
     constructor(private commandExecutor: ICommandExecutor) {
         super();
-        const self = this;
         this.slideWidth = ko.observable(0);
         this.isConnectionSlow = ko.observable(false);
         this.calculateWidth();
@@ -56,17 +55,17 @@ export class SeatPage extends PageBase {
             read() {
                 return tableManager.currentIndex();
             },
-            write(value) {
+            write: (value) => {
                 tableManager.currentIndex(value);
-                self.log("Switched to table with index " + value);
+                this.log("Switched to table with index " + value);
             },
         });
         this.currentIndex1 = ko.computed<number>({
-            read() {
-                return self.currentIndex() + 1;
+            read: () => {
+                return this.currentIndex() + 1;
             },
-            write(value) {
-                self.currentIndex(value - 1);
+            write: (value) => {
+                this.currentIndex(value - 1);
             },
             owner: this,
         });
@@ -87,24 +86,24 @@ export class SeatPage extends PageBase {
             const tables = tableManager.tables();
             return tables;
         }, this);
-        this.loading = ko.computed(function() {
-            const ct = self.currentTable();
+        this.loading = ko.computed(() => {
+            const ct = this.currentTable();
             if (ct == null) {
                 return false;
             }
 
             return ct.connecting();
         }, this);
-        this.frozen = ko.computed(function() {
-            const ct = self.currentTable();
+        this.frozen = ko.computed(() => {
+            const ct = this.currentTable();
             if (ct === null) {
                 return false;
             }
 
             return ct.frozen();
         }, this);
-        this.opened = ko.computed(function() {
-            const ct = self.currentTable();
+        this.opened = ko.computed(() => {
+            const ct = this.currentTable();
             if (ct === null) {
                 return false;
             }
@@ -280,14 +279,13 @@ export class SeatPage extends PageBase {
         }
     }
     public leave() {
-        const self = this;
         // Unsubscribe from table notifications.
         const tableView = this.currentTable();
-        const removeCurrentTable = function() {
+        const removeCurrentTable = () => {
             // Navigate back to the lobby.
             if (tableManager.tables().length === 0) {
                 app.lobbyPageBlock.showLobby();
-                self.deactivate();
+                this.deactivate();
             }
         };
         const leaved = this.commandExecutor.executeCommand("app.leaveTable", [tableView.tableId]) as JQueryDeferred<() => void>;
@@ -369,12 +367,11 @@ export class SeatPage extends PageBase {
         this.slideWidth(viewportLandscapeWidth);
     }
     private onConnectionSlow() {
-        const self = this;
         this.isConnectionSlow(true);
 
         // Clear message after some time passed by.
-        timeService.setTimeout(function() {
-            self.isConnectionSlow(false);
+        timeService.setTimeout(() => {
+            this.isConnectionSlow(false);
         }, 3000);
     }
     private onResetConnectionSlow() {

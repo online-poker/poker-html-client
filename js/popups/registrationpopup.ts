@@ -8,7 +8,7 @@ import { AccountManager } from "../services/accountManager";
 import { PopupBase } from "../ui/popupbase";
 import { SimplePopup } from "./simplepopup";
 
-declare var app: App;
+declare const app: App;
 
 export class RegistrationPopup extends PopupBase {
     public login: ko.Observable<string>;
@@ -111,7 +111,6 @@ export class RegistrationPopup extends PopupBase {
         });
     }
     public async confirm() {
-        const self = this;
         const isValid = this.validationModel.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
@@ -145,7 +144,7 @@ export class RegistrationPopup extends PopupBase {
                 || data.Status === "PhoneVerificationRequired"
                 || data.Status === "EmailVerificationRequired";
             if (registrationSuccess) {
-                self.close();
+                this.close();
                 SimplePopup.display(_("auth.registration"), _("auth.registrationStatus." + data.Status));
             } else {
                 // Report registration errors;
@@ -155,13 +154,13 @@ export class RegistrationPopup extends PopupBase {
                 let observable: ko.Observable<string> | undefined;
                 switch (data.Status) {
                     case "LoginAlreadyUsed":
-                        observable = self.login;
+                        observable = this.login;
                         break;
                     case "EmailAlreadyUsed":
-                        observable = self.email;
+                        observable = this.email;
                         break;
                     case "PhoneAlreadyUsed":
-                        observable = self.phoneNumber;
+                        observable = this.phoneNumber;
                         break;
                 }
 
@@ -169,7 +168,7 @@ export class RegistrationPopup extends PopupBase {
                 // display targeted error message
                 if (dataEntryError && observable) {
                     observable.setError(_("errors." + data.Status));
-                    self.moveToError();
+                    this.moveToError();
                 } else {
                     // Otherwise display generic error.
                     SimplePopup.display(_("auth.registration"), _("errors." + data.Status));
@@ -178,7 +177,7 @@ export class RegistrationPopup extends PopupBase {
                 authManager.authenticated(false);
             }
         } finally {
-            self.loading(false);
+            this.loading(false);
         }
     }
 

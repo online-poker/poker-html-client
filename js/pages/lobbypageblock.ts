@@ -8,7 +8,7 @@ import { TablesListPage } from "./tableslistpage";
 import { TournamentLobbyPage } from "./tournamentlobbypage";
 import { TournamentsListPage } from "./tournamentslistpage";
 
-declare var app: App;
+declare const app: App;
 
 export class LobbyPageBlock extends PageBlock {
     public sngListPage: TournamentsListPage;

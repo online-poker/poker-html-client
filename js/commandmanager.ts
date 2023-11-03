@@ -20,7 +20,7 @@ export interface ICommandManager extends ICommandExecutor {
 }
 
 export class CommandManager implements ICommandManager {
-    public commands: any[] = [];
+    public commands: {[name: string]: CommandHandler} = {};
 
     /**
      * Register command with given name for execution.

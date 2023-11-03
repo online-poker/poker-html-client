@@ -1,8 +1,6 @@
-﻿/// <reference path="poker.commanding.api.d.ts" />
+﻿declare const host: string;
 
-declare var host: string;
-
-import { Information, TournamentBetStructure, TournamentPrizeStructure } from "@poker/api-server";
+import { BannerData, Information, TournamentBetStructure, TournamentPrizeStructure } from "@poker/api-server";
 import * as ko from "knockout";
 import { debugSettings } from "./debugsettings";
 import { PageBlock } from "./pageblock";
@@ -28,7 +26,6 @@ class MetadataManager {
         this.failed = value;
     }
     public async update() {
-        const self = this;
         const metadataApi = new Information(host);
         const failHandler = () => {
             if (this.failed !== null) {
@@ -62,27 +59,27 @@ class MetadataManager {
                 return;
             }
 
-            self.log("Informaton about players online received: " + JSON.stringify(onlinePlayersData.Data));
-            self.registered(onlinePlayersData.Data[0].toString());
-            self.online(onlinePlayersData.Data[1].toString());
+            this.log("Informaton about players online received: " + JSON.stringify(onlinePlayersData.Data));
+            this.registered(onlinePlayersData.Data[0].toString());
+            this.online(onlinePlayersData.Data[1].toString());
 
-            self.log("Informaton about prize structure received: " + JSON.stringify(prizeStructureData.Data));
-            self.prizes = prizeStructureData.Data;
+            this.log("Informaton about prize structure received: " + JSON.stringify(prizeStructureData.Data));
+            this.prizes = prizeStructureData.Data;
 
-            self.log("Informaton about bet structure received: " + JSON.stringify(betStructureData.Data));
-            self.bets = betStructureData.Data;
+            this.log("Informaton about bet structure received: " + JSON.stringify(betStructureData.Data));
+            this.bets = betStructureData.Data;
 
-            self.log("Informaton about avatars received: " + JSON.stringify(avatarsData.Avatars));
-            self.avatars = avatarsData.Avatars;
+            this.log("Informaton about avatars received: " + JSON.stringify(avatarsData.Avatars));
+            this.avatars = avatarsData.Avatars;
 
-            self.log("Informaton about banners received: " + JSON.stringify(bannersData.Data));
-            self.banners = bannersData.Data;
+            this.log("Informaton about banners received: " + JSON.stringify(bannersData.Data));
+            this.banners = bannersData.Data;
 
-            self.log("Informaton about small banners received: " + JSON.stringify(smallBannersData.Data));
-            self.smallBanners = smallBannersData.Data;
+            this.log("Informaton about small banners received: " + JSON.stringify(smallBannersData.Data));
+            this.smallBanners = smallBannersData.Data;
 
-            if (self.ready !== null) {
-                self.ready();
+            if (this.ready !== null) {
+                this.ready();
             }
         } catch (e) {
             this.log(e);
@@ -102,11 +99,10 @@ class MetadataManager {
         }
     }
     public async updateOnline() {
-        const self = this;
         const metadataApi = new Information(host);
         const onlinePlayers = await metadataApi.getOnlinePlayers();
-        self.registered(onlinePlayers.Data[0].toString());
-        self.online(onlinePlayers.Data[1].toString());
+        this.registered(onlinePlayers.Data[0].toString());
+        this.online(onlinePlayers.Data[1].toString());
         return onlinePlayers;
     }
 

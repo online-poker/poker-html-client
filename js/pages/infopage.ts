@@ -3,7 +3,7 @@ import { PageBlock } from "../pageblock";
 import { keyboardActivationService } from "../services";
 import { PageBase } from "../ui/pagebase";
 
-declare var app: App;
+declare const app: App;
 
 export class InfoPage extends PageBase {
     constructor() {

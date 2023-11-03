@@ -4,7 +4,7 @@ import { App } from "../app";
 import { debugSettings } from "../debugsettings";
 import { PageBlock } from "../pageblock";
 
-declare var app: App;
+declare const app: App;
 
 export class UIManager {
     public static getTabBarItemForPage(pageName: string): string {
@@ -18,7 +18,7 @@ export class UIManager {
         UIManager.pageMappings[pageName] = tabBarItem;
     }
 
-    private static pageMappings: string[] = [];
+    private static pageMappings: {[page: string]: string} = {};
 
     public currentPageContainer: string;
     public effectivePageContainer: string;
@@ -139,7 +139,7 @@ export class UIManager {
             return null;
         }
 
-        return app[pageBlockName + "PageBlock"] as PageBlock;
+        return app[(pageBlockName + "PageBlock") as keyof App] as PageBlock;
     }
 
     /**
@@ -151,7 +151,7 @@ export class UIManager {
             return null;
         }
 
-        return app[subPageName + "Page"] as Page;
+        return app[(subPageName + "Page") as keyof App] as Page;
     }
 
     private logPage(message: string, ...params: any[]) {
