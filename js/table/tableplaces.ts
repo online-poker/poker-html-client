@@ -157,7 +157,7 @@ export class TablePlaces {
             throw new Error("Invalid seat number: " + seat);
         }
 
-        const seatVar = this["place" + seat] as KnockoutObservable<TablePlaceModel>;
+        const seatVar = this["place" + seat] as ko.Observable<TablePlaceModel>;
         seatVar(player);
     }
     public standup(seat: number) {
@@ -165,11 +165,11 @@ export class TablePlaces {
             throw new Error("Invalid seat number: " + seat);
         }
 
-        const seatVar = this["place" + seat] as KnockoutObservable<TablePlaceModel>;
+        const seatVar = this["place" + seat] as ko.Observable<TablePlaceModel>;
         seatVar(null);
     }
     public getPlaceBySeat(seat: number) {
-        const seatVar = this["place" + seat] as KnockoutObservable<TablePlaceModel>;
+        const seatVar = this["place" + seat] as ko.Observable<TablePlaceModel>;
         return seatVar();
     }
     public getPlaceByPlayerId(playerId: number) {

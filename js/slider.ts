@@ -7,12 +7,12 @@ class SliderItem {
 }
 
 export class Slider {
-    public currentIndex: KnockoutObservable<number>;
-    public currentIndex1: KnockoutComputed<number>;
+    public currentIndex: ko.Observable<number>;
+    public currentIndex1: ko.Computed<number>;
     public items: SliderItem[];
-    public current: KnockoutComputed<SliderItem | null>;
-    public next: KnockoutComputed<SliderItem | null>;
-    public prev: KnockoutComputed<SliderItem | null>;
+    public current: ko.Computed<SliderItem | null>;
+    public next: ko.Computed<SliderItem | null>;
+    public prev: ko.Computed<SliderItem | null>;
     public enabled = ko.observable(true);
 
     constructor() {
@@ -22,7 +22,7 @@ export class Slider {
             read: () => {
                 return this.currentIndex() + 1;
             },
-            write: (value) => {
+            write: (value: number) => {
                 if (this.enabled()) {
                     this.currentIndex(value - 1);
                 }

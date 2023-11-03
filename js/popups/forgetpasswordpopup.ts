@@ -7,10 +7,10 @@ import { PopupBase } from "../ui/popupbase";
 export class ForgetPasswordPopup extends PopupBase {
     public login: ko.Observable<string>;
     public email: ko.Observable<string>;
-    public errors: KnockoutValidationErrors;
+    public errors: ko.ValidationErrors;
     public errorMessage: ko.Observable<string>;
     public loading: ko.Observable<boolean>;
-    private validationModel: ko.Observable<ForgetPasswordPopup>;
+    private validationModel: ko.Observable<this>;
 
     constructor() {
         super();

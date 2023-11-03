@@ -271,7 +271,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
     public canActivate(): boolean {
         return tableManager.tables().length !== 0;
     }
-    public switchTable(index: KnockoutObservable<number>) {
+    public switchTable(index: ko.Observable<number>) {
         this.currentIndex(index());
     }
     public prevTable() {

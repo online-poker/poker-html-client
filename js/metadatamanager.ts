@@ -189,7 +189,7 @@ class MetadataManager {
 
         return 4;
     }
-    private log(message: string | Error) {
+    private log(message: unknown) {
         if (debugSettings.initialization.metadata) {
             // tslint:disable-next-line:no-console
             console.log(message);

@@ -1,6 +1,7 @@
 declare var host: string;
 
 import { Information } from "@poker/api-server";
+import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
@@ -40,7 +41,7 @@ export class HomePage extends PageBase {
         Link: "",
     });
     public bannerIntervalHandle: number | null = null;
-    public showScreenOverlay: KnockoutComputed<boolean>;
+    public showScreenOverlay: ko.Computed<boolean>;
     private intervalHandle: number | null = null;
 
     constructor() {

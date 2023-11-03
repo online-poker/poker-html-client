@@ -1,4 +1,5 @@
 ﻿/// <reference path="../poker.commanding.api.ts" />
+/// <reference path="../typings/knockout.ts" />
 
 import * as ko from "knockout";
 import { App } from "../app";
@@ -7,7 +8,6 @@ import { _ } from "../languagemanager";
 import { SimplePopup } from "../popups/simplepopup";
 import { AccountManager } from "../services/accountManager";
 import { TableView } from "../table/tableview";
-import { PopupBase } from "../ui/popupbase";
 
 declare var app: App;
 
@@ -19,7 +19,7 @@ export class AddMoneyPopup {
     public maxBet: ko.Observable<number>;
     public accountTotal: ko.Observable<number>;
     public tableName: ko.Observable<string>;
-    public errors: KnockoutValidationErrors;
+    public errors: ko.ValidationErrors;
     public errorMessage: ko.Observable<string>;
     public tableView: ko.Observable<TableView>;
     public loading: ko.Observable<boolean>;
@@ -141,7 +141,7 @@ export class AddMoneyPopup {
             app.closePopup("ok");
             SimplePopup.display(_("addMoney.caption"), _("addMoney.success"));
             this.ticketCode(null);
-        } catch (e) {
+        } catch (e: any) {
             this.processing(false);
             this.loading(false);
             SimplePopup.display(_("addMoney.caption"), _("errors." + e.message));

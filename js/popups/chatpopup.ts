@@ -1,5 +1,6 @@
 ﻿/// <reference path="../poker.commanding.api.ts" />
 
+import * as ko from "knockout";
 import { connectionService } from "poker/services";
 import { App } from "../app";
 import { _ } from "../languagemanager";
@@ -19,7 +20,7 @@ export class ChatPopup {
     public messages: ko.ObservableArray<PlayerMessage>;
     public systemMessages: ko.ObservableArray<SystemMessage>;
     private tableView: TableView | null = null;
-    private subscription: KnockoutSubscription | null = null;
+    private subscription: ko.Subscription | null = null;
 
     constructor() {
         this.control = new ChatControl();

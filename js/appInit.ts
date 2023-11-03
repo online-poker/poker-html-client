@@ -28,15 +28,16 @@ function isRunningStandalone() {
 
 function configureBindings() {
     // tslint:disable:no-string-literal
+    const currencySymbolHandler = ko.bindingHandlers["currencySymbol"] as any;
     if (appConfig.ui.realMoneyCurrencySymbol) {
-        ko.bindingHandlers["currencySymbol"].moneySymbol = appConfig.ui.realMoneyCurrencySymbol;
+        currencySymbolHandler.moneySymbol = appConfig.ui.realMoneyCurrencySymbol;
     }
 
     if (appConfig.ui.gameMoneySymbol) {
-        ko.bindingHandlers["currencySymbol"].chipsSymbol = appConfig.ui.gameMoneySymbol;
+        currencySymbolHandler.chipsSymbol = appConfig.ui.gameMoneySymbol;
     }
 
-    const betHandler = ko.bindingHandlers["bet"];
+    const betHandler = ko.bindingHandlers["bet"] as any;
     if (appConfig.ui.useShortMoneyRepresentationForBets) {
         betHandler.useShortMoneyRepresentationForBets = true;
     }

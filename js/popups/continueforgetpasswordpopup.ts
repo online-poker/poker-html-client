@@ -12,9 +12,9 @@ export class ContinueForgetPasswordPopup extends PopupBase {
     public password: ko.Observable<string>;
     public confirmPassword: ko.Observable<string>;
     public errorMessage: ko.Observable<string>;
-    public errors: KnockoutValidationErrors;
+    public errors: ko.ValidationErrors;
     public loading: ko.Observable<boolean>;
-    private validationModel: ko.Observable<ContinueForgetPasswordPopup>;
+    private validationModel: ko.Observable<this>;
 
     constructor() {
         super();

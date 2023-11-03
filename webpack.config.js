@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
+const ExtractTextPlugin = require('mini-css-extract-plugin');
+//const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const bundleOutputDir = './dist';
 
 module.exports = (env) => {
@@ -39,13 +39,13 @@ module.exports = (env) => {
         },
         module: {
             rules: [
-                { test: /\.(tsx|ts)?$/, include: /js/, use: 'awesome-typescript-loader?configFileName=build-tsconfig.json&silent=true' },
+                { test: /\.(tsx|ts)?$/, include: /js/, use: 'ts-loader?configFileName=build-tsconfig.json&silent=true' },
                 { test: /\.css$/, use: isDevBuild ? ['style-loader', 'css-loader'] : ExtractTextPlugin.extract({ use: 'css-loader?minimize' }) },
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' }
             ]
         },
         plugins: [
-            new CheckerPlugin(),
+            //new CheckerPlugin(),
         ].concat(isDevBuild ? [
             // Plugins that apply in development builds only
             new webpack.SourceMapDevToolPlugin({

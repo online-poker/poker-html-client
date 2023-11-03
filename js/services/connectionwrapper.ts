@@ -225,7 +225,7 @@ export class ConnectionWrapper {
                 throw new Error("SignalR connection has invalid state.");
             }
 
-            return new Promise<any>(function(resolve, reject) {
+            return new Promise<void>(function(resolve, reject) {
                 timeService.setTimeout(async function() {
                     if (attemptsLeft <= 0) {
                         reject(new Error("Last retry did not work. Stop attempts."));
@@ -320,7 +320,7 @@ export class ConnectionWrapper {
             const connectionInfo = "HID:" + hubId;
             this.logEvent("Connected to server! Connection " + connectionInfo);
             return this;
-        } catch (e) {
+        } catch (e: any) {
             this.logEvent("Could not Connect!" + e.message);
             return new Promise<ConnectionWrapper>((resolve, reject) => {
                 timeService.setTimeout(async () => {

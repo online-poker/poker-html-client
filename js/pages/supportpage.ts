@@ -1,5 +1,6 @@
 import { Support } from "@poker/api-server";
 import * as ko from "knockout";
+import "poker/typings/knockout";
 import { App } from "../app";
 import { _ } from "../languagemanager";
 import { SimplePopup } from "../popups/simplepopup";
@@ -9,7 +10,7 @@ import { PageBase } from "../ui/pagebase";
 declare var host: string;
 declare var app: App;
 
-export class SupportPage extends PageBase implements KnockoutValidationGroup {
+export class SupportPage extends PageBase implements ko.ValidationGroup {
     public displayFullName = false;
     public displaySubject = false;
 
@@ -20,7 +21,7 @@ export class SupportPage extends PageBase implements KnockoutValidationGroup {
     public body = ko.observable("").extend({ required: true, maxLength: 1000 });
     public errorMessage = ko.observable<string>();
 
-    public errors: KnockoutValidationErrors;
+    public errors: ko.ValidationErrors;
     public isValid: () => boolean;
 
     constructor() {

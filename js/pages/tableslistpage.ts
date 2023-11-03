@@ -1,6 +1,7 @@
 /// <reference path="../poker.commanding.api.ts" />
 
 import { Game } from "@poker/api-server";
+import * as ko from "knockout";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";

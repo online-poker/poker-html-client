@@ -1,3 +1,4 @@
+import * as ko from "knockout";
 import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";
 

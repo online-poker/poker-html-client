@@ -1,3 +1,4 @@
+import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
 import { App } from "../app";
 import { PageBlock } from "../pageblock";

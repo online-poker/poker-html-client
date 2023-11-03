@@ -5,11 +5,11 @@ import { Checkbox } from "poker/components/shared/checkbox/checkbox";
 import { TimeBlockComponent } from "poker/components/timeblock/timeblock";
 import * as table from "./table";
 
-const trivialViewModelFactory = function (params: { data: any }, componentInfo: KnockoutComponentTypes.ComponentInfo) {
+const trivialViewModelFactory = function (params: { data: any }, componentInfo: ko.components.ComponentInfo) {
     return params.data;
 };
 
-const tableIconViewModelFactory = function (params: { data: LobbyTableItem }, componentInfo: KnockoutComponentTypes.ComponentInfo) {
+const tableIconViewModelFactory = function (params: { data: LobbyTableItem }, componentInfo: ko.components.ComponentInfo) {
     const tableData = params.data;
     return {
         displayTakenSeats: true,
