@@ -1,5 +1,5 @@
 ﻿import { TournamentDefinition, TournamentPrizeStructure } from "@poker/api-server";
-import ko = require("knockout");
+import * as ko from "knockout";
 import * as metadataManager from "../../../metadatamanager";
 
 interface TournamentPrizeStructureView {
@@ -9,11 +9,11 @@ interface TournamentPrizeStructureView {
 }
 
 class TournamentPrizeInformationComponent {
-    private data: KnockoutObservable<TournamentDefinition>;
-    private totalPrize: KnockoutComputed<number | null>;
-    private structure: KnockoutComputed<TournamentPrizeStructureView[]>;
+    private data: ko.Observable<TournamentDefinition>;
+    private totalPrize: ko.Computed<number | null>;
+    private structure: ko.Computed<TournamentPrizeStructureView[]>;
 
-    constructor(params: { data: KnockoutObservable<TournamentDefinition> }) {
+    constructor(params: { data: ko.Observable<TournamentDefinition> }) {
         const self = this;
         this.data = params.data;
 

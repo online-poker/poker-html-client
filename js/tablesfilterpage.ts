@@ -5,8 +5,8 @@ export class TablesFilterPage extends PageBase {
     public oldpassword: ko.Observable<string>;
     public password: ko.Observable<string>;
     public confirmpassword: ko.Observable<string>;
-    public errors: KnockoutValidationErrors;
-    private validationModel: ko.Observable<TablesFilterPage>;
+    public errors: ko.ValidationErrors;
+    private validationModel: ko.Observable<this>;
 
     constructor() {
         super();

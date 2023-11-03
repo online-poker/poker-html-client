@@ -7,10 +7,10 @@ import { PageBase } from "../ui/pagebase";
 
 declare var app: App;
 
-export class OperationsHistoryPage extends PageBase implements KnockoutValidationGroup {
+export class OperationsHistoryPage extends PageBase implements ko.ValidationGroup {
     public from: ko.Observable<string>;
     public to: ko.Observable<string>;
-    public errors: KnockoutValidationErrors;
+    public errors: ko.ValidationErrors;
     public operations: ko.ObservableArray<OperationData>;
     public loading: ko.Observable<boolean>;
     public isValid: () => boolean;

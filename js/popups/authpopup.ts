@@ -20,9 +20,9 @@ export class AuthPopup extends PopupBase {
     public allowRememberMe: ko.Observable<boolean>;
     public allowPasswordRecovery: ko.Observable<boolean>;
 
-    public errors: KnockoutValidationErrors;
+    public errors: ko.ValidationErrors;
     public loading: ko.Observable<boolean>;
-    private validationModel: ko.Observable<AuthPopup>;
+    private validationModel: ko.Observable<this>;
 
     constructor() {
         super();

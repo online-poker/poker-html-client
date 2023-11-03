@@ -152,7 +152,7 @@ export class LobbyPage extends PageBase {
     public loading: ko.Observable<boolean>;
     public currentTime: ko.Computed<string>;
 
-    public authenticated: ko.Observable<boolean>;
+    public authenticated: ko.Computed<boolean>;
     public login: ko.Computed<string>;
     public amount: ko.Observable<number>;
 
@@ -463,7 +463,7 @@ export class LobbyPage extends PageBase {
             app.lobbyPageBlock.showSecondary("lobby");
         }
     }
-    public selectFilterParameter<T>(parameter: KnockoutObservable<T>, value: T) {
+    public selectFilterParameter<T>(parameter: ko.Observable<T>, value: T) {
         parameter(value);
         if (PageBlock.useDoubleView) {
             app.lobbyPageBlock.showSecondary("lobby");

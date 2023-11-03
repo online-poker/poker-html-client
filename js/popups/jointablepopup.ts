@@ -19,14 +19,14 @@ export class JoinTablePopup {
     public maxBet: ko.Observable<number>;
     public accountTotal: ko.Observable<number>;
     public tableName: ko.Observable<string>;
-    public errors: KnockoutValidationErrors;
+    public errors: ko.ValidationErrors;
     public errorMessage: ko.Observable<string>;
     public seatNumber: ko.Observable<number>;
     public tableView: ko.Observable<TableView>;
     public loading: ko.Observable<boolean>;
     public allowUsePersonalAccount: ko.Observable<boolean>;
     public allowTickets: ko.Observable<boolean>;
-    private validationModel: ko.Observable<JoinTablePopup>;
+    private validationModel: ko.Observable<this>;
 
     public constructor() {
         this.buyin = ko.observable<number>()

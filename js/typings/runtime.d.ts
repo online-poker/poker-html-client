@@ -8,3 +8,9 @@
 interface Navigator {
     standalone?: boolean;
 }
+
+declare module "knockout.validation" {
+    export = validation;
+}
+
+declare var validation: any;

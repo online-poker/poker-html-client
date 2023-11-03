@@ -2,7 +2,7 @@
 
 import IScroll = require("iscroll");
 import * as $ from "jquery";
-import ko = require("knockout");
+import * as ko from "knockout";
 import * as moment from "moment";
 import { App } from "./app";
 import { debugSettings } from "./debugsettings";
@@ -21,11 +21,11 @@ export function registerBindings() {
         update(
             element: HTMLElement,
             valueAccessor: () => any,
-            allBindingsAccessor: KnockoutAllBindingsAccessor,
+            allBindings: ko.AllBindings,
             viewModel: any,
-            bindingContext: KnockoutBindingContext) {
+            bindingContext: ko.BindingContext<any>) {
             const value = valueAccessor();
-            let observable: KnockoutObservable<boolean>;
+            let observable: ko.Observable<boolean>;
             let duration: number;
             if (ko.isObservable(value)) {
                 observable = value;
@@ -46,9 +46,9 @@ export function registerBindings() {
         init(
             element: HTMLElement,
             valueAccessor: () => any,
-            allBindingsAccessor: KnockoutAllBindingsAccessor,
+            allBindings: ko.AllBindings,
             viewModel: any,
-            bindingContext: KnockoutBindingContext) {
+            bindingContext: ko.BindingContext<any>) {
             if (!imageBindingHandler.options.enabled) {
                 return;
             }
@@ -76,9 +76,9 @@ export function registerBindings() {
         update(
             element: HTMLElement,
             valueAccessor: () => any,
-            allBindingsAccessor: KnockoutAllBindingsAccessor,
+            allBindings: ko.AllBindings,
             viewModel: any,
-            bindingContext: KnockoutBindingContext) {
+            bindingContext: ko.BindingContext<any>) {
             if (!imageBindingHandler.options.enabled) {
                 return;
             }
@@ -103,11 +103,11 @@ export function registerBindings() {
     ko.bindingHandlers["image"] = imageBindingHandler;
     ko.bindingHandlers["ltext"] = {
         update(
-            element,
+            element: HTMLElement,
             valueAccessor: () => any,
-            allBindingsAccessor: KnockoutAllBindingsAccessor,
+            allBindings: ko.AllBindings,
             viewModel: any,
-            bindingContext: KnockoutBindingContext) {
+            bindingContext: ko.BindingContext<any>) {
             const parameters = ko.utils.unwrapObservable(valueAccessor());
             if (parameters === null || parameters === undefined) {
                 return "";
@@ -122,14 +122,16 @@ export function registerBindings() {
                 value = _(parameters.key, parameters.params);
             }
 
-            ko.bindingHandlers.text.update!(element, () => value, allBindingsAccessor, viewModel, bindingContext);
+            ko.bindingHandlers.text.update(element, () => value);
         },
     };
     ko.bindingHandlers["lattr"] = {
         update(
-            element, valueAccessor: () => any,
-            allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: KnockoutBindingContext) {
+            element: HTMLElement,
+            valueAccessor: () => any,
+            allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: ko.BindingContext<any>) {
             const propsObject = ko.utils.unwrapObservable(valueAccessor());
             const val = {};
             for (const propName in propsObject) {
@@ -139,35 +141,36 @@ export function registerBindings() {
                 }
             }
 
-            ko.bindingHandlers.attr.update!(element, () => val, allBindingsAccessor, viewModel, bindingContext);
+            ko.bindingHandlers.attr.update(element, () => val);
         },
     };
     ko.bindingHandlers["lhtml"] = {
         init(
-            element, valueAccessor: () => any,
-            allBindingsAccessor: KnockoutAllBindingsAccessor,
+            element: HTMLElement,
+            valueAccessor: () => any,
+            allBindings: ko.AllBindings,
             viewModel: any,
-            bindingContext: KnockoutBindingContext) {
-            ko.bindingHandlers.html.init!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+            bindingContext: ko.BindingContext<any>) {
+            ko.bindingHandlers.html.init();
         },
         update(
-            element,
+            element: HTMLElement,
             valueAccessor: () => any,
-            allBindingsAccessor: KnockoutAllBindingsAccessor,
+            allBindings: ko.AllBindings,
             viewModel: any,
-            bindingContext: KnockoutBindingContext) {
+            bindingContext: ko.BindingContext<any>) {
             const lockey = ko.utils.unwrapObservable(valueAccessor()) as string;
             const value = _(lockey);
-            ko.bindingHandlers.html.update!(element, () => value, allBindingsAccessor, viewModel, bindingContext);
+            ko.bindingHandlers.html.update(element, () => value);
         },
     };
     ko.bindingHandlers["spinner"] = {
         init(
-            element,
+            element: HTMLElement,
             valueAccessor: () => any,
-            allBindingsAccessor: KnockoutAllBindingsAccessor,
+            allBindings: ko.AllBindings,
             viewModel: any,
-            bindingContext: KnockoutBindingContext) {
+            bindingContext: ko.BindingContext<any>) {
             const opts = {
                 lines: 13, // The number of lines to draw
                 length: 4, // The length of each line
@@ -190,20 +193,24 @@ export function registerBindings() {
             const spinner = new Spinner(opts).spin(element);
         },
         update(
-            element,
+            element: HTMLElement,
             valueAccessor: () => any,
-            allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: KnockoutBindingContext) {
-            ko.bindingHandlers.visible.update!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+            allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: ko.BindingContext<any>) {
+            ko.bindingHandlers.visible.update(element, valueAccessor);
         },
     };
     const dateBindingHander = {
         update(
-            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: KnockoutBindingContext) {
+            element: HTMLElement,
+            valueAccessor: () => any,
+            allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: ko.BindingContext<any>) {
             const lockey = ko.utils.unwrapObservable(valueAccessor()) as string;
             const value = _(lockey);
-            ko.bindingHandlers.text.update!(element, function() {
+            ko.bindingHandlers.text.update(element, function() {
                 let dateValue = moment(value);
                 if (debugSettings.application.useUtcDates) {
                     dateValue = dateValue.utc();
@@ -214,13 +221,17 @@ export function registerBindings() {
                 }
 
                 return dateValue.format(dateBindingHander.format);
-            }, allBindingsAccessor, viewModel, bindingContext);
+            });
         },
         format: "D MMM, H:mm",
     };
     ko.bindingHandlers["date"] = dateBindingHander;
     ko.bindingHandlers["selector"] = {
-        init(element, valueAccessor, allBindings, viewModel, bindingContext) {
+        init(element: HTMLElement,
+             valueAccessor: () => any,
+             allBindings: ko.AllBindings,
+             viewModel: any,
+             bindingContext: ko.BindingContext<any>) {
             const value = valueAccessor();
             ko.bindingHandlers.click.init!(element, function() {
                 return function() {
@@ -245,7 +256,11 @@ export function registerBindings() {
         evt.preventDefault();
     }
     ko.bindingHandlers["command"] = {
-        init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+        init(element: HTMLElement,
+             valueAccessor: () => any,
+             allBindings: ko.AllBindings,
+             viewModel: any,
+             bindingContext: ko.BindingContext<any>) {
             let value = valueAccessor();
             value = ko.unwrap(value);
             let isFast = false;
@@ -295,15 +310,15 @@ export function registerBindings() {
             ko.bindingHandlers.event.init!(
                 element,
                 wrapperValueAccessor,
-                allBindingsAccessor,
+                allBindings,
                 viewModel,
                 bindingContext);
         },
     };
     const numericTextHandler = {
         update(
-            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: KnockoutBindingContext) {
+            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: ko.AllBindings,
+            viewModel: any, bindingContext: ko.BindingContext<any>) {
             const value = ko.utils.unwrapObservable(valueAccessor()) as any;
             const positions = ko.utils.unwrapObservable(allBindingsAccessor().positions) as number || numericTextHandler.defaultPositions;
             let finalFormatted: string;
@@ -318,12 +333,9 @@ export function registerBindings() {
             } else {
                 finalFormatted = "";
             }
-            ko.bindingHandlers.text.update!(
+            ko.bindingHandlers.text.update(
                 element,
-                function() { return finalFormatted; },
-                allBindingsAccessor,
-                viewModel,
-                bindingContext);
+                function() { return finalFormatted; });
         },
 
         defaultPositions: 2,
@@ -336,10 +348,11 @@ export function registerBindings() {
         moneySymbol: "$",
         chipsSymbol: "",
         update(
-            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: KnockoutBindingContext) {
+            element: HTMLElement, valueAccessor: () => any, allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: ko.BindingContext<any>) {
             const value = ko.utils.unwrapObservable(valueAccessor()) as any;
-            const positions = ko.utils.unwrapObservable(allBindingsAccessor()) as number;
+            const positions = ko.utils.unwrapObservable(allBindings()) as number;
             let text: string;
             if (value === 1) {
                 text = currencySymbolBindingHandler.moneySymbol;
@@ -349,15 +362,12 @@ export function registerBindings() {
 
             ko.bindingHandlers.text.update!(
                 element,
-                () => text,
-                allBindingsAccessor,
-                viewModel,
-                bindingContext);
+                () => text);
         },
     };
     ko.bindingHandlers["currencySymbol"] = currencySymbolBindingHandler;
     interface SwipeBindingOptions {
-        index: KnockoutObservable<number>;
+        index: ko.Observable<number>;
         duration?: number;
         slideWidth?: number;
         autoFix?: boolean;
@@ -365,7 +375,7 @@ export function registerBindings() {
         disabled?: boolean;
         updateOnSlideChange?: boolean;
     }
-    interface SwipeKnockoutBindingContext extends KnockoutBindingContext {
+    interface SwipeKnockoutBindingContext extends ko.BindingContext<any> {
         $swiper: Swipe;
         $swiperIndex?: number;
         insideUpdate: boolean;
@@ -385,8 +395,9 @@ export function registerBindings() {
             }
         },
         init(
-            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: SwipeKnockoutBindingContext) {
+            element: HTMLElement, valueAccessor: () => any, allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: SwipeKnockoutBindingContext) {
             const valObservable: SwipeBindingOptions = valueAccessor();
             const autoFix = valObservable.autoFix === undefined ? true : !!valObservable.autoFix;
             const breakDistance = valObservable.breakDistance === undefined ? null : valObservable.breakDistance;
@@ -443,7 +454,7 @@ export function registerBindings() {
             bindingContext.$swiper = new Swipe(element, options);
         },
         update(
-            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
+            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: ko.AllBindings,
             viewModel: any, bindingContext: SwipeKnockoutBindingContext) {
             const valObservable: SwipeBindingOptions = valueAccessor();
             if (valObservable.disabled) {
@@ -472,17 +483,19 @@ export function registerBindings() {
     ko.bindingHandlers["swipe"] = swipeHandler as any;
     ko.bindingHandlers["swipeForeach"] = {
         init(
-            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
+            element: HTMLElement, valueAccessor: () => any, allBindings: ko.AllBindings,
             viewModel: any, bindingContext: SwipeKnockoutBindingContext) {
             swipeHandler.log("swipeForeach init ", valueAccessor()(), viewModel, bindingContext.$swiper);
-            ko.bindingHandlers.foreach.init!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+            ko.bindingHandlers.foreach.init!(element, valueAccessor, allBindings, viewModel, bindingContext);
             return { controlsDescendantBindings: true };
         },
         update(
-            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: SwipeKnockoutBindingContext) {
+            element: HTMLElement, valueAccessor: () => any, allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: SwipeKnockoutBindingContext) {
             swipeHandler.log("swipeForeach update ", valueAccessor()(), viewModel, bindingContext.$swiper);
-            ko.bindingHandlers.foreach.update!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+
+            // ko.bindingHandlers.foreach.update!(element, valueAccessor, allBindings, viewModel, bindingContext);
             swipeHandler.log("Preious slider position ", bindingContext.$swiperIndex);
             if (bindingContext.$swiper) {
                 bindingContext.$swiper.kill();
@@ -494,10 +507,10 @@ export function registerBindings() {
     } as any;
     ko.virtualElements.allowedBindings["swipeForeach"] = true;
     interface ScrollBindingOptions {
-        refreshTrigger: KnockoutObservable<any>;
+        refreshTrigger: ko.Observable<any>;
         suppress?: boolean;
     }
-    interface ScrollKnockoutBindingContext extends KnockoutBindingContext {
+    interface ScrollKnockoutBindingContext extends ko.BindingContext<any> {
         $scroll: IScroll;
     }
     const scrollHandler = {
@@ -562,7 +575,7 @@ export function registerBindings() {
             }
         },
         init(
-            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
+            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: ko.AllBindings,
             viewModel: any, bindingContext: ScrollKnockoutBindingContext) {
             const valObservable: ScrollBindingOptions = valueAccessor();
             const suppressed = valObservable.suppress || false;
@@ -579,8 +592,9 @@ export function registerBindings() {
         moneyFractionalSeparator: ".",
         fractionalDigitsCount: 2,
         update(
-            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: KnockoutBindingContext) {
+            element: HTMLElement, valueAccessor: () => any, allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: ko.BindingContext<any>) {
             const value = ko.unwrap(valueAccessor());
             if (value === null || value === undefined || value === 0) {
                 element.innerHTML = "";
@@ -627,8 +641,10 @@ export function registerBindings() {
     ko.bindingHandlers["bet"] = betHandler;
     ko.bindingHandlers["forceFocus"] = {
         init(
-            element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: KnockoutBindingContext) {
+            element: HTMLElement,
+            valueAccessor: () => any, allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: ko.BindingContext<any>) {
             const handler = function(data: any, event: Event) {
                 setTimeout(() => {
                     const currentTargetElement = event.currentTarget as HTMLElement;
@@ -636,13 +652,14 @@ export function registerBindings() {
                 }, 0);
             };
             ko.bindingHandlers.event.init(element, function() { return { touchstart: handler }; },
-                allBindingsAccessor, viewModel, bindingContext);
+                allBindings, viewModel, bindingContext);
         },
     };
     ko.bindingHandlers["slideup"] = {
         init(
-            element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: KnockoutBindingContext) {
+            element: HTMLElement, valueAccessor: () => any, allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: ko.BindingContext<any>) {
             const value = valueAccessor();
             const functionValue = value as () => void;
             const hammer = Hammer(element, { dragMinDistance: 3 });
@@ -654,8 +671,9 @@ export function registerBindings() {
 
     ko.bindingHandlers["slidedown"] = {
         init(
-            element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: KnockoutBindingContext) {
+            element: HTMLElement, valueAccessor: () => any, allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: ko.BindingContext<any>) {
             const value = valueAccessor();
             const functionValue = value as () => void;
             const hammer = Hammer(element, { dragMinDistance: 3 });
@@ -666,8 +684,9 @@ export function registerBindings() {
     };
     ko.bindingHandlers["slideleft"] = {
         init(
-            element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: KnockoutBindingContext) {
+            element: HTMLElement, valueAccessor: () => any, allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: ko.BindingContext<any>) {
             const value = valueAccessor();
             const functionValue = value as () => void;
             const hammer = Hammer(element, { threshold: 10 });
@@ -679,8 +698,9 @@ export function registerBindings() {
 
     ko.bindingHandlers["slideright"] = {
         init(
-            element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: KnockoutBindingContext) {
+            element: HTMLElement, valueAccessor: () => any, allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: ko.BindingContext<any>) {
             const value = valueAccessor();
             const functionValue = value as () => void;
             const hammer = Hammer(element, { threshold: 10 });
@@ -692,8 +712,9 @@ export function registerBindings() {
 
     ko.bindingHandlers["doubletap"] = {
         init(
-            element, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: KnockoutBindingContext) {
+            element: HTMLElement, valueAccessor: () => any, allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: ko.BindingContext<any>) {
             const value = valueAccessor();
             const functionValue = value as () => void;
             const hammer = Hammer(element, { tap: true });
@@ -707,8 +728,9 @@ export function registerBindings() {
 
     ko.bindingHandlers["handle"] = {
         init(
-            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: KnockoutBindingContext) {
+            element: HTMLElement, valueAccessor: () => any, allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: ko.BindingContext<any>) {
             const value = valueAccessor();
             const functionValue = value as () => number;
             // eslint-disable-next-line @typescript-eslint/camelcase
@@ -734,17 +756,18 @@ export function registerBindings() {
         },
     };
     interface FadeTableBindingSettings {
-        item: KnockoutSubscribable<any>;
-        target: KnockoutObservable<boolean>;
+        item: ko.Subscribable<any>;
+        target: ko.Observable<boolean>;
         duration?: number;
     }
-    interface FadeTableBindingContext extends KnockoutBindingContext {
+    interface FadeTableBindingContext extends ko.BindingContext<any> {
         $timeout?: number;
     }
     ko.bindingHandlers["fadeTable"] = {
         init(
-            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor,
-            viewModel: any, bindingContext: FadeTableBindingContext) {
+            element: HTMLElement, valueAccessor: () => any, allBindings: ko.AllBindings,
+            viewModel: any,
+            bindingContext: FadeTableBindingContext) {
             const value = valueAccessor() as FadeTableBindingSettings;
             const duration = value.duration || 1000;
             const subscription = value.item.subscribe(function(val) {

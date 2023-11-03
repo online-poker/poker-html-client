@@ -1,4 +1,4 @@
-﻿import ko = require("knockout");
+﻿import * as ko from "knockout";
 
 /**
  * Parameters for the timeblock component
@@ -11,12 +11,12 @@ interface CheckboxParameters {
 }
 
 export class Checkbox {
-    public checked: KnockoutObservable<boolean>;
-    public label: KnockoutObservable<string>;
-    public right: KnockoutObservable<boolean>;
-    public color: KnockoutObservable<string>;
+    public checked: ko.Observable<boolean>;
+    public label: ko.Observable<string>;
+    public right: ko.Observable<boolean>;
+    public color: ko.Observable<string>;
 
-    constructor(params: CheckboxParameters, componentInfo?: KnockoutComponentTypes.ComponentInfo) {
+    constructor(params: CheckboxParameters, componentInfo?: ko.components.ComponentInfo) {
         const checked = params.checked;
         if (typeof checked === "boolean") {
             this.checked = ko.observable(checked);

@@ -1,5 +1,6 @@
 import { getAuthToken, setAuthToken } from "@poker/api-server";
 import * as $ from "jquery";
+import * as ko from "knockout";
 import { appConfig } from "poker/appconfig";
 import { authManager } from "poker/authmanager";
 import { CommandManager } from "poker/commandmanager";
@@ -110,7 +111,7 @@ export class App {
     public mainSelector: Selector;
     public spinner: any;
     public progressSpinner: any;
-    public processing: KnockoutObservable<boolean>;
+    public processing: ko.Observable<boolean>;
     public popupClosed: Signal;
     public loadPromises: JQueryPromise<void>[];
     public fullyInitialized: boolean;
@@ -154,7 +155,7 @@ export class App {
 
         this.morePopup = new MorePopup();
 
-        this.processing = ko.observable(false);
+        this.processing = ko.observable<boolean>(false);
 
         this.popupClosed = new signals.Signal();
         this.registerCommands();
@@ -1101,7 +1102,7 @@ export class App {
         }
 
         console.log("Launch intialization of metadata first time");
-        const failHandler = function (e: Error) {
+        const failHandler = function (e: unknown) {
             if (e) {
                 console.error(e);
             } else {

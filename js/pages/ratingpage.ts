@@ -1,3 +1,4 @@
+import * as ko from "knockout";
 import { App } from "../app";
 import { AccountManager } from "../services/accountManager";
 

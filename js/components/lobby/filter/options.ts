@@ -1,4 +1,4 @@
-﻿import ko = require("knockout");
+﻿import * as ko from "knockout";
 
 /**
  * Parameters for the timeblock component
@@ -9,7 +9,7 @@ interface FilterOptionsComponentParameters {
     /**
      * Optional initial slide to be presented first.
      */
-    displayCurrency?: boolean | KnockoutObservable<boolean>;
+    displayCurrency?: boolean | ko.Observable<boolean>;
 }
 
 export class FilterOptionsComponent {

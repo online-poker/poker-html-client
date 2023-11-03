@@ -7,8 +7,8 @@ export interface SelectorItem {
 }
 
 export class Selector {
-    public caption: KnockoutObservable<string>;
-    public items: KnockoutObservableArray<SelectorItem>;
+    public caption: ko.Observable<string>;
+    public items: ko.ObservableArray<SelectorItem>;
     public selected: (item: SelectorItem) => void;
     public cancelled: () => void;
     constructor() {

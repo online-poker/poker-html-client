@@ -28,9 +28,9 @@ export class RegistrationPopup extends PopupBase {
     public imageUrl: ko.Observable<string>;
     public imageFile = ko.observable<string>();
     public loading: ko.Observable<boolean>;
-    public errors: KnockoutValidationErrors;
+    public errors: ko.ValidationErrors;
     public allowSelectUserAvatar: ko.Observable<boolean>;
-    private validationModel: ko.Observable<RegistrationPopup>;
+    private validationModel: ko.Observable<this>;
 
     constructor() {
         super();
