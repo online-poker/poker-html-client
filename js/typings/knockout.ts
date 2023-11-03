@@ -16,7 +16,9 @@ declare module "knockout" {
     }
 
     export interface ValidationGroup {
-        dummy: any;
+        errors?: ValidationErrors | undefined;
+        isValid?: (() => boolean) | undefined;
+        isAnyMessageShown?: (() => boolean) | undefined;
     }
 
     type KnockoutValidationMessageFunction = (params: any, observable: any) => string;
