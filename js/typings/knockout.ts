@@ -15,7 +15,9 @@ declare module "knockout" {
         showAllMessages(all: boolean): void;
     }
 
-    export interface ValidationGroup {}
+    export interface ValidationGroup {
+        dummy: any;
+    }
 
     type KnockoutValidationMessageFunction = (params: any, observable: any) => string;
 
@@ -96,4 +98,3 @@ declare module "knockout" {
         };
     }
 }
-
