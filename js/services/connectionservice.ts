@@ -1,4 +1,4 @@
-﻿declare var baseUrl: string;
+﻿declare const baseUrl: string;
 
 import { getAuthToken } from "@poker/api-server";
 import * as signals from "signals";

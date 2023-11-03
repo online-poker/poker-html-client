@@ -14,7 +14,7 @@ import { settings } from "../settings";
 import { tableManager } from "../table/tablemanager";
 import { TournamentView } from "../table/tournamentview";
 
-declare var app: App;
+declare const app: App;
 
 export class TableMenuPopup {
     public soundEnabled: ko.Computed<boolean>;
@@ -162,7 +162,6 @@ export class TableMenuPopup {
 
     public async shown() {
         // Load settings
-        const self = this;
         const currentTable = this.currentTableProvider.currentTable();
         const myPlayer = currentTable.myPlayer();
         const playerIsInGame = myPlayer != null;
@@ -207,12 +206,12 @@ export class TableMenuPopup {
                 if (tournamentView.addonAllowed() || tournamentView.rebuyAllowed()) {
                     const data = await this.accountManager.getAccount();
                     const personalAccount = data.Data;
-                    const currentMoney = self.getCurrentMoney(tournamentView, personalAccount);
+                    const currentMoney = this.getCurrentMoney(tournamentView, personalAccount);
                     const addonPrice = tdata.AddonPrice + tdata.AddonFee;
                     const rebuyPrice = tdata.RebuyFee + tdata.RebuyPrice;
-                    self.isSufficientMoneyForAddon(addonPrice <= currentMoney);
-                    self.isSufficientMoneyForRebuy(rebuyPrice <= currentMoney);
-                    self.isSufficientMoneyForDoubleRebuy((2 * rebuyPrice) <= currentMoney);
+                    this.isSufficientMoneyForAddon(addonPrice <= currentMoney);
+                    this.isSufficientMoneyForRebuy(rebuyPrice <= currentMoney);
+                    this.isSufficientMoneyForDoubleRebuy((2 * rebuyPrice) <= currentMoney);
                 }
             }
         } else {

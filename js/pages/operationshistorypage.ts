@@ -5,7 +5,7 @@ import { orientationService, reloadManager } from "../services";
 import { AccountManager } from "../services/accountManager";
 import { PageBase } from "../ui/pagebase";
 
-declare var app: App;
+declare const app: App;
 
 export class OperationsHistoryPage extends PageBase implements ko.ValidationGroup {
     public from: ko.Observable<string>;

@@ -1,9 +1,7 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { App } from "../app";
 
-declare var app: App;
+declare const app: App;
 
 export class OkCancelPopup {
     public title: ko.Observable<string>;

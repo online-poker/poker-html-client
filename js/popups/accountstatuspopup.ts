@@ -1,5 +1,3 @@
-/// <reference path="../poker.commanding.api.ts" />
-
 import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
 import { App } from "../app";
@@ -7,7 +5,7 @@ import { _ } from "../languagemanager";
 import { accountService } from "../services";
 import { PopupBase } from "../ui/popupbase";
 
-declare var app: App;
+declare const app: App;
 
 export class AccountStatusPopup extends PopupBase {
     public loading: ko.Observable<boolean>;

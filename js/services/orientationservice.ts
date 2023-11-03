@@ -1,6 +1,4 @@
-﻿/// <reference path="../typings/cordova.d.ts" />
-
-import { settings } from "poker/settings";
+﻿import { settings } from "poker/settings";
 
 export type ScreenOrientation = "portrait" | "landscape";
 
@@ -8,7 +6,7 @@ export class OrientationService {
     private lastOrientation: ScreenOrientation | null = null;
     private disableRotation = false;
 
-    constructor (private screen: IScreen) {
+    constructor (private screen: Screen) {
     }
 
     public async setOrientation(orientation: ScreenOrientation) {

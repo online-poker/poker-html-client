@@ -5,7 +5,7 @@ import { PageBlock } from "../pageblock";
 import { AccountManager } from "../services/accountManager";
 import { PageBase } from "../ui/pagebase";
 
-declare var app: App;
+declare const app: App;
 
 export class WithdrawalPage extends PageBase {
     public player: ko.Observable<any>;
@@ -16,7 +16,6 @@ export class WithdrawalPage extends PageBase {
 
     constructor() {
         super();
-        const self = this;
         this.withdrawalAmount = ko.observable(null);
         this.withdrawalMethod = ko.observable(null);
         this.withdrawalMethods = ko.observableArray([
@@ -30,12 +29,12 @@ export class WithdrawalPage extends PageBase {
                 const api = new AccountManager();
                 const data = await api.getAccount();
                 const personalAccountData = data.Data;
-                self.player({
+                this.player({
                     login: authManager.login(),
                     amount: personalAccountData.RealMoney,
                 });
             } else {
-                self.player({
+                this.player({
                     login: "",
                     amount: null,
                 });

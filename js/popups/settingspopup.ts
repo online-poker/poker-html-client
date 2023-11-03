@@ -5,7 +5,7 @@ import { appConfig } from "../appconfig";
 import { settings } from "../settings";
 import { PopupBase } from "../ui/popupbase";
 
-declare var app: App;
+declare const app: App;
 
 export class SettingsPopup {
     public loading: ko.Observable<boolean>;

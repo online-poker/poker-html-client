@@ -1,12 +1,11 @@
 ﻿/// <reference types="jquery" />
-/// <reference path="../typings/cordova.d.ts" />
 /* tslint:disable:no-string-literal */
 
 import { App } from "../app";
 import * as timeService from "../timeservice";
 import { uiManager } from "./uimanager";
 
-declare var app: App;
+declare const app: App;
 
 export class KeyboardActivationService {
     public static keyboardShowModifier = "keyboard-shown";

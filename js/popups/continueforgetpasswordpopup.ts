@@ -5,7 +5,7 @@ import { SimplePopup } from "../popups/simplepopup";
 import { AccountManager } from "../services/accountManager";
 import { PopupBase } from "../ui/popupbase";
 
-declare var app: App;
+declare const app: App;
 
 export class ContinueForgetPasswordPopup extends PopupBase {
     public token: ko.Observable<string>;
@@ -34,7 +34,6 @@ export class ContinueForgetPasswordPopup extends PopupBase {
         super.shown(args);
     }
     public async confirm() {
-        const self = this;
         const isValid = this.validationModel.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
@@ -42,20 +41,20 @@ export class ContinueForgetPasswordPopup extends PopupBase {
         }
 
         if (!this.loading()) {
-            self.loading(true);
-            self.errorMessage(null);
+            this.loading(true);
+            this.errorMessage(null);
             const accountApi = new AccountManager();
             const data = await accountApi.resetPassword(this.token(), this.password());
             if (data.Status === "Ok") {
-                self.token(null);
-                self.password(null);
-                self.confirmPassword(null);
+                this.token(null);
+                this.password(null);
+                this.confirmPassword(null);
                 app.closePopup();
-                self.loading(false);
+                this.loading(false);
                 SimplePopup.display(_("auth.passwordRecovery"), _("auth.passwordRecoveredSuccess"));
             } else {
                 // Report authentication or authorization errors
-                self.errorMessage(_("errors." + data.Status));
+                this.errorMessage(_("errors." + data.Status));
             }
         }
     }

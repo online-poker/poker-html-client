@@ -13,7 +13,7 @@ import { SelectorItem } from "./selector";
 import { ChipItem } from "./table/chipitem";
 import * as timeService from "./timeservice";
 
-declare var app: App;
+declare const app: App;
 
 export function registerBindings() {
     // Binding set loading variable for short amount of time.
@@ -133,7 +133,7 @@ export function registerBindings() {
             viewModel: any,
             bindingContext: ko.BindingContext<any>) {
             const propsObject = ko.utils.unwrapObservable(valueAccessor());
-            const val = {};
+            const val: any = {};
             for (const propName in propsObject) {
                 if (propsObject.hasOwnProperty(propName)) {
                     const value = _(propsObject[propName]);
@@ -733,7 +733,7 @@ export function registerBindings() {
             bindingContext: ko.BindingContext<any>) {
             const value = valueAccessor();
             const functionValue = value as () => number;
-            // eslint-disable-next-line @typescript-eslint/camelcase
+            // eslint-disable-next-line
             const hammer = Hammer(element, { drag_block_horizontal: true, drag_lock_to_axis: true });
             const parent = element.parentElement;
             hammer.on("drag", function(event) {

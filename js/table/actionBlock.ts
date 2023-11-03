@@ -1,6 +1,4 @@
-﻿/// <reference path="../typings/signalr.d.ts" />
-
-import { Game } from "@poker/api-server";
+﻿import { Game } from "@poker/api-server";
 import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
 import { orientationService } from "poker/services";
@@ -18,8 +16,8 @@ import { TableSlider } from "./tableSlider";
 import { TableView } from "./tableview";
 import { TablePlaceModel } from "./tabpleplacemodel";
 
-declare var host: string;
-declare var app: App;
+declare const host: string;
+declare const app: App;
 
 export class ActionBlock {
     public tableSlider: TableSlider;
@@ -219,7 +217,6 @@ export class ActionBlock {
     private suppressSetSitoutStatus: boolean;
 
     constructor() {
-        const self = this;
         this.tableSlider = new TableSlider();
         this.dealsAllowed = ko.observable(false);
         this.buttonsEnabled = ko.observable(false);
@@ -288,9 +285,9 @@ export class ActionBlock {
             return otherPlayersHasMoneyToSupport;
         });
         this.isAllInDuringCheckOrCall = ko.computed(() => {
-            let currentAmount = self.checkOrCallAmount();
+            let currentAmount = this.checkOrCallAmount();
             currentAmount = currentAmount == null ? 0 : currentAmount;
-            let playerMoney = self.playerMoney();
+            let playerMoney = this.playerMoney();
             playerMoney = playerMoney == null ? 0 : playerMoney;
             if (playerMoney <= currentAmount) {
                 return true;
@@ -299,12 +296,12 @@ export class ActionBlock {
             return false;
         });
         this.checkCallButtonCaption = ko.computed(() => {
-            let currentAmount = self.checkOrCallAmount();
+            let currentAmount = this.checkOrCallAmount();
             currentAmount = currentAmount == null ? 0 : currentAmount;
-            let playerMoney = self.playerMoney();
+            let playerMoney = this.playerMoney();
             playerMoney = playerMoney == null ? 0 : playerMoney;
             if (playerMoney <= currentAmount) {
-                const myself = self.myPlayer();
+                const myself = this.myPlayer();
                 if (myself != null) {
                     const amount = myself.Bet() + playerMoney;
                     return _("table.allin").replace("#amount", withCommas(amount.toString(), ","));
@@ -312,7 +309,7 @@ export class ActionBlock {
 
                 return "";
             } else {
-                if (self.isCheck()) {
+                if (this.isCheck()) {
                     return _("table.check");
                 } else {
                     return _("table.call").replace("#amount", withCommas(currentAmount.toString(), ","));
@@ -320,10 +317,10 @@ export class ActionBlock {
             }
         });
         this.isAllInDuringBetOrRaise = ko.computed(() => {
-            let currentAmount = self.tableSlider.current();
+            let currentAmount = this.tableSlider.current();
             currentAmount = currentAmount == null ? 0 : currentAmount;
-            const player = self.myPlayer();
-            let playerMoney = self.playerMoney();
+            const player = this.myPlayer();
+            let playerMoney = this.playerMoney();
             if (player != null) {
                 playerMoney += player.Bet();
             }
@@ -335,25 +332,25 @@ export class ActionBlock {
 
             return false;
         });
-        this.raiseBetButtonCaption = ko.computed(function() {
-            let currentAmount = self.tableSlider.current();
+        this.raiseBetButtonCaption = ko.computed(() => {
+            let currentAmount = this.tableSlider.current();
             currentAmount = currentAmount == null ? 0 : currentAmount;
-            const player = self.myPlayer();
-            let playerMoney = self.playerMoney();
+            const player = this.myPlayer();
+            let playerMoney = this.playerMoney();
             if (player != null) {
                 playerMoney += player.Bet();
             }
 
             playerMoney = playerMoney == null ? 0 : playerMoney;
-            if (self.isAllInDuringBetOrRaise()) {
-                const myself = self.myPlayer();
+            if (this.isAllInDuringBetOrRaise()) {
+                const myself = this.myPlayer();
                 if (myself != null) {
                     return _("table.allin").replace("#amount", withCommas(playerMoney, ",").toString());
                 }
 
                 return "";
             } else {
-                if (self.isRaise()) {
+                if (this.isRaise()) {
                     return _("table.raise").replace("#amount", withCommas(currentAmount, ",").toString());
                 } else {
                     return _("table.bet").replace("#amount", withCommas(currentAmount, ",").toString());
@@ -361,90 +358,90 @@ export class ActionBlock {
             }
         });
 
-        this.foldOnRaise.subscribe(function(value) {
+        this.foldOnRaise.subscribe((value) => {
             if (value) {
-                self.supportAny(false);
-                self.supportDirectAmount(false);
+                this.supportAny(false);
+                this.supportDirectAmount(false);
             }
         });
-        this.supportDirectAmount.subscribe(function(value) {
+        this.supportDirectAmount.subscribe((value) => {
             if (value) {
-                self.supportAny(false);
-                self.foldOnRaise(false);
+                this.supportAny(false);
+                this.foldOnRaise(false);
 
-                self.amountSupported(self.tableView.maximumBet() - self.tableView.myBet());
+                this.amountSupported(this.tableView.maximumBet() - this.tableView.myBet());
             } else {
-                self.amountSupported(-1);
+                this.amountSupported(-1);
             }
         });
-        this.supportAny.subscribe(function(value) {
+        this.supportAny.subscribe((value) => {
             if (value) {
-                self.supportDirectAmount(false);
-                self.foldOnRaise(false);
+                this.supportDirectAmount(false);
+                this.foldOnRaise(false);
             }
         });
-        this.sitoutBlockVisible = ko.computed(function() {
-            return self.isSitOut() && !self.gameClosed();
+        this.sitoutBlockVisible = ko.computed(() => {
+            return this.isSitOut() && !this.gameClosed();
         });
-        this.mainButtonsBlockVisible = ko.computed(function() {
-            return self.turnEnabled() && !self.isSitOut() && self.buttonsEnabled()
-                && self.dealsAllowed() && self.myPlayerInGame()
-                && !self.gameClosed();
+        this.mainButtonsBlockVisible = ko.computed(() => {
+            return this.turnEnabled() && !this.isSitOut() && this.buttonsEnabled()
+                && this.dealsAllowed() && this.myPlayerInGame()
+                && !this.gameClosed();
         });
-        this.autoButtonsBlockVisible = ko.computed(function() {
-            if (!self.isInGame()) {
+        this.autoButtonsBlockVisible = ko.computed(() => {
+            if (!this.isInGame()) {
                 return false;
             }
 
-            return !self.turnEnabled() && !self.isSitOut()
-                && self.notMyTurn()
-                && self.dealsAllowed() && self.myPlayerInGame()
-                && !self.gameClosed();
+            return !this.turnEnabled() && !this.isSitOut()
+                && this.notMyTurn()
+                && this.dealsAllowed() && this.myPlayerInGame()
+                && !this.gameClosed();
         });
-        this.raiseBlockVisible = ko.computed(function() {
-            if (self.gameFinished()) {
+        this.raiseBlockVisible = ko.computed(() => {
+            if (this.gameFinished()) {
                 return false;
             }
 
-            return self.mainButtonsBlockVisible()
-                && self.couldRaise() && self.myPlayerInGame()
-                && !self.gameClosed();
+            return this.mainButtonsBlockVisible()
+                && this.couldRaise() && this.myPlayerInGame()
+                && !this.gameClosed();
         });
         this.raiseBlockCollapsed = ko.computed(() => {
             return this.expanded() && appConfig.game.collapseRaiseBlockWhenExpanded;
         });
-        this.observerModeBlockVisible = ko.computed(function() {
-            return (!authManager.authenticated() && !self.testMode()) || self.myPlayer() == null;
+        this.observerModeBlockVisible = ko.computed(() => {
+            return (!authManager.authenticated() && !this.testMode()) || this.myPlayer() == null;
         });
-        this.startBlockVisible = ko.computed(function() {
-            if (self.sitoutBlockVisible()) {
+        this.startBlockVisible = ko.computed(() => {
+            if (this.sitoutBlockVisible()) {
                 return false;
             }
 
-            if (self.autoButtonsBlockVisible()) {
+            if (this.autoButtonsBlockVisible()) {
                 return false;
             }
 
-            if (self.mainButtonsBlockVisible()) {
+            if (this.mainButtonsBlockVisible()) {
                 return false;
             }
 
-            return !self.gameClosed() && !self.observerModeBlockVisible();
+            return !this.gameClosed() && !this.observerModeBlockVisible();
         });
-        this.chatVisible = ko.computed(function() {
-            return !self.raiseBlockVisible()
-                && !self.gameClosed();
+        this.chatVisible = ko.computed(() => {
+            return !this.raiseBlockVisible()
+                && !this.gameClosed();
         });
 
         if (debugSettings.actionBlock.traceBlocksVisbility) {
-            this.waitBigBlindBlockVisible.subscribe(function(visbile) {
-                self.log("WaitBB block " + (visbile ? "visible" : "hidden"));
+            this.waitBigBlindBlockVisible.subscribe((visbile) => {
+                this.log("WaitBB block " + (visbile ? "visible" : "hidden"));
             });
-            this.mainButtonsBlockVisible.subscribe(function(visbile) {
-                self.log("Main Buttons block " + (visbile ? "visible" : "hidden"));
+            this.mainButtonsBlockVisible.subscribe((visbile) => {
+                this.log("Main Buttons block " + (visbile ? "visible" : "hidden"));
             });
-            this.sitoutBlockVisible.subscribe(function(visbile) {
-                self.log("Sit out block " + (visbile ? "visible" : "hidden"));
+            this.sitoutBlockVisible.subscribe((visbile) => {
+                this.log("Sit out block " + (visbile ? "visible" : "hidden"));
             });
             this.autoButtonsBlockVisible.subscribe((visbile) => {
                 this.log("Auto Buttons block " + (visbile ? "visible" : "hidden"));

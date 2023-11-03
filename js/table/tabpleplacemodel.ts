@@ -206,62 +206,61 @@ export class TablePlaceModel {
         this.CardsHightlighted = ko.observable(false);
         this.CurrentAction = ko.observable<string>();
 
-        const self = this;
-        this.IsCardsAnimating = ko.computed(function() {
-            return self.IsDealCards() || self.IsFoldCards();
+        this.IsCardsAnimating = ko.computed(() => {
+            return this.IsDealCards() || this.IsFoldCards();
         }, this);
-        this.IsBetPlaced = ko.computed(function() {
-            return self.Bet() > 0 && !self.IsMovingBetToPot();
+        this.IsBetPlaced = ko.computed(() => {
+            return this.Bet() > 0 && !this.IsMovingBetToPot();
         }, this);
-        this.IsSitoutStatus = ko.computed(function() {
-            return (self.Status() & 1) !== 0;
+        this.IsSitoutStatus = ko.computed(() => {
+            return (this.Status() & 1) !== 0;
         }, this);
         this.IsParticipatingStatus = ko.computed({
-            read() {
-                return (self.Status() & 8) !== 0;
+            read: () => {
+                return (this.Status() & 8) !== 0;
             },
-            write(value: boolean) {
+            write: (value: boolean) => {
                 if (value) {
-                    self.Status(self.Status() | 8);
+                    this.Status(this.Status() | 8);
                 } else {
-                    self.Status(self.Status() & ~8);
+                    this.Status(this.Status() & ~8);
                 }
             },
             owner: this,
         });
         this.IsInGameStatus = ko.computed({
-            read() {
-                return (self.Status() & 16) !== 0;
+            read: () => {
+                return (this.Status() & 16) !== 0;
             },
-            write(value: boolean) {
+            write: (value: boolean) => {
                 if (value) {
-                    self.Status(self.Status() | 16);
+                    this.Status(this.Status() | 16);
                 } else {
-                    self.Status(self.Status() & ~16);
+                    this.Status(this.Status() & ~16);
                 }
             },
             owner: this,
         });
         this.IsInGameStatus(this.IsParticipatingStatus() && this.Cards() !== null);
 
-        this.IsBronse = ko.computed(function() {
-            return self.Points() >= 100 * 1000
-                && self.Points() < 200 * 1000;
+        this.IsBronse = ko.computed(() => {
+            return this.Points() >= 100 * 1000
+                && this.Points() < 200 * 1000;
         });
-        this.IsSilver = ko.computed(function() {
-            return self.Points() >= 200 * 1000
-                && self.Points() < 500 * 1000;
+        this.IsSilver = ko.computed(() => {
+            return this.Points() >= 200 * 1000
+                && this.Points() < 500 * 1000;
         });
-        this.IsGold = ko.computed(function() {
-            return self.Points() >= 500 * 1000;
+        this.IsGold = ko.computed(() => {
+            return this.Points() >= 500 * 1000;
         });
 
-        this.LastChatMessageTrimed = ko.computed(function() {
-            if (self.LastChatMessage() === null) {
+        this.LastChatMessageTrimed = ko.computed(() => {
+            if (this.LastChatMessage() === null) {
                 return null;
             }
 
-            return self.LastChatMessage().substr(0, appConfig.game.messageDisplaySize || 17) + "\u2026";
+            return this.LastChatMessage().substr(0, appConfig.game.messageDisplaySize || 17) + "\u2026";
         });
     }
     public prepareForNewGame() {

@@ -13,8 +13,8 @@ import { ConnectionWrapper } from "../services/connectionwrapper";
 import * as timeService from "../timeservice";
 import { tableManager } from "./tablemanager";
 
-declare var host: string;
-declare var app: App;
+declare const host: string;
+declare const app: App;
 
 export class TournamentView {
     public tournamentData = ko.observable<TournamentDefinition>();
@@ -81,7 +81,6 @@ export class TournamentView {
     public totalPrize: ko.Computed<number | null>;
 
     constructor(public tournamentId: number, data: TournamentDefinition) {
-        const self = this;
         this.tournamentData(data);
         this.status(data.Status);
         this.rebuyAllowed(data.IsRebuyAllowed);
@@ -94,8 +93,8 @@ export class TournamentView {
             }
         }
 
-        this.totalPrize = ko.computed(function() {
-            const tdata = self.tournamentData();
+        this.totalPrize = ko.computed(() => {
+            const tdata = this.tournamentData();
             if (tdata === null) {
                 return null;
             }
@@ -109,18 +108,17 @@ export class TournamentView {
             return Promise.resolve({ Status: "Ok", Data: null });
         }
 
-        const self = this;
         const tournamentApi = new Tournament(host);
         this.loading(true);
         const data = await tournamentApi.getTournament(this.tournamentId);
         if (data.Status === "Ok") {
             const tournamentData: TournamentDefinition = data.Data;
-            self.log("Informaton about tournament " + self.tournamentId + " received: ", data.Data);
-            self.log(tournamentData.TournamentName);
-            self.tournamentData(tournamentData);
+            this.log("Informaton about tournament " + this.tournamentId + " received: ", data.Data);
+            this.log(tournamentData.TournamentName);
+            this.tournamentData(tournamentData);
         }
 
-        self.loading(false);
+        this.loading(false);
         return data;
     }
     public clearInformation() {
@@ -130,15 +128,14 @@ export class TournamentView {
      * Updates information about tournament.
      */
     public async updateTournamentInformation() {
-        const self = this;
         if (this.connectingRequest !== null && this.connectingRequest.state() === "pending") {
             // Re-schedule updating information.
-            this.connectingRequest.then(null, function() {
-                self.log("Rescheduling the updating information.");
-                self.updateTournamentInformation();
+            this.connectingRequest.then(null, () => {
+                this.log("Rescheduling the updating information.");
+                this.updateTournamentInformation();
             });
-            self.log("Cancelling the connection request process");
-            self.cancelUpdateTableInformation();
+            this.log("Cancelling the connection request process");
+            this.cancelUpdateTableInformation();
             return;
         }
 
@@ -149,29 +146,29 @@ export class TournamentView {
         const connectionInfo = "HID:" + hubId;
         this.log("Connecting to tournament " + this.tournamentId + " on connection " + connectionInfo);
         const startConnection = app.buildStartConnection();
-        startConnection.then(function() {
+        startConnection.then(() => {
             if (wrapper.terminated) {
                 return;
             }
 
             hubId = wrapper.connection.id;
-            self.log("Attempting to connect to table and chat over connection " + hubId);
+            this.log("Attempting to connect to table and chat over connection " + hubId);
 
-            const joinTournamentRequest = self.joinTournament(wrapper);
+            const joinTournamentRequest = this.joinTournament(wrapper);
             const joinRequest = $.when(joinTournamentRequest);
-            currentLoadingRequest.progress(function(command: string) {
-                self.log("Receiving request to cancel all joining operations");
+            currentLoadingRequest.progress((command: string) => {
+                this.log("Receiving request to cancel all joining operations");
                 joinTournamentRequest.notify(command);
             });
-            joinRequest.then(function() {
+            joinRequest.then(() => {
                 if (wrapper.terminated) {
                     currentLoadingRequest.reject("Cancelled");
                     return;
                 }
 
-                self.log("Joining to tournament finished");
+                this.log("Joining to tournament finished");
                 currentLoadingRequest.resolve();
-            }, function(result1) {
+            }, (result1) => {
                     if (wrapper.terminated) {
                         return;
                     }
@@ -179,11 +176,11 @@ export class TournamentView {
                     const message = "Rejecting request due to join tournament failure in the connection."
                         + "Failed request: " + result1[0];
 
-                    self.log(message);
+                    this.log(message);
                     currentLoadingRequest.reject(message);
                 });
-        }, function(message) {
-            self.log("Tournament connection failed. Error: " + message);
+        }, (message) => {
+            this.log("Tournament connection failed. Error: " + message);
             currentLoadingRequest.reject("Table connection failed. Error: " + message);
         });
         this.connectingRequest = currentLoadingRequest;
@@ -195,7 +192,6 @@ export class TournamentView {
         }
     }
     public joinTournament(wrapper: ConnectionWrapper, maxAttempts = 3) {
-        const self = this;
         const result = $.Deferred();
         if (maxAttempts === 0 || wrapper.terminated) {
             this.log("Stop connecting to tournament");
@@ -208,12 +204,12 @@ export class TournamentView {
         this.log("Joining tournament on connection " + connectionInfo);
         let cancelled = false;
         let subsequentDeferred: JQueryDeferred<any> | null = null;
-        const cancelOperation = function() {
-            self.log("Cancelling join tournament request");
+        const cancelOperation = () => {
+            this.log("Cancelling join tournament request");
             result.reject("Cancelled", true);
         };
 
-        wrapper.buildStartConnection()().then(function() {
+        wrapper.buildStartConnection()().then(() => {
             if (wrapper.terminated) {
                 cancelOperation();
                 return;
@@ -221,8 +217,8 @@ export class TournamentView {
 
             const connectionId = wrapper.connection.id;
             const connectionState = wrapper.connection.state;
-            self.log(`Executing Game.subscribeTournament on connection ${connectionId} in state ${connectionState}`);
-            const operation = wrapper.connection.Game.server.subscribeTournament(self.tournamentId)
+            this.log(`Executing Game.subscribeTournament on connection ${connectionId} in state ${connectionState}`);
+            const operation = wrapper.connection.Game.server.subscribeTournament(this.tournamentId)
                 .then(function() {
                     if (wrapper.terminated) {
                         cancelOperation();
@@ -230,21 +226,21 @@ export class TournamentView {
                     }
 
                     result.resolve();
-                }, function(error: any) {
+                }, (error: any) => {
                     if (wrapper.terminated || cancelled || error === "Cancelled") {
                         cancelOperation();
                         return;
                     }
 
                     const message = "" + error as string;
-                    self.log(`Failed to join tournament ${self.tournamentId}, ${connectionInfo}. Reason: ${message}`);
+                    this.log(`Failed to join tournament ${this.tournamentId}, ${connectionInfo}. Reason: ${message}`);
                     if (message.indexOf("Connection was disconnected before invocation result was received.") >= 0) {
-                        self.log("Stopped connecting to table since underlying connection is broken");
+                        this.log("Stopped connecting to table since underlying connection is broken");
                         slowInternetService.showReconnectFailedPopup();
                         result.reject("Stopped connecting to table since underlying connection is broken", false);
                         return;
                     } else {
-                        subsequentDeferred = self.joinTournament(wrapper, maxAttempts - 1);
+                        subsequentDeferred = this.joinTournament(wrapper, maxAttempts - 1);
                         return subsequentDeferred.then(function() {
                             result.resolve();
                         }, function(subsequentError, subsequentCancelled: boolean) {
@@ -267,7 +263,6 @@ export class TournamentView {
         return result;
     }
     public async onTournamentStatusChanged(status: TournamentStatus) {
-        const self = this;
         const data = this.tournamentData();
         const oldStatus = this.status();
         this.status(status);
@@ -282,7 +277,7 @@ export class TournamentView {
                 return;
             }
 
-            await self.openTournamentTableUI();
+            await this.openTournamentTableUI();
         }
 
         if (status === TournamentStatus.Started) {
@@ -298,7 +293,7 @@ export class TournamentView {
                 return;
             }
 
-            await self.openTournamentTableUI();
+            await this.openTournamentTableUI();
         }
 
         if (status === TournamentStatus.Cancelled) {
@@ -311,7 +306,7 @@ export class TournamentView {
                     _("tournament.caption", { tournament: data.TournamentName }),
                     _("tournament.tournamentCancelled", { tournament: data.TournamentName }));
             } finally {
-                self.log("Tournament " + self.tournamentId + " cancelled");
+                this.log("Tournament " + this.tournamentId + " cancelled");
                 app.lobbyPageBlock.showLobby();
                 app.tablesPage.deactivate();
             }
@@ -319,7 +314,7 @@ export class TournamentView {
 
         if (status === TournamentStatus.Completed) {
             this.executeOnCurrentTable(() => {
-                self.displayTournamentFinished();
+                this.displayTournamentFinished();
             });
         }
     }
@@ -354,7 +349,6 @@ export class TournamentView {
         }
     }
     public onTournamentPlayerGameCompleted(placeTaken: number) {
-        const self = this;
         this.finishedPlaying(true);
         this.finishTime(new Date().valueOf());
         this.finishedPlace = placeTaken;
@@ -375,7 +369,7 @@ export class TournamentView {
         }
 
         this.executeOnCurrentTable(() => {
-            self.displayGameFinishedNotification(prize, placeTaken);
+            this.displayGameFinishedNotification(prize, placeTaken);
         });
     }
     public onTournamentBetLevelChanged(level: number) {
@@ -485,7 +479,6 @@ export class TournamentView {
         this.currentTableId = null;
     }
     private async openTournamentTableUI() {
-        const self = this;
         const data = this.tournamentData();
         const messageKey = appConfig.tournament.openTableAutomatically
             ? "tournament.tournamentStarted"
@@ -495,13 +488,13 @@ export class TournamentView {
                 _("tournament.caption", { tournament: data.TournamentName }),
                 _(messageKey, { tournament: data.TournamentName }));
         } finally {
-            self.log("Tournament " + self.tournamentId + " started");
+            this.log("Tournament " + this.tournamentId + " started");
             if (appConfig.tournament.openTableAutomatically) {
                 if (!this.currentTableId) {
                     this.log(`No current table for tournament ${this.tournamentId}. Stop opening tables page`);
                 } else {
                     await this.openTournamentTable(this.currentTableId);
-                    self.log("Opening table for tournament " + self.tournamentId + "");
+                    this.log("Opening table for tournament " + this.tournamentId + "");
                     if (appConfig.game.seatMode) {
                         app.executeCommand("page.seats");
                     } else {
@@ -512,7 +505,6 @@ export class TournamentView {
         }
     }
     private displayTournamentFinished() {
-        const self = this;
         const data = this.tournamentData();
         const currentDate = new Date().valueOf();
         if (this.finishedPlaying() && (currentDate - this.finishTime()) > 2000) {
@@ -520,17 +512,17 @@ export class TournamentView {
         }
 
         if (this.finishedPlace !== 1 && this.finishedPlace !== 2) {
-            self.log("Tournament " + self.tournamentId + " completed");
+            this.log("Tournament " + this.tournamentId + " completed");
             timeService.setTimeout(async () => {
                 if (app.tablesPage.tablesShown()/* && app.tablesPage.currentTable().tournament() == self*/) {
                     try {
                         await SimplePopup.display(_("tournament.caption", { tournament: data.TournamentName }),
                         _("tournament.tournamentCompleted", { tournament: data.TournamentName }));
                     } finally {
-                        self.finalizeTournament();
+                        this.finalizeTournament();
                     }
                 } else {
-                    self.finalizeTournament();
+                    this.finalizeTournament();
                 }
             }, 2000);
         } else {

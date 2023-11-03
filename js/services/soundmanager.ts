@@ -14,7 +14,7 @@ export class SoundManager {
      */
     constructor(public variant: string, private variantHasHumanVoice: boolean) {
         /* tslint:disable:no-string-literal */
-        this.context = window["AudioContext"] || window["webkitAudioContext"];
+        this.context = window["AudioContext"] as any;
         /* tslint:enable:no-string-literal */
 
         this.webAudioTouchUnlock(this.context);

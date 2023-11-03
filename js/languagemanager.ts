@@ -1,4 +1,4 @@
-declare var messages: any;
+declare let messages: any;
 
 export class LanguageManager {
     public currentLang: string;

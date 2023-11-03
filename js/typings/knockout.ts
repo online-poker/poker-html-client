@@ -87,7 +87,7 @@ declare module "knockout" {
         value: number;
     }
 
-    export interface ObservableExtenderOptions {
+    export interface ObservableExtenderOptions<T> {
         required?: boolean;
         validatable?: boolean;
         email?: boolean;

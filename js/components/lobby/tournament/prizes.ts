@@ -14,19 +14,18 @@ class TournamentPrizeInformationComponent {
     private structure: ko.Computed<TournamentPrizeStructureView[]>;
 
     constructor(params: { data: ko.Observable<TournamentDefinition> }) {
-        const self = this;
         this.data = params.data;
 
-        this.totalPrize = ko.computed(function () {
-            const tdata = self.data();
+        this.totalPrize = ko.computed(() => {
+            const tdata = this.data();
             if (tdata == null) {
                 return null;
             }
 
             return tdata.PrizeAmount + (tdata.CollectedPrizeAmount || 0);
         }, this);
-        this.structure = ko.computed(function () {
-            const data = self.data();
+        this.structure = ko.computed(() => {
+            const data = this.data();
             if (data == null) {
                 return [];
             }
@@ -49,7 +48,7 @@ class TournamentPrizeInformationComponent {
             }
 
             const result = [] as TournamentPrizeStructureView[];
-            const totalPrize = self.totalPrize() || 0;
+            const totalPrize = this.totalPrize() || 0;
             currentPrize.PrizeLevel.forEach(function (item, index) {
                 result.push({
                     place: index + 1,

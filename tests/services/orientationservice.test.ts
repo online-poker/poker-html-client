@@ -1,25 +1,71 @@
 import { OrientationService } from "poker/services/orientationservice";
 
-const screenNotSupportedEntirely: IScreen = { } as any;
+const screenNotSupportedEntirely: Screen = { } as any;
 
 let lastOrientation = "";
 let lockCallCount = 0;
-const screenOrientationSupported: IScreen = {
+const screenOrientationSupported: Screen = {
     orientation: {
         async lock(orientation: string) {
             lockCallCount++;
             lastOrientation = orientation;
         },
+        angle: 0,
+        onchange(this: ScreenOrientation, ev: Event) {
+            throw new Error("Function not implemented.");
+        },
+        type: "landscape-primary",
+        unlock(): void {
+            throw new Error("Function not implemented.");
+        },
+        addEventListener<K extends "change">(type: K, listener: (this: ScreenOrientation, ev: ScreenOrientationEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void {
+            throw new Error("Function not implemented.");
+        },
+        removeEventListener<K extends "change">(type: K, listener: (this: ScreenOrientation, ev: ScreenOrientationEventMap[K]) => any, options?: boolean | EventListenerOptions): void {
+            throw new Error("Function not implemented.");
+        },
+        dispatchEvent(event: Event): boolean {
+            throw new Error("Function not implemented.");
+        },
     },
+    availHeight: 0,
+    availWidth: 0,
+    colorDepth: 0,
+    height: 0,
+    pixelDepth: 0,
+    width: 0,
 };
-const screenOrientationNotSupportedApi: IScreen = {
+const screenOrientationNotSupportedApi: Screen = {
     orientation: {
         async lock(orientation: string) {
             lockCallCount++;
             lastOrientation = orientation;
             throw new DOMException("screen.orientation.lock() is not available on this device.", "notsuported");
         },
+        angle: 0,
+        onchange(this: ScreenOrientation, ev: Event) {
+            throw new Error("Function not implemented.");
+        },
+        type: "landscape-primary",
+        unlock(): void {
+            throw new Error("Function not implemented.");
+        },
+        addEventListener<K extends "change">(type: K, listener: (this: ScreenOrientation, ev: ScreenOrientationEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void {
+            throw new Error("Function not implemented.");
+        },
+        removeEventListener<K extends "change">(type: K, listener: (this: ScreenOrientation, ev: ScreenOrientationEventMap[K]) => any, options?: boolean | EventListenerOptions): void {
+            throw new Error("Function not implemented.");
+        },
+        dispatchEvent(event: Event): boolean {
+            throw new Error("Function not implemented.");
+        },
     },
+    availHeight: 0,
+    availWidth: 0,
+    colorDepth: 0,
+    height: 0,
+    pixelDepth: 0,
+    width: 0,
 };
 
 const deviceVariants = [

@@ -1,4 +1,4 @@
-﻿declare var host: string;
+﻿declare const host: string;
 
 import { Account, setAuthToken } from "@poker/api-server";
 import ko = require("knockout");

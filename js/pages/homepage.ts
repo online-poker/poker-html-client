@@ -1,4 +1,4 @@
-declare var host: string;
+declare const host: string;
 
 import { Information } from "@poker/api-server";
 import * as ko from "knockout";
@@ -14,7 +14,7 @@ import { settings } from "../settings";
 import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";
 
-declare var app: App;
+declare const app: App;
 
 export class HomePage extends PageBase {
     public online: ko.Observable<string>;
