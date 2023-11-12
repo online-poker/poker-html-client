@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [10.x,14.x, 16.x, 18.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -24,18 +24,24 @@ jobs:
         cache: 'npm'
         #registry-url: 'https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/'
 
-    - uses: ponicode/azure-devops-npm-action@master
-      with:
-        organisation: "pokerkz"
-        registry: "Shared"
-        user: "pokerkz"
-        password: ${{ secrets.NPM_TOKEN }}
-        email: "we dont need it"
-        scope: "poker"
       
-    - name: Install dependencies
+    - name: Safe install dependencies
       run: |
-        npm ci
+        printf "@poker:registry=https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/\n" > ~/.npmrc
+        printf "\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:username=pokerkz\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:email=npm >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:_password=${{ secrets.NPM_TOKEN }}\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:username=pokerkz\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:_password=${{ secrets.NPM_TOKEN }}\n" >> ~/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:email=npm >> ~/.npmrc
+        printf "always-auth=true\n" >> ~/.npmrc
+        npm ci --ignore-scripts
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: Full install dependencies
+      run: npm rebuild && npm run prepare --if-present
 
     - name: Build
       run: |
