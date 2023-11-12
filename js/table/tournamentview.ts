@@ -514,7 +514,7 @@ export class TournamentView {
         if (this.finishedPlace !== 1 && this.finishedPlace !== 2) {
             this.log("Tournament " + this.tournamentId + " completed");
             timeService.setTimeout(async () => {
-                if (app.tablesPage.tablesShown()/* && app.tablesPage.currentTable().tournament() == self*/) {
+                if (app.tablesPage.tablesShown()/* && app.tablesPage.currentTable().tournament() == this*/) {
                     try {
                         await SimplePopup.display(_("tournament.caption", { tournament: data.TournamentName }),
                         _("tournament.tournamentCompleted", { tournament: data.TournamentName }));

@@ -494,8 +494,7 @@ export function registerBindings() {
             viewModel: any,
             bindingContext: SwipeKnockoutBindingContext) {
             swipeHandler.log("swipeForeach update ", valueAccessor()(), viewModel, bindingContext.$swiper);
-
-            // ko.bindingHandlers.foreach.update!(element, valueAccessor, allBindings, viewModel, bindingContext);
+            (ko.bindingHandlers["foreach"] as ko.BindingHandler).update!(element, valueAccessor, allBindings, viewModel, bindingContext);
             swipeHandler.log("Preious slider position ", bindingContext.$swiperIndex);
             if (bindingContext.$swiper) {
                 bindingContext.$swiper.kill();

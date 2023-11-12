@@ -1806,7 +1806,7 @@ export class TableView {
                     // this.clearNotification();
                 }
 
-                // this.tournament().addonCount(self.tournament().addonCount() + 1);
+                // this.tournament().addonCount(this.tournament().addonCount() + 1);
                 SimplePopup.display(_("tableMenu.addon"), _("tableMenu.addonSuccess"));
             } else {
                 SimplePopup.display(_("tableMenu.addon"), _("errors." + data.Status));

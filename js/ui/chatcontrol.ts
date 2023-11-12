@@ -34,7 +34,7 @@ export class ChatControl {
             chatHub.on("Message", handler);
             connectionService.terminatedConnection.addOnce(function() {
                 chatHub.off("Message", handler);
-            }, self, 0);
+            }, this, 0);
         });
     }
     public append(messageId: number, tableId: number, type: string, sender: string, message: string) {
