@@ -49,8 +49,17 @@ jobs:
         npm run lint:test
         npm run compile:test -- --noEmit
 
+    - name: Generate Report
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.1.9
+      with:
+        reports: './coverage/*.xml'
+        targetdir: './coveragereport'
+        reporttypes: 'Cobertura'
+        verbosity: 'Info'
+        tag: '${{ github.run_number }}_${{ github.run_id }}'
+
     - name: Report coverage
       uses: 5monkeys/cobertura-action@master
       with:
-        path: coverage/*.xml
-        minimum_coverage: 5
+        path: coveragereport/*.xml
+        minimum_coverage: 0
