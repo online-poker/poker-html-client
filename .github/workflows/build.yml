@@ -45,7 +45,7 @@ jobs:
 
     - name: Build
       run: |
-        npm run test -- --runInBand
+        npm run test:prod -- --runInBand
         npm run lint:test
         npm run compile:test -- --noEmit
 
