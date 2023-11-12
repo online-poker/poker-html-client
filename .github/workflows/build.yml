@@ -24,16 +24,25 @@ jobs:
         cache: 'npm'
         #registry-url: 'https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/'
 
+    - uses: ponicode/azure-devops-npm-action@master
+      with:
+        organisation: "pokerkz"
+        registry: "Shared"
+        user: "pokerkz"
+        password: ${{ secrets.NPM_TOKEN }}
+        email: "kant2002@gmail.com"
+        scope: "poker"
+      
     - name: Safe install dependencies
       run: |
-        printf "@poker:registry=https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/\n" >> ~/.npmrc
-        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:username=pokerkz\n" >> ~/.npmrc
-        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:email=kant2002@gmail.com >> ~/.npmrc
-        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:_password=${{ secrets.NPM_TOKEN }}\n" >> ~/.npmrc
-        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:username=pokerkz\n" >> ~/.npmrc
-        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:_password=${{ secrets.NPM_TOKEN }}\n" >> ~/.npmrc
-        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:email=kant2002@gmail.com >> ~/.npmrc
-        printf "always-auth=true\n" >> ~/.npmrc
+        printf "@poker:registry=https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/\n" >> $GITHUB_WORKSPACE/.npmrc
+        printf "always-auth=true\n" >> $GITHUB_WORKSPACE/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:username=pokerkz\n" >> $GITHUB_WORKSPACE/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:email=kant2002@gmail.com >> $GITHUB_WORKSPACE/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:_password=${{ secrets.NPM_TOKEN }}\n" >> $GITHUB_WORKSPACE/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:username=pokerkz\n" >> $GITHUB_WORKSPACE/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:_password=${{ secrets.NPM_TOKEN }}\n" >> $GITHUB_WORKSPACE/.npmrc
+        printf "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:email=kant2002@gmail.com >> $GITHUB_WORKSPACE/.npmrc
         npm ci --ignore-scripts
       env:
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
