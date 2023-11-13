@@ -69,7 +69,7 @@
     "webpack-cli": "5.1.4"
   },
   "dependencies": {
-    "@poker/api-server": "0.1.0-dev.20180406123347",
+    "@poker/api-server": "0.1.0-dev.20231113120601",
     "@types/applicationinsights-js": "^1.0.5",
     "isomorphic-fetch": "^3.0.0",
     "jest-environment-jsdom": "^29.7.0",
