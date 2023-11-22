@@ -148,6 +148,13 @@ export class TablePlaceModel {
 
     public cardsOverlayVisible = ko.observable(true);
     public needCardsOverlay = ko.observable(false);
+    public embeddedSeatAddress = ko.computed(() => {
+        if (window.location.host.indexOf("localhost")) {
+            return "//" + window.location.host + ":" + (window.location.port + this.Seat()) + "/embedded/seat";
+        }
+
+        return "//seat" + this.Seat() + "." + window.location.host + "/embedded/seat";
+    });
 
     /**
      * Timer which control clearing of current action text
