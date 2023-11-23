@@ -1,4 +1,5 @@
 /* tslint:disable:no-bitwise */
+import * as $ from "jquery";
 import * as ko from "knockout";
 import * as moment from "moment";
 import { IApiProvider } from "poker/api";

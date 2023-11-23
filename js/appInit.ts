@@ -4,10 +4,14 @@ import * as moment from "moment";
 import { AnimationSettings } from "poker/table/animationsettings";
 import { App } from "./app";
 import { AppConfig, appConfig, overrideConfiguration } from "./appconfig";
+export { overrideConfiguration } from "./appconfig";
 import { registerBindings } from "./bindings";
+export { registerBindings } from "./bindings";
 import { registerComponents } from "./components/registration";
+export { registerComponents } from "./components/registration";
 import { debugSettings } from "./debugsettings";
 import { registerExtenders } from "./extenders";
+export { registerExtenders } from "./extenders";
 import { _ } from "./languagemanager";
 import { ActionBlock } from "./table/actionBlock";
 import { exposeCardsConstants } from "./table/cardsHelper";
@@ -26,7 +30,7 @@ function isRunningStandalone() {
         || ("standalone" in window.navigator && window.navigator["standalone"] === true));
 }
 
-function configureBindings() {
+export function configureBindings() {
     // tslint:disable:no-string-literal
     const currencySymbolHandler = ko.bindingHandlers["currencySymbol"] as any;
     if (appConfig.ui.realMoneyCurrencySymbol) {
@@ -65,12 +69,12 @@ function configureBindings() {
     }
 }
 
-function registerTableView() {
+export function registerTableView() {
     window["TableView"] = TableView;
     window["ActionBlock"] = ActionBlock;
 }
 
-function bootstrap(localConfiguration?: Partial<AppConfig>, animationSettingsOverride?: Partial<AnimationSettings>) {
+export function bootstrap(localConfiguration?: Partial<AppConfig>, animationSettingsOverride?: Partial<AnimationSettings>) {
     overrideConfiguration(localConfiguration || {});
     AnimationSettings.setOverride(animationSettingsOverride || {});
 
@@ -162,13 +166,3 @@ function bootstrap(localConfiguration?: Partial<AppConfig>, animationSettingsOve
         }
     }
 }
-
-export = {
-    bootstrap,
-    overrideConfiguration,
-    configureBindings,
-    registerTableView,
-    registerBindings,
-    registerComponents,
-    registerExtenders,
-};

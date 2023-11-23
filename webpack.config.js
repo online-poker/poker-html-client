@@ -17,25 +17,34 @@ module.exports = (env) => {
             }
         },
         externals: {
-            jquery: 'jquery',
-            moment: 'moment',
-            knockout: 'knockout',
-            signals: 'signals',
-            signalr: 'signalr',
-            iscroll: 'iscroll',
-            'knockout.validation': 'knockout.validation',
+            jquery: 'commonjs jquery',
+            moment: 'commonjs moment',
+            knockout: 'commonjs knockout',
+            signals: 'commonjs signals',
+            signalr: 'commonjs signalr',
+            iscroll: 'commonjs iscroll',
+            'knockout.validation': 'commonjs knockout.validation',
         },
         output: {
             path: path.join(__dirname, bundleOutputDir),
             filename: '[name].js',
             publicPath: 'dist/',
             library: {
-                root: "PokerClient",
-                amd: 'poker-html-client',
-                commonjs: 'poker-html-client',
+                //root: "PokerClient",
+                //amd: 'poker-html-client',
+                //commonjs: "poker-html-client",
+                //commonjs: {
+                    //name: 'poker-html-client',
+                    //type: 'commonjs',
+                    //export: ['bootstrap']
+                //},
+                //export: ['bootstrap']
+                name: 'poker-html-client',
+                type: 'umd',
+                //export: "default"
             },
-            libraryTarget: "umd",
-            umdNamedDefine: true            
+            //libraryTarget: "umd",
+            //umdNamedDefine: true
         },
         module: {
             rules: [
