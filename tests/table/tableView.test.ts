@@ -1217,21 +1217,19 @@ describe("Table view", () => {
         describe("Remove server", () => {
             beforeEach(() => {
                 Object.defineProperty(window, "location", {
-                    configurable: true,
-                    enumerable: true,
+                    writable: true,
                     value: new URL("https://testdomain.xyz"),
                 });
             });
 
             afterEach(() => {
                 Object.defineProperty(window, "location", {
-                    configurable: true,
-                    enumerable: true,
+                    writable: true,
                     value: originalWindowLocation,
                 });
             });
 
-            it("Check seat locations", async () => {
+            it("Check seat locations", () => {
                 global.messages = {
                 };
                 const tableView = new TableView(1, {
@@ -1276,21 +1274,19 @@ describe("Table view", () => {
         describe("Dev setup", () => {
             beforeEach(() => {
                 Object.defineProperty(window, "location", {
-                    configurable: true,
-                    enumerable: true,
+                    writable: true,
                     value: new URL("https://localhost:1000"),
                 });
             });
 
             afterEach(() => {
                 Object.defineProperty(window, "location", {
-                    configurable: true,
-                    enumerable: true,
+                    writable: true,
                     value: originalWindowLocation,
                 });
             });
 
-            it("Check seat locations", async () => {
+            it("Check seat locations", () => {
                 global.messages = {
                 };
                 const tableView = new TableView(1, {
