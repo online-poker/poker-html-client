@@ -2,6 +2,7 @@
 declare const host: string;
 
 import { Game, GameTableModel, LobbyTournamentItem, Tournament, TournamentDefinition } from "@poker/api-server";
+import * as $ from "jquery";
 import * as ko from "knockout";
 import * as moment from "moment";
 import { authManager } from "poker/authmanager";

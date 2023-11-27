@@ -1,4 +1,5 @@
-﻿import * as ko from "knockout";
+﻿import * as $ from "jquery";
+import * as ko from "knockout";
 import { App } from "../app";
 
 declare const app: App;

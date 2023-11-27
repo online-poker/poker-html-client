@@ -1,4 +1,5 @@
-﻿import * as ko from "knockout";
+﻿import * as $ from "jquery";
+import * as ko from "knockout";
 import { connectionService } from "poker/services";
 import { App } from "../app";
 import { _ } from "../languagemanager";
