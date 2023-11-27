@@ -1,4 +1,5 @@
-﻿import * as ko from "knockout";
+﻿import * as $ from "jquery";
+import * as ko from "knockout";
 import { PopupBase } from "../ui/popupbase";
 
 type PromiseOrVoid = void | Promise<void>;
