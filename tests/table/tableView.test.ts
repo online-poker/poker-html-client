@@ -1201,4 +1201,136 @@ describe("Table view", () => {
             expect(tableView.timeLeft()).toEqual(-1);
         });
     });
+    describe("Place address", () => {
+        const originalWindowLocation = window.location;
+
+        beforeAll(() => {
+            GameActionsQueue.waitDisabled = true;
+            GameActionsQueue.drainQueuePause = 0;
+            debugSettings.tableView.trace = false;
+            appConfig.timeSettings.moveTime = undefined;
+        });
+        afterAll(() => {
+            GameActionsQueue.waitDisabled = false;
+            GameActionsQueue.drainQueuePause = 100;
+        });
+        describe("Remove server", () => {
+            beforeEach(() => {
+                Object.defineProperty(window, "location", {
+                    configurable: true,
+                    enumerable: true,
+                    value: new URL("https://testdomain.xyz"),
+                });
+            });
+
+            afterEach(() => {
+                Object.defineProperty(window, "location", {
+                    configurable: true,
+                    enumerable: true,
+                    value: originalWindowLocation,
+                });
+            });
+
+            it("Check seat locations", async () => {
+                global.messages = {
+                };
+                const tableView = new TableView(1, {
+                    TableId: 1,
+                    TableName: "",
+                    BigBlind: 200,
+                    SmallBlind: 100,
+                    CurrencyId: 1,
+                    HandsPerHour: 0,
+                    AveragePotSize: 0,
+                    JoinedPlayers: 2,
+                    MaxPlayers: 8,
+                    PotLimitType: 2,
+                }, noopApiProvider);
+                const players: GamePlayerStartInformation[] = [{
+                    PlayerId: 1,
+                    Money: 10000,
+                }, {
+                    PlayerId: 2,
+                    Money: 10000,
+                }, {
+                    PlayerId: 3,
+                    Money: 10000,
+                }, {
+                    PlayerId: 4,
+                    Money: 10000,
+                }];
+                const actions: GameActionStartInformation[] = [];
+                login("player4");
+                loginId(4);
+                authenticated(true);
+                const tableSatusPlayers = [
+                    getSeatPlayer(1, 10000),
+                    getSeatPlayer(2, 10000),
+                    getSeatPlayer(3, 10000),
+                    getSeatPlayer(4, 10000),
+                ];
+                tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, null, true, 0, false, true, null, 0, 2);
+                expect(tableView.getPlayerPlaceViewModel(1).seatAddress).toEqual("//seat1.testdomain.xyz/embedded/seat");
+            });
+        });
+        describe("Dev setup", () => {
+            beforeEach(() => {
+                Object.defineProperty(window, "location", {
+                    configurable: true,
+                    enumerable: true,
+                    value: new URL("https://localhost:1000"),
+                });
+            });
+
+            afterEach(() => {
+                Object.defineProperty(window, "location", {
+                    configurable: true,
+                    enumerable: true,
+                    value: originalWindowLocation,
+                });
+            });
+
+            it("Check seat locations", async () => {
+                global.messages = {
+                };
+                const tableView = new TableView(1, {
+                    TableId: 1,
+                    TableName: "",
+                    BigBlind: 200,
+                    SmallBlind: 100,
+                    CurrencyId: 1,
+                    HandsPerHour: 0,
+                    AveragePotSize: 0,
+                    JoinedPlayers: 2,
+                    MaxPlayers: 8,
+                    PotLimitType: 2,
+                }, noopApiProvider);
+                const players: GamePlayerStartInformation[] = [{
+                    PlayerId: 1,
+                    Money: 10000,
+                }, {
+                    PlayerId: 2,
+                    Money: 10000,
+                }, {
+                    PlayerId: 3,
+                    Money: 10000,
+                }, {
+                    PlayerId: 4,
+                    Money: 10000,
+                }];
+                const actions: GameActionStartInformation[] = [];
+                login("player4");
+                loginId(4);
+                authenticated(true);
+                const tableSatusPlayers = [
+                    getSeatPlayer(1, 10000),
+                    getSeatPlayer(2, 10000),
+                    getSeatPlayer(3, 10000),
+                    getSeatPlayer(4, 10000),
+                ];
+                tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, null, true, 0, false, true, null, 0, 2);
+                expect(tableView.getPlayerPlaceViewModel(3).seatAddress).toEqual("//localhost:1003/embedded/seat");
+            });
+        });
+    });
 });

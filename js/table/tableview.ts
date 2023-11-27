@@ -762,7 +762,7 @@ export class TableView {
     public getPlayerPlaceViewModel(seat: number) {
         return {
             seat,
-            seatAddres: this.getEmbeddedSeatAddress(seat),
+            seatAddress: this.getEmbeddedSeatAddress(seat),
             item: this.tablePlaces.getOffsetPlace(seat),
         };
     }
