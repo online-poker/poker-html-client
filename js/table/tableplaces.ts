@@ -148,6 +148,10 @@ export class TablePlaces {
 
         return ((seat - 1 + this.maxPlayers - this.virtualOffset()) % this.maxPlayers) + 1;
     }
+    public getOffsetPlace(seat: number) {
+        const offsetSeat = this.getVirtualOffset(seat);
+        return this.getPlaceBySeat(offsetSeat);
+    }
     public rotate(offset: number) {
         const newOffset = (this.maxPlayers + offset + this.virtualOffset()) % this.maxPlayers;
         this.virtualOffset(newOffset);

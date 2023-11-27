@@ -150,11 +150,6 @@ export class TablePlaceModel {
     public needCardsOverlay = ko.observable(false);
 
     /**
-     * Address of the emebedded seat.
-     */
-    public embeddedSeatAddress: ko.Computed<string>;
-
-    /**
      * Timer which control clearing of current action text
      */
     private CurrentActionTimer: number = 0;
@@ -267,13 +262,6 @@ export class TablePlaceModel {
 
             return this.LastChatMessage().substr(0, appConfig.game.messageDisplaySize || 17) + "\u2026";
         });
-        this.embeddedSeatAddress = ko.computed(() => {
-            if (window.location.host.indexOf("localhost")) {
-                return "//" + window.location.host + ":" + (window.location.port + this.Seat()) + "/embedded/seat";
-            }
-
-            return "//seat" + this.Seat() + "." + window.location.host + "/embedded/seat";
-        }, this);
     }
     public prepareForNewGame() {
         this.TotalBet(null);

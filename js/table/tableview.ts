@@ -759,6 +759,13 @@ export class TableView {
         const tableCards = this.tableCards.tableCardsData();
         return my.getCombination(tableCards);
     }
+    public getPlayerPlaceViewModel(seat: number) {
+        return {
+            seat,
+            seatAddress: this.getEmbeddedSeatAddress(seat),
+            item: this.tablePlaces.getOffsetPlace(seat),
+        };
+    }
     public startTimer(startTime: number = 1, playSound: boolean = true) {
         if (this.frozen()) {
             return;
@@ -3239,6 +3246,17 @@ export class TableView {
     private refreshPlaces() {
         this.logGameEvent("Refreshing places");
         this.tablePlaces.refreshPlaces();
+    }
+
+    private getEmbeddedSeatAddress(seat: number) {
+        if (window.location.host.indexOf("localhost") !== -1) {
+            // Assume that dev environmnet setup like this
+            // first port is table port
+            // other 10 ports is for embedded seats.
+            return "//" + window.location.hostname + ":" + (parseInt(window.location.port, 10) + seat) + "/embedded/seat";
+        }
+
+        return "//seat" + seat + "." + window.location.host + "/embedded/seat";
     }
 
     /**
