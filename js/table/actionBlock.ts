@@ -1,4 +1,5 @@
 ﻿import { Game } from "@poker/api-server";
+import * as $ from "jquery";
 import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
 import { orientationService } from "poker/services";

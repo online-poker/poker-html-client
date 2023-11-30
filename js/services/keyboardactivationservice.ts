@@ -1,6 +1,6 @@
-﻿/// <reference types="jquery" />
-/* tslint:disable:no-string-literal */
+﻿/* tslint:disable:no-string-literal */
 
+import * as $ from "jquery";
 import { App } from "../app";
 import * as timeService from "../timeservice";
 import { uiManager } from "./uimanager";

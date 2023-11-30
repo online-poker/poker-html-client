@@ -1,4 +1,5 @@
 ﻿/// <reference types="applicationinsights-js" />
+import * as $ from "jquery";
 import { debugSettings } from "../debugsettings";
 import * as timeService from "../timeservice";
 import { CancelToken } from "./cancelToken";
