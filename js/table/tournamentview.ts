@@ -1,4 +1,5 @@
 ﻿import { Game, Tournament, TournamentDefinition, TournamentPlayerStatus, TournamentPrizeStructure, TournamentStatus } from "@poker/api-server";
+import * as $ from "jquery";
 import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
 import { TableView } from "poker/table/tableview";
