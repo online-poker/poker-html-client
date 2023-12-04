@@ -105,7 +105,10 @@ export class AuthManager implements IAuthenticationInformation, IAuthenticationM
                 settings.saveSettings();
                 if (appConfig.game.seatMode) {
                     // tslint:disable-next-line:no-string-literal
-                    appInsights.context["device"].model = "Individual Console: " + login;
+                    if (window["appInsights"]) {
+                        // tslint:disable-next-line:no-string-literal
+                        appInsights.context["device"].model = "Individual Console: " + login;
+                    }
                 }
             } else {
                 // Report authentication or authorization errors

@@ -351,6 +351,9 @@ export class ConnectionWrapper {
             console.log(message, params);
         }
 
-        appInsights.trackTrace(message);
+        // tslint:disable-next-line:no-string-literal
+        if (window["appInsights"]) {
+            appInsights.trackTrace(message);
+        }
     }
 }

@@ -804,16 +804,13 @@ export class TableView {
      */
     public async updateTableInformation() {
         if (this.connectingRequest !== null && this.connectingRequest.state() === "pending") {
+            // Re-schedule updating information.
+            this.connectingRequest.then(null, () => {
+                this.log("Rescheduling the updating information.");
+                this.updateTableInformation();
+            });
             this.log("Cancelling the connection request process");
             this.cancelUpdateTableInformation();
-            // Re-schedule updating information.
-            try {
-                await this.connectingRequest;
-            } catch (e) {
-                this.log("Rescheduling the updating information.");
-                await this.updateTableInformation();
-            }
-
             return;
         }
 
