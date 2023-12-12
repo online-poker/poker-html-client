@@ -4,6 +4,7 @@ import { FilterOptionsComponent } from "poker/components/lobby/filter/options";
 import { Checkbox } from "poker/components/shared/checkbox/checkbox";
 import { TimeBlockComponent } from "poker/components/timeblock/timeblock";
 import * as table from "./table";
+import { Keypad } from "./keypad/keypad";
 
 const trivialViewModelFactory = function (params: { data: any }, componentInfo: ko.components.ComponentInfo) {
     return params.data;
@@ -155,5 +156,9 @@ export function registerComponents() {
     ko.components.register("table-place-players", {
         template: getTemplateDefinition("table/table/place-players.html"),
         viewModel: { createViewModel: trivialViewModelFactory },
+    });
+    ko.components.register("keypad", {
+        template: getTemplateDefinition("keypad/keypad.html"),
+        viewModel: (params?: any) => new Keypad(params.value),
     });
 }

@@ -97,6 +97,7 @@ export class AppConfig {
         moneyFractionalSeparator: ".",
         enableScreenOverlay: false,
         deploymentPath: "",
+        hasKeyPad: false,
     };
 }
 

@@ -24,12 +24,13 @@ export class JoinTablePopup {
     public loading: ko.Observable<boolean>;
     public allowUsePersonalAccount: ko.Observable<boolean>;
     public allowTickets: ko.Observable<boolean>;
+    public hasKeyPad: ko.Observable<boolean>;
     private validationModel: ko.Observable<this>;
 
     public constructor() {
         this.buyin = ko.observable<number>()
             .extend({ required: appConfig.joinTable.allowUsePersonalAccount, validatable: true });
-        this.ticketCode = ko.observable<string>()
+        this.ticketCode = ko.observable<string>("")
             .extend({ required: appConfig.joinTable.allowTickets, validatable: true });
         this.tableView = ko.observable<TableView>();
         this.seatNumber = ko.observable<number>(0);
@@ -45,6 +46,7 @@ export class JoinTablePopup {
         this.errorMessage = ko.observable<string>();
         this.allowUsePersonalAccount = ko.observable<boolean>(appConfig.joinTable.allowUsePersonalAccount);
         this.allowTickets = ko.observable<boolean>(appConfig.joinTable.allowTickets);
+        this.hasKeyPad = ko.observable(appConfig.ui.hasKeyPad);
     }
     public async shown() {
         const manager = new AccountManager();
