@@ -24,11 +24,12 @@ export class AddMoneyPopup {
     public ticketCode: ko.Observable<string>;
     public allowUsePersonalAccount: ko.Observable<boolean>;
     public allowTickets: ko.Observable<boolean>;
+    public hasKeyPad: ko.Observable<boolean>;
     private validationModel: ko.Observable<this>;
 
     constructor() {
         this.buyin = ko.observable<number>().extend({ required: appConfig.tournament.enabled, validatable: true });
-        this.ticketCode = ko.observable<string>().extend({ required: appConfig.game.seatMode, validatable: true });
+        this.ticketCode = ko.observable<string>("").extend({ required: appConfig.game.seatMode, validatable: true });
         this.tableView = ko.observable<TableView>();
         this.accountTotal = ko.observable<number>(0);
         this.loading = ko.observable<boolean>(false);
@@ -43,6 +44,7 @@ export class AddMoneyPopup {
         this.processing = ko.observable(false);
         this.allowUsePersonalAccount = ko.observable(appConfig.joinTable.allowUsePersonalAccount);
         this.allowTickets = ko.observable(appConfig.joinTable.allowTickets);
+        this.hasKeyPad = ko.observable(appConfig.ui.hasKeyPad);
     }
     public async shown() {
         const accountManager = new AccountManager();
