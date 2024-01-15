@@ -9,10 +9,11 @@ export class SoundManager {
 
     /**
      * Initialize a new instance of the @see SoundManager class
+     * @param basePath Base path where to look for variants.
      * @param variant Variant of the sound set.
      * @param variantHasHumanVoice Whether play human voices, or not.
      */
-    constructor(public variant: string, private variantHasHumanVoice: boolean) {
+    constructor(public basePath: string, public variant: string, private variantHasHumanVoice: boolean) {
         /* tslint:disable:no-string-literal */
         this.context = window["AudioContext"] as any;
         /* tslint:enable:no-string-literal */
@@ -24,9 +25,9 @@ export class SoundManager {
             return;
         }
 
-        this.quickPlay(`snd/${this.variant}/fold.mp3`);
+        this.quickPlay(`${this.basePath}/${this.variant}/fold.mp3`);
         if (this.hasHumanVoice()) {
-            this.quickPlay(`snd/${this.variant}/fold_human.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/fold_human.mp3`);
         }
     }
 
@@ -36,12 +37,12 @@ export class SoundManager {
         }
 
         try {
-            await this.quickPlay(`snd/${this.variant}/check_loud.mp3`);
+            await this.quickPlay(`${this.basePath}/${this.variant}/check_loud.mp3`);
             await wait(200);
-            await this.quickPlay(`snd/${this.variant}/check_loud.mp3`);
+            await this.quickPlay(`${this.basePath}/${this.variant}/check_loud.mp3`);
             await wait(100);
             if (this.hasHumanVoice()) {
-                await this.quickPlay(`snd/${this.variant}/check_human.mp3`);
+                await this.quickPlay(`${this.basePath}/${this.variant}/check_human.mp3`);
             }
         } catch (e) {
             // tslint:disable-next-line:no-console
@@ -53,9 +54,9 @@ export class SoundManager {
             return;
         }
 
-        this.quickPlay(`snd/${this.variant}/call.mp3`);
+        this.quickPlay(`${this.basePath}/${this.variant}/call.mp3`);
         if (this.hasHumanVoice()) {
-            this.quickPlay(`snd/${this.variant}/call_human.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/call_human.mp3`);
         }
     }
     public playBet() {
@@ -63,9 +64,9 @@ export class SoundManager {
             return;
         }
 
-        this.quickPlay(`snd/${this.variant}/bet.mp3`);
+        this.quickPlay(`${this.basePath}/${this.variant}/bet.mp3`);
         if (this.hasHumanVoice()) {
-            this.quickPlay(`snd/${this.variant}/bet_human.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/bet_human.mp3`);
         }
     }
     public playRaise() {
@@ -73,9 +74,9 @@ export class SoundManager {
             return;
         }
 
-        this.quickPlay(`snd/${this.variant}/raise.mp3`);
+        this.quickPlay(`${this.basePath}/${this.variant}/raise.mp3`);
         if (this.hasHumanVoice()) {
-            this.quickPlay(`snd/${this.variant}/raise_human.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/raise_human.mp3`);
         }
     }
     public playAllIn() {
@@ -83,9 +84,9 @@ export class SoundManager {
             return;
         }
 
-        this.quickPlay(`snd/${this.variant}/allin.mp3`);
+        this.quickPlay(`${this.basePath}/${this.variant}/allin.mp3`);
         if (this.hasHumanVoice()) {
-            this.quickPlay(`snd/${this.variant}/allin_human.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/allin_human.mp3`);
         }
     }
     public playAllInCondition() {
@@ -93,14 +94,14 @@ export class SoundManager {
             return;
         }
 
-        this.quickPlay(`snd/${this.variant}/allin.mp3`);
+        this.quickPlay(`${this.basePath}/${this.variant}/allin.mp3`);
     }
     public playWinChips() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
 
-        this.quickPlay(`snd/${this.variant}/winchips.mp3`);
+        this.quickPlay(`${this.basePath}/${this.variant}/winchips.mp3`);
     }
     public playTurnReminder() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -108,9 +109,9 @@ export class SoundManager {
         }
 
         if (this.hasHumanVoice()) {
-            this.quickPlay(`snd/${this.variant}/turnreminder_human.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/turnreminder_human.mp3`);
         } else {
-            this.quickPlay(`snd/${this.variant}/turnreminder.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/turnreminder.mp3`);
         }
     }
     public playTurnReminderForAll() {
@@ -119,9 +120,9 @@ export class SoundManager {
         }
 
         if (this.hasHumanVoice()) {
-            this.quickPlay(`snd/${this.variant}/turnreminder_human.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/turnreminder_human.mp3`);
         } else {
-            this.quickPlay(`snd/${this.variant}/turnreminder.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/turnreminder.mp3`);
         }
     }
     public playDealCards() {
@@ -129,14 +130,14 @@ export class SoundManager {
             return;
         }
 
-        this.quickPlay(`snd/${this.variant}/shuffle.mp3`);
+        this.quickPlay(`${this.basePath}/${this.variant}/shuffle.mp3`);
     }
     public playFlop() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
             return;
         }
 
-        this.quickPlay(`snd/${this.variant}/flip_b.mp3`);
+        this.quickPlay(`${this.basePath}/${this.variant}/flip_b.mp3`);
     }
     public playFlopCards() {
         if (!this.enabled() || !this.tableSoundsEnabled()) {
@@ -144,9 +145,9 @@ export class SoundManager {
         }
 
         if (this.hasHumanVoice()) {
-            this.quickPlay(`snd/${this.variant}/flop.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/flop.mp3`);
         } else {
-            this.quickPlay(`snd/${this.variant}/flip_b.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/flip_b.mp3`);
         }
     }
     public playTurn() {
@@ -155,9 +156,9 @@ export class SoundManager {
         }
 
         if (this.hasHumanVoice()) {
-            this.quickPlay(`snd/${this.variant}/turn.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/turn.mp3`);
         } else {
-            this.quickPlay(`snd/${this.variant}/flip_b.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/flip_b.mp3`);
         }
     }
     public playRiver() {
@@ -166,9 +167,9 @@ export class SoundManager {
         }
 
         if (this.hasHumanVoice()) {
-            this.quickPlay(`snd/${this.variant}/river.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/river.mp3`);
         } else {
-            this.quickPlay(`snd/${this.variant}/flip_b.mp3`);
+            this.quickPlay(`${this.basePath}/${this.variant}/flip_b.mp3`);
         }
     }
     private quickPlay(fileName: string) {

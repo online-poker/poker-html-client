@@ -17,7 +17,7 @@ export { WebsiteService } from "./websiteService";
 let soundManager: SoundManager;
 export function getSoundManager() {
     if (!soundManager) {
-        soundManager = new SoundManager(appConfig.game.soundTheme, appConfig.game.hasHumanVoice);
+        soundManager = new SoundManager(appConfig.game.soundPath, appConfig.game.soundTheme, appConfig.game.hasHumanVoice);
     }
 
     return soundManager;

@@ -48,6 +48,7 @@ export class AppConfig {
         hasPageReload: false,
         soundTheme: "poker",
         hasHumanVoice: true,
+        soundPath: "/snd",
         cardsOverlaySupported: true,
         messageDisplaySize: 17,
         messageDisplayDuration: 2000,
