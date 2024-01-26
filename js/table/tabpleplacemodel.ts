@@ -395,48 +395,49 @@ export class TablePlaceModel {
     public getHelpMessage(tableView: TableView): string {
         if (tableView.actionBlock.sitoutBlockVisible()) {
             if (this.Money() === 0) {
-                return "Пожалуйста, пополните ваш счёт";
+                return _("table.helpMessage.notEnoughMoney");
             }
 
-            return "Нажмите кнопку Вернуться чтобы продолжить игру";
+            return _("table.helpMessage.returnToGame");
         }
 
         if (tableView.actionBlock.needBB()) {
             if (this.Money() === 0) {
-                return "Пожалуйста, пополните ваш счёт";
+                return _("table.helpMessage.notEnoughMoney");
             }
 
             if (tableView.actionBlock.waitbb()) {
-                return "Подождите пожалуйста, вы начнете игру когда будете сидеть на большом блаинде";
+                return _("table.helpMessage.waitingBB");
             } else {
-                return "Помните, на позиции \"дилера\" или \"маленького блайнда\", вы не сможете войти в игру.";
+                return _("table.helpMessage.needBB");
             }
         }
 
         if (tableView.actionBlock.mainButtonsBlockVisible()) {
-            return "Пожалуйста сделайте Вашу ставку";
+            return _("table.helpMessage.makeBet");
         }
 
         if (tableView.actionBlock.autoButtonsBlockVisible()) {
-            return "Желаем удачи";
+            return _("table.helpMessage.goodLuck");
         }
 
         if (this.WinAmount() > 0) {
-            return "Поздравляем, Ваш выигрыш: " + withCommas(this.WinAmount(), ",");
+            return _("table.helpMessage.youWin")
+                .replace("##amount", withCommas(this.WinAmount(), ","));
         }
 
         if (this.Money() === 0) {
-            return "Пожалуйста, пополните ваш счёт";
+            return _("table.helpMessage.notEnoughMoney");
         }
 
         // When player fold cards.
         if (this.IsCardsFolded()) {
-            return "Желаем удачи";
+            return _("table.helpMessage.goodLuck");
         }
 
         // This is fallback case for situations in the
         // beginning of the game start, pause between move confirmation.
-        return "Желаем удачи";
+        return _("table.helpMessage.goodLuck");
     }
 
     public getCombination(tableCards: number[]) {
