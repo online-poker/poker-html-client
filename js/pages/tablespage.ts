@@ -1,4 +1,5 @@
-﻿import * as $ from "jquery";
+﻿import { attachRelayToPage, detachRelayToPage } from "iframe-touch-relay";
+import * as $ from "jquery";
 import * as ko from "knockout";
 import { ICommandExecutor } from "poker/commandmanager";
 import { App } from "../app";
@@ -221,6 +222,10 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         if (!PageBlock.useDoubleView) {
             orientationService.setOrientation("portrait");
         }
+
+        if (appConfig.game.tablePreviewMode) {
+            detachRelayToPage();
+        }
     }
     public activate() {
         super.activate();
@@ -255,6 +260,10 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
             soundManager.enabled(false);
         } else {
             soundManager.enabled(settings.soundEnabled());
+        }
+
+        if (appConfig.game.tablePreviewMode) {
+            attachRelayToPage(document.getElementsByName("iframe"));
         }
 
         soundManager.tableSoundsEnabled(true);
