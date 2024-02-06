@@ -1,4 +1,5 @@
-﻿import * as $ from "jquery";
+﻿import { attachTouchRelay, detachTouchRelay } from "iframe-touch-relay";
+import * as $ from "jquery";
 import * as ko from "knockout";
 import { ICommandExecutor } from "poker/commandmanager";
 import { App } from "../app";
@@ -212,6 +213,10 @@ export class SeatPage extends PageBase {
         if (!PageBlock.useDoubleView) {
             orientationService.setOrientation("portrait");
         }
+
+        if (appConfig.game.seatMode) {
+            detachTouchRelay();
+        }
     }
     public activate() {
         super.activate();
@@ -241,6 +246,10 @@ export class SeatPage extends PageBase {
             soundManager.enabled(false);
         } else {
             soundManager.enabled(settings.soundEnabled());
+        }
+
+        if (appConfig.game.seatMode) {
+            attachTouchRelay();
         }
 
         soundManager.tableSoundsEnabled(true);
