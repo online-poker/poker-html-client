@@ -99,6 +99,7 @@ export class AppConfig {
         enableScreenOverlay: false,
         deploymentPath: "",
         hasKeyPad: false,
+        relayTouches: false,
     };
 }
 

@@ -223,7 +223,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
             orientationService.setOrientation("portrait");
         }
 
-        if (appConfig.game.tablePreviewMode) {
+        if (appConfig.game.tablePreviewMode && appConfig.ui.relayTouches) {
             detachRelayToPage();
         }
     }
@@ -262,8 +262,10 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
             soundManager.enabled(settings.soundEnabled());
         }
 
-        if (appConfig.game.tablePreviewMode) {
-            attachRelayToPage(document.getElementsByName("iframe"));
+        if (appConfig.game.tablePreviewMode && appConfig.ui.relayTouches) {
+            setTimeout(function() {
+                attachRelayToPage(document.getElementsByTagName("iframe"));
+            }, 1000);
         }
 
         soundManager.tableSoundsEnabled(true);

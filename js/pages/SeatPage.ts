@@ -214,7 +214,7 @@ export class SeatPage extends PageBase {
             orientationService.setOrientation("portrait");
         }
 
-        if (appConfig.game.seatMode) {
+        if (appConfig.game.seatMode && appConfig.ui.relayTouches) {
             detachTouchRelay();
         }
     }
@@ -248,7 +248,7 @@ export class SeatPage extends PageBase {
             soundManager.enabled(settings.soundEnabled());
         }
 
-        if (appConfig.game.seatMode) {
+        if (appConfig.game.seatMode && appConfig.ui.relayTouches) {
             attachTouchRelay();
         }
 
