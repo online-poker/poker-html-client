@@ -14,6 +14,7 @@ import { ChipItem } from "./table/chipitem";
 import * as timeService from "./timeservice";
 
 declare const app: App;
+const fastDefault = false;
 
 export function registerBindings() {
     // Binding set loading variable for short amount of time.
@@ -263,11 +264,11 @@ export function registerBindings() {
              bindingContext: ko.BindingContext<any>) {
             let value = valueAccessor();
             value = ko.unwrap(value);
-            let isFast = false;
+            let isFast = fastDefault;
             let commandTag = value;
             let preventDefault = false;
             if (typeof value === "object") {
-                isFast = value.fast || false;
+                isFast = value.fast || fastDefault;
                 preventDefault = value.preventDefault || false;
                 commandTag = value.command;
             }
