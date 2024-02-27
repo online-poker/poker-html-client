@@ -22,6 +22,7 @@ import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";
 
 declare const app: App;
+let zones: any;
 
 export class TablesPage extends PageBase implements ICurrentTableProvider {
     public currentTable: ko.Computed<TableView>;
@@ -225,6 +226,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
 
         if (appConfig.game.tablePreviewMode && appConfig.ui.relayTouches) {
             detachRelayToPage();
+            zones = null;
         }
     }
     public activate() {
@@ -264,7 +266,8 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
 
         if (appConfig.game.tablePreviewMode && appConfig.ui.relayTouches) {
             setTimeout(function() {
-                attachRelayToPage(document.getElementsByTagName("iframe"));
+                zones = document.getElementsByTagName("iframe");
+                attachRelayToPage(zones, { decodeCoordinates });
             }, 1000);
         }
 
@@ -440,4 +443,52 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
             console.log(message, params);
         }
     }
+}
+
+function decodeCoordinates(element: HTMLElement, x: number, y: number) {
+    const boundary = element.getBoundingClientRect();
+    const clientX = x - boundary.left;
+    const clientY = y - boundary.top;
+    const style = window.getComputedStyle(element.offsetParent, null);
+    const transform = style.getPropertyValue("transform");
+    if (transform !== "none") {
+        const elementStyle = window.getComputedStyle(element, null);
+        const totalWidth = parseFloat(elementStyle.getPropertyValue("width").replace("px", ""));
+        const totalHeight = parseFloat(elementStyle.getPropertyValue("height").replace("px", ""));
+        let values = transform.split("(")[1];
+        values = values.split(")")[0];
+        const parts = values.split(",");
+        const a = parseFloat(parts[0]);
+        const b = parseFloat(parts[1]);
+        const c = parseFloat(parts[2]);
+        const d = parseFloat(parts[3]);
+
+        const scale = Math.sqrt(a * a + b * b);
+
+        // const angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
+        const angle = element === zones[0] ? 180 :
+            element === zones[1] ? 90 :
+            element === zones[2] ? 0 :
+            element === zones[3] ? 0 :
+            element === zones[4] ? -90 :
+            element === zones[5] ? 180 : 0;
+        if (angle === 0) {
+            // console.log("Element ", element, " has angle ", angle, `. (${clientX},${clientY}) => (${clientX},${clientY})`);
+            return { clientX, clientY };
+        }
+        if (angle === 180) {
+            // console.log("Element ", element, " has angle ", angle, `. (${clientX},${clientY}) => (${clientX},${totalHeight - clientY})`);
+            return { clientX: totalWidth - clientX, clientY: totalHeight - clientY };
+        }
+        if (angle === -90) {
+            // console.log("Element ", element, " has angle ", angle, `. (${clientX},${clientY}) => (${clientY},${totalWidth - clientX})`);
+            return { clientX: clientY, clientY: totalHeight - clientX };
+        }
+        if (angle === 90) {
+            // console.log("Element ", element, " has angle ", angle, `. (${clientX},${clientY}) => (${clientY},${clientX})`);
+            return { clientX: totalWidth - clientY, clientY: clientX };
+        }
+    }
+
+    return { clientX, clientY };
 }
