@@ -961,6 +961,28 @@ export class ActionBlock {
     public toggleWaitBB() {
         this.waitbb(!this.waitbb());
     }
+
+    /**
+     * Starts interaction with cards. Depends on the config either open cards, or toggle.
+     */
+    public startCardInteraction() {
+        if (appConfig.ui.touchToggleCards) {
+            this.cardsOverlayVisible(!this.cardsOverlayVisible());
+        } else {
+            this.cardsOverlayVisible(false);
+        }
+    }
+
+    /**
+     * Ends interaction with cards. Depends on the config either close cards, or do nothing.
+     */
+    public endCardInteraction() {
+        if (appConfig.ui.touchToggleCards) {
+            // Do nothing.
+        } else {
+            this.cardsOverlayVisible(true);
+        }
+    }
     private async comeBackCore() {
         if (this.processing()) {
             return;

@@ -100,6 +100,7 @@ export class AppConfig {
         deploymentPath: "",
         hasKeyPad: false,
         relayTouches: false,
+        touchToggleCards: false,
     };
 }
 
