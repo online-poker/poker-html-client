@@ -21,6 +21,7 @@ class GameActionBlock {
 
 export interface TimeSettings {
     moveTime?: number | undefined;
+    updateTimeFromServer?: boolean | undefined;
 }
 
 export class AppConfig {
@@ -83,6 +84,7 @@ export class AppConfig {
         hasSupportPages: false,
     };
     public timeSettings: TimeSettings = {
+        updateTimeFromServer: true
     };
     public ui = {
         isDesktopApp: false,

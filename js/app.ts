@@ -299,7 +299,10 @@ export class App {
     }
     // Update DOM on a Received Event
     public async receivedEvent(id: string) {
-        timeService.start();
+        if (appConfig.timeSettings.updateTimeFromServer) {
+            timeService.start();
+        }
+
         settings.soundEnabled.subscribe(function(value) {
             const soundManager = getSoundManager();
             soundManager.enabled(value);
@@ -942,7 +945,10 @@ export class App {
         }
 
         self.logEvent("Resume application");
-        timeService.start();
+        if (appConfig.timeSettings.updateTimeFromServer) {
+            timeService.start();
+        }
+
         self.showSplash();
         const target = document.getElementById("spinner");
         self.spinner.spin(target);
