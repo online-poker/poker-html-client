@@ -445,6 +445,32 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
     }
 }
 
+function getZonesAngle(element: HTMLElement) {
+    if (zones.length == 2) {
+        const angle = element === zones[0] ? 90 : -90;
+        return angle;
+    } else if (zones.length == 6) {
+        const angle = element === zones[0] ? 180 :
+            element === zones[1] ? 90 :
+            element === zones[2] ? 0 :
+            element === zones[3] ? 0 :
+            element === zones[4] ? -90 :
+            element === zones[5] ? 180 : 0;
+        return angle;
+    } else if (zones.length == 8) {
+        const angle = element === zones[0] ? 180 :
+            element === zones[1] ? 45 :
+            element === zones[2] ? -45 :
+            element === zones[3] ? 0 :
+            element === zones[4] ? 0 :
+            element === zones[5] ? -135 :
+            element === zones[6] ? 135 :
+            element === zones[7] ? 180 : 0;
+        return angle;
+    } 
+    return 0;
+}
+
 function decodeCoordinates(element: HTMLElement, x: number, y: number) {
     const boundary = element.getBoundingClientRect();
     const clientX = x - boundary.left;
@@ -466,28 +492,23 @@ function decodeCoordinates(element: HTMLElement, x: number, y: number) {
         const scale = Math.sqrt(a * a + b * b);
 
         // const angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
-        const angle = element === zones[0] ? 180 :
-            element === zones[1] ? 90 :
-            element === zones[2] ? 0 :
-            element === zones[3] ? 0 :
-            element === zones[4] ? -90 :
-            element === zones[5] ? 180 : 0;
-        if (angle === 0) {
-            // console.log("Element ", element, " has angle ", angle, `. (${clientX},${clientY}) => (${clientX},${clientY})`);
-            return { clientX, clientY };
-        }
+        const angle = getZonesAngle(element);
+        let result : {clientX : number; clientY: number};        
         if (angle === 180) {
-            // console.log("Element ", element, " has angle ", angle, `. (${clientX},${clientY}) => (${clientX},${totalHeight - clientY})`);
-            return { clientX: totalWidth - clientX, clientY: totalHeight - clientY };
+            result = { clientX: totalWidth - clientX, clientY: totalHeight - clientY };
+        } else if (angle === -90) {
+            result = { clientX: clientY, clientY: totalHeight - clientX };
+        } else if (angle === 90) {
+            result = { clientX: totalWidth - clientY, clientY: clientX };
+        } else {
+            result = { clientX, clientY };
         }
-        if (angle === -90) {
-            // console.log("Element ", element, " has angle ", angle, `. (${clientX},${clientY}) => (${clientY},${totalWidth - clientX})`);
-            return { clientX: clientY, clientY: totalHeight - clientX };
+        
+        if (appConfig.ui.debugTouches) {
+            console.log("Element ", element, " has angle ", angle, `. (${clientX},${clientY}) => (${result.clientX},${result.clientY})`);
         }
-        if (angle === 90) {
-            // console.log("Element ", element, " has angle ", angle, `. (${clientX},${clientY}) => (${clientY},${clientX})`);
-            return { clientX: totalWidth - clientY, clientY: clientX };
-        }
+
+        return result;
     }
 
     return { clientX, clientY };
