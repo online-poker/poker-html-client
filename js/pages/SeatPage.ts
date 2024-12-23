@@ -249,7 +249,7 @@ export class SeatPage extends PageBase {
         }
 
         if (appConfig.game.seatMode && appConfig.ui.relayTouches) {
-            attachTouchRelay();
+            (attachTouchRelay as any)({debug: appConfig.ui.debugTouches});
         }
 
         soundManager.tableSoundsEnabled(true);
