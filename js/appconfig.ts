@@ -104,6 +104,7 @@ export class AppConfig {
         relayTouches: false,
         debugTouches: false,
         touchToggleCards: false,
+        fastTouch: false,
     };
 }
 

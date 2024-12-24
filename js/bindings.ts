@@ -5,6 +5,7 @@ import * as $ from "jquery";
 import * as ko from "knockout";
 import * as moment from "moment";
 import { App } from "./app";
+import { appConfig } from "./appconfig";
 import { debugSettings } from "./debugsettings";
 import { siFormatter, withCommas } from "./helpers";
 import { _ } from "./languagemanager";
@@ -14,7 +15,7 @@ import { ChipItem } from "./table/chipitem";
 import * as timeService from "./timeservice";
 
 declare const app: App;
-const fastDefault = false;
+const fastDefault = appConfig.ui.fastTouch;
 
 export function registerBindings() {
     // Binding set loading variable for short amount of time.
