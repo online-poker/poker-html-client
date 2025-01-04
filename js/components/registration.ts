@@ -5,6 +5,7 @@ import { Checkbox } from "poker/components/shared/checkbox/checkbox";
 import { TimeBlockComponent } from "poker/components/timeblock/timeblock";
 import * as table from "./table";
 import { Keypad } from "./keypad/keypad";
+import { LanguageSelectorComponent } from "./language-selector/languageselector";
 
 const trivialViewModelFactory = function (params: { data: any }, componentInfo: ko.components.ComponentInfo) {
     return params.data;
@@ -123,6 +124,14 @@ export function registerComponents() {
     ko.components.register("game-type-selector", {
         template: getTemplateDefinition("game-type-selector/game-type-selector.html"),
         viewModel: (params?: any) => new GameTypeSelectorComponent(params),
+    });
+
+    /**
+     * Language selector
+     */
+    ko.components.register("language-selector", {
+        template: getTemplateDefinition("language-selector/language-selector.html"),
+        viewModel: (params?: any) => new LanguageSelectorComponent(params),
     });
 
     /**
