@@ -1,14 +1,29 @@
 declare let messages: any;
 
+export interface LanguageDescriptor {
+    code: string;
+    name: string;    
+}
+
 export class LanguageManager {
     public currentLang: string;
     constructor() {
-        this.currentLang = "ru_RU";
+        this.currentLang = "ru";
     }
     public setLang(lang: string): void {
         this.currentLang = lang;
     }
+    public getSupportedLanguages(): LanguageDescriptor[] {
+        return [
+            { code:"ru", name:"Русский" },
+            { code:"en", name:"English" },
+        ]
+    }
     public getProvider() {
+        if (messages[this.currentLang]) {
+            return messages[this.currentLang];
+        }
+
         return messages;
     }
     public setProvider(provider: any) {
