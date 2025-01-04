@@ -154,6 +154,10 @@ export function registerComponents() {
         template: getTemplateDefinition("table/menu/menu.html"),
         viewModel: (params?: any) => new table.TableMenuComponent(params),
     });
+    ko.components.register("quick-table-menu", {
+        template: getTemplateDefinition("table/quick-menu/quick-menu.html"),
+        viewModel: (params?: any) => new table.QuickTableMenuComponent(params),
+    });
     ko.components.register("tournament-status-indicator", {
         template: getTemplateDefinition("table/tournament-status-indicator/tournament-status-indicator.html"),
         viewModel: { createViewModel: trivialViewModelFactory },
