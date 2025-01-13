@@ -1,6 +1,6 @@
 ﻿<div class="quick-table-menu" data-bind="with: page">
     <button class="button btn-quick-menu" data-bind="command: $parent.toggleMenu.bind($parent)">...</button>
-    <!-- ko if: visible -->
+    <!-- ko if: $parent.visible() -->
     <ul class="quick-table-menu-items">
         <li>Item 1</li>
         <li>Item 2</li>
