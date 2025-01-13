@@ -1,3 +1,5 @@
+import { observable, Observable } from "knockout";
+
 declare let messages: any;
 
 export interface LanguageDescriptor {
@@ -6,12 +8,10 @@ export interface LanguageDescriptor {
 }
 
 export class LanguageManager {
-    public currentLang: string;
-    constructor() {
-        this.currentLang = "ru";
-    }
+    public currentLang: Observable<string> = observable("ru");
+
     public setLang(lang: string): void {
-        this.currentLang = lang;
+        this.currentLang(lang);
     }
     public getSupportedLanguages(): LanguageDescriptor[] {
         return [
@@ -20,8 +20,8 @@ export class LanguageManager {
         ]
     }
     public getProvider() {
-        if (messages[this.currentLang]) {
-            return messages[this.currentLang];
+        if (messages[this.currentLang()]) {
+            return messages[this.currentLang()];
         }
 
         return messages;

@@ -22,6 +22,6 @@ export class LanguageSelectorComponent {
         l.setLang(desc.code);
     }
     public isSelected(desc: LanguageDescriptor) {
-        return l.currentLang === desc.code;
+        return l.currentLang() === desc.code;
     }
 }
