@@ -76,7 +76,7 @@ export class WebsiteService {
     }
 
     private getBase() {
-        return this.websiteRoot + l.currentLang + "/";
+        return this.websiteRoot + l.currentLang() + "/";
     }
 
     private getAuthUrl() {
