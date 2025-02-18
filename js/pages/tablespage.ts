@@ -267,7 +267,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         if (appConfig.game.tablePreviewMode && appConfig.ui.relayTouches) {
             setTimeout(function() {
                 zones = document.getElementsByTagName("iframe");
-                attachRelayToPage(zones, { decodeCoordinates });
+                attachRelayToPage(zones, { decodeCoordinates, debug: appConfig.ui.debugTouches });
             }, 1000);
         }
 
