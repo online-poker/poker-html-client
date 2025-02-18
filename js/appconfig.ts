@@ -105,6 +105,7 @@ export class AppConfig {
         debugTouches: false,
         touchToggleCards: false,
         fastTouch: false,
+        progressBackgroundInitialColor: "rgba(0,0,0,0.75)",
     };
 }
 

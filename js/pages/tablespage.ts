@@ -46,12 +46,14 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
     public nextGameTypeInformation: ko.Computed<string>;
     public splashShown = ko.observable(false);
     public tablesShown = ko.observable(true);
+    public progressBackgroundColor: KnockoutObservable<string>;
     public orientationWillBeChanged = ko.observable(false);
 
     constructor(private commandExecutor: ICommandExecutor) {
         super();
         this.slideWidth = ko.observable(0);
         this.isConnectionSlow = ko.observable(false);
+        this.progressBackgroundColor = ko.observable(appConfig.ui.progressBackgroundInitialColor);
         this.currentIndex = ko.computed<number>({
             read() {
                 return tableManager.currentIndex();
@@ -209,11 +211,10 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         app.tabBar.visible(true);
         app.tabBar.select("tables", false);
         app.processing(true);
-        const oldColor = $(".progress-background").css("background-color");
-        $(".progress-background").css("background-color", "black");
+        this.progressBackgroundColor("black");
         timeService.setTimeout(() => {
             app.processing(false);
-            $(".progress-background").css("background-color", oldColor);
+            this.progressBackgroundColor(appConfig.ui.progressBackgroundInitialColor);
         }, 500);
         /* tslint:disable:no-string-literal no-unused-expression */
         window["StatusBar"] && StatusBar.show();
