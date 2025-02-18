@@ -21,16 +21,16 @@ export interface PlayerWinInformation {
  * Class which performs collection of hand history
  */
 export class HandHistory extends TableMonitor {
-    public detailedOperations: KnockoutObservableArray<string>;
-    public shortOperations: KnockoutObservableArray<string>;
+    public detailedOperations: ko.ObservableArray<string>;
+    public shortOperations: ko.ObservableArray<string>;
     public players: string[];
     public rawCards: number[] = [];
     public id: number;
-    public cards: KnockoutObservableArray<string>;
+    public cards: ko.ObservableArray<string>;
     public potentialCards: number[] = [];
-    public playersData: KnockoutObservableArray<PlayerWinInformation>;
+    public playersData: ko.ObservableArray<PlayerWinInformation>;
     public valid = true;
-    public gameType: KnockoutObservable<number>;
+    public gameType: ko.Observable<number>;
 
     constructor(tableView: TableView) {
         super(tableView);

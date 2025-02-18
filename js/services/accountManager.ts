@@ -1,5 +1,5 @@
 import { Account, PersonalAccountData } from "@poker/api-server";
-declare var host: string;
+declare const host: string;
 
 export interface IAccountManager {
     getAccount(): Promise<ApiResult<PersonalAccountData>>;

@@ -5,12 +5,12 @@ import { AccountManager } from "../services/accountManager";
 import { PopupBase } from "../ui/popupbase";
 
 export class ForgetPasswordPopup extends PopupBase {
-    public login: KnockoutObservable<string>;
-    public email: KnockoutObservable<string>;
-    public errors: KnockoutValidationErrors;
-    public errorMessage: KnockoutObservable<string>;
-    public loading: KnockoutObservable<boolean>;
-    private validationModel: KnockoutObservable<ForgetPasswordPopup>;
+    public login: ko.Observable<string>;
+    public email: ko.Observable<string>;
+    public errors: ko.ValidationErrors;
+    public errorMessage: ko.Observable<string>;
+    public loading: ko.Observable<boolean>;
+    private validationModel: ko.Observable<this>;
 
     constructor() {
         super();
@@ -22,7 +22,6 @@ export class ForgetPasswordPopup extends PopupBase {
         this.loading = ko.observable(false);
     }
     public async confirm() {
-        const self = this;
         const isValid = this.validationModel.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
@@ -30,23 +29,23 @@ export class ForgetPasswordPopup extends PopupBase {
         }
 
         if (!this.loading()) {
-            self.loading(true);
+            this.loading(true);
             const accountApi = new AccountManager();
             try {
                 const data = await accountApi.requestResetPassword(this.login(), this.email());
-                self.loading(false);
+                this.loading(false);
                 if (data.Status === "Ok") {
-                    self.errorMessage(null);
-                    self.login(null);
-                    self.email(null);
-                    self.close();
+                    this.errorMessage(null);
+                    this.login(null);
+                    this.email(null);
+                    this.close();
                     SimplePopup.display(_("auth.forgetPassword"), _("auth.forgetPasswordSuccess"));
                 } else {
                     // Report authentication or authorization errors
-                    self.errorMessage(_("errors." + data.Status));
+                    this.errorMessage(_("errors." + data.Status));
                 }
             } catch (e) {
-                self.loading(false);
+                this.loading(false);
             }
         }
     }

@@ -140,6 +140,11 @@ describe("Player cards", function () {
 
     describe("Overlay for current user", function () {
         it("Overlay is needed only by current user", function () {
+            overrideConfiguration({
+                game: {
+                    cardsOverlaySupported: true,
+                },
+            });
             const tableView = new TableView(1, {
                 TableId: 1,
                 TableName: "",
@@ -177,6 +182,51 @@ describe("Player cards", function () {
             tableView.onBet(1, 2, 50, 1);
 
             expect(tableView.tablePlaces.place1().needCardsOverlay()).toEqual(true);
+            expect(tableView.tablePlaces.place2().needCardsOverlay()).toEqual(false);
+        });
+        it("Overlay is not needed if not supported", function () {
+            overrideConfiguration({
+                game: {
+                    cardsOverlaySupported: false,
+                },
+            });
+            const tableView = new TableView(1, {
+                TableId: 1,
+                TableName: "",
+                BigBlind: 200,
+                SmallBlind: 100,
+                CurrencyId: 1,
+                HandsPerHour: 0,
+                AveragePotSize: 0,
+                JoinedPlayers: 2,
+                MaxPlayers: 8,
+                PotLimitType: 2,
+            }, noopApiProvider);
+            const players: GamePlayerStartInformation[] = [{
+                PlayerId: 1,
+                Money: 10000,
+            }, {
+                PlayerId: 2,
+                Money: 10000,
+            }];
+            const actions: GameActionStartInformation[] = [];
+            login("player1");
+            loginId(1);
+            authenticated(true);
+            const tableSatusPlayers = [
+                getSeatPlayer(1, 10000),
+                getSeatPlayer(2, 10000),
+            ];
+            tableView.onTableStatusInfo(tableSatusPlayers, [], null, 4, 100, 10, null, null, null, null, 1, true, 0, false, true, null, 0, 2);
+            tableView.onGameStarted(1, players, actions, 4);
+            tableView.onBet(2, 0, 100, 1);
+            tableView.onBet(1, 0, 200, 2);
+            tableView.onPlayerCards(1, [15, 5, 41, 18]);
+            tableView.onPlayerCards(2, [1, 2, 3, 4]);
+            tableView.onBet(2, 2, 50, 1);
+            tableView.onBet(1, 2, 50, 1);
+
+            expect(tableView.tablePlaces.place1().needCardsOverlay()).toEqual(false);
             expect(tableView.tablePlaces.place2().needCardsOverlay()).toEqual(false);
         });
     });

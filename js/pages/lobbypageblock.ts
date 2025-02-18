@@ -1,4 +1,5 @@
 ﻿import { TournamentDefinition } from "@poker/api-server";
+import { authManager } from "poker/authmanager";
 import { UIManager } from "poker/services/uimanager";
 import { App } from "../app";
 import { PageBlock } from "../pageblock";
@@ -7,7 +8,7 @@ import { TablesListPage } from "./tableslistpage";
 import { TournamentLobbyPage } from "./tournamentlobbypage";
 import { TournamentsListPage } from "./tournamentslistpage";
 
-declare var app: App;
+declare const app: App;
 
 export class LobbyPageBlock extends PageBlock {
     public sngListPage: TournamentsListPage;
@@ -26,7 +27,7 @@ export class LobbyPageBlock extends PageBlock {
         this.lobbyPage = lobbyPage;
         this.tablesListPage = new TablesListPage();
         this.addSecondary("tablesList", this.tablesListPage);
-        this.tournamentLobbyPage = new TournamentLobbyPage();
+        this.tournamentLobbyPage = new TournamentLobbyPage(authManager);
         UIManager.addTabBarItemMapping("lobby", "tournamentLobby");
         this.addSecondary("tournamentLobby", this.tournamentLobbyPage);
         this.tournamentsListPage = new TournamentsListPage();

@@ -1,3 +1,4 @@
+import * as $ from "jquery";
 import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
 import { App } from "../app";
@@ -8,27 +9,29 @@ import { AccountManager } from "../services/accountManager";
 import { PopupBase } from "../ui/popupbase";
 import { SimplePopup } from "./simplepopup";
 
-declare var app: App;
+declare const app: App;
 
 export class RegistrationPopup extends PopupBase {
-    public login: KnockoutObservable<string>;
-    public email: KnockoutObservable<string>;
-    public phoneNumber: KnockoutObservable<string>;
-    public firstName: KnockoutObservable<string>;
-    public lastName: KnockoutObservable<string>;
-    public patronymicName: KnockoutObservable<string>;
-    public city: KnockoutObservable<string>;
-    public password: KnockoutObservable<string>;
-    public confirmPassword: KnockoutObservable<string>;
-    public country: KnockoutObservable<number>;
-    public ageValid: KnockoutObservable<boolean>;
-    public agreeEula: KnockoutObservable<boolean>;
-    public imageUrl: KnockoutObservable<string>;
+    public login: ko.Observable<string>;
+    public email: ko.Observable<string>;
+    public phoneNumber: ko.Observable<string>;
+    public firstName: ko.Observable<string>;
+    public lastName: ko.Observable<string>;
+    public patronymicName: ko.Observable<string>;
+    public firstNameVisible: ko.Observable<boolean>;
+    public lastNameVisible: ko.Observable<boolean>;
+    public city: ko.Observable<string>;
+    public password: ko.Observable<string>;
+    public confirmPassword: ko.Observable<string>;
+    public country: ko.Observable<number>;
+    public ageValid: ko.Observable<boolean>;
+    public agreeEula: ko.Observable<boolean>;
+    public imageUrl: ko.Observable<string>;
     public imageFile = ko.observable<string>();
-    public loading: KnockoutObservable<boolean>;
-    public errors: KnockoutValidationErrors;
-    public allowSelectUserAvatar: KnockoutObservable<boolean>;
-    private validationModel: KnockoutObservable<RegistrationPopup>;
+    public loading: ko.Observable<boolean>;
+    public errors: ko.ValidationErrors;
+    public allowSelectUserAvatar: ko.Observable<boolean>;
+    private validationModel: ko.Observable<this>;
 
     constructor() {
         super();
@@ -38,6 +41,8 @@ export class RegistrationPopup extends PopupBase {
         this.firstName = ko.observable<string>().extend({ required: appConfig.registration.requireFirstName });
         this.lastName = ko.observable<string>().extend({ required: appConfig.registration.requireLastName });
         this.patronymicName = ko.observable<string>();
+        this.firstNameVisible = ko.observable(appConfig.registration.firstNameVisible);
+        this.lastNameVisible = ko.observable(appConfig.registration.lastNameVisible);
         this.password = ko.observable<string>().extend({ required: true, maxLength: 16 });
         this.confirmPassword = ko.observable<string>().extend({ required: true, equal: this.password });
         this.city = ko.observable<string>();
@@ -107,7 +112,6 @@ export class RegistrationPopup extends PopupBase {
         });
     }
     public async confirm() {
-        const self = this;
         const isValid = this.validationModel.isValid();
         if (!isValid) {
             this.errors.showAllMessages(true);
@@ -127,10 +131,10 @@ export class RegistrationPopup extends PopupBase {
 
         try {
             const data = await accountManager.register(
-                this.login(),
-                this.email(),
+                this.login().trim(),
+                this.email().trim(),
                 this.password(),
-                this.phoneNumber(),
+                this.phoneNumber().trim(),
                 this.firstName(),
                 this.lastName(),
                 this.patronymicName(),
@@ -141,23 +145,23 @@ export class RegistrationPopup extends PopupBase {
                 || data.Status === "PhoneVerificationRequired"
                 || data.Status === "EmailVerificationRequired";
             if (registrationSuccess) {
-                self.close();
+                this.close();
                 SimplePopup.display(_("auth.registration"), _("auth.registrationStatus." + data.Status));
             } else {
                 // Report registration errors;
                 const dataEntryError = data.Status === "LoginAlreadyUsed"
                     || data.Status === "EmailAlreadyUsed"
                     || data.Status === "PhoneAlreadyUsed";
-                let observable: KnockoutObservable<string> | undefined;
+                let observable: ko.Observable<string> | undefined;
                 switch (data.Status) {
                     case "LoginAlreadyUsed":
-                        observable = self.login;
+                        observable = this.login;
                         break;
                     case "EmailAlreadyUsed":
-                        observable = self.email;
+                        observable = this.email;
                         break;
                     case "PhoneAlreadyUsed":
-                        observable = self.phoneNumber;
+                        observable = this.phoneNumber;
                         break;
                 }
 
@@ -165,7 +169,7 @@ export class RegistrationPopup extends PopupBase {
                 // display targeted error message
                 if (dataEntryError && observable) {
                     observable.setError(_("errors." + data.Status));
-                    self.moveToError();
+                    this.moveToError();
                 } else {
                     // Otherwise display generic error.
                     SimplePopup.display(_("auth.registration"), _("errors." + data.Status));
@@ -174,7 +178,7 @@ export class RegistrationPopup extends PopupBase {
                 authManager.authenticated(false);
             }
         } finally {
-            self.loading(false);
+            this.loading(false);
         }
     }
 

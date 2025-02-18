@@ -2,32 +2,32 @@
 import { TablePlaceModel } from "./tabpleplacemodel";
 
 export class TablePlaces {
-    public placesRefreshTrigger: KnockoutObservable<{}>;
+    public placesRefreshTrigger: ko.Observable<void>;
 
-    public place1: KnockoutObservable<TablePlaceModel>;
-    public place2: KnockoutObservable<TablePlaceModel>;
-    public place3: KnockoutObservable<TablePlaceModel>;
-    public place4: KnockoutObservable<TablePlaceModel>;
-    public place5: KnockoutObservable<TablePlaceModel>;
-    public place6: KnockoutObservable<TablePlaceModel>;
-    public place7: KnockoutObservable<TablePlaceModel>;
-    public place8: KnockoutObservable<TablePlaceModel>;
-    public place9: KnockoutObservable<TablePlaceModel>;
-    public place10: KnockoutObservable<TablePlaceModel>;
+    public place1: ko.Observable<TablePlaceModel>;
+    public place2: ko.Observable<TablePlaceModel>;
+    public place3: ko.Observable<TablePlaceModel>;
+    public place4: ko.Observable<TablePlaceModel>;
+    public place5: ko.Observable<TablePlaceModel>;
+    public place6: ko.Observable<TablePlaceModel>;
+    public place7: ko.Observable<TablePlaceModel>;
+    public place8: ko.Observable<TablePlaceModel>;
+    public place9: ko.Observable<TablePlaceModel>;
+    public place10: ko.Observable<TablePlaceModel>;
 
-    public offsetPlace1: KnockoutComputed<TablePlaceModel>;
-    public offsetPlace2: KnockoutComputed<TablePlaceModel>;
-    public offsetPlace3: KnockoutComputed<TablePlaceModel>;
-    public offsetPlace4: KnockoutComputed<TablePlaceModel>;
-    public offsetPlace5: KnockoutComputed<TablePlaceModel>;
-    public offsetPlace6: KnockoutComputed<TablePlaceModel>;
-    public offsetPlace7: KnockoutComputed<TablePlaceModel>;
-    public offsetPlace8: KnockoutComputed<TablePlaceModel>;
-    public offsetPlace9: KnockoutComputed<TablePlaceModel>;
-    public offsetPlace10: KnockoutComputed<TablePlaceModel>;
+    public offsetPlace1: ko.Computed<TablePlaceModel>;
+    public offsetPlace2: ko.Computed<TablePlaceModel>;
+    public offsetPlace3: ko.Computed<TablePlaceModel>;
+    public offsetPlace4: ko.Computed<TablePlaceModel>;
+    public offsetPlace5: ko.Computed<TablePlaceModel>;
+    public offsetPlace6: ko.Computed<TablePlaceModel>;
+    public offsetPlace7: ko.Computed<TablePlaceModel>;
+    public offsetPlace8: ko.Computed<TablePlaceModel>;
+    public offsetPlace9: ko.Computed<TablePlaceModel>;
+    public offsetPlace10: ko.Computed<TablePlaceModel>;
 
-    public places: KnockoutComputed<TablePlaceModel[]>;
-    public virtualOffset: KnockoutObservable<number>;
+    public places: ko.Computed<TablePlaceModel[]>;
+    public virtualOffset: ko.Observable<number>;
 
     constructor(private maxPlayers: number) {
         this.placesRefreshTrigger = ko.observable();
@@ -148,6 +148,10 @@ export class TablePlaces {
 
         return ((seat - 1 + this.maxPlayers - this.virtualOffset()) % this.maxPlayers) + 1;
     }
+    public getOffsetPlace(seat: number) {
+        const offsetSeat = this.getVirtualOffset(seat);
+        return this.getPlaceBySeat(offsetSeat);
+    }
     public rotate(offset: number) {
         const newOffset = (this.maxPlayers + offset + this.virtualOffset()) % this.maxPlayers;
         this.virtualOffset(newOffset);
@@ -157,7 +161,7 @@ export class TablePlaces {
             throw new Error("Invalid seat number: " + seat);
         }
 
-        const seatVar = this["place" + seat] as KnockoutObservable<TablePlaceModel>;
+        const seatVar = this[("place" + seat) as keyof this] as ko.Observable<TablePlaceModel>;
         seatVar(player);
     }
     public standup(seat: number) {
@@ -165,11 +169,11 @@ export class TablePlaces {
             throw new Error("Invalid seat number: " + seat);
         }
 
-        const seatVar = this["place" + seat] as KnockoutObservable<TablePlaceModel>;
+        const seatVar = this[("place" + seat) as keyof this] as ko.Observable<TablePlaceModel>;
         seatVar(null);
     }
     public getPlaceBySeat(seat: number) {
-        const seatVar = this["place" + seat] as KnockoutObservable<TablePlaceModel>;
+        const seatVar = this[("place" + seat) as keyof this] as ko.Observable<TablePlaceModel>;
         return seatVar();
     }
     public getPlaceByPlayerId(playerId: number) {

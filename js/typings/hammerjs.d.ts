@@ -6,7 +6,7 @@
 
 /// <reference types="jquery" />
 
-declare var Hammer: HammerStatic;
+declare const Hammer: HammerStatic;
 
 interface HammerStatic {
     (element: any, options?: HammerOptions): HammerInstance;

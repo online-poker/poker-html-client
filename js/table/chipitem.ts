@@ -12,7 +12,7 @@ interface ChipStackCalcIntermediate {
 }
 
 export class ChipItem {
-    public baseAmount: KnockoutObservable<number>;
+    public baseAmount: ko.Observable<number>;
     private maxStackCount = 5;
 
     constructor(base: number) {
@@ -20,8 +20,7 @@ export class ChipItem {
     }
 
     public getData(amount: number) {
-        const self = this;
-        const list = [1, 5, 10, 50, 100, 500].map((item) => (item * self.baseAmount()));
+        const list = [1, 5, 10, 50, 100, 500].map((item) => (item * this.baseAmount()));
         const stack = this.calculateStackSimple(amount, list);
         return this.transform(stack);
     }
@@ -105,7 +104,6 @@ export class ChipItem {
     }
 
     private calculateStackSimpleInternal(amount: number, chipAmounts: number[], allowOveradd: boolean): ChipStackCalcIntermediate {
-        const self = this;
         const minimumAmount = chipAmounts[0];
         let intermediate = chipAmounts.filter((ca) => amount >= ca);
         let upperBound: number;
@@ -128,34 +126,28 @@ export class ChipItem {
         let target: {
             amount: number;
             chipsAmount: number;
-            difference: number
+            difference: number;
         }[];
         if (allowOveradd) {
-            target = effectiveChipsAmount.map(function(item) {
-                return {
-                    amount: item,
-                    chipsAmount: Math.min(Math.floor((amount + item - 1) / item), self.maxStackCount),
-                    difference: 0,
-                };
-            });
-            target = target.concat(effectiveChipsAmount.map(function(item) {
-                return {
-                    amount: item,
-                    chipsAmount: Math.min(Math.floor(amount / item), self.maxStackCount),
-                    difference: 0,
-                };
+            target = effectiveChipsAmount.map((item) => ({
+                amount: item,
+                chipsAmount: Math.min(Math.floor((amount + item - 1) / item), this.maxStackCount),
+                difference: 0,
             }));
+            target = target.concat(effectiveChipsAmount.map((item) => ({
+                amount: item,
+                chipsAmount: Math.min(Math.floor(amount / item), this.maxStackCount),
+                difference: 0,
+            })));
         } else {
-            target = effectiveChipsAmount.map(function(item) {
-                return {
-                    amount: item,
-                    chipsAmount: Math.min(Math.floor(amount / item), self.maxStackCount),
-                    difference: 0,
-                };
-            });
+            target = effectiveChipsAmount.map((item) => ({
+                amount: item,
+                chipsAmount: Math.min(Math.floor(amount / item), this.maxStackCount),
+                difference: 0,
+            }));
         }
 
-        target = target.filter((item) => item.chipsAmount <= self.maxStackCount)
+        target = target.filter((item) => item.chipsAmount <= this.maxStackCount)
             .map(function(item) {
                 return {
                     amount: item.amount,

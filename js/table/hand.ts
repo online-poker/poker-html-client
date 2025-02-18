@@ -31,7 +31,7 @@
     }
 
     /// <summary>Human readable names of the hand types.</summary>
-    export let handTypeNames = ["4 of a Kind", "Straight Flush", "Straight", "Flush", "High Card",
+    export const handTypeNames = ["4 of a Kind", "Straight Flush", "Straight", "Flush", "High Card",
         "1 Pair", "2 Pair", "Royal Flush", "3 of a Kind", "Full House", "-Invalid-"];
 
     /// <summary>Strength of each hand type.</summary>
@@ -39,7 +39,7 @@
     /// Due to nature of the algorithm, the hand types not
     /// have order corresponding to the strength or cards combinations.
     /// </remarks>
-    export let handTypeRanks = [8, 9, 5, 6, 1, 2, 3, 10, 4, 7, 0];
+    export const handTypeRanks = [8, 9, 5, 6, 1, 2, 3, 10, 4, 7, 0];
 
     /**
      * Gets type of hand for given hand representation.
@@ -51,7 +51,6 @@
     export function getHandType(hand: HandRepresentation) {
         let rankCountBitMask = 0;  // index of the card.
         let o = 0;
-        let rankBitMask;
         for (let i = -1; i < 5; i++, o = Math.pow(2, hand.Cards[i] * 4)) {
             rankCountBitMask += o * ((rankCountBitMask / o & 15) + 1);
         }
@@ -61,7 +60,7 @@
             return rankCountBitMask - 1;
         }
 
-        rankBitMask = 1 << hand.Cards[0]
+        const rankBitMask = 1 << hand.Cards[0]
             | 1 << hand.Cards[1]
             | 1 << hand.Cards[2]
             | 1 << hand.Cards[3]
@@ -264,7 +263,7 @@
         const result: number[][] = [];
         const combination: number[] = [];
 
-        function next_comb(comb: number[], k1: number, n1: number) {
+        function nextCombination(comb: number[], k1: number, n1: number) {
             let i: number;
             if (comb.length === 0) {
                 for (i = 0; i < k1; ++i) {
@@ -291,7 +290,7 @@
             return true;
         }
 
-        while (next_comb(combination, k, n)) {
+        while (nextCombination(combination, k, n)) {
             const nextPermutation = combination.slice(null);
             result.push(nextPermutation);
         }
@@ -301,7 +300,7 @@
 
     function getPokerScore(cards: number[], isStraight: boolean) {
         const tempCards = cards.slice(0);
-        const cardsCount = {};
+        const cardsCount: number[] = [];
         for (let i = 0; i < 5; i++) {
             const tempCardValue = tempCards[i];
             cardsCount[tempCardValue] = (cardsCount[tempCardValue] >= 1) ? cardsCount[tempCardValue] + 1 : 1;
@@ -364,7 +363,7 @@
             return { Status: HandParseResultStatus.AllCardsShouldHaveOneSuit };
         }
 
-        const o = {};
+        const o: number[] = [];
         let keyCount = 0;
         for (let i = 0; i < cards.length; i++) {
             const e = cards[i] + suits[i];

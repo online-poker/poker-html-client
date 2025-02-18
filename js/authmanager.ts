@@ -1,5 +1,4 @@
-﻿declare var host: string;
-declare var appInsights: Client;
+﻿declare const host: string;
 
 import { Account, setAuthToken } from "@poker/api-server";
 import ko = require("knockout");
@@ -63,17 +62,17 @@ export class AuthManager implements IAuthenticationInformation, IAuthenticationM
     /**
      * Returns authentication status of the application user.
      */
-    public authenticated: KnockoutObservable<boolean>;
+    public authenticated: ko.Observable<boolean>;
 
     /**
      * Returns information about current login.
      */
-    public login: KnockoutObservable<string>;
+    public login: ko.Observable<string>;
 
     /**
      * Returns information about id of the current login.
      */
-    public loginId: KnockoutObservable<number>;
+    public loginId: ko.Observable<number>;
 
     constructor() {
         this.authenticated = ko.observable(false);
@@ -106,7 +105,10 @@ export class AuthManager implements IAuthenticationInformation, IAuthenticationM
                 settings.saveSettings();
                 if (appConfig.game.seatMode) {
                     // tslint:disable-next-line:no-string-literal
-                    appInsights.context["device"].model = "Individual Console: " + login;
+                    if (window["appInsights"]) {
+                        // tslint:disable-next-line:no-string-literal
+                        appInsights.context["device"].model = "Individual Console: " + login;
+                    }
                 }
             } else {
                 // Report authentication or authorization errors

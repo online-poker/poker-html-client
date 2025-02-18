@@ -6,7 +6,7 @@ import { AccountManager } from "../services/accountManager";
 import { settings } from "../settings";
 import { PageBase } from "../ui/pagebase";
 
-declare var app: App;
+declare const app: App;
 
 interface AccountPagePlayerAccountModel {
     currencyName: string;
@@ -29,14 +29,13 @@ interface AccountPagePlayerModel {
 }
 
 export class AccountPage extends PageBase {
-    public cashierCaption: KnockoutObservable<string>;
-    public loading: KnockoutObservable<boolean>;
-    public player: KnockoutObservable<AccountPagePlayerModel>;
+    public cashierCaption: ko.Observable<string>;
+    public loading: ko.Observable<boolean>;
+    public player: ko.Observable<AccountPagePlayerModel>;
     public ratingSupported = ko.observable(appConfig.game.hasRating);
 
     constructor() {
         super();
-        const self = this;
         this.cashierCaption = ko.observable<string>();
         this.loading = ko.observable(false);
         const emptyElement: AccountPagePlayerModel = {
@@ -51,11 +50,11 @@ export class AccountPage extends PageBase {
             accounts: [],
             stars: 0,
         };
-        authManager.registerAuthenticationChangedHandler(function(newValue) {
+        authManager.registerAuthenticationChangedHandler((newValue) => {
             if (newValue) {
-                self.updateInformation(true);
+                this.updateInformation(true);
             } else {
-                self.player(emptyElement);
+                this.player(emptyElement);
             }
         });
         this.player = ko.observable(emptyElement);
@@ -79,23 +78,21 @@ export class AccountPage extends PageBase {
             return;
         }
 
-        const self = this;
-        const realMoneySupported = !settings.isGuest();
-        const gameMoneySupported = settings.isGuest();
+        const realMoneySupported = true;
+        const gameMoneySupported = false;
         const pointsSupported = true;
         this.loading(true);
         this.requestData(realMoneySupported, gameMoneySupported, pointsSupported).then(
-            () => self.loading(false),
+            () => this.loading(false),
             () => this.requestData(realMoneySupported, gameMoneySupported, pointsSupported));
     }
 
     private async requestData(realMoneySupported: boolean, gameMoneySupported: boolean, pointsSupported: boolean) {
-        const self = this;
         const api = new AccountManager();
         const data = await api.getPlayer();
-        self.loading(false);
+        this.loading(false);
         const personalAccountData = data.Data;
-        if (!self.visible()) {
+        if (!this.visible()) {
             return;
         }
 
@@ -140,7 +137,7 @@ export class AccountPage extends PageBase {
             status = "status3";
         }
 
-        self.player({
+        this.player({
             login: authManager.login(),
             email: personalAccountData.Email,
             firstName: personalAccountData.FirstName,

@@ -1,5 +1,3 @@
-/// <reference path="../poker.commanding.api.ts" />
-
 import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
 import { App } from "../app";
@@ -7,17 +5,17 @@ import { _ } from "../languagemanager";
 import { accountService } from "../services";
 import { PopupBase } from "../ui/popupbase";
 
-declare var app: App;
+declare const app: App;
 
 export class AccountStatusPopup extends PopupBase {
-    public loading: KnockoutObservable<boolean>;
-    public information: KnockoutObservable<AccountServiceInformation>;
-    public loginName: KnockoutObservable<string>;
-    public tableName: KnockoutObservable<string>;
-    public smallBlind: KnockoutObservable<number>;
-    public bigBlind: KnockoutObservable<number>;
-    public tableInformation: KnockoutComputed<string>;
-    public betInformation: KnockoutComputed<string>;
+    public loading: ko.Observable<boolean>;
+    public information: ko.Observable<AccountServiceInformation>;
+    public loginName: ko.Observable<string>;
+    public tableName: ko.Observable<string>;
+    public smallBlind: ko.Observable<number>;
+    public bigBlind: ko.Observable<number>;
+    public tableInformation: ko.Computed<string>;
+    public betInformation: ko.Computed<string>;
     public displayCurrencyName: boolean;
     public addMoneyAvailable = ko.observable(false);
     public addMoneyAllowed = ko.observable(false);

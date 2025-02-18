@@ -1,5 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="./poker.commanding.api.d.ts" />
 import { getAuthToken, setAuthToken } from "@poker/api-server";
 import * as $ from "jquery";
+import * as ko from "knockout";
+import { appConfig } from "poker/appconfig";
 import { authManager } from "poker/authmanager";
 import { CommandManager } from "poker/commandmanager";
 import { AccountManager } from "poker/services/accountManager";
@@ -19,6 +23,7 @@ import {
     SeatPage,
     TablesPage,
 } from "./pages";
+import "./poker.commanding.api.ts";
 import {
     AccountStatusPopup,
     AddMoneyPopup,
@@ -63,8 +68,10 @@ import { AnimationSettings } from "./table/animationsettings";
 import * as runtimeSettings from "./table/runtimesettings";
 import { tableManager } from "./table/tablemanager";
 import * as timeService from "./timeservice";
+import { PopupBase } from "./ui/popupbase";
 
 type PromiseOrVoid = void | Promise<void>;
+type ProviseOrVoidFactory = () => PromiseOrVoid;
 
 export interface LoginPromptResult {
     authenticated: boolean;
@@ -108,7 +115,7 @@ export class App {
     public mainSelector: Selector;
     public spinner: any;
     public progressSpinner: any;
-    public processing: KnockoutObservable<boolean>;
+    public processing: ko.Observable<boolean>;
     public popupClosed: Signal;
     public loadPromises: JQueryPromise<void>[];
     public fullyInitialized: boolean;
@@ -119,12 +126,10 @@ export class App {
     private commandManager = new CommandManager();
 
     constructor() {
-        const self = this;
-
         this.loadPromises = [];
         // register pages.
         this.homePage = new HomePage();
-        this.otherPageBlock = new OtherPageBlock();
+        this.otherPageBlock = new OtherPageBlock(this.commandManager);
         this.infoPageBlock = new InfoPageBlock();
         this.lobbyPageBlock = new LobbyPageBlock();
         this.cashierPageBlock = new CashierPageBlock();
@@ -143,7 +148,7 @@ export class App {
         this.settingsPopup = new SettingsPopup();
         this.rulesPopup = new RulesPopup();
         this.sweepstakesRulesPopup = new SweepstakesRulesPopup();
-        this.tableMenuPopup = new TableMenuPopup(this.tablesPage, this.commandManager, new AccountManager());
+        this.tableMenuPopup = new TableMenuPopup(this.tablesPage, this.commandManager, new AccountManager(), authManager);
         this.addMoneyPopup = new AddMoneyPopup();
         this.slowConnectionPopup = new SlowConnectionPopup();
         this.tableChatPopup = new ChatPopup();
@@ -152,7 +157,7 @@ export class App {
 
         this.morePopup = new MorePopup();
 
-        this.processing = ko.observable(false);
+        this.processing = ko.observable<boolean>(false);
 
         this.popupClosed = new signals.Signal();
         this.registerCommands();
@@ -242,14 +247,9 @@ export class App {
     // Bind any events that are required on startup. Common events are:
     // "load", "deviceready", "offline", and "online".
     public bindEvents() {
-        document.addEventListener("deviceready", this.onDeviceReady, false);
-        if (debugSettings.ios.hasMultitasking) {
-            document.addEventListener("resign", this.onResign, false);
-            document.addEventListener("active", this.onActive, false);
-        }
-
-        document.addEventListener("pause", this.onPause, false);
-        document.addEventListener("resume", this.onResume, false);
+        deviceEvents.ready.add(this.onDeviceReady, this);
+        deviceEvents.pause.add(this.onPause, this);
+        deviceEvents.resume.add(this.onResume, this);
         deviceEvents.initialize();
         deviceEvents.ready.addOnce(function() {
             console.log("Device ready fired");
@@ -283,7 +283,6 @@ export class App {
             platformInfo.isTablet = true;
         }
 
-        app.tablesPage.calculateLandscapeWidth();
         pushService.register();
 
         tableManager.maxTablesReached.add(function(continuation: () => void) {
@@ -300,8 +299,10 @@ export class App {
     }
     // Update DOM on a Received Event
     public async receivedEvent(id: string) {
-        const self = this;
-        timeService.start();
+        if (appConfig.timeSettings.updateTimeFromServer) {
+            timeService.start();
+        }
+
         settings.soundEnabled.subscribe(function(value) {
             const soundManager = getSoundManager();
             soundManager.enabled(value);
@@ -329,9 +330,9 @@ export class App {
                 app.lobbyPageBlock.lobbyPage.tournamentOptions.currency(2);
             }
         });
-        $.when(this.loadPromises).then(function() {
+        $.when(this.loadPromises).then(() => {
             keyboardActivationService.setup();
-            self.setupTouchActivation();
+            this.setupTouchActivation();
         });
         this.setInitializationState();
         let startPage = "main";
@@ -354,6 +355,7 @@ export class App {
         }
 
         this.setDesiredOrientation();
+
         if (platformInfo.isTablet) {
             orientationService.suppressRotation();
         }
@@ -362,9 +364,9 @@ export class App {
         metadataManager.setFailed(() => {
             slowInternetService.onConnectionSlow();
             slowInternetService.onDisconnected();
-            self.metadataUpdateFailed();
+            this.metadataUpdateFailed();
         });
-        metadataManager.setReady(function() {
+        metadataManager.setReady(() => {
             // Adjust height
             const toolpadHeight = platformInfo.hasTabBar() ? 49 : 15;
             const logoHeight = 102;
@@ -386,21 +388,23 @@ export class App {
                 } else {
                     tournamentLobbyAdjustment = 81;
                     lobbyAdjustment = -30;
-                    app.setupMenu();
+                    if (platformInfo.hasMenu()) {
+                        app.setupMenu();
+                    }
                 }
             }
 
             if (startPage === "main") {
                 uiManager.showPage("main");
-                self.showPageBlock("home");
-                self.showSubPage("home");
+                this.showPageBlock("home");
+                this.showSubPage("home");
             } else {
                 app.showSubPage("tables");
-                self.loadTablesAndTournaments(true);
+                this.loadTablesAndTournaments(true);
             }
 
-            tableManager.tables.subscribe(function(newValue: TableView[]) {
-                self.updateTabbar(authManager.authenticated(), newValue);
+            tableManager.tables.subscribe((newValue: TableView[]) => {
+                this.updateTabbar(authManager.authenticated(), newValue);
                 if (newValue && metadataManager.banners != null) {
                     const filteredBanners = metadataManager.banners
                         .filter((banner) => banner.Id > settings.lastBannerId())
@@ -416,14 +420,14 @@ export class App {
                     }
                 }
             });
-            authManager.registerAuthenticationChangedHandler(function(newValue) {
-                self.updateTabbar(newValue, tableManager.tables());
+            authManager.registerAuthenticationChangedHandler((newValue) => {
+                this.updateTabbar(newValue, tableManager.tables());
 
                 // tslint:disable-next-line:no-console
                 console.log("Authentication changed.");
                 setTimeout(() => {
-                    self.terminateConnection();
-                    self.loadTablesAndTournaments(newValue);
+                    this.terminateConnection();
+                    this.loadTablesAndTournaments(newValue);
                 }, 100);
             });
         });
@@ -434,12 +438,12 @@ export class App {
         console.log("Detecting internet status..." + hasInternet ? "connected" : "not connected");
         if (hasInternet) {
             slowInternetService.setRetryHandler(null);
-            self.updateMetadataOnLaunch();
-            self.hideSplash();
+            this.updateMetadataOnLaunch();
+            this.hideSplash();
         } else {
             slowInternetService.onOffline();
-            self.hideSplash();
-            slowInternetService.setRetryHandler(() => self.updateMetadataOnLaunch());
+            this.hideSplash();
+            slowInternetService.setRetryHandler(() => this.updateMetadataOnLaunch());
         }
     }
     public setInitializationState() {
@@ -485,22 +489,21 @@ export class App {
         this.mainSelector.setParams(selectorCaption, options, successCallback, cancelCallback);
     }
     public bindPageBlock(pageBlockName: string, viewModel: PageBlock) {
-        const self = this;
-        this.commandManager.registerCommand("pageblock." + pageBlockName, async function showPageBlock() {
+        this.commandManager.registerCommand("pageblock." + pageBlockName, async () => {
             const requireAuthentication = viewModel.requireAuthentication;
             if (!requireAuthentication) {
                 if (!viewModel.requireGuestAuthentication) {
-                    self.showPageBlock(pageBlockName);
+                    this.showPageBlock(pageBlockName);
                 } else {
                     const value = await app.requireGuestAuthentication();
                     if (value.authenticated) {
-                        self.showPageBlock(pageBlockName);
+                        this.showPageBlock(pageBlockName);
                     }
                 }
             } else {
                 const value = await app.requireAuthentication();
                 if (value.authenticated) {
-                    self.showPageBlock(pageBlockName);
+                    this.showPageBlock(pageBlockName);
                 }
             }
         });
@@ -511,15 +514,14 @@ export class App {
         }
     }
     public bindSubPage(pageName: string, viewModel: any) {
-        const self = this;
-        this.commandManager.registerCommand("page." + pageName, async function showPage() {
+        this.commandManager.registerCommand("page." + pageName, async () => {
             const requireAuthentication = viewModel.requireAuthentication || false;
             if (!requireAuthentication) {
-                self.showSubPage(pageName);
+                this.showSubPage(pageName);
             } else {
                 const value = await app.requireAuthentication();
                 if (value.authenticated) {
-                    self.showSubPage(pageName);
+                    this.showSubPage(pageName);
                 }
             }
         });
@@ -557,9 +559,8 @@ export class App {
         ko.applyBindings(viewModel, pageElement);
     }
     public bindPopup(popup: string, viewModel: any): void {
-        const self = this;
-        this.commandManager.registerCommand("popup." + popup, function() {
-            self.showPopup(popup);
+        this.commandManager.registerCommand("popup." + popup, () => {
+            this.showPopup(popup);
         });
         if (typeof window === "undefined") {
             return;
@@ -650,7 +651,7 @@ export class App {
                 };
                 resolve(signalData);
             }, this, 1);
-            const popupObject = this[this.currentPopup + "Popup"];
+            const popupObject = this[(this.currentPopup + "Popup") as keyof this] as PopupBase;
             if (popupObject != null) {
                 popupObject.shown(args);
             }
@@ -678,7 +679,7 @@ export class App {
             }
 
             const popupName = this.currentPopup;
-            const popupObject = this[this.currentPopup + "Popup"];
+            const popupObject = this[(this.currentPopup + "Popup") as keyof this] as PopupBase;
             /* tslint:disable:no-string-literal */
             if (popupObject !== undefined && popupObject["visible"] !== undefined) {
                 popupObject.visible(false);
@@ -699,9 +700,13 @@ export class App {
         window.location.reload();
     }
     public shouldRotateToOrientation(interfaceOrientation: any) {
-        /// Checks that given orientation currently supported
-        /// For now this is works in iOS.
-        return ScreenOrientation.shouldRotateToOrientation(interfaceOrientation);
+        /* tslint:disable-next-line:no-string-literal */
+        const worker: WorkerFunc | undefined = window["ScreenOrientation"]["shouldRotateToOrientation"];
+        if (worker) {
+            return worker(interfaceOrientation);
+        }
+
+        return false;
     }
     public requireAuthentication(): Promise<LoginPromptResult> {
         if (!authManager.authenticated()) {
@@ -728,7 +733,11 @@ export class App {
     public async requireGuestAuthentication(): Promise<LoginPromptResult> {
         if (!authManager.authenticated()) {
             // We don't authenticated, so display authentication popup.
-            await authManager.loginAsGuest();
+            const authenticate = await authManager.loginAsGuest();
+            if (authenticate !== "Ok") {
+                await SimplePopup.display(_("auth.guestPlay"), [_(`errors.${authenticate}`)]);
+            }
+
             return {
                 authenticated: authManager.authenticated(),
                 wasAuthenticated: false,
@@ -755,7 +764,7 @@ export class App {
         popupObject.customStyle("");
         return deferred;
     }
-    public promptEx(title: string, messages: string[], buttons: string[], actions: Array<() => PromiseOrVoid>) {
+    public promptEx(title: string, messages: string[], buttons: string[], actions: ProviseOrVoidFactory[]) {
         this.showPopup("custom");
         const popupObject = this.customPopup;
         const deferred = popupObject.deferred;
@@ -785,6 +794,10 @@ export class App {
             if (currentTable === null || currentTable.model === null) {
                 console.warn("No tables opened. Could not open tables page");
                 SimplePopup.display(_("menu.tables"), _("tablesList.noTablesSelected"));
+                return;
+            }
+
+            if (currentTable.tableId === 0) {
                 return;
             }
 
@@ -932,7 +945,10 @@ export class App {
         }
 
         self.logEvent("Resume application");
-        timeService.start();
+        if (appConfig.timeSettings.updateTimeFromServer) {
+            timeService.start();
+        }
+
         self.showSplash();
         const target = document.getElementById("spinner");
         self.spinner.spin(target);
@@ -1010,7 +1026,6 @@ export class App {
         });
     }
     private async updateMetadataOnResume(lastPage: string, pageBlockBeforeClosing: string, subPageBeforeClosing: string) {
-        const self = this;
         if (debugSettings.initialization.stopOnResume) {
             return;
         }
@@ -1022,11 +1037,11 @@ export class App {
             return;
         }
 
-        const failHandler = function() {
+        const failHandler = () => {
             console.log("Failed updating metadata on resume, rescheduling attempt.");
             slowInternetService.showReconnectFailedPopup();
             slowInternetService.setRetryHandler(() => {
-                self.updateMetadataOnResume(lastPage, pageBlockBeforeClosing, subPageBeforeClosing);
+                this.updateMetadataOnResume(lastPage, pageBlockBeforeClosing, subPageBeforeClosing);
             });
         };
         if (!await this.versionCheck()) {
@@ -1040,7 +1055,7 @@ export class App {
             try {
                 await tableManager.getCurrentTablesAndTournaments();
                 this.spinner.stop();
-                const wrapper = await self.establishConnection();
+                const wrapper = await this.establishConnection();
                 if (wrapper.terminated) {
                     return;
                 }
@@ -1080,13 +1095,12 @@ export class App {
         }
     }
     private async updateMetadataOnLaunch() {
-        const self = this;
         if (debugSettings.initialization.stopOnLaunch) {
             return;
         }
 
         console.log("Launch intialization of metadata first time");
-        const failHandler = function (e: Error) {
+        const failHandler = (e: unknown) => {
             if (e) {
                 console.error(e);
             } else {
@@ -1095,22 +1109,22 @@ export class App {
 
             console.log("Failed updating metadata for first time, rescheduling attempt.");
             slowInternetService.setRetryHandler(() => {
-                self.updateMetadataOnLaunch();
+                this.updateMetadataOnLaunch();
             });
         };
         if (!await this.versionCheck()) {
             return;
         }
 
-        self.preloadTableImages();
+        this.preloadTableImages();
         try {
             await metadataManager.update();
-            self.spinner.stop();
+            this.spinner.stop();
             tableManager.initialize(this.commandManager);
             try {
-                await self.establishConnection();
+                await this.establishConnection();
                 await tableManager.getCurrentTablesAndTournaments();
-                self.fullyInitialized = true;
+                this.fullyInitialized = true;
                 metadataManager.setReady(null);
             } catch (e) {
                 console.log("Failed to initialize connection and get current tables and tournaments");
@@ -1193,18 +1207,17 @@ export class App {
         };
     }
     private async loadTablesAndTournaments(authenticated: boolean) {
-        const self = this;
         if (authenticated) {
             try {
                 await tableManager.getCurrentTablesAndTournaments();
-                self.establishConnection();
+                this.establishConnection();
             } catch (e) {
                 console.log("Could not get current tables!");
                 slowInternetService.showReconnectFailedPopup();
             }
         } else {
             tableManager.clear();
-            self.establishConnection();
+            this.establishConnection();
         }
     }
     private setFailedState() {
@@ -1230,10 +1243,9 @@ export class App {
         }
     }
     private initializeConnection() {
-        const self = this;
         // connectionService.initializeConnection();
-        connectionService.recoverableError.add(function() {
-            self.establishConnection();
+        connectionService.recoverableError.add(() => {
+            this.establishConnection();
         });
     }
     private terminateConnection(forceDisconnect = false) {
@@ -1241,7 +1253,6 @@ export class App {
         connectionService.terminateConnection(forceDisconnect);
     }
     private async establishConnection(maxAttempts = 3) {
-        const self = this;
         // This part should be moved up to the stack to remove dependency on other services
         // in the connection management.
         connectionService.initializeConnection();
@@ -1250,20 +1261,20 @@ export class App {
             return wrapper;
         }
 
-        self.logEvent("Setting up connection dependent services.");
+        this.logEvent("Setting up connection dependent services.");
         slowInternetService.manualDisconnect = false;
         tableManager.connectTables();
         tableManager.connectTournaments();
         const connection = wrapper.connection;
         try {
-            self.logEvent("Joining lobby chat.");
+            this.logEvent("Joining lobby chat.");
             connection.Chat.server.join(0);
         } catch (error) {
             console.log(error);
             throw new Error("Could not join chat after establishingConnection");
         }
 
-        self.logEvent("Listening lobby chat messages.");
+        this.logEvent("Listening lobby chat messages.");
         const chatHub = connection.createHubProxy("chat");
         chatHub.on("Message", function(...msg: any[]) {
             const messageId = msg[0];
@@ -1290,12 +1301,11 @@ export class App {
     }
 
     private updateTabbar(authenticated: boolean, tables: TableView[]) {
-        const self = this;
         if (authenticated) {
             const tablesEnabled = tables.length > 0;
-            self.tabBar.enable("tables", tablesEnabled);
+            this.tabBar.enable("tables", tablesEnabled);
         } else {
-            self.tabBar.enable("tables", false);
+            this.tabBar.enable("tables", false);
         }
     }
     private setupClosePopupOnClick() {
@@ -1306,31 +1316,31 @@ export class App {
         });
     }
     private preloadTableImages() {
-        imagePreloadService.preloadResource("img/lobby/table2-empty");
-        imagePreloadService.preloadResource("img/lobby/table2-s1");
-        imagePreloadService.preloadResource("img/lobby/table2-s2");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table2-empty");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table2-s1");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table2-s2");
 
-        imagePreloadService.preloadResource("img/lobby/table6-empty");
-        imagePreloadService.preloadResource("img/lobby/table6-s1");
-        imagePreloadService.preloadResource("img/lobby/table6-s2");
-        imagePreloadService.preloadResource("img/lobby/table6-s3");
-        imagePreloadService.preloadResource("img/lobby/table6-s4");
-        imagePreloadService.preloadResource("img/lobby/table6-s5");
-        imagePreloadService.preloadResource("img/lobby/table6-s6");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-empty");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-s1");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-s2");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-s3");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-s4");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-s5");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table6-s6");
 
-        imagePreloadService.preloadResource("img/lobby/table10-empty");
-        imagePreloadService.preloadResource("img/lobby/table10-s1");
-        imagePreloadService.preloadResource("img/lobby/table10-s2");
-        imagePreloadService.preloadResource("img/lobby/table10-s3");
-        imagePreloadService.preloadResource("img/lobby/table10-s4");
-        imagePreloadService.preloadResource("img/lobby/table10-s5");
-        imagePreloadService.preloadResource("img/lobby/table10-s6");
-        imagePreloadService.preloadResource("img/lobby/table10-s7");
-        imagePreloadService.preloadResource("img/lobby/table10-s8");
-        imagePreloadService.preloadResource("img/lobby/table10-s9");
-        imagePreloadService.preloadResource("img/lobby/table10-s10");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-empty");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s1");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s2");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s3");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s4");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s5");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s6");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s7");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s8");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s9");
+        imagePreloadService.preloadResource(appConfig.ui.deploymentPath + "img/lobby/table10-s10");
 
-        imagePreloadService.preloadDeviceSpecificResource("img/images/tableImages/poker_table");
+        imagePreloadService.preloadDeviceSpecificResource(appConfig.ui.deploymentPath + "img/images/tableImages/poker_table");
     }
     private logEvent(message: string) {
         if (debugSettings.device.events) {
@@ -1357,4 +1367,4 @@ export class App {
     }
 }
 
-declare var app: App;
+declare const app: App;

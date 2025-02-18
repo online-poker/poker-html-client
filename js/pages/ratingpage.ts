@@ -1,7 +1,8 @@
+import * as ko from "knockout";
 import { App } from "../app";
 import { AccountManager } from "../services/accountManager";
 
-declare var app: App;
+declare const app: App;
 
 export class RatingPage implements Page {
     public ratings = ko.observableArray<UserRatingModel>();

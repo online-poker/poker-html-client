@@ -1,11 +1,9 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { App } from "../app";
 import * as timeService from "../timeservice";
 import { PopupBase } from "../ui/popupbase";
 
-declare var app: App;
+declare const app: App;
 
 export class SimplePopup extends PopupBase {
     public static display(title: string, message: string | string[]): Promise<PopupResult> {
@@ -38,8 +36,8 @@ export class SimplePopup extends PopupBase {
 
         return promise;
     }
-    public title: KnockoutObservable<string>;
-    public messages: KnockoutObservableArray<string>;
+    public title: ko.Observable<string>;
+    public messages: ko.ObservableArray<string>;
 
     constructor() {
         super();

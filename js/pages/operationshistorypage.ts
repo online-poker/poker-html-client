@@ -5,14 +5,14 @@ import { orientationService, reloadManager } from "../services";
 import { AccountManager } from "../services/accountManager";
 import { PageBase } from "../ui/pagebase";
 
-declare var app: App;
+declare const app: App;
 
-export class OperationsHistoryPage extends PageBase implements KnockoutValidationGroup {
-    public from: KnockoutObservable<string>;
-    public to: KnockoutObservable<string>;
-    public errors: KnockoutValidationErrors;
-    public operations: KnockoutObservableArray<OperationData>;
-    public loading: KnockoutObservable<boolean>;
+export class OperationsHistoryPage extends PageBase implements ko.ValidationGroup {
+    public from: ko.Observable<string>;
+    public to: ko.Observable<string>;
+    public errors: ko.ValidationErrors;
+    public operations: ko.ObservableArray<OperationData>;
+    public loading: ko.Observable<boolean>;
     public isValid: () => boolean;
 
     constructor() {

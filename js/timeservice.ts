@@ -4,11 +4,11 @@ import * as moment from "moment";
 import { debugSettings } from "./debugsettings";
 import * as runtimeSettings from "./table/runtimesettings";
 
-declare var host: string;
+declare const host: string;
 
 class TimeService {
     private static MillisecondsInMinutes = 60 * 1000;
-    public currentTime: KnockoutObservable<string>;
+    public currentTime: ko.Observable<string>;
     public timeDiff: number = 0;
     private handle: number = 0;
     private timeouts: number[] = [];

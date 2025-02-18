@@ -1,37 +1,35 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import { _ } from "../languagemanager";
 import { SimplePopup } from "../popups/simplepopup";
 import { AccountManager } from "../services/accountManager";
 import { TableView } from "../table/tableview";
-import { PopupBase } from "../ui/popupbase";
 
-declare var app: App;
+declare const app: App;
 
 export class AddMoneyPopup {
-    public buyin: KnockoutObservable<number>;
-    public minBuyin: KnockoutObservable<number>;
-    public maxBuyin: KnockoutObservable<number>;
-    public minBet: KnockoutObservable<number>;
-    public maxBet: KnockoutObservable<number>;
-    public accountTotal: KnockoutObservable<number>;
-    public tableName: KnockoutObservable<string>;
-    public errors: KnockoutValidationErrors;
-    public errorMessage: KnockoutObservable<string>;
-    public tableView: KnockoutObservable<TableView>;
-    public loading: KnockoutObservable<boolean>;
-    public processing: KnockoutObservable<boolean>;
-    public ticketCode: KnockoutObservable<string>;
-    public allowUsePersonalAccount: KnockoutObservable<boolean>;
-    public allowTickets: KnockoutObservable<boolean>;
-    private validationModel: KnockoutObservable<AddMoneyPopup>;
+    public buyin: ko.Observable<number>;
+    public minBuyin: ko.Observable<number>;
+    public maxBuyin: ko.Observable<number>;
+    public minBet: ko.Observable<number>;
+    public maxBet: ko.Observable<number>;
+    public accountTotal: ko.Observable<number>;
+    public tableName: ko.Observable<string>;
+    public errors: ko.ValidationErrors;
+    public errorMessage: ko.Observable<string>;
+    public tableView: ko.Observable<TableView>;
+    public loading: ko.Observable<boolean>;
+    public processing: ko.Observable<boolean>;
+    public ticketCode: ko.Observable<string>;
+    public allowUsePersonalAccount: ko.Observable<boolean>;
+    public allowTickets: ko.Observable<boolean>;
+    public hasKeyPad: ko.Observable<boolean>;
+    private validationModel: ko.Observable<this>;
 
     constructor() {
         this.buyin = ko.observable<number>().extend({ required: appConfig.tournament.enabled, validatable: true });
-        this.ticketCode = ko.observable<string>().extend({ required: appConfig.game.seatMode, validatable: true });
+        this.ticketCode = ko.observable<string>("").extend({ required: appConfig.game.seatMode, validatable: true });
         this.tableView = ko.observable<TableView>();
         this.accountTotal = ko.observable<number>(0);
         this.loading = ko.observable<boolean>(false);
@@ -46,19 +44,19 @@ export class AddMoneyPopup {
         this.processing = ko.observable(false);
         this.allowUsePersonalAccount = ko.observable(appConfig.joinTable.allowUsePersonalAccount);
         this.allowTickets = ko.observable(appConfig.joinTable.allowTickets);
+        this.hasKeyPad = ko.observable(appConfig.ui.hasKeyPad);
     }
     public async shown() {
-        const self = this;
         const accountManager = new AccountManager();
-        self.loading(true);
-        self.processing(false);
+        this.loading(true);
+        this.processing(false);
         if (appConfig.joinTable.allowUsePersonalAccount) {
             try {
                 const data = await accountManager.getAccount();
-                self.loading(false);
+                this.loading(false);
                 if (data.Status === "Ok") {
                     const personalAccountData = data.Data;
-                    const tableData = self.tableView().model;
+                    const tableData = this.tableView().model;
                     let balance = 0;
                     const currencyId = tableData.CurrencyId;
                     if (currencyId === 1) {
@@ -67,28 +65,28 @@ export class AddMoneyPopup {
                         balance = personalAccountData.GameMoney;
                     }
 
-                    const tableView = self.tableView();
+                    const tableView = this.tableView();
                     const myPlayer = tableView.myPlayer()!;
                     const totalBet = (myPlayer.TotalBet() === null ? 0 : myPlayer.TotalBet()) + myPlayer.Bet();
                     const tableTotal = totalBet + myPlayer.Money();
-                    self.accountTotal(balance);
-                    self.tableName(tableData.TableName);
-                    self.minBet(tableData.SmallBlind);
-                    self.maxBet(tableData.BigBlind);
+                    this.accountTotal(balance);
+                    this.tableName(tableData.TableName);
+                    this.minBet(tableData.SmallBlind);
+                    this.maxBet(tableData.BigBlind);
                     const baseMinimalBuyIn = tableView.minimalBuyIn() * tableData.BigBlind;
                     const maxBuyIn = (20 * baseMinimalBuyIn) - tableTotal;
-                    self.minBuyin(1);
-                    self.maxBuyin(maxBuyIn);
-                    self.buyin(Math.min(2 * baseMinimalBuyIn, maxBuyIn));
+                    this.minBuyin(1);
+                    this.maxBuyin(maxBuyIn);
+                    this.buyin(Math.min(2 * baseMinimalBuyIn, maxBuyIn));
                 } else {
                     SimplePopup.display(_("addMoney.caption"), _("errors." + data.Status));
                 }
             } catch (e) {
-                self.loading(false);
+                this.loading(false);
                 SimplePopup.display(_("addMoney.caption"), _("addMoney.joinError"));
             }
         } else {
-            self.loading(false);
+            this.loading(false);
         }
     }
     public async confirm() {
@@ -141,7 +139,7 @@ export class AddMoneyPopup {
             app.closePopup("ok");
             SimplePopup.display(_("addMoney.caption"), _("addMoney.success"));
             this.ticketCode(null);
-        } catch (e) {
+        } catch (e: any) {
             this.processing(false);
             this.loading(false);
             SimplePopup.display(_("addMoney.caption"), _("errors." + e.message));

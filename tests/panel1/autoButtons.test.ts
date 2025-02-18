@@ -21,6 +21,14 @@ describe("auto buttons", function () {
         logEnabled = false;
         debugSettings.tableView.trace = false;
         global.messages = {
+            table: {
+                actiontext: {
+                    fold: "Фолд",
+                    checkFold: "Чек/Фолд",
+                    check: "Чек",
+                    callAmount: "Колл #amount",
+                },
+            },
         };
     });
 

@@ -67,7 +67,7 @@ export class PageBlock {
             return null;
         }
 
-        return this[subPageName + "Page"] as Page;
+        return this[(subPageName + "Page") as keyof this] as Page;
     }
     private showSubPage(pageName: string) {
         const nextPageObject = this.getSubPage(pageName);
@@ -114,7 +114,7 @@ export class PageBlock {
         return this.getSelector() + " .sub-page." + pageName;
     }
     private bindSubPage(pageName: string, viewModel: any): void {
-        this[pageName + "Page"] = viewModel;
+        this[(pageName + "Page") as keyof this] = viewModel;
         if (typeof window === "undefined") {
             return;
         }

@@ -2,6 +2,13 @@
     "extends": "tslint:recommended",
     "rules": {
         "class-name": true,
+        "completed-docs": [
+          false,
+          {
+            "classes": { "visibilities": [ "exported" ] },
+            "functions": { "visibilities": [ "exported" ] }
+          }
+        ],
         "comment-format": [
             true,
             "check-space"

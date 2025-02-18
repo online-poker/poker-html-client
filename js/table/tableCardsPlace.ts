@@ -3,20 +3,20 @@ import { convertToCards } from "./cardsHelper";
 import * as runtimeSettings from "./runtimesettings";
 
 export class TableCardsPlace {
-    public tableCards: KnockoutObservableArray<string>;
-    public tableCardsData: KnockoutObservableArray<number>;
-    public isFlop: KnockoutObservable<boolean>;
-    public isFlop5: KnockoutObservable<boolean>;
-    public isTurn: KnockoutObservable<boolean>;
-    public isTurn5: KnockoutObservable<boolean>;
-    public isRiver: KnockoutObservable<boolean>;
-    public isAnimating: KnockoutComputed<boolean>;
-    public CardsHightlighted: KnockoutObservable<boolean>;
-    public Card1Hightlighted: KnockoutObservable<boolean>;
-    public Card2Hightlighted: KnockoutObservable<boolean>;
-    public Card3Hightlighted: KnockoutObservable<boolean>;
-    public Card4Hightlighted: KnockoutObservable<boolean>;
-    public Card5Hightlighted: KnockoutObservable<boolean>;
+    public tableCards: ko.ObservableArray<string>;
+    public tableCardsData: ko.ObservableArray<number>;
+    public isFlop: ko.Observable<boolean>;
+    public isFlop5: ko.Observable<boolean>;
+    public isTurn: ko.Observable<boolean>;
+    public isTurn5: ko.Observable<boolean>;
+    public isRiver: ko.Observable<boolean>;
+    public isAnimating: ko.Computed<boolean>;
+    public CardsHightlighted: ko.Observable<boolean>;
+    public Card1Hightlighted: ko.Observable<boolean>;
+    public Card2Hightlighted: ko.Observable<boolean>;
+    public Card3Hightlighted: ko.Observable<boolean>;
+    public Card4Hightlighted: ko.Observable<boolean>;
+    public Card5Hightlighted: ko.Observable<boolean>;
 
     constructor() {
         this.tableCards = ko.observableArray<string>([]);

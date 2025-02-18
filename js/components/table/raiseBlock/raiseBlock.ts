@@ -1,8 +1,9 @@
+import * as ko from "knockout";
 import { TableSlider } from "../../../table/tableSlider";
 
 export interface IRaiseBlockComponentParameters {
     data: TableSlider;
-    updateTranslatorTrigger: KnockoutSubscribable<any>;
+    updateTranslatorTrigger: ko.Subscribable<any>;
     updateTranslator: () => void;
 }
 

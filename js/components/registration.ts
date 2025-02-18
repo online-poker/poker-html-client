@@ -1,12 +1,17 @@
-﻿import ko = require("knockout");
-
+﻿import * as ko from "knockout";
+import { GameTypeSelectorComponent } from "poker/components/game-type-selector/gametypeselector";
+import { FilterOptionsComponent } from "poker/components/lobby/filter/options";
+import { Checkbox } from "poker/components/shared/checkbox/checkbox";
+import { TimeBlockComponent } from "poker/components/timeblock/timeblock";
 import * as table from "./table";
+import { Keypad } from "./keypad/keypad";
+import { LanguageSelectorComponent } from "./language-selector/languageselector";
 
-const trivialViewModelFactory = function (params: { data: any }, componentInfo: KnockoutComponentTypes.ComponentConfig) {
+const trivialViewModelFactory = function (params: { data: any }, componentInfo: ko.components.ComponentInfo) {
     return params.data;
 };
 
-const tableIconViewModelFactory = function (params: { data: LobbyTableItem }, componentInfo: KnockoutComponentTypes.ComponentConfig) {
+const tableIconViewModelFactory = function (params: { data: LobbyTableItem }, componentInfo: ko.components.ComponentInfo) {
     const tableData = params.data;
     return {
         displayTakenSeats: true,
@@ -21,7 +26,7 @@ function getTemplateDefinition(name: string) {
     // tslint:disable-next-line:no-string-literal
     const useRequire = window["PokerComponents"] === undefined;
     if (useRequire) {
-        return { require: "text!app/components/" + name };
+        throw new Error(`Component ${name} does not have template.`);
     }
 
     // tslint:disable-next-line:no-string-literal
@@ -46,17 +51,19 @@ export function registerComponents() {
     });
     ko.components.register("tournament-prizes", {
         template: getTemplateDefinition("lobby/tournament/prizes.html"),
-        viewModel: { require: "app/components/lobby/tournament/prizes" },
     });
     ko.components.register("checkbox", {
         template: getTemplateDefinition("shared/checkbox/checkbox.html"),
-        viewModel: { require: "app/components/shared/checkbox/checkbox" },
+        viewModel: (params?: any) => new Checkbox(params),
     });
     ko.components.register("tournament-blinds", {
         template: getTemplateDefinition("lobby/tournament/blinds.html"),
     });
     ko.components.register("rotate-phone-block", {
         template: getTemplateDefinition("rotate-phone-block/rotate-phone-block.html"),
+    });
+    ko.components.register("screen-overlay-block", {
+        template: getTemplateDefinition("screen-overlay-block/screen-overlay-block.html"),
     });
 
     /**
@@ -84,15 +91,15 @@ export function registerComponents() {
     });
     ko.components.register("cash-options", {
         template: getTemplateDefinition("lobby/filter/cash-options.html"),
-        viewModel: { require: "app/components/lobby/filter/options" },
+        viewModel: (params?: any) => new FilterOptionsComponent(params),
     });
     ko.components.register("tournament-options", {
         template: getTemplateDefinition("lobby/filter/tournament-options.html"),
-        viewModel: { require: "app/components/lobby/filter/options" },
+        viewModel: (params?: any) => new FilterOptionsComponent(params),
     });
     ko.components.register("sng-options", {
         template: getTemplateDefinition("lobby/filter/sng-options.html"),
-        viewModel: { require: "app/components/lobby/filter/options" },
+        viewModel: (params?: any) => new FilterOptionsComponent(params),
     });
 
     /**
@@ -108,7 +115,7 @@ export function registerComponents() {
      */
     ko.components.register("timeblock", {
         template: getTemplateDefinition("timeblock/timeblock.html"),
-        viewModel: { require: "app/components/timeblock/timeblock" },
+        viewModel: (params?: any) => new TimeBlockComponent(params),
     });
 
     /**
@@ -116,7 +123,15 @@ export function registerComponents() {
      */
     ko.components.register("game-type-selector", {
         template: getTemplateDefinition("game-type-selector/game-type-selector.html"),
-        viewModel: { require: "app/components/game-type-selector/gametypeselector" },
+        viewModel: (params?: any) => new GameTypeSelectorComponent(params),
+    });
+
+    /**
+     * Language selector
+     */
+    ko.components.register("language-selector", {
+        template: getTemplateDefinition("language-selector/language-selector.html"),
+        viewModel: (params?: any) => new LanguageSelectorComponent(params),
     });
 
     /**
@@ -124,24 +139,28 @@ export function registerComponents() {
      */
     ko.components.register("table-action-block", {
         template: getTemplateDefinition("table/actionBlock/actionBlock.html"),
-        viewModel: table.ActionBlockComponent,
+        viewModel: (params?: any) => new table.ActionBlockComponent(params),
     });
     ko.components.register("table-secondary-action-block", {
         template: getTemplateDefinition("table/actionBlock/secondaryActionBlock.html"),
-        viewModel: table.ActionBlockComponent,
+        viewModel: (params?: any) => new table.ActionBlockComponent(params),
     });
     ko.components.register("table-raise-block", {
         template: getTemplateDefinition("table/raiseBlock/raiseBlock.html"),
-        viewModel: table.RaiseBlockComponent,
+        viewModel: (params?: any) => new table.RaiseBlockComponent(params),
     });
 
     ko.components.register("table-menu", {
         template: getTemplateDefinition("table/menu/menu.html"),
-        viewModel: table.TableMenuComponent,
+        viewModel: (params?: any) => new table.TableMenuComponent(params),
+    });
+    ko.components.register("quick-table-menu", {
+        template: getTemplateDefinition("table/quick-menu/quick-menu.html"),
+        viewModel: (params?: any) => new table.QuickTableMenuComponent(params),
     });
     ko.components.register("tournament-status-indicator", {
         template: getTemplateDefinition("table/tournament-status-indicator/tournament-status-indicator.html"),
-        viewModel: trivialViewModelFactory,
+        viewModel: { createViewModel: trivialViewModelFactory },
     });
     ko.components.register("table-place-marks", {
         template: getTemplateDefinition("table/table/place-marks.html"),
@@ -150,5 +169,9 @@ export function registerComponents() {
     ko.components.register("table-place-players", {
         template: getTemplateDefinition("table/table/place-players.html"),
         viewModel: { createViewModel: trivialViewModelFactory },
+    });
+    ko.components.register("keypad", {
+        template: getTemplateDefinition("keypad/keypad.html"),
+        viewModel: (params?: any) => new Keypad(params.value),
     });
 }

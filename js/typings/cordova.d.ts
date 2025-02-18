@@ -33,27 +33,11 @@ interface CordovaMenu {
     optionItemClick: (optionId: number) => void;
 }
 
-interface CordovaScreenOrientation {
-    setOrientation(orientation: string): void;
-    lock(): void;
-    unlock(): void;
-    shouldRotateToOrientation(orientation: any): boolean;
-}
-
-interface IScreenOrientation {
+interface ScreenOrientation {
     lock(orientation: string): Promise<void>;
 }
 
-interface IScreen {
-    orientation: IScreenOrientation;
-}
-
-interface Screen extends IScreen {
-
-}
-
-declare var menu: CordovaMenu;
-declare var ScreenOrientation: CordovaScreenOrientation;
+declare const menu: CordovaMenu;
 
 declare module WindowsAzure {
     export module Messaging {
@@ -71,6 +55,6 @@ declare module WindowsAzure {
             onPushNotificationReceived: (message: any) => void;
         }
 
-        var NotificationHub: NotificationHubInterface;
+        const NotificationHub: NotificationHubInterface;
     }
 }

@@ -1,4 +1,5 @@
 import * as ko from "knockout";
+import "poker/typings/knockout";
 import * as kov from "knockout.validation";
 
 export function updateDefaultMessages() {

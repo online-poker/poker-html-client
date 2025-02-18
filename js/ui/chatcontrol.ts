@@ -1,16 +1,14 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
-
-import * as ko from "knockout";
+﻿import * as ko from "knockout";
 import { connectionService } from "poker/services";
 import { ConnectionWrapper } from "poker/services/connectionwrapper";
 import * as timeService from "../timeservice";
 
 export class ChatControl {
-    public currentMessage: KnockoutObservable<string>;
-    public messages: KnockoutObservableArray<string>;
-    public loading: KnockoutObservable<boolean>;
+    public currentMessage: ko.Observable<string>;
+    public messages: ko.ObservableArray<string>;
+    public loading: ko.Observable<boolean>;
     private timeoutHandler: number = 0;
-    private tableId: KnockoutObservable<number>;
+    private tableId: ko.Observable<number>;
 
     constructor() {
         this.currentMessage = ko.observable<string>();
@@ -36,7 +34,7 @@ export class ChatControl {
             chatHub.on("Message", handler);
             connectionService.terminatedConnection.addOnce(function() {
                 chatHub.off("Message", handler);
-            }, self, 0);
+            }, this, 0);
         });
     }
     public append(messageId: number, tableId: number, type: string, sender: string, message: string) {

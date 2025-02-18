@@ -25,7 +25,7 @@ import { allNoneClassesFourCards, allNoneClassesTwoCards, cardsArray, decodeCard
 import { TableView } from "./tableview";
 import { TournamentView } from "./tournamentview";
 
-declare var host: string;
+declare const host: string;
 
 export enum CardsDealedCodes {
     PlayerCardsDealed = 0,
@@ -35,37 +35,35 @@ export enum CardsDealedCodes {
 }
 
 export class TableManager {
-    public tables: KnockoutObservableArray<TableView>;
-    public currentIndex: KnockoutObservable<number>;
-    public hasTurn: KnockoutComputed<boolean>;
+    public tables: ko.ObservableArray<TableView>;
+    public currentIndex: ko.Observable<number>;
+    public hasTurn: ko.Computed<boolean>;
     public maxTablesReached: Signal;
     public duplicateEventFound: Signal = new signals.Signal();
 
     /**
      * Tournaments in which player registered.
      */
-    public tournaments: KnockoutObservableArray<TournamentView>;
+    public tournaments: ko.ObservableArray<TournamentView>;
 
     private duplicators: DuplicateFinder[];
     private reserveTablesForTournaments = false;
 
     constructor(private apiProvider: IApiProvider) {
-        const self = this;
         this.tables = ko.observableArray<TableView>([]);
         this.tournaments = ko.observableArray<TournamentView>([]);
         this.currentIndex = ko.observable(0);
-        connectionService.reconnected.add(() => self.onReconnected());
+        connectionService.reconnected.add(() => this.onReconnected());
         this.duplicators = [];
         this.maxTablesReached = new signals.Signal();
-        this.hasTurn = ko.computed(function () {
-            const tablesWithTurn = self.tables().filter((table) => table.isMyTurn());
+        this.hasTurn = ko.computed(() => {
+            const tablesWithTurn = this.tables().filter((table) => table.isMyTurn());
             return tablesWithTurn.length > 0;
         }, this);
     }
 
     public initialize(commandManager: ICommandManager) {
-        const self = this;
-        commandManager.registerCommand("app.selectTable", function (parameters?: any[]): void {
+        commandManager.registerCommand("app.selectTable", (parameters?: any[]): void => {
             if (!parameters || parameters.length < 1) {
                 // tslint:disable-next-line:no-console
                 console.log("Insufficient parameters to the 'app.selectTable' command");
@@ -76,55 +74,42 @@ export class TableManager {
             const update = parameters.length <= 1
                 ? true
                 : parameters[1] as boolean;
-            self.selectTable(table, update);
+            this.selectTable(table, update);
             if (appConfig.game.tableReloadSupported) {
                 appReloadService.startMonitoring(table.TableId);
             }
         });
-        commandManager.registerCommand("app.leaveTable", function (parameters?: any[]): JQueryDeferred<void> {
-            const result = $.Deferred<void>();
+        commandManager.registerCommand("app.leaveTable", async (parameters?: any[]) => {
             if (!parameters || parameters.length < 1) {
                 // tslint:disable-next-line:no-console
                 console.log("Insufficient parameters to the 'app.leaveTable' command");
-                result.reject();
-                return result;
+                throw new Error("Insufficient parameters to the 'app.leaveTable' command");
             }
 
             const tableId: number = parameters[0];
-            const tableView = self.getTableById(tableId);
+            const tableView = this.getTableById(tableId);
             if (tableView != null) {
                 let tableViewSafe = tableView;
                 // tslint:disable-next-line:no-console
                 console.log("Leaving table " + tableView.tableId.toString());
-                tableView.showStandupPrompt().then(function () {
-                    tableViewSafe.disconnect();
-                    tableViewSafe = self.remove(tableViewSafe);
+                await tableView.showStandupPrompt();
+                tableViewSafe.disconnect();
+                tableViewSafe = this.remove(tableViewSafe);
 
-                    // appReloadService.clearMonitoring(table.TableId);
-
-                    // Adjust currently selected table.
-                    self.adjustTablePosition();
-
-                    result.resolve();
-                }, function () {
-                    result.reject();
-                });
-
-                return result;
+                // appReloadService.clearMonitoring(table.TableId);
+                // Adjust currently selected table.
+                this.adjustTablePosition();
             }
-
-            result.reject();
-            return result;
         });
-        connectionService.newConnection.add(function(currentConnection: ConnectionWrapper) {
+        connectionService.newConnection.add((currentConnection: ConnectionWrapper) => {
             if (authManager.authenticated()) {
-                self.initializeChatHub(currentConnection);
-                self.initializeGameHub(currentConnection);
+                this.initializeChatHub(currentConnection);
+                this.initializeGameHub(currentConnection);
             }
         });
         settings.autoHideCards.subscribe((newValue) => {
             const api = this.apiProvider.getGame();
-            self.tables().forEach(function(tableView) {
+            this.tables().forEach(function(tableView) {
                 // Set open card parameters in parallel for all tables.
                 api.setTableParameters(tableView.tableId, !newValue);
             });
@@ -158,7 +143,6 @@ export class TableManager {
         return sittingTables;
     }
     public async getCurrentTournaments() {
-        const self = this;
         const gapi = this.apiProvider.getGame();
         const tapi = this.apiProvider.getTournament();
         const data = await tapi.getTournaments(0, 0, 0, 0, 0);
@@ -168,7 +152,7 @@ export class TableManager {
         if (status === "Ok") {
             const rtournaments = registeredTournamentsData.Data;
             if (rtournaments !== null && rtournaments.length !== 0) {
-                const args = await self.requestTournamentsInformation(rtournaments);
+                const args = await this.requestTournamentsInformation(rtournaments);
                 const tournaments = [] as TournamentDefinition[];
                 for (let i = 0; i < args.length; i++) {
                     tournaments.push(args[i]);
@@ -287,12 +271,11 @@ export class TableManager {
         return this.tables().length;
     }
     public selectTournament(model: TournamentDefinition, update: boolean) {
-        const self = this;
         const tournamentId = model.TournamentId;
         let tournamentView = this.getTournamentById(tournamentId);
-        const append = function() {
+        const append = () => {
             if (tournamentView === null) {
-                tournamentView = self.addTournament(tournamentId, model);
+                tournamentView = this.addTournament(tournamentId, model);
             }
 
             if (update && connectionService.currentConnection !== null) {
@@ -1247,8 +1230,7 @@ export class TableManager {
     }
 
     private requestTournamentsInformation(tournaments: TournamentPlayerStateDefinition[]) {
-        const self = this;
-        const deferreds = [] as Array<Promise<TournamentDefinition>>;
+        const deferreds = [] as Promise<TournamentDefinition>[];
         for (let i = 0; i < tournaments.length; i++) {
             const tournamentPlayerState = tournaments[i];
             const d = this.buildTournamentInformationRequest(
@@ -1261,17 +1243,16 @@ export class TableManager {
     }
 
     private async buildTournamentInformationRequest(tournamentId: number, tableId: number): Promise<TournamentDefinition> {
-        const self = this;
         const gapi = this.apiProvider.getGame();
         const tapi = this.apiProvider.getTournament();
         const data = await tapi.getTournament(tournamentId);
         const tournamentData = data.Data;
-        self.selectTournament(tournamentData, false);
+        this.selectTournament(tournamentData, false);
         if (tableId != null) {
             const tableData = await gapi.getTableById(tableId);
-            self.selectTable(tableData.Data, false);
-            const tournamentTableView = self.getTableById(tableId);
-            const tournamentView = self.getTournamentById(tournamentId);
+            this.selectTable(tableData.Data, false);
+            const tournamentTableView = this.getTableById(tableId);
+            const tournamentView = this.getTournamentById(tournamentId);
             if (tournamentView && tournamentTableView) {
                 tournamentTableView.tournament(tournamentView);
             }

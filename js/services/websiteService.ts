@@ -1,4 +1,4 @@
-﻿declare var authToken: any;
+﻿declare const authToken: any;
 import { l } from "../languagemanager";
 
 /**
@@ -68,7 +68,7 @@ export class WebsiteService {
      * Navigates to the update APK url.
      */
     public navigateUpdateApk() {
-        this.open(this.getBase() + "update/");
+        // this.open(this.getBase() + "update/");
     }
 
     private open(url: string) {
@@ -76,7 +76,7 @@ export class WebsiteService {
     }
 
     private getBase() {
-        return this.websiteRoot + l.currentLang + "/";
+        return this.websiteRoot + l.currentLang() + "/";
     }
 
     private getAuthUrl() {

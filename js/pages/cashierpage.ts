@@ -4,25 +4,24 @@ import { App } from "../app";
 import { accountService, reloadManager, WebsiteService } from "../services";
 import { PageBase } from "../ui/pagebase";
 
-declare var host: string;
-declare var app: App;
+declare const host: string;
+declare const app: App;
 
 class CashierPage extends PageBase {
-    public cashierCaption: KnockoutObservable<string>;
-    public player: KnockoutObservable<AccountServiceInformation>;
+    public cashierCaption: ko.Observable<string>;
+    public player: ko.Observable<AccountServiceInformation>;
     public requireAuthentication: boolean = true;
-    public loading: KnockoutObservable<boolean>;
+    public loading: ko.Observable<boolean>;
 
     constructor() {
         super();
-        const self = this;
         this.loading = ko.observable(false);
         this.cashierCaption = ko.observable<string>();
-        authManager.registerAuthenticationChangedHandler(function(newValue) {
+        authManager.registerAuthenticationChangedHandler((newValue) => {
             if (newValue) {
-                self.updateInformation();
+                this.updateInformation();
             } else {
-                self.player({
+                this.player({
                     login: "",
                     accounts: [] as AccountInformation[],
                     lastTransaction: null,
@@ -37,14 +36,13 @@ class CashierPage extends PageBase {
     }
     public activate() {
         super.activate();
-        const self = this;
         if (!authManager.authenticated()) {
             app.showPopup("auth");
         } else {
             this.updateInformation();
         }
 
-        reloadManager.setReloadCallback(() => self.updateInformation());
+        reloadManager.setReloadCallback(() => this.updateInformation());
     }
     public async updateInformation() {
         this.loading(true);

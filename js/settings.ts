@@ -1,18 +1,22 @@
 ﻿import * as ko from "knockout";
+import { ScreenOrientation } from "poker/services/orientationservice";
+import { appConfig } from "./appconfig";
+import { PageBlock } from "./pageblock";
 
 class Settings {
-    public login: KnockoutObservable<string>;
-    public password: KnockoutObservable<string>;
-    public autoSwitchTables: KnockoutObservable<boolean>;
-    public autoHideCards: KnockoutObservable<boolean>;
-    public soundEnabled: KnockoutObservable<boolean>;
-    public lastBannerId: KnockoutObservable<number>;
+    public login: ko.Observable<string>;
+    public password: ko.Observable<string>;
+    public autoSwitchTables: ko.Observable<boolean>;
+    public autoHideCards: ko.Observable<boolean>;
+    public soundEnabled: ko.Observable<boolean>;
+    public lastBannerId: ko.Observable<number>;
 
     public authToken = ko.observable<string>();
     public lastPage = ko.observable<string>();
     public lastTime = ko.observable<number>(0);
     public isGuest = ko.observable<boolean>(false);
     public cardsVariant = ko.observable<string>();
+    public orientation = ko.observable<ScreenOrientation>();
 
     constructor() {
         this.login = ko.observable<string>();
@@ -36,6 +40,9 @@ class Settings {
         this.lastPage(this.getItemString("reload.lastPage", "main"));
         this.authToken(this.getItemString("reload.authToken", null));
         this.cardsVariant(this.getItemString("cardsVariant", "down"));
+
+        const defaultOrientation = PageBlock.useDoubleView ? "landscape" : appConfig.ui.defaultOrientation;
+        this.orientation(this.getItemString("orientation", defaultOrientation) as ScreenOrientation);
     }
     public saveSettings() {
         this.setItemString("auth.login", this.login());
@@ -50,6 +57,7 @@ class Settings {
         this.setItemString("reload.authToken", this.authToken(), null);
         this.setItemNumber("reload.lastTime", this.lastTime(), 0);
         this.setItemString("cardsVariant", this.cardsVariant());
+        this.setItemString("orientation", this.orientation());
     }
     private getItemBoolean(name: string, defaultValue: boolean = false) {
         const item = localStorage.getItem(name) as string;

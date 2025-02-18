@@ -1,6 +1,7 @@
 ﻿/* tslint:disable:no-bitwise */
 
 import * as ko from "knockout";
+import { appConfig } from "poker/appconfig";
 import { withCommas } from "../helpers";
 import { _ } from "../languagemanager";
 import * as timeService from "../timeservice";
@@ -23,84 +24,84 @@ export class TablePlaceModel {
     /**
      * Id of the player
      */
-    public PlayerId: KnockoutObservable<number>;
+    public PlayerId: ko.Observable<number>;
 
     /**
      * Player's login
      */
-    public PlayerName: KnockoutObservable<string>;
-    public PlayerUrl: KnockoutObservable<string>;
-    public IsCurrent: KnockoutObservable<boolean>;
-    public IsDealer: KnockoutObservable<boolean>;
-    public IsBigBlind: KnockoutObservable<boolean>;
-    public IsSmallBlind: KnockoutObservable<boolean>;
-    public Money: KnockoutObservable<number>;
-    public Seat: KnockoutObservable<number>;
+    public PlayerName: ko.Observable<string>;
+    public PlayerUrl: ko.Observable<string>;
+    public IsCurrent: ko.Observable<boolean>;
+    public IsDealer: ko.Observable<boolean>;
+    public IsBigBlind: ko.Observable<boolean>;
+    public IsSmallBlind: ko.Observable<boolean>;
+    public Money: ko.Observable<number>;
+    public Seat: ko.Observable<number>;
 
     /**
      * Cards which player has as displayed in the UI
      */
-    public Cards: KnockoutObservableArray<string>;
+    public Cards: ko.ObservableArray<string>;
 
     /**
      * Cards which would be displayed as currenly back cards
      */
-    public BackCards: KnockoutObservableArray<string>;
+    public BackCards: ko.ObservableArray<string>;
 
     /*
      * Actual  hand cards which player has in this game.
      */
-    public HandCards: KnockoutObservableArray<string>;
+    public HandCards: ko.ObservableArray<string>;
 
     /*
      * Actual hand cards which player has in this game.
      */
-    public DisplayedHandCards: KnockoutObservableArray<string>;
+    public DisplayedHandCards: ko.ObservableArray<string>;
 
     /*
      * Folded hand cards which player has in this game.
      */
-    public FoldedCards: KnockoutObservableArray<string>;
+    public FoldedCards: ko.ObservableArray<string>;
 
     /**
      * Cards which player has as displayed in the UI
      */
-    public RawCards: KnockoutObservableArray<number>;
-    public Bet: KnockoutObservable<number>;
+    public RawCards: ko.ObservableArray<number>;
+    public Bet: ko.Observable<number>;
 
     /**
      * Count of points for the player.
      */
-    public Points: KnockoutObservable<number>;
+    public Points: ko.Observable<number>;
 
     /**
      * Count of stars for the player.
      */
-    public Stars: KnockoutObservable<number>;
+    public Stars: ko.Observable<number>;
 
-    public IsBronse: KnockoutComputed<boolean>;
-    public IsSilver: KnockoutComputed<boolean>;
-    public IsGold: KnockoutComputed<boolean>;
-    public IsBetPlaced: KnockoutComputed<boolean>;
-    public IsBetAnimationLocked: KnockoutObservable<boolean>;
-    public IsMovingBetToPot: KnockoutObservable<boolean>;
-    public IsDealCards: KnockoutObservable<boolean>;
+    public IsBronse: ko.Computed<boolean>;
+    public IsSilver: ko.Computed<boolean>;
+    public IsGold: ko.Computed<boolean>;
+    public IsBetPlaced: ko.Computed<boolean>;
+    public IsBetAnimationLocked: ko.Observable<boolean>;
+    public IsMovingBetToPot: ko.Observable<boolean>;
+    public IsDealCards: ko.Observable<boolean>;
 
     /**
      * Indicates that animation show for cards fold.
      */
-    public IsFoldCards: KnockoutObservable<boolean>;
-    public IsCardsAnimating: KnockoutComputed<boolean>;
-    public Status: KnockoutObservable<number>;
-    public WinAmount: KnockoutObservable<number>;
-    public TotalBet: KnockoutObservable<number>;
-    public WasInGame: KnockoutObservable<boolean>;
-    public IsCardsFolded: KnockoutObservable<boolean>;
-    public Card1Hightlighted: KnockoutObservable<boolean>;
-    public Card2Hightlighted: KnockoutObservable<boolean>;
-    public Card3Hightlighted: KnockoutObservable<boolean>;
-    public Card4Hightlighted: KnockoutObservable<boolean>;
-    public CardsHightlighted: KnockoutObservable<boolean>;
+    public IsFoldCards: ko.Observable<boolean>;
+    public IsCardsAnimating: ko.Computed<boolean>;
+    public Status: ko.Observable<number>;
+    public WinAmount: ko.Observable<number>;
+    public TotalBet: ko.Observable<number>;
+    public WasInGame: ko.Observable<boolean>;
+    public IsCardsFolded: ko.Observable<boolean>;
+    public Card1Hightlighted: ko.Observable<boolean>;
+    public Card2Hightlighted: ko.Observable<boolean>;
+    public Card3Hightlighted: ko.Observable<boolean>;
+    public Card4Hightlighted: ko.Observable<boolean>;
+    public CardsHightlighted: ko.Observable<boolean>;
     public IsCardsOpened = ko.observable(false);
 
     /**
@@ -116,19 +117,19 @@ export class TablePlaceModel {
     /**
      * Indicates current action which player performs now
      */
-    public CurrentAction: KnockoutObservable<string>;
+    public CurrentAction: ko.Observable<string>;
 
-    public IsSitoutStatus: KnockoutComputed<boolean>;
-
-    /**
-     * Indicates that player has in game status.
-     */
-    public IsParticipatingStatus: KnockoutComputed<boolean>;
+    public IsSitoutStatus: ko.Computed<boolean>;
 
     /**
      * Indicates that player has in game status.
      */
-    public IsInGameStatus: KnockoutComputed<boolean>;
+    public IsParticipatingStatus: ko.Computed<boolean>;
+
+    /**
+     * Indicates that player has in game status.
+     */
+    public IsInGameStatus: ko.Computed<boolean>;
 
     /**
      * Last message in the chat which this player shows
@@ -138,7 +139,7 @@ export class TablePlaceModel {
     /**
      * Last message in the chat which this player shows
      */
-    public LastChatMessageTrimed: KnockoutComputed<string | null>;
+    public LastChatMessageTrimed: ko.Computed<string | null>;
 
     /**
      * Combination of cards for the winner.
@@ -205,62 +206,61 @@ export class TablePlaceModel {
         this.CardsHightlighted = ko.observable(false);
         this.CurrentAction = ko.observable<string>();
 
-        const self = this;
-        this.IsCardsAnimating = ko.computed(function() {
-            return self.IsDealCards() || self.IsFoldCards();
+        this.IsCardsAnimating = ko.computed(() => {
+            return this.IsDealCards() || this.IsFoldCards();
         }, this);
-        this.IsBetPlaced = ko.computed(function() {
-            return self.Bet() > 0 && !self.IsMovingBetToPot();
+        this.IsBetPlaced = ko.computed(() => {
+            return this.Bet() > 0 && !this.IsMovingBetToPot();
         }, this);
-        this.IsSitoutStatus = ko.computed(function() {
-            return (self.Status() & 1) !== 0;
+        this.IsSitoutStatus = ko.computed(() => {
+            return (this.Status() & 1) !== 0;
         }, this);
         this.IsParticipatingStatus = ko.computed({
-            read() {
-                return (self.Status() & 8) !== 0;
+            read: () => {
+                return (this.Status() & 8) !== 0;
             },
-            write(value: boolean) {
+            write: (value: boolean) => {
                 if (value) {
-                    self.Status(self.Status() | 8);
+                    this.Status(this.Status() | 8);
                 } else {
-                    self.Status(self.Status() & ~8);
+                    this.Status(this.Status() & ~8);
                 }
             },
             owner: this,
         });
         this.IsInGameStatus = ko.computed({
-            read() {
-                return (self.Status() & 16) !== 0;
+            read: () => {
+                return (this.Status() & 16) !== 0;
             },
-            write(value: boolean) {
+            write: (value: boolean) => {
                 if (value) {
-                    self.Status(self.Status() | 16);
+                    this.Status(this.Status() | 16);
                 } else {
-                    self.Status(self.Status() & ~16);
+                    this.Status(this.Status() & ~16);
                 }
             },
             owner: this,
         });
         this.IsInGameStatus(this.IsParticipatingStatus() && this.Cards() !== null);
 
-        this.IsBronse = ko.computed(function() {
-            return self.Points() >= 100 * 1000
-                && self.Points() < 200 * 1000;
+        this.IsBronse = ko.computed(() => {
+            return this.Points() >= 100 * 1000
+                && this.Points() < 200 * 1000;
         });
-        this.IsSilver = ko.computed(function() {
-            return self.Points() >= 200 * 1000
-                && self.Points() < 500 * 1000;
+        this.IsSilver = ko.computed(() => {
+            return this.Points() >= 200 * 1000
+                && this.Points() < 500 * 1000;
         });
-        this.IsGold = ko.computed(function() {
-            return self.Points() >= 500 * 1000;
+        this.IsGold = ko.computed(() => {
+            return this.Points() >= 500 * 1000;
         });
 
-        this.LastChatMessageTrimed = ko.computed(function() {
-            if (self.LastChatMessage() === null) {
+        this.LastChatMessageTrimed = ko.computed(() => {
+            if (this.LastChatMessage() === null) {
                 return null;
             }
 
-            return self.LastChatMessage().substr(0, 17) + "\u2026";
+            return this.LastChatMessage().substr(0, appConfig.game.messageDisplaySize || 17) + "\u2026";
         });
     }
     public prepareForNewGame() {
@@ -353,7 +353,7 @@ export class TablePlaceModel {
      */
     public startAction(action: string) {
         this.CurrentAction(action);
-        this.CurrentActionTimer = timeService.setTimeout(() => this.clearAction(), 2000);
+        this.CurrentActionTimer = timeService.setTimeout(() => this.clearAction(), appConfig.game.clearActionDuration || 2000);
     }
 
     /**
@@ -369,7 +369,7 @@ export class TablePlaceModel {
      */
     public displayChatMessage(message: string) {
         this.LastChatMessage(message);
-        this.LastChatMessageTimer = timeService.setTimeout(() => this.clearChatMessage(), 2000);
+        this.LastChatMessageTimer = timeService.setTimeout(() => this.clearChatMessage(), appConfig.game.messageDisplayDuration || 2000);
     }
 
     /**
@@ -395,48 +395,49 @@ export class TablePlaceModel {
     public getHelpMessage(tableView: TableView): string {
         if (tableView.actionBlock.sitoutBlockVisible()) {
             if (this.Money() === 0) {
-                return "Пожалуйста, пополните ваш счёт";
+                return _("table.helpMessage.notEnoughMoney");
             }
 
-            return "Нажмите кнопку Вернуться чтобы продолжить игру";
+            return _("table.helpMessage.returnToGame");
         }
 
         if (tableView.actionBlock.needBB()) {
             if (this.Money() === 0) {
-                return "Пожалуйста, пополните ваш счёт";
+                return _("table.helpMessage.notEnoughMoney");
             }
 
             if (tableView.actionBlock.waitbb()) {
-                return "Подождите пожалуйста, вы начнете игру когда будете сидеть на большом блаинде";
+                return _("table.helpMessage.waitingBB");
             } else {
-                return "Помните, на позиции \"дилера\" или \"маленького блайнда\", вы не сможете войти в игру.";
+                return _("table.helpMessage.needBB");
             }
         }
 
         if (tableView.actionBlock.mainButtonsBlockVisible()) {
-            return "Пожалуйста сделайте Вашу ставку";
+            return _("table.helpMessage.makeBet");
         }
 
         if (tableView.actionBlock.autoButtonsBlockVisible()) {
-            return "Желаем удачи";
+            return _("table.helpMessage.goodLuck");
         }
 
         if (this.WinAmount() > 0) {
-            return "Поздравляем, Ваш выигрыш: " + withCommas(this.WinAmount(), ",");
+            return _("table.helpMessage.youWin")
+                .replace("##amount", withCommas(this.WinAmount(), ","));
         }
 
         if (this.Money() === 0) {
-            return "Пожалуйста, пополните ваш счёт";
+            return _("table.helpMessage.notEnoughMoney");
         }
 
         // When player fold cards.
         if (this.IsCardsFolded()) {
-            return "Желаем удачи";
+            return _("table.helpMessage.goodLuck");
         }
 
         // This is fallback case for situations in the
         // beginning of the game start, pause between move confirmation.
-        return "Желаем удачи";
+        return _("table.helpMessage.goodLuck");
     }
 
     public getCombination(tableCards: number[]) {

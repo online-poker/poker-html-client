@@ -1,0 +1,3 @@
+﻿<ul class="language-selector" data-bind="foreach: languages">
+	<li class="language" data-bind="attr: { 'class': 'language ' + ($parent.isSelected.bind($data) ? ' selected' : '') }, text: $data.name, command: $parent.setLanguage.bind($data)">Language name</li>
+</ul>

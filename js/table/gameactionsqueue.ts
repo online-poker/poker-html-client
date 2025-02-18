@@ -168,7 +168,6 @@ export class GameActionsQueue {
             return;
         }
 
-        const self = this;
         const worker = this.tasks.shift();
         if (worker === undefined) {
             this.error("Worker is null");

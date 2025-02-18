@@ -6,7 +6,7 @@ export class PageBase implements Page {
     /**
      * Indicating whether page is currently visible
      */
-    public visible: KnockoutObservable<boolean>;
+    public visible: ko.Observable<boolean>;
 
     constructor() {
         this.visible = ko.observable(false);

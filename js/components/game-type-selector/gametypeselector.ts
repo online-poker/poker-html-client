@@ -1,4 +1,4 @@
-﻿import ko = require("knockout");
+﻿import * as ko from "knockout";
 import { _ } from "../../languagemanager";
 import { Slider } from "../../slider";
 
@@ -6,15 +6,15 @@ import { Slider } from "../../slider";
  * Parameters for the timeblock component
  */
 interface TimeBlockComponentParameters {
-    selected?: KnockoutObservable<number>;
+    selected?: ko.Observable<number>;
 
     /**
      * Optional initial slide to be presented first.
      */
-    initial?: number | KnockoutObservable<number>;
+    initial?: number | ko.Observable<number>;
 }
 
-class TimeBlockComponent {
+export class GameTypeSelectorComponent {
     private slider = new Slider();
 
     constructor(params: TimeBlockComponentParameters) {
@@ -33,5 +33,3 @@ class TimeBlockComponent {
         }
     }
 }
-
-export = TimeBlockComponent;

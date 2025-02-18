@@ -1,21 +1,21 @@
+import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
 import { App } from "../app";
 import { PageBlock } from "../pageblock";
 import { AccountManager } from "../services/accountManager";
 import { PageBase } from "../ui/pagebase";
 
-declare var app: App;
+declare const app: App;
 
 export class WithdrawalPage extends PageBase {
-    public player: KnockoutObservable<any>;
-    public withdrawalMethods: KnockoutObservableArray<any>;
-    public withdrawalMethod: KnockoutObservable<number>;
-    public withdrawalAmount: KnockoutObservable<number>;
-    public accountNumber: KnockoutObservable<number>;
+    public player: ko.Observable<any>;
+    public withdrawalMethods: ko.ObservableArray<any>;
+    public withdrawalMethod: ko.Observable<number>;
+    public withdrawalAmount: ko.Observable<number>;
+    public accountNumber: ko.Observable<number>;
 
     constructor() {
         super();
-        const self = this;
         this.withdrawalAmount = ko.observable(null);
         this.withdrawalMethod = ko.observable(null);
         this.withdrawalMethods = ko.observableArray([
@@ -29,12 +29,12 @@ export class WithdrawalPage extends PageBase {
                 const api = new AccountManager();
                 const data = await api.getAccount();
                 const personalAccountData = data.Data;
-                self.player({
+                this.player({
                     login: authManager.login(),
                     amount: personalAccountData.RealMoney,
                 });
             } else {
-                self.player({
+                this.player({
                     login: "",
                     amount: null,
                 });

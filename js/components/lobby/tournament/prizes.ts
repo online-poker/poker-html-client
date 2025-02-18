@@ -1,5 +1,5 @@
 ﻿import { TournamentDefinition, TournamentPrizeStructure } from "@poker/api-server";
-import ko = require("knockout");
+import * as ko from "knockout";
 import * as metadataManager from "../../../metadatamanager";
 
 interface TournamentPrizeStructureView {
@@ -9,24 +9,23 @@ interface TournamentPrizeStructureView {
 }
 
 class TournamentPrizeInformationComponent {
-    private data: KnockoutObservable<TournamentDefinition>;
-    private totalPrize: KnockoutComputed<number | null>;
-    private structure: KnockoutComputed<TournamentPrizeStructureView[]>;
+    private data: ko.Observable<TournamentDefinition>;
+    private totalPrize: ko.Computed<number | null>;
+    private structure: ko.Computed<TournamentPrizeStructureView[]>;
 
-    constructor(params: { data: KnockoutObservable<TournamentDefinition> }) {
-        const self = this;
+    constructor(params: { data: ko.Observable<TournamentDefinition> }) {
         this.data = params.data;
 
-        this.totalPrize = ko.computed(function () {
-            const tdata = self.data();
+        this.totalPrize = ko.computed(() => {
+            const tdata = this.data();
             if (tdata == null) {
                 return null;
             }
 
             return tdata.PrizeAmount + (tdata.CollectedPrizeAmount || 0);
         }, this);
-        this.structure = ko.computed(function () {
-            const data = self.data();
+        this.structure = ko.computed(() => {
+            const data = this.data();
             if (data == null) {
                 return [];
             }
@@ -49,7 +48,7 @@ class TournamentPrizeInformationComponent {
             }
 
             const result = [] as TournamentPrizeStructureView[];
-            const totalPrize = self.totalPrize() || 0;
+            const totalPrize = this.totalPrize() || 0;
             currentPrize.PrizeLevel.forEach(function (item, index) {
                 result.push({
                     place: index + 1,

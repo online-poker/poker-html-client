@@ -4,7 +4,7 @@ import { App } from "../app";
 import * as metadataManager from "../metadatamanager";
 import { PopupBase } from "../ui/popupbase";
 
-declare var app: App;
+declare const app: App;
 
 export class SelectAvatarPopup extends PopupBase {
     public avatars = ko.observableArray<string>();

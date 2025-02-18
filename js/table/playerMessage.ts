@@ -4,10 +4,10 @@ import { authManager } from "poker/authmanager";
 export class PlayerMessage {
     public messageId: number;
     public sender: string;
-    public message: KnockoutObservable<string>;
-    public fullMessage: KnockoutComputed<string>;
+    public message: ko.Observable<string>;
+    public fullMessage: ko.Computed<string>;
     public date: string;
-    public isMy: KnockoutObservable<boolean>;
+    public isMy: ko.Observable<boolean>;
     public isAdmin: boolean;
 
     constructor(messageId: number, date: Date, sender: string, message: string) {

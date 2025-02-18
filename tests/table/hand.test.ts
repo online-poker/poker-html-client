@@ -338,7 +338,7 @@ describe("Get extended card information", () => {
         try {
             getHandTypeEx(hand.Hand);
             fail("Should not be there");
-        } catch (e) {
+        } catch (e: any) {
             expect(e.message).toBe("Should be passed 5 cards for extended interpretation.");
         }
     });
@@ -348,7 +348,7 @@ describe("Get extended card information", () => {
         try {
             getHandTypeEx(hand.Hand);
             fail("Should not be there");
-        } catch (e) {
+        } catch (e: any) {
             expect(e.message).toBe("Should be passed 5 cards for extended interpretation.");
         }
     });

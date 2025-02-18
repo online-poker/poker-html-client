@@ -1,13 +1,13 @@
-﻿import ko = require("knockout");
+﻿import * as ko from "knockout";
 import { debugSettings } from "../../debugsettings";
 
 class TabBarItem {
     public name: string;
     public caption: string;
     public cssClass: string;
-    public selected: KnockoutObservable<boolean>;
-    public disabled: KnockoutObservable<boolean>;
-    public notice: KnockoutObservable<boolean>;
+    public selected: ko.Observable<boolean>;
+    public disabled: ko.Observable<boolean>;
+    public notice: ko.Observable<boolean>;
     public action: () => void;
     public handler() {
         if (this.action != null) {
@@ -17,8 +17,8 @@ class TabBarItem {
 }
 
 class TabBar {
-    public items: KnockoutObservableArray<TabBarItem>;
-    public visible: KnockoutObservable<boolean>;
+    public items: ko.ObservableArray<TabBarItem>;
+    public visible: ko.Observable<boolean>;
 
     constructor() {
         this.items = ko.observableArray<TabBarItem>([]);

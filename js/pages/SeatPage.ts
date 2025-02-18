@@ -1,4 +1,5 @@
-﻿import * as $ from "jquery";
+﻿import { attachTouchRelay, detachTouchRelay } from "iframe-touch-relay";
+import * as $ from "jquery";
 import * as ko from "knockout";
 import { ICommandExecutor } from "poker/commandmanager";
 import { App } from "../app";
@@ -20,53 +21,52 @@ import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";
 import { version } from "../version";
 
-declare var app: App;
+declare const app: App;
 
 export class SeatPage extends PageBase {
-    public currentTable: KnockoutComputed<TableView>;
-    public selectedTables: KnockoutComputed<TableView[]>;
-    public currentIndex: KnockoutComputed<number>;
-    public currentIndex1: KnockoutComputed<number>;
-    public slideWidth: KnockoutObservable<number>;
-    public loading: KnockoutComputed<boolean>;
+    public currentTable: ko.Computed<TableView>;
+    public selectedTables: ko.Computed<TableView[]>;
+    public currentIndex: ko.Computed<number>;
+    public currentIndex1: ko.Computed<number>;
+    public slideWidth: ko.Observable<number>;
+    public loading: ko.Computed<boolean>;
     public activeHandler: SignalBinding;
     public resignHandler: SignalBinding;
     public slowConnectionHandler: SignalBinding;
     public reconnectedHandler: SignalBinding;
     public disconnectedHandler: SignalBinding;
-    public isConnectionSlow: KnockoutObservable<boolean>;
-    public libraryVersion: KnockoutComputed<string> = ko.computed(() => "Библиотека: " + version);
+    public isConnectionSlow: ko.Observable<boolean>;
+    public libraryVersion: ko.Computed<string> = ko.computed(() => "Библиотека: " + version);
     public lastConnecton: string;
-    public frozen: KnockoutComputed<boolean>;
-    public opened: KnockoutComputed<boolean>;
-    public changeBetParametersNextGame: KnockoutComputed<boolean>;
-    public changeGameTypeNextGame: KnockoutComputed<boolean>;
-    public nextGameInformation: KnockoutComputed<string>;
-    public nextGameTypeInformation: KnockoutComputed<string>;
+    public frozen: ko.Computed<boolean>;
+    public opened: ko.Computed<boolean>;
+    public changeBetParametersNextGame: ko.Computed<boolean>;
+    public changeGameTypeNextGame: ko.Computed<boolean>;
+    public nextGameInformation: ko.Computed<string>;
+    public nextGameTypeInformation: ko.Computed<string>;
     public splashShown = ko.observable(false);
     public tablesShown = ko.observable(true);
 
     constructor(private commandExecutor: ICommandExecutor) {
         super();
-        const self = this;
         this.slideWidth = ko.observable(0);
         this.isConnectionSlow = ko.observable(false);
-        this.calculateLandscapeWidth();
+        this.calculateWidth();
         this.currentIndex = ko.computed<number>({
             read() {
                 return tableManager.currentIndex();
             },
-            write(value) {
+            write: (value) => {
                 tableManager.currentIndex(value);
-                self.log("Switched to table with index " + value);
+                this.log("Switched to table with index " + value);
             },
         });
         this.currentIndex1 = ko.computed<number>({
-            read() {
-                return self.currentIndex() + 1;
+            read: () => {
+                return this.currentIndex() + 1;
             },
-            write(value) {
-                self.currentIndex(value - 1);
+            write: (value) => {
+                this.currentIndex(value - 1);
             },
             owner: this,
         });
@@ -87,24 +87,24 @@ export class SeatPage extends PageBase {
             const tables = tableManager.tables();
             return tables;
         }, this);
-        this.loading = ko.computed(function() {
-            const ct = self.currentTable();
+        this.loading = ko.computed(() => {
+            const ct = this.currentTable();
             if (ct == null) {
                 return false;
             }
 
             return ct.connecting();
         }, this);
-        this.frozen = ko.computed(function() {
-            const ct = self.currentTable();
+        this.frozen = ko.computed(() => {
+            const ct = this.currentTable();
             if (ct === null) {
                 return false;
             }
 
             return ct.frozen();
         }, this);
-        this.opened = ko.computed(function() {
-            const ct = self.currentTable();
+        this.opened = ko.computed(() => {
+            const ct = this.currentTable();
             if (ct === null) {
                 return false;
             }
@@ -156,34 +156,13 @@ export class SeatPage extends PageBase {
             }
         });
     }
-    public calculateLandscapeWidth() {
-        // When running not within browser, skip calculations.
-        if (typeof window === "undefined") {
+    public calculateWidth() {
+        if (orientationService.isTargetOrientation("portrait")) {
+            this.calculatePortraitWidth();
             return;
         }
 
-        let viewportLandscapeWidth = 640;
-        const currentWidth = $("body").width()!;
-        if (currentWidth >= 1024 || (currentWidth === 768 && $("body").height() === 0)) {
-            viewportLandscapeWidth = 1024;
-            if (currentWidth >= 1920) {
-                viewportLandscapeWidth = 1920;
-            }
-
-            if (currentWidth >= 3840) {
-                viewportLandscapeWidth = 3840;
-            }
-        }
-
-        if (currentWidth < 360) {
-            if (window.innerHeight > 500) {
-                viewportLandscapeWidth = 568;
-            } else {
-                viewportLandscapeWidth = 480;
-            }
-        }
-
-        this.slideWidth(viewportLandscapeWidth);
+        this.calculateLandscapeWidth();
     }
     public recordConnection() {
         this.lastConnecton = navigator.connection.type;
@@ -234,6 +213,10 @@ export class SeatPage extends PageBase {
         if (!PageBlock.useDoubleView) {
             orientationService.setOrientation("portrait");
         }
+
+        if (appConfig.game.seatMode && appConfig.ui.relayTouches) {
+            detachTouchRelay();
+        }
     }
     public activate() {
         super.activate();
@@ -265,6 +248,10 @@ export class SeatPage extends PageBase {
             soundManager.enabled(settings.soundEnabled());
         }
 
+        if (appConfig.game.seatMode && appConfig.ui.relayTouches) {
+            attachTouchRelay({ debug: appConfig.ui.debugTouches });
+        }
+
         soundManager.tableSoundsEnabled(true);
         reloadManager.setReloadCallback(() => {
             if (debugSettings.application.reloadTablesDataOnResume) {
@@ -278,7 +265,7 @@ export class SeatPage extends PageBase {
     public canActivate(): boolean {
         return tableManager.tables().length !== 0;
     }
-    public switchTable(index: KnockoutObservable<number>) {
+    public switchTable(index: ko.Observable<number>) {
         this.currentIndex(index());
     }
     public prevTable() {
@@ -301,14 +288,13 @@ export class SeatPage extends PageBase {
         }
     }
     public leave() {
-        const self = this;
         // Unsubscribe from table notifications.
         const tableView = this.currentTable();
-        const removeCurrentTable = function() {
+        const removeCurrentTable = () => {
             // Navigate back to the lobby.
             if (tableManager.tables().length === 0) {
                 app.lobbyPageBlock.showLobby();
-                self.deactivate();
+                this.deactivate();
             }
         };
         const leaved = this.commandExecutor.executeCommand("app.leaveTable", [tableView.tableId]) as JQueryDeferred<() => void>;
@@ -337,13 +323,64 @@ export class SeatPage extends PageBase {
     public reload(): void {
         window.location.reload();
     }
+    private calculatePortraitWidth() {
+        // When running not within browser, skip calculations.
+        if (typeof window === "undefined") {
+            return;
+        }
+
+        let viewportPortraitWidth = 320;
+        const currentWidth = $("body").width()!;
+
+        if (currentWidth >= 375) {
+            viewportPortraitWidth = 375;
+        }
+
+        if (currentWidth >= 414) {
+            viewportPortraitWidth = 414;
+        }
+
+        if (currentWidth >= 768) {
+            viewportPortraitWidth = 768;
+        }
+
+        this.slideWidth(viewportPortraitWidth);
+    }
+    private calculateLandscapeWidth() {
+        // When running not within browser, skip calculations.
+        if (typeof window === "undefined") {
+            return;
+        }
+
+        let viewportLandscapeWidth = 640;
+        const currentWidth = $("body").width()!;
+        if (currentWidth >= 1024 || (currentWidth === 768 && $("body").height() === 0)) {
+            viewportLandscapeWidth = 1024;
+            if (currentWidth >= 1920) {
+                viewportLandscapeWidth = 1920;
+            }
+
+            if (currentWidth >= 3840) {
+                viewportLandscapeWidth = 3840;
+            }
+        }
+
+        if (currentWidth < 360) {
+            if (window.innerHeight > 500) {
+                viewportLandscapeWidth = 568;
+            } else {
+                viewportLandscapeWidth = 480;
+            }
+        }
+
+        this.slideWidth(viewportLandscapeWidth);
+    }
     private onConnectionSlow() {
-        const self = this;
         this.isConnectionSlow(true);
 
         // Clear message after some time passed by.
-        timeService.setTimeout(function() {
-            self.isConnectionSlow(false);
+        timeService.setTimeout(() => {
+            this.isConnectionSlow(false);
         }, 3000);
     }
     private onResetConnectionSlow() {

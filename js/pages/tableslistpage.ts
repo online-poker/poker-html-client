@@ -1,6 +1,5 @@
-/// <reference path="../poker.commanding.api.ts" />
-
 import { Game } from "@poker/api-server";
+import * as ko from "knockout";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
@@ -9,13 +8,13 @@ import { reloadManager } from "../services";
 import { tableManager } from "../table/tablemanager";
 import { PageBase } from "../ui/pagebase";
 
-declare var host: string;
-declare var app: App;
+declare const host: string;
+declare const app: App;
 
 export class TablesListPage extends PageBase {
-    public tablesCaption: KnockoutComputed<string>;
-    public tables: KnockoutObservableArray<any>;
-    public loading: KnockoutObservable<boolean>;
+    public tablesCaption: ko.Computed<string>;
+    public tables: ko.ObservableArray<any>;
+    public loading: ko.Observable<boolean>;
 
     constructor() {
         super();
@@ -45,7 +44,6 @@ export class TablesListPage extends PageBase {
         }
 
         this.loading(true);
-        const self = this;
         const gameApi = new Game(host);
         const privateTables = 0;
         const fullTables: boolean | null = null;
@@ -58,18 +56,18 @@ export class TablesListPage extends PageBase {
         const moneyType = lobbyPage.cashOptions.currency();
         const limitType = lobbyPage.cashOptions.limits();
         const data = await gameApi.getTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType, appConfig.game.showTournamentTables);
-        self.loading(false);
-        if (!self.visible()) {
+        this.loading(false);
+        if (!this.visible()) {
             return;
         }
 
         if (data.Status === "Ok") {
-            self.log("Informaton about tables received: ", data.Data);
+            this.log("Informaton about tables received: ", data.Data);
             const tables = data.Data as any[];
             tables.forEach(function (item) {
                 item.IsOpened = tableManager.isOpened(item.TableId);
             });
-            self.tables(tables);
+            this.tables(tables);
         }
     }
     public updateOpenedTables() {

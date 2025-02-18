@@ -1,5 +1,5 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
-
+﻿import * as $ from "jquery";
+import * as ko from "knockout";
 import { connectionService } from "poker/services";
 import { App } from "../app";
 import { _ } from "../languagemanager";
@@ -9,26 +9,26 @@ import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
 import { ChatControl } from "../ui/chatcontrol";
 
-declare var app: App;
+declare const app: App;
 
 export class ChatPopup {
     public control: ChatControl;
-    public caption: KnockoutObservable<string>;
-    public currentMessage: KnockoutObservable<string>;
-    public loading: KnockoutObservable<boolean>;
-    public messages: KnockoutObservableArray<PlayerMessage>;
-    public systemMessages: KnockoutObservableArray<SystemMessage>;
+    public caption: ko.Observable<string>;
+    public currentMessage: ko.Observable<string>;
+    public loading: ko.Observable<boolean>;
+    public messages: ko.ObservableArray<PlayerMessage>;
+    public systemMessages: ko.ObservableArray<SystemMessage>;
     private tableView: TableView | null = null;
-    private subscription: KnockoutSubscription | null = null;
+    private subscription: ko.Subscription | null = null;
 
     constructor() {
         this.control = new ChatControl();
-        this.currentMessage = ko.observable("");
+        this.currentMessage = ko.observable<string>("");
         this.loading = ko.observable(false);
         this.caption = ko.observable(_("chat.tableCaption"));
         this.control.initialize();
         this.messages = ko.observableArray<PlayerMessage>([]);
-        this.systemMessages = ko.observableArray<PlayerMessage>([]);
+        this.systemMessages = ko.observableArray<SystemMessage>([]);
     }
     public attach(view: TableView) {
         if (this.subscription !== null) {
@@ -55,12 +55,13 @@ export class ChatPopup {
             return;
         }
 
-        if (this.currentMessage() === "") {
+        const message: string = this.currentMessage();
+        if (message === "") {
             return;
         }
 
-        this.tableView.chatMessage(this.currentMessage());
-        this.currentMessage("");
+        this.tableView.chatMessage(message as any);
+        this.currentMessage("" as any);
         await this.tableView.sendMessage();
     }
     public close() {

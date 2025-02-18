@@ -1,8 +1,11 @@
 /* tslint:disable:no-bitwise */
 import { PersonalAccountData, TournamentOptionsEnum } from "@poker/api-server";
 import * as ko from "knockout";
-import { authManager } from "poker/authmanager";
+import { IAuthenticationInformation } from "poker/authmanager";
 import { ICommandExecutor } from "poker/commandmanager";
+import { _ } from "poker/languagemanager";
+import { PageBlock } from "poker/pageblock";
+import { SimplePopup } from "poker/popups/index";
 import { ICurrentTableProvider } from "poker/services";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
@@ -11,26 +14,39 @@ import { settings } from "../settings";
 import { tableManager } from "../table/tablemanager";
 import { TournamentView } from "../table/tournamentview";
 
-declare var app: App;
+declare const app: App;
 
 export class TableMenuPopup {
-    public soundEnabled: KnockoutComputed<boolean>;
-    public autoSwitchTables: KnockoutComputed<boolean>;
-    public autoHideCards: KnockoutComputed<boolean>;
-    public showInRating: KnockoutObservable<boolean>;
+    public soundEnabled: ko.Computed<boolean>;
+    public autoSwitchTables: ko.Computed<boolean>;
+    public autoHideCards: ko.Computed<boolean>;
+    public showInRating: ko.Observable<boolean>;
     public addMoneyAvailable = ko.observable(false);
-    public addMoneyAllowed: KnockoutObservable<boolean>;
-    public handHistoryAllowed: KnockoutObservable<boolean>;
-    public leaveAllowed: KnockoutObservable<boolean>;
-    public accountStatusAllowed: KnockoutObservable<boolean>;
-    public tournamentInformationAllowed: KnockoutObservable<boolean>;
-    public rebuyAllowed: KnockoutObservable<boolean>;
-    public doublerebuyAllowed: KnockoutObservable<boolean>;
-    public addonAllowed: KnockoutObservable<boolean>;
-    public isTournamentTable: KnockoutObservable<boolean>;
-    public allowUsePersonalAccount: KnockoutObservable<boolean>;
-    public allowTickets: KnockoutObservable<boolean>;
-    public standupText: KnockoutComputed<string>;
+    public addMoneyAllowed: ko.Observable<boolean>;
+    public handHistoryAllowed: ko.Observable<boolean>;
+    public leaveAllowed: ko.Observable<boolean>;
+    public toggleSkipDealsAllowed: ko.Observable<boolean>;
+    public accountStatusAllowed: ko.Observable<boolean>;
+    public tournamentInformationAllowed: ko.Observable<boolean>;
+
+    public rebuyAllowed: ko.Computed<boolean>;
+    public doublerebuyAllowed: ko.Computed<boolean>;
+    public addonAllowed: ko.Computed<boolean>;
+
+    public isRebuyCurrentlyAllowed: ko.Observable<boolean>;
+    public isDoubleRebuyCurrentlyAllowed: ko.Observable<boolean>;
+    public isAddonCurrentlyAllowed: ko.Observable<boolean>;
+
+    public isSufficientMoneyForRebuy: ko.Observable<boolean>;
+    public isSufficientMoneyForDoubleRebuy: ko.Observable<boolean>;
+    public isSufficientMoneyForAddon: ko.Observable<boolean>;
+
+    public isTournamentTable: ko.Observable<boolean>;
+    public allowUsePersonalAccount: ko.Observable<boolean>;
+    public allowTickets: ko.Observable<boolean>;
+    public standupText: ko.PureComputed<"table.takeWin" | "table.leave">;
+    public allowSettings: ko.Computed<boolean>;
+    public settingsCaption: ko.PureComputed<"settings.cardsVariantCaption" | "settings.orientationModeCaption" | "settings.caption">;
     /**
      * Tournament has rebuys.
      */
@@ -50,11 +66,16 @@ export class TableMenuPopup {
      * Indicate that rating is supported.
      */
     public ratingSupported = ko.observable(appConfig.game.hasRating);
+    /**
+     * Indicate whether sitout status set.
+     */
+    public skipDeals: ko.Observable<boolean>;
 
     constructor(
         private currentTableProvider: ICurrentTableProvider,
         private commandExecutor: ICommandExecutor,
-        private accountManager: IAccountManager) {
+        private accountManager: IAccountManager,
+        private authInformation: IAuthenticationInformation) {
         this.soundEnabled = ko.computed<boolean>({
             owner: this,
             read() {
@@ -87,12 +108,30 @@ export class TableMenuPopup {
         this.addMoneyAllowed = ko.observable(false);
         this.handHistoryAllowed = ko.observable(false);
         this.leaveAllowed = ko.observable(false);
+        this.toggleSkipDealsAllowed = ko.observable(false);
         this.accountStatusAllowed = ko.observable(false);
         this.tournamentInformationAllowed = ko.observable(false);
-        this.rebuyAllowed = ko.observable(false);
-        this.doublerebuyAllowed = ko.observable(false);
-        this.addonAllowed = ko.observable(false);
+
+        this.isAddonCurrentlyAllowed = ko.observable(false);
+        this.isRebuyCurrentlyAllowed = ko.observable(false);
+        this.isDoubleRebuyCurrentlyAllowed = ko.observable(false);
+
+        this.isSufficientMoneyForAddon = ko.observable(false);
+        this.isSufficientMoneyForRebuy = ko.observable(false);
+        this.isSufficientMoneyForDoubleRebuy = ko.observable(false);
+
+        this.rebuyAllowed = ko.computed(() =>
+            this.isSufficientMoneyForRebuy() && this.isRebuyCurrentlyAllowed(),
+        );
+        this.doublerebuyAllowed = ko.computed(() =>
+            this.isSufficientMoneyForDoubleRebuy() && this.isDoubleRebuyCurrentlyAllowed(),
+        );
+        this.addonAllowed = ko.computed(() =>
+            this.isSufficientMoneyForAddon() && this.isAddonCurrentlyAllowed(),
+        );
+
         this.isTournamentTable = ko.observable(false);
+
         this.allowUsePersonalAccount = ko.observable(appConfig.joinTable.allowUsePersonalAccount);
         this.allowTickets = ko.observable(appConfig.joinTable.allowTickets);
         this.standupText = ko.pureComputed(() => {
@@ -104,19 +143,36 @@ export class TableMenuPopup {
             const hasWin = player.Money() > 0 || currentTable.myPlayerInGame();
             return hasWin ? "table.takeWin" : "table.leave";
         });
+        this.skipDeals = ko.observable<boolean>(false).extend({ rateLimit: 500 });
+        this.allowSettings = ko.pureComputed(() =>
+            this.allowTickets() || (appConfig.ui.usePortraitAndLandscapeOrientationModes && !PageBlock.useDoubleView),
+        );
+        this.settingsCaption = ko.pureComputed(() => {
+            if (this.allowTickets() && !appConfig.ui.usePortraitAndLandscapeOrientationModes) {
+                return "settings.cardsVariantCaption";
+            }
+
+            if (!this.allowTickets() && appConfig.ui.usePortraitAndLandscapeOrientationModes) {
+                return "settings.orientationModeCaption";
+            }
+
+            return "settings.caption";
+        });
     }
 
     public async shown() {
         // Load settings
-        const self = this;
         const currentTable = this.currentTableProvider.currentTable();
         const myPlayer = currentTable.myPlayer();
         const playerIsInGame = myPlayer != null;
+        this.toggleSkipDealsAllowed(playerIsInGame);
         this.addMoneyAvailable(currentTable.tournament() == null && currentTable.opened());
         this.addMoneyAllowed(currentTable.couldAddChips());
         this.handHistoryAllowed(playerIsInGame && currentTable.lastHandHistory() != null);
-        this.leaveAllowed(myPlayer != null && !currentTable.myPlayerInGame() && myPlayer.IsSitoutStatus());
-        this.accountStatusAllowed(authManager.authenticated());
+        const leaveAllowed = myPlayer != null && !currentTable.myPlayerInGame() && myPlayer.IsSitoutStatus();
+        this.leaveAllowed(!appConfig.game.seatMode || leaveAllowed);
+        this.accountStatusAllowed(this.authInformation.authenticated());
+        this.skipDeals(currentTable.isSitOut());
 
         const tournamentView = currentTable.tournament();
         this.isTournamentTable(tournamentView != null);
@@ -134,30 +190,37 @@ export class TableMenuPopup {
             if ((this.tournamentHasRebuy() || this.tournamentHasAddon())
                 && playerIsInGame) {
                 const moneyInGame = myPlayer.TotalBet() + myPlayer.Money();
-                this.addonAllowed(tournamentView.addonAllowed() && tournamentView.addonCount() === 0);
-                this.rebuyAllowed(tournamentView.rebuyAllowed()
+
+                this.isAddonCurrentlyAllowed(tournamentView.addonAllowed() && tournamentView.addonCount() === 0);
+                this.isRebuyCurrentlyAllowed(tournamentView.rebuyAllowed()
                     && moneyInGame <= tdata.MaximumAmountForRebuy
                     && !currentTable.hasPendingMoney());
-                this.doublerebuyAllowed(tournamentView.rebuyAllowed()
+                this.isDoubleRebuyCurrentlyAllowed(tournamentView.rebuyAllowed()
                     && moneyInGame === 0);
+                // Set isSufficientMoney status temporary to current allowed status
+                // until data is loaded.
+                this.isSufficientMoneyForDoubleRebuy(this.isDoubleRebuyCurrentlyAllowed());
+                this.isSufficientMoneyForAddon(this.isAddonCurrentlyAllowed());
+                this.isSufficientMoneyForRebuy(this.isRebuyCurrentlyAllowed());
+
                 if (tournamentView.addonAllowed() || tournamentView.rebuyAllowed()) {
                     const data = await this.accountManager.getAccount();
                     const personalAccount = data.Data;
-                    const currentMoney = self.getCurrentMoney(tournamentView, personalAccount);
+                    const currentMoney = this.getCurrentMoney(tournamentView, personalAccount);
                     const addonPrice = tdata.AddonPrice + tdata.AddonFee;
                     const rebuyPrice = tdata.RebuyFee + tdata.RebuyPrice;
-                    self.addonAllowed(self.addonAllowed() && addonPrice < currentMoney);
-                    self.rebuyAllowed(self.rebuyAllowed() && (rebuyPrice < currentMoney));
-                    self.doublerebuyAllowed(self.doublerebuyAllowed() && ((2 * rebuyPrice) < currentMoney));
+                    this.isSufficientMoneyForAddon(addonPrice <= currentMoney);
+                    this.isSufficientMoneyForRebuy(rebuyPrice <= currentMoney);
+                    this.isSufficientMoneyForDoubleRebuy((2 * rebuyPrice) <= currentMoney);
                 }
             }
         } else {
             this.tournamentHasRebuy(false);
             this.tournamentHasAddon(false);
 
-            this.addonAllowed(false);
-            this.rebuyAllowed(false);
-            this.doublerebuyAllowed(false);
+            this.isRebuyCurrentlyAllowed(false);
+            this.isDoubleRebuyCurrentlyAllowed(false);
+            this.isAddonCurrentlyAllowed(false);
         }
     }
     public confirm() {
@@ -208,7 +271,12 @@ export class TableMenuPopup {
         this.confirm();
     }
     public rebuy() {
-        if (!this.rebuyAllowed()) {
+        if (!this.isRebuyCurrentlyAllowed()) {
+            return;
+        }
+
+        if (!this.isSufficientMoneyForRebuy()) {
+            this.showInsufficientFundsPrompt("table.rebuyPromptCaption");
             return;
         }
 
@@ -216,7 +284,12 @@ export class TableMenuPopup {
         currentTable.showRebuyPrompt();
     }
     public doubleRebuy() {
-        if (!this.doublerebuyAllowed()) {
+        if (!this.isDoubleRebuyCurrentlyAllowed()) {
+            return;
+        }
+
+        if (!this.isSufficientMoneyForDoubleRebuy()) {
+            this.showInsufficientFundsPrompt("table.doubleRebuyPromptCaption");
             return;
         }
 
@@ -224,7 +297,12 @@ export class TableMenuPopup {
         currentTable.showDoubleRebuyPrompt();
     }
     public addon() {
-        if (!this.addonAllowed()) {
+        if (!this.isAddonCurrentlyAllowed()) {
+            return;
+        }
+
+        if (!this.isSufficientMoneyForAddon()) {
+            this.showInsufficientFundsPrompt("table.addonPromptCaption");
             return;
         }
 
@@ -256,13 +334,57 @@ export class TableMenuPopup {
         window.location.reload();
     }
     public leave() {
-        if (this.leaveAllowed()) {
-            const index = tableManager.currentIndex();
-            const tableView = tableManager.tables()[index];
+        const index = tableManager.currentIndex();
+        const tableView = tableManager.tables()[index];
+
+        if (this.leaveAllowed() && appConfig.game.seatMode) {
             tableView.showStandupPrompt();
         }
+
+        if (!appConfig.game.seatMode) {
+            const removeCurrentTable = () => {
+                // Navigate back to the lobby.
+                if (tableManager.tables().length === 0) {
+                    app.lobbyPageBlock.showLobby();
+                    app.tablesPage.deactivate();
+                    app.closePopup();
+                }
+            };
+            const leaved = this.commandExecutor.executeCommand("app.leaveTable", [tableView.tableId]) as JQueryDeferred<() => void>;
+            leaved.then(removeCurrentTable);
+        }
+    }
+    public toLobby() {
+        const tableView = app.tablesPage.currentTable();
+        const redirectToLobby = () => {
+            app.lobbyPageBlock.showLobby();
+            app.tablesPage.deactivate();
+            app.closePopup();
+        };
+        if (tableView.myPlayer() != null) {
+            redirectToLobby();
+        } else {
+            const removeCurrentTable = () => {
+                // Navigate back to the lobby.
+                if (tableManager.tables().length === 0) {
+                    redirectToLobby();
+                }
+            };
+            const leaved = this.commandExecutor.executeCommand("app.leaveTable", [tableView.tableId]) as JQueryDeferred<() => void>;
+            leaved.then(removeCurrentTable);
+        }
+    }
+    private toggleSkipDeals() {
+        this.skipDeals(!this.skipDeals());
+        const currentTable = this.currentTableProvider.currentTable();
+        currentTable.toggleSkipDeals(this.skipDeals());
+        this.confirm();
     }
     private getCurrentMoney(tournament: TournamentView, personalAccount: PersonalAccountData) {
         return personalAccount.RealMoney;
+    }
+
+    private showInsufficientFundsPrompt(promptTitle: string) {
+        SimplePopup.display(_(promptTitle), _("tableMenu.insufficientFunds"));
     }
 }

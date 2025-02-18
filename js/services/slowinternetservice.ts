@@ -2,7 +2,7 @@ import { App } from "../app";
 import { debugSettings } from "../debugsettings";
 import { connectionService } from "./index";
 
-declare var app: App;
+declare const app: App;
 
 type RetryHandler = () => void;
 

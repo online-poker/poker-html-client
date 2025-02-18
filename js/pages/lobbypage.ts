@@ -1,7 +1,8 @@
 ﻿/* tslint:disable:no-bitwise */
-declare var host: string;
+declare const host: string;
 
-import { Game, LobbyTournamentItem, Tournament, TournamentDefinition } from "@poker/api-server";
+import { Game, GameTableModel, LobbyTournamentItem, Tournament, TournamentDefinition } from "@poker/api-server";
+import * as $ from "jquery";
 import * as ko from "knockout";
 import * as moment from "moment";
 import { authManager } from "poker/authmanager";
@@ -19,13 +20,13 @@ import { tableManager } from "../table/tablemanager";
 import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";
 
-declare var app: App;
+declare const app: App;
 
 export class CashOptions {
-    public currency: KnockoutObservable<number>;
-    public limits: KnockoutObservable<number>;
-    public bets: KnockoutObservable<number>;
-    public maxPlayers: KnockoutObservable<number>;
+    public currency: ko.Observable<number>;
+    public limits: ko.Observable<number>;
+    public bets: ko.Observable<number>;
+    public maxPlayers: ko.Observable<number>;
 
     constructor() {
         // require("extenders");
@@ -75,10 +76,10 @@ export class CashOptions {
 }
 
 export class TournamentOptions {
-    public currency: KnockoutObservable<number>;
-    public buyin: KnockoutObservable<number>;
-    public speed: KnockoutObservable<number>;
-    public maxPlayers: KnockoutObservable<number>;
+    public currency: ko.Observable<number>;
+    public buyin: ko.Observable<number>;
+    public speed: ko.Observable<number>;
+    public maxPlayers: ko.Observable<number>;
 
     constructor() {
         // require("extenders");
@@ -133,33 +134,51 @@ interface LobbyTournamentItemEx extends LobbyTournamentItem {
 }
 
 export class LobbyPage extends PageBase {
-    public online: KnockoutObservable<string>;
-    public registered: KnockoutObservable<string>;
-    public captionLabel: KnockoutComputed<string>;
+    public online: ko.Observable<string>;
+    public registered: ko.Observable<string>;
+    public captionLabel: ko.Computed<string>;
     public slider: Slider;
     public cashOptions: CashOptions;
     public tournamentOptions: TournamentOptions;
     public sngOptions: TournamentOptions;
-    public showFilterSlider: KnockoutObservable<boolean>;
-    public showItemsListSlider: KnockoutObservable<boolean>;
-    public filterLocked: KnockoutObservable<boolean>;
+    public showFilterSlider: ko.Observable<boolean>;
+    public showItemsListSlider: ko.Observable<boolean>;
+    public filterLocked: ko.Observable<boolean>;
 
-    public tournamentsCaption: KnockoutComputed<string>;
-    public selectionCaption: KnockoutComputed<string>;
-    public tournaments: KnockoutObservableArray<LobbyTournamentItemEx>;
-    public sngs: KnockoutObservableArray<LobbyTournamentItemEx>;
-    public tables: KnockoutObservableArray<any>;
-    public loading: KnockoutObservable<boolean>;
-    public currentTime: KnockoutComputed<string>;
+    public tournamentsCaption: ko.Computed<string>;
+    public selectionCaption: ko.Computed<string>;
+    public tournaments: ko.ObservableArray<LobbyTournamentItemEx>;
+    public sngs: ko.ObservableArray<LobbyTournamentItemEx>;
+    public tables: ko.ObservableArray<any>;
+    public loading: ko.Observable<boolean>;
+    public currentTime: ko.Computed<string>;
 
-    public authenticated: KnockoutObservable<boolean>;
-    public login: KnockoutComputed<string>;
-    public amount: KnockoutObservable<number>;
+    public authenticated: ko.Computed<boolean>;
+    public login: ko.Computed<string>;
+    public amount: ko.Observable<number>;
+
+    public cashTablesEnabled: ko.Observable<boolean>;
+    public tournamentTablesEnabled: ko.Observable<boolean>;
+    public sngTablesEnabled: ko.Observable<boolean>;
+    public showScreenOverlay: ko.Computed<boolean>;
 
     constructor() {
         super();
-        const self = this;
+        this.showScreenOverlay = ko.computed(() => {
+            if (!appConfig.ui.enableScreenOverlay) {
+                return false;
+            }
 
+            if ((/iphone|ipod|ipad/gi).test(navigator.platform)) {
+                if (!navigator.standalone) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
+        });
         this.currentTime = ko.computed(function () {
             return timeService.currentTime();
         }, this);
@@ -187,28 +206,39 @@ export class LobbyPage extends PageBase {
         this.slider.addOption(_("lobby.cashGames"), "cash", null);
         this.slider.addOption(_("lobby.tournaments"), "tournaments", null);
         this.slider.addOption(_("lobby.sitAndGo"), "sng", null);
+        this.cashTablesEnabled = ko.observable(appConfig.lobby.cashTablesEnabled);
+        this.tournamentTablesEnabled = ko.observable(appConfig.lobby.tournamentTablesEnabled);
+        this.sngTablesEnabled = ko.observable(appConfig.lobby.sngTablesEnabled);
+
         if (!appConfig.tournament.enabled) {
             this.slider.enabled(false);
+            this.tournamentTablesEnabled(false);
+            this.sngTablesEnabled(false);
+        }
+
+        if (appConfig.tournament.enableTournamentOnly) {
+            this.slider.enabled(false);
+            this.slider.currentIndex(1);
         }
 
         this.loading = ko.observable(false);
-        this.selectionCaption = ko.computed(function () {
-            if (self.slider.currentIndex() === 0) {
+        this.selectionCaption = ko.computed(() => {
+            if (this.slider.currentIndex() === 0) {
                 return _("tablesList.headerCaption")
-                    .replace("#count", self.tables().length.toString());
+                    .replace("#count", this.tables().length.toString());
             }
 
-            if (self.slider.currentIndex() === 1) {
+            if (this.slider.currentIndex() === 1) {
                 return _("tournamentsList.headerCaption")
-                    .replace("#count", self.tournaments().length.toString());
+                    .replace("#count", this.tournaments().length.toString());
             }
 
             return _("tournamentsList.sngCaption")
-                .replace("#count", self.sngs().length.toString());
+                .replace("#count", this.sngs().length.toString());
         }, this);
 
-        tableManager.tables.subscribe(function () {
-            self.updateOpenedTables();
+        tableManager.tables.subscribe(() => {
+            this.updateOpenedTables();
         });
 
         this.authenticated = ko.computed(function () {
@@ -217,11 +247,11 @@ export class LobbyPage extends PageBase {
         this.login = ko.computed(function () {
             return authManager.login();
         }, this);
-        authManager.registerAuthenticationChangedHandler(function (newValue) {
+        authManager.registerAuthenticationChangedHandler((newValue) => {
             if (authManager.login() === null) {
-                self.amount(0);
+                this.amount(0);
             } else {
-                self.updateAccount();
+                this.updateAccount();
             }
         });
         this.amount = ko.observable(0);
@@ -242,7 +272,6 @@ export class LobbyPage extends PageBase {
             return;
         }
 
-        const self = this;
         this.showFilterSlider(PageBlock.useDoubleView);
         this.showItemsListSlider(!PageBlock.useDoubleView);
         if (pageName === "lobby") {
@@ -253,7 +282,7 @@ export class LobbyPage extends PageBase {
                 }
             }
 
-            reloadManager.setReloadCallback(() => self.update(true));
+            reloadManager.setReloadCallback(() => this.update(true));
         }
 
         this.updateAccount();
@@ -272,12 +301,11 @@ export class LobbyPage extends PageBase {
             return;
         }
 
-        const self = this;
         metadataManager.updateOnline();
 
         // Added reloading of the all information.
-        const resetLoading = function () {
-            self.loading(false);
+        const resetLoading = () => {
+            this.loading(false);
         };
         this.loading(true);
         try {
@@ -341,7 +369,6 @@ export class LobbyPage extends PageBase {
     }
 
     public async refreshTournaments(tournamentType: number) {
-        const self = this;
         const tournamentApi = new Tournament(host);
 
         const options = tournamentType === 2 ? this.tournamentOptions : this.sngOptions;
@@ -351,12 +378,12 @@ export class LobbyPage extends PageBase {
         const buyin = options.buyin();
         const maxPlayers = options.maxPlayers() === 0 ? 0 : 1 << (options.maxPlayers() - 1);
         const data = await tournamentApi.getTournaments(prizeCurrency, tournamentTypeMask, speed, buyin, maxPlayers);
-        if (!self.visible()) {
+        if (!this.visible()) {
             return;
         }
 
         if (data.Status === "Ok") {
-            self.log("Informaton about tournaments received: ", data.Data);
+            this.log("Informaton about tournaments received: ", data.Data);
             const enchance = (item: LobbyTournamentItem) => {
                 const result = item as LobbyTournamentItemEx;
                 const startDate = moment(item.StartDate);
@@ -369,9 +396,9 @@ export class LobbyPage extends PageBase {
                 return result;
             };
             if (tournamentType === 2) {
-                self.tournaments(data.Data.map(enchance));
+                this.tournaments(data.Data.map(enchance));
             } else {
-                self.sngs(data.Data.map(enchance));
+                this.sngs(data.Data.map(enchance));
             }
         }
     }
@@ -433,7 +460,7 @@ export class LobbyPage extends PageBase {
             app.lobbyPageBlock.showSecondary("lobby");
         }
     }
-    public selectFilterParameter<T>(parameter: KnockoutObservable<T>, value: T) {
+    public selectFilterParameter<T>(parameter: ko.Observable<T>, value: T) {
         parameter(value);
         if (PageBlock.useDoubleView) {
             app.lobbyPageBlock.showSecondary("lobby");
@@ -478,11 +505,10 @@ export class LobbyPage extends PageBase {
             return;
         }
 
-        const self = this;
         try {
             await this.updateAccountData();
         } catch (e) {
-            self.updateAccount();
+            this.updateAccount();
         }
     }
     public showAccount() {
@@ -492,13 +518,12 @@ export class LobbyPage extends PageBase {
      * Starts request for the account data.
      */
     private async updateAccountData() {
-        const self = this;
         const manager = new AccountManager();
         const data = await manager.getAccount();
         if (data.Status === "Ok") {
             const personalAccountData = data.Data;
             const total = settings.isGuest() ? personalAccountData.GameMoney : personalAccountData.RealMoney;
-            self.amount(total);
+            this.amount(total);
         } else {
             console.error("Error during making call to Account.GetPlayerDefinition in lobby page");
         }

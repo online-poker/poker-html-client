@@ -5,7 +5,7 @@ class TournamentManager {
     /**
      * Tournaments in which player registered.
      */
-    public tournaments: KnockoutObservableArray<TournamentView>;
+    public tournaments: ko.ObservableArray<TournamentView>;
 
     /**
      * Notifies that tournament started

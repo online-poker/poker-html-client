@@ -1,13 +1,12 @@
-﻿/// <reference path="../poker.commanding.api.ts" />
-
+﻿import * as $ from "jquery";
 import * as ko from "knockout";
 import { App } from "../app";
 
-declare var app: App;
+declare const app: App;
 
 export class OkCancelPopup {
-    public title: KnockoutObservable<string>;
-    public messages: KnockoutObservableArray<string>;
+    public title: ko.Observable<string>;
+    public messages: ko.ObservableArray<string>;
     public buttons = ko.observableArray<string>([]);
     public deferred: JQueryDeferred<() => void>;
     public customStyle = ko.observable("");

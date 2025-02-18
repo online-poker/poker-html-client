@@ -1,7 +1,5 @@
-﻿/// <reference types="applicationinsights" />
-declare var baseUrl: string;
-declare var appInsights: Client;
-
+﻿/// <reference types="applicationinsights-js" />
+import * as $ from "jquery";
 import { debugSettings } from "../debugsettings";
 import * as timeService from "../timeservice";
 import { CancelToken } from "./cancelToken";
@@ -226,7 +224,7 @@ export class ConnectionWrapper {
                 throw new Error("SignalR connection has invalid state.");
             }
 
-            return new Promise<any>(function(resolve, reject) {
+            return new Promise<void>(function(resolve, reject) {
                 timeService.setTimeout(async function() {
                     if (attemptsLeft <= 0) {
                         reject(new Error("Last retry did not work. Stop attempts."));
@@ -241,8 +239,8 @@ export class ConnectionWrapper {
         return await tryConnection(30);
     }
     private onConnectionStateChanged(state: SignalR.StateChanged) {
-        this.logEvent("SignalR state changed from: " + ConnectionService.stateConversion[state.oldState]
-            + " to: " + ConnectionService.stateConversion[state.newState]);
+        this.logEvent("SignalR state changed from: " + ConnectionService.stateConversion[state.oldState as 0|1|2|4]
+            + " to: " + ConnectionService.stateConversion[state.newState as 0|1|2|4]);
 
         if (state.newState === 4) {
             connectionService.isDisconnected = true;
@@ -321,7 +319,7 @@ export class ConnectionWrapper {
             const connectionInfo = "HID:" + hubId;
             this.logEvent("Connected to server! Connection " + connectionInfo);
             return this;
-        } catch (e) {
+        } catch (e: any) {
             this.logEvent("Could not Connect!" + e.message);
             return new Promise<ConnectionWrapper>((resolve, reject) => {
                 timeService.setTimeout(async () => {
@@ -353,6 +351,9 @@ export class ConnectionWrapper {
             console.log(message, params);
         }
 
-        appInsights.trackTrace(message);
+        // tslint:disable-next-line:no-string-literal
+        if (window["appInsights"]) {
+            appInsights.trackTrace(message);
+        }
     }
 }

@@ -1,6 +1,7 @@
-declare var host: string;
+declare const host: string;
 
 import { Information } from "@poker/api-server";
+import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
@@ -13,25 +14,25 @@ import { settings } from "../settings";
 import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";
 
-declare var app: App;
+declare const app: App;
 
 export class HomePage extends PageBase {
-    public online: KnockoutObservable<string>;
-    public registered: KnockoutObservable<string>;
+    public online: ko.Observable<string>;
+    public registered: ko.Observable<string>;
     public news = ko.observableArray<string>([]);
     public currentNews = ko.observable("");
-    public username: KnockoutObservable<string>;
-    public password: KnockoutObservable<string>;
-    public errorMessage: KnockoutObservable<string>;
-    public rememberMe: KnockoutObservable<boolean>;
-    public allowSelfRegistration: KnockoutObservable<boolean>;
-    public allowRememberMe: KnockoutObservable<boolean>;
-    public allowPasswordRecovery: KnockoutObservable<boolean>;
-    public allowGuest: KnockoutObservable<boolean>;
+    public username: ko.Observable<string>;
+    public password: ko.Observable<string>;
+    public errorMessage: ko.Observable<string>;
+    public rememberMe: ko.Observable<boolean>;
+    public allowSelfRegistration: ko.Observable<boolean>;
+    public allowRememberMe: ko.Observable<boolean>;
+    public allowPasswordRecovery: ko.Observable<boolean>;
+    public allowGuest: ko.Observable<boolean>;
 
-    public captionLabel: KnockoutComputed<string>;
-    public authenticatedUser: KnockoutComputed<string>;
-    public authenticated: KnockoutComputed<boolean>;
+    public captionLabel: ko.Computed<string>;
+    public authenticatedUser: ko.Computed<string>;
+    public authenticated: ko.Computed<boolean>;
     public banners = ko.observableArray<BannerData>([]);
     public currentBanner = ko.observable<BannerData>({
         Id: 0,
@@ -40,10 +41,26 @@ export class HomePage extends PageBase {
         Link: "",
     });
     public bannerIntervalHandle: number | null = null;
+    public showScreenOverlay: ko.Computed<boolean>;
     private intervalHandle: number | null = null;
 
     constructor() {
         super();
+        this.showScreenOverlay = ko.computed(() => {
+            if (!appConfig.ui.enableScreenOverlay) {
+                return false;
+            }
+
+            if ((/iphone|ipod|ipad/gi).test(navigator.platform)) {
+                if (!navigator.standalone) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
+        });
         this.online = metadataManager.online;
         this.registered = metadataManager.registered;
         this.captionLabel = ko.computed(() => {
@@ -107,10 +124,10 @@ export class HomePage extends PageBase {
         app.showPageBlock("lobby");
         app.showSubPage("lobby");
     }
-    public login() {
-        const username = this.username();
+    public async login() {
+        let username = this.username();
         const password = this.password();
-        if (username === null || username.trim() === "") {
+        if (!username || username.trim() === "") {
             this.errorMessage(_("homePage.userRequired"));
             return;
         }
@@ -127,24 +144,26 @@ export class HomePage extends PageBase {
         keyboardActivationService.forceHideKeyboard();
 
         app.processing(true);
-        authManager.authenticate(username, password, this.rememberMe())
-            .then((status: string) => {
-                app.processing(false);
-                if (status === "Ok") {
-                    this.errorMessage(null);
-                    this.username("");
-                    this.password("");
-                    app.lobbyPageBlock.showLobby();
+        username = username.trim();
+        try {
+            const authStatus = await authManager.authenticate(username, password, this.rememberMe());
+            app.processing(false);
+            if (authStatus === "Ok") {
+                this.errorMessage(null);
+                this.username("");
+                this.password("");
+                app.lobbyPageBlock.showLobby();
+            } else {
+                if (authStatus) {
+                    this.errorMessage(_("errors." + authStatus));
                 } else {
-                    if (status) {
-                        this.errorMessage(_("errors." + status));
-                    } else {
-                        this.errorMessage(_("auth.unspecifiedError"));
-                    }
+                    this.errorMessage(_("auth.unspecifiedError"));
                 }
-            }, function () {
-                app.processing(false);
-            });
+            }
+        } catch (e) {
+            app.processing(false);
+            console.error("An error occurred while trying to open lobby page after authentication " + e);
+        }
     }
     public logout() {
         // do nothing.

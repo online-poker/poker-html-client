@@ -1,4 +1,6 @@
-﻿class GameHandHistory {
+﻿import { mergeDeep } from "poker/helpers";
+
+class GameHandHistory {
     /**
      * Show game history with cards.
      */
@@ -15,6 +17,11 @@ class GameActionBlock {
      * Wherether action panel is present on the application
      */
     public hasSecondaryPanel = true;
+}
+
+export interface TimeSettings {
+    moveTime?: number | undefined;
+    updateTimeFromServer?: boolean | undefined;
 }
 
 export class AppConfig {
@@ -42,11 +49,16 @@ export class AppConfig {
         hasPageReload: false,
         soundTheme: "poker",
         hasHumanVoice: true,
+        soundPath: "/snd",
         cardsOverlaySupported: true,
+        messageDisplaySize: 17,
+        messageDisplayDuration: 2000,
+        clearActionDuration: 2000,
     };
     public tournament = {
         enabled: false,
         openTableAutomatically: true,
+        enableTournamentOnly: false,
     };
     public joinTable = {
         allowUsePersonalAccount: false,
@@ -58,48 +70,43 @@ export class AppConfig {
         requirePhoneNumber: false,
         requireFirstName: false,
         requireLastName: false,
+        firstNameVisible: true,
+        lastNameVisible: true,
     };
     public lobby = {
         openTableRequireAuthentication: true,
+        cashTablesEnabled: true,
+        tournamentTablesEnabled: true,
+        sngTablesEnabled: true,
     };
     public info = {
         hasInfoPages: false,
         hasSupportPages: false,
     };
+    public timeSettings: TimeSettings = {
+        updateTimeFromServer: true
+    };
     public ui = {
+        isDesktopApp: false,
+        realMoneyCurrencySymbol: "$",
+        gameMoneySymbol: "",
+        allowExpandActionBlockGuestureOnlyOnMyTurn: false,
+        usePortraitAndLandscapeOrientationModes: false,
+        defaultOrientation: "landscape",
+        useShortMoneyRepresentationForBets: false,
+        minConvertibleToSIBetValue: 10000,
+        moneySeparator: ",",
+        fractionalDigitsCount: 2,
+        moneyFractionalSeparator: ".",
+        enableScreenOverlay: false,
+        deploymentPath: "",
+        hasKeyPad: false,
+        relayTouches: false,
+        debugTouches: false,
+        touchToggleCards: false,
+        fastTouch: false,
         progressBackgroundInitialColor: "rgba(0,0,0,0.75)",
     };
-}
-/**
- * Simple object check.
- * @param item
- * @returns {boolean}
- */
-function isObject(item: any) {
-    return (item && typeof item === "object" && !Array.isArray(item));
-}
-
-/**
- * Deep merge two objects.
- * @param target
- * @param ...sources
- */
-function mergeDeep(target: any, ...sources: any[]): any {
-    if (!sources.length) { return target; }
-    const source = sources.shift();
-
-    if (isObject(target) && isObject(source)) {
-        for (const key in source) {
-        if (isObject(source[key])) {
-            if (!target[key]) { Object.assign(target, { [key]: {} }); }
-            mergeDeep(target[key], source[key]);
-        } else {
-            Object.assign(target, { [key]: source[key] });
-        }
-        }
-    }
-
-    return mergeDeep(target, ...sources);
 }
 
 export type PartialConfiguration<T> = {

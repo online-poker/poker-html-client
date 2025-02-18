@@ -1,4 +1,5 @@
-﻿import * as $ from "jquery";
+﻿import { attachRelayToPage, detachRelayToPage } from "iframe-touch-relay";
+import * as $ from "jquery";
 import * as ko from "knockout";
 import { ICommandExecutor } from "poker/commandmanager";
 import { App } from "../app";
@@ -20,54 +21,54 @@ import { TableView } from "../table/tableview";
 import * as timeService from "../timeservice";
 import { PageBase } from "../ui/pagebase";
 
-declare var app: App;
+declare const app: App;
+let zones: any;
 
 export class TablesPage extends PageBase implements ICurrentTableProvider {
-    public currentTable: KnockoutComputed<TableView>;
-    public selectedTables: KnockoutComputed<TableView[]>;
-    public currentIndex: KnockoutComputed<number>;
-    public currentIndex1: KnockoutComputed<number>;
-    public slideWidth: KnockoutObservable<number>;
-    public loading: KnockoutComputed<boolean>;
+    public currentTable: ko.Computed<TableView>;
+    public selectedTables: ko.Computed<TableView[]>;
+    public currentIndex: ko.Computed<number>;
+    public currentIndex1: ko.Computed<number>;
+    public slideWidth: ko.Observable<number>;
+    public loading: ko.Computed<boolean>;
     public activeHandler: SignalBinding;
     public resignHandler: SignalBinding;
     public slowConnectionHandler: SignalBinding;
     public reconnectedHandler: SignalBinding;
     public disconnectedHandler: SignalBinding;
-    public isConnectionSlow: KnockoutObservable<boolean>;
+    public isConnectionSlow: ko.Observable<boolean>;
     public lastConnecton: string;
-    public frozen: KnockoutComputed<boolean>;
-    public opened: KnockoutComputed<boolean>;
-    public changeBetParametersNextGame: KnockoutComputed<boolean>;
-    public changeGameTypeNextGame: KnockoutComputed<boolean>;
-    public nextGameInformation: KnockoutComputed<string>;
-    public nextGameTypeInformation: KnockoutComputed<string>;
+    public frozen: ko.Computed<boolean>;
+    public opened: ko.Computed<boolean>;
+    public changeBetParametersNextGame: ko.Computed<boolean>;
+    public changeGameTypeNextGame: ko.Computed<boolean>;
+    public nextGameInformation: ko.Computed<string>;
+    public nextGameTypeInformation: ko.Computed<string>;
     public splashShown = ko.observable(false);
     public tablesShown = ko.observable(true);
     public progressBackgroundColor: KnockoutObservable<string>;
+    public orientationWillBeChanged = ko.observable(false);
 
     constructor(private commandExecutor: ICommandExecutor) {
         super();
-        const self = this;
         this.slideWidth = ko.observable(0);
         this.isConnectionSlow = ko.observable(false);
-        this.calculateLandscapeWidth();
         this.progressBackgroundColor = ko.observable(appConfig.ui.progressBackgroundInitialColor);
         this.currentIndex = ko.computed<number>({
             read() {
                 return tableManager.currentIndex();
             },
-            write(value) {
+            write: (value) => {
                 tableManager.currentIndex(value);
-                self.log("Switched to table with index " + value);
+                this.log("Switched to table with index " + value);
             },
         });
         this.currentIndex1 = ko.computed<number>({
-            read() {
-                return self.currentIndex() + 1;
+            read: () => {
+                return this.currentIndex() + 1;
             },
-            write(value) {
-                self.currentIndex(value - 1);
+            write: (value) => {
+                this.currentIndex(value - 1);
             },
             owner: this,
         });
@@ -156,43 +157,24 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
                 value.animationSuppressed(false);
             }
         });
+        settings.orientation.subscribe((value) => {
+            if (orientationService.isScreenOrientationSupported()) {
+                this.orientationWillBeChanged(true);
+                this.setOrientation();
+                timeService.setTimeout(() => {
+                    this.currentTable().actionBlock.updateBounds();
+                    this.calculateWidth();
+                }, 300);
+            }
+        });
     }
-    public calculateLandscapeWidth() {
-        // When running not within browser, skip calculations.
-        if (typeof window === "undefined") {
+    public calculateWidth() {
+        if (orientationService.isTargetOrientation("portrait")) {
+            this.calculatePortraitWidth();
             return;
         }
 
-        let viewportLandscapeWidth = 640;
-        const currentWidth = $("body").width();
-        if (currentWidth >= 1024 || (currentWidth === 768 && $("body").height() === 0)) {
-            viewportLandscapeWidth = 1024;
-            if (currentWidth >= 1280) {
-                viewportLandscapeWidth = 1280;
-            }
-
-            if (currentWidth >= 1680) {
-                viewportLandscapeWidth = 1680;
-            }
-
-            if (currentWidth >= 1920) {
-                viewportLandscapeWidth = 1920;
-            }
-
-            if (currentWidth >= 3840) {
-                viewportLandscapeWidth = 3840;
-            }
-        }
-
-        if (currentWidth < 360) {
-            if (window.innerHeight > 500) {
-                viewportLandscapeWidth = 568;
-            } else {
-                viewportLandscapeWidth = 480;
-            }
-        }
-
-        this.slideWidth(viewportLandscapeWidth);
+        this.calculateLandscapeWidth();
     }
     public recordConnection() {
         this.lastConnecton = navigator.connection.type;
@@ -242,6 +224,11 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         if (!PageBlock.useDoubleView) {
             orientationService.setOrientation("portrait");
         }
+
+        if (appConfig.game.tablePreviewMode && appConfig.ui.relayTouches) {
+            detachRelayToPage();
+            zones = null;
+        }
     }
     public activate() {
         super.activate();
@@ -252,8 +239,13 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         this.disconnectedHandler = connectionService.disconnected.add(this.onResetConnectionSlow, this);
         uiManager.showPage("table");
         app.tabBar.visible(false);
-        orientationService.setOrientation("landscape");
+        // As swiperjs module can not handle slideWidth updates
+        // we should rerender hole swipe module.
+        // Delete swipe node from DOM
+        this.orientationWillBeChanged(true);
+        this.setOrientation();
         timeService.setTimeout(() => {
+            this.calculateWidth();
             orientationService.lock();
         }, 200);
         const currentTable = this.currentTable();
@@ -273,6 +265,13 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
             soundManager.enabled(settings.soundEnabled());
         }
 
+        if (appConfig.game.tablePreviewMode && appConfig.ui.relayTouches) {
+            setTimeout(function() {
+                zones = document.getElementsByTagName("iframe");
+                attachRelayToPage(zones, { decodeCoordinates, debug: appConfig.ui.debugTouches });
+            }, 1000);
+        }
+
         soundManager.tableSoundsEnabled(true);
         reloadManager.setReloadCallback(() => {
             if (debugSettings.application.reloadTablesDataOnResume) {
@@ -286,7 +285,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
     public canActivate(): boolean {
         return tableManager.tables().length !== 0;
     }
-    public switchTable(index: KnockoutObservable<number>) {
+    public switchTable(index: ko.Observable<number>) {
         this.currentIndex(index());
     }
     public prevTable() {
@@ -309,14 +308,13 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         }
     }
     public leave() {
-        const self = this;
         // Unsubscribe from table notifications.
         const tableView = this.currentTable();
         const removeCurrentTable = () => {
             // Navigate back to the lobby.
             if (tableManager.tables().length === 0) {
                 app.lobbyPageBlock.showLobby();
-                self.deactivate();
+                this.deactivate();
             }
         };
         const leaved = this.commandExecutor.executeCommand("app.leaveTable", [tableView.tableId]) as JQueryDeferred<() => void>;
@@ -349,13 +347,92 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         });
         finishedTournamentTables.forEach((tournamentTable: TableView) => tableManager.remove(tournamentTable));
     }
+    private calculatePortraitWidth() {
+        // When running not within browser, skip calculations.
+        if (typeof window === "undefined") {
+            return;
+        }
+
+        let viewportPortraitWidth = 320;
+        const currentWidth = $("body").width()!;
+
+        if (currentWidth >= 375) {
+            viewportPortraitWidth = 375;
+        }
+
+        if (currentWidth >= 414) {
+            viewportPortraitWidth = 414;
+        }
+
+        if (currentWidth >= 768) {
+            viewportPortraitWidth = 768;
+        }
+
+        this.slideWidth(viewportPortraitWidth);
+        // Render swipe node with new slideWidth
+        this.orientationWillBeChanged(false);
+    }
+    private calculateLandscapeWidth() {
+        // When running not within browser, skip calculations.
+        if (typeof window === "undefined") {
+            return;
+        }
+
+        let viewportLandscapeWidth = 640;
+        const currentWidth = $("body").width();
+        if (currentWidth >= 667 || currentWidth === 375) {
+            viewportLandscapeWidth = 667;
+        }
+
+        if (currentWidth >= 736 || currentWidth === 414) {
+            viewportLandscapeWidth = 736;
+        }
+
+        if (currentWidth >= 1024 || (currentWidth === 768 && $("body").height() === 0)) {
+            viewportLandscapeWidth = 1024;
+            if (currentWidth >= 1280) {
+                viewportLandscapeWidth = 1280;
+            }
+
+            if (currentWidth >= 1680) {
+                viewportLandscapeWidth = 1680;
+            }
+
+            if (currentWidth >= 1920) {
+                viewportLandscapeWidth = 1920;
+            }
+
+            if (currentWidth >= 3840) {
+                viewportLandscapeWidth = 3840;
+            }
+        }
+
+        if (currentWidth < 360) {
+            if (window.innerHeight > 500) {
+                viewportLandscapeWidth = 568;
+            } else {
+                viewportLandscapeWidth = 480;
+            }
+        }
+
+        this.slideWidth(viewportLandscapeWidth);
+        // Render swipe node with new slideWidth
+        this.orientationWillBeChanged(false);
+    }
+    private setOrientation() {
+        if (orientationService.isTargetOrientation("portrait") && !PageBlock.useDoubleView) {
+            orientationService.setOrientation("portrait");
+            return;
+        }
+
+        orientationService.setOrientation("landscape");
+    }
     private onConnectionSlow() {
-        const self = this;
         this.isConnectionSlow(true);
 
         // Clear message after some time passed by.
         timeService.setTimeout(() => {
-            self.isConnectionSlow(false);
+            this.isConnectionSlow(false);
         }, 3000);
     }
     private onResetConnectionSlow() {
@@ -367,4 +444,73 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
             console.log(message, params);
         }
     }
+}
+
+function getZonesAngle(element: HTMLElement) {
+    if (zones.length == 2) {
+        const angle = element === zones[0] ? 90 : -90;
+        return angle;
+    } else if (zones.length == 6) {
+        const angle = element === zones[0] ? 180 :
+            element === zones[1] ? 90 :
+            element === zones[2] ? 0 :
+            element === zones[3] ? 0 :
+            element === zones[4] ? -90 :
+            element === zones[5] ? 180 : 0;
+        return angle;
+    } else if (zones.length == 8) {
+        const angle = element === zones[0] ? 180 :
+            element === zones[1] ? 45 :
+            element === zones[2] ? -45 :
+            element === zones[3] ? 0 :
+            element === zones[4] ? 0 :
+            element === zones[5] ? -135 :
+            element === zones[6] ? 135 :
+            element === zones[7] ? 180 : 0;
+        return angle;
+    } 
+    return 0;
+}
+
+function decodeCoordinates(element: HTMLElement, x: number, y: number) {
+    const boundary = element.getBoundingClientRect();
+    const clientX = x - boundary.left;
+    const clientY = y - boundary.top;
+    const style = window.getComputedStyle(element.offsetParent, null);
+    const transform = style.getPropertyValue("transform");
+    if (transform !== "none") {
+        const elementStyle = window.getComputedStyle(element, null);
+        const totalWidth = parseFloat(elementStyle.getPropertyValue("width").replace("px", ""));
+        const totalHeight = parseFloat(elementStyle.getPropertyValue("height").replace("px", ""));
+        let values = transform.split("(")[1];
+        values = values.split(")")[0];
+        const parts = values.split(",");
+        const a = parseFloat(parts[0]);
+        const b = parseFloat(parts[1]);
+        const c = parseFloat(parts[2]);
+        const d = parseFloat(parts[3]);
+
+        const scale = Math.sqrt(a * a + b * b);
+
+        // const angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
+        const angle = getZonesAngle(element);
+        let result : {clientX : number; clientY: number};        
+        if (angle === 180) {
+            result = { clientX: totalWidth - clientX, clientY: totalHeight - clientY };
+        } else if (angle === -90) {
+            result = { clientX: clientY, clientY: totalHeight - clientX };
+        } else if (angle === 90) {
+            result = { clientX: totalWidth - clientY, clientY: clientX };
+        } else {
+            result = { clientX, clientY };
+        }
+        
+        if (appConfig.ui.debugTouches) {
+            console.log("Element ", element, " has angle ", angle, `. (${clientX},${clientY}) => (${result.clientX},${result.clientY})`);
+        }
+
+        return result;
+    }
+
+    return { clientX, clientY };
 }

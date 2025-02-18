@@ -1,0 +1,65 @@
+name: NodeJS with Webpack
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        #registry-url: 'https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/'
+
+      
+    - name: Safe install dependencies
+      run: |
+        echo "@poker:registry=https://pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/" > ~/.npmrc
+        echo "" >> ~/.npmrc
+        echo "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:username=pokerkz" >> ~/.npmrc
+        echo "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:email=npm" >> ~/.npmrc
+        echo "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/registry/:_password=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+        echo "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:username=pokerkz" >> ~/.npmrc
+        echo "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:_password=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+        echo "//pokerkz.pkgs.visualstudio.com/_packaging/Shared/npm/:email=npm" >> ~/.npmrc
+        echo "always-auth=true" >> ~/.npmrc
+        npm ci --ignore-scripts
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: Full install dependencies
+      run: npm rebuild && npm run prepare --if-present
+
+    - name: Build
+      run: |
+        npm run test:prod -- --runInBand
+        npm run lint:test
+        npm run compile:test -- --noEmit
+
+    - name: Generate Report
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.1.9
+      with:
+        reports: './coverage/*.xml'
+        targetdir: './coveragereport'
+        reporttypes: 'Cobertura'
+        verbosity: 'Info'
+        tag: '${{ github.run_number }}_${{ github.run_id }}'
+
+    - name: Report coverage
+      uses: 5monkeys/cobertura-action@master
+      with:
+        path: coveragereport/*.xml
+        minimum_coverage: 50

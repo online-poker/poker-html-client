@@ -367,6 +367,11 @@ let messages: any = {
             check: 'Чек',
             call: 'Колл',
             allin: 'Олл-ин',
+            callAny: 'Колл любую ставку',
+            checkFold: 'Чек/Фолд',
+            callAnyCheck: 'Колл любую ставку/Чек',
+            allinAmount: 'Олл-ин #amount',
+            callAmount: 'Колл #amount',
         },
         combination: {
             c1: 'Старшая; ##c1',
@@ -388,6 +393,16 @@ let messages: any = {
         gameTypeChangeNextGame: "Тип игры изменится на - ##gameType",
         holdem: 'Техас Холдем',
         omaha: 'Омаха',
+        sitHereInformation: "Нажмите кнопку Сесть тут для начала игры",
+        helpMessage: {
+            notEnoughMoney: "Пожалуйста, пополните ваш счёт",
+            returnToGame: "Нажмите кнопку Вернуться чтобы продолжить игру",
+            goodLuck: "Желаем удачи",
+            waitingBB: "Подождите пожалуйста, вы начнете игру когда будете сидеть на большом блаинде",
+            needBB: "Помните, на позиции \"дилера\" или \"маленького блайнда\", вы не сможете войти в игру.",
+            makeBet: "Пожалуйста сделайте Вашу ставку",
+            youWin: "Поздравляем, Ваш выигрыш: ##amount",
+        },
     },
     tournament: {
         caption: 'Турнир',
@@ -508,6 +523,7 @@ let messages: any = {
         rebuySuccess: 'Ребай сделан успешно',
         doublerebuySuccess: 'Двойной ребай слелан успешно',
         addonSuccess: 'Аддон сделан успешно',
+        insufficientFunds: "Недостаточно средств на вашем счёте.",
     },
     operationsHistory: {
         pageCaption: 'История счета',
@@ -683,5 +699,8 @@ let messages: any = {
         TicketAlreadyUsed: "Билет уже использован",
         InsufficientTables: "Недочтаточно столов",
         OperationNotValidWhenTableFrozen: "Операция недоступна когда стол поставлен на паузу",
+        LoginShouldNotContainWhiteSpace: 'В логине не должен присутствовать пробел.',
+        EmailShouldNotContainWhiteSpace: 'В имейле не должен присутствовать пробел.',
+        PhoneNumberShouldNotContainWhiteSpace: 'В номере телефона не должен присутствовать пробел.',
     },
 };

@@ -126,14 +126,14 @@ export function cardValue(card: number) {
  * @param gameType Type of the game for which return the decoded cards.
  */
 export function decodeCardsArray(cardsData: string | null): number[] {
-    if (cardsData === null || cardsData === null) {
+    if (cardsData === null) {
         return null;
     }
 
     if (typeof cardsData === "object") {
         // tslint:disable:no-console
-        console.log(cardsData[0]);
-        console.log(cardsData[1]);
+        console.log(cardsData![0]);
+        console.log(cardsData![1]);
         // tslint:enable:no-console
         cardsData = "//8=";
         if (cardsData.length === 4) {
@@ -175,7 +175,7 @@ export function convertToCards(data: number[]): string[] {
     });
 }
 
-export function cardsArray(cardsData: string): string[] {
+export function cardsArray(cardsData: string | null): string[] {
     /// <signature>
     ///   <summary>Get card string</summary>
     ///   <param name="cards" type="Array">Array of the cards.</param>
@@ -186,8 +186,8 @@ export function cardsArray(cardsData: string): string[] {
 
     if (typeof cardsData === "object") {
         // tslint:disable:no-console
-        console.log(cardsData[0]);
-        console.log(cardsData[1]);
+        console.log(cardsData![0]);
+        console.log(cardsData![1]);
         // tslint:enable:no-console
         cardsData = allNone;
     }
@@ -209,7 +209,7 @@ export function cardsArray(cardsData: string): string[] {
     }
 
     const cardsString = window.atob(cardsData);
-    const cards = new Array();
+    const cards = [];
     for (let i = 0; i < cardsString.length; i++) {
         cards.push(cardValue(cardsString.charCodeAt(i)));
     }

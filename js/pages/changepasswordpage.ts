@@ -1,11 +1,12 @@
 import * as ko from "knockout";
+import "../typings/knockout";
 import { PageBase } from "../ui/pagebase";
 
-export class ChangePasswordPage extends PageBase implements KnockoutValidationGroup {
-    public oldpassword: KnockoutObservable<string>;
-    public password: KnockoutObservable<string>;
-    public confirmpassword: KnockoutObservable<string>;
-    public errors: KnockoutValidationErrors;
+export class ChangePasswordPage extends PageBase implements ko.ValidationGroup {
+    public oldpassword: ko.Observable<string>;
+    public password: ko.Observable<string>;
+    public confirmpassword: ko.Observable<string>;
+    public errors: ko.ValidationErrors;
     public isValid: () => boolean;
 
     constructor() {

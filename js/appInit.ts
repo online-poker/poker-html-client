@@ -1,12 +1,17 @@
 import * as $ from "jquery";
 import ko = require("knockout");
 import * as moment from "moment";
+import { AnimationSettings } from "poker/table/animationsettings";
 import { App } from "./app";
-import { AppConfig, overrideConfiguration } from "./appconfig";
+import { AppConfig, appConfig, overrideConfiguration } from "./appconfig";
+export { overrideConfiguration } from "./appconfig";
 import { registerBindings } from "./bindings";
+export { registerBindings } from "./bindings";
 import { registerComponents } from "./components/registration";
+export { registerComponents } from "./components/registration";
 import { debugSettings } from "./debugsettings";
 import { registerExtenders } from "./extenders";
+export { registerExtenders } from "./extenders";
 import { _ } from "./languagemanager";
 import { ActionBlock } from "./table/actionBlock";
 import { exposeCardsConstants } from "./table/cardsHelper";
@@ -14,7 +19,6 @@ import { TableView } from "./table/tableview";
 import { updateDefaultMessages } from "./validationConfiguration";
 
 declare const host: string;
-declare const appInsights: Client;
 
 function isStandaloneSupported() {
     return ("standalone" in window.navigator);
@@ -26,19 +30,63 @@ function isRunningStandalone() {
         || ("standalone" in window.navigator && window.navigator["standalone"] === true));
 }
 
-export function bootstrap(localConfiguration?: Partial<AppConfig>) {
+export function configureBindings() {
+    // tslint:disable:no-string-literal
+    const currencySymbolHandler = ko.bindingHandlers["currencySymbol"] as any;
+    if (appConfig.ui.realMoneyCurrencySymbol) {
+        currencySymbolHandler.moneySymbol = appConfig.ui.realMoneyCurrencySymbol;
+    }
+
+    if (appConfig.ui.gameMoneySymbol) {
+        currencySymbolHandler.chipsSymbol = appConfig.ui.gameMoneySymbol;
+    }
+
+    const betHandler = ko.bindingHandlers["bet"] as any;
+    if (appConfig.ui.useShortMoneyRepresentationForBets) {
+        betHandler.useShortMoneyRepresentationForBets = true;
+    }
+
+    if (appConfig.ui.minConvertibleToSIBetValue) {
+        betHandler.minConvertibleValue = appConfig.ui.minConvertibleToSIBetValue;
+    }
+
+    if (appConfig.ui.moneyFractionalSeparator) {
+        betHandler.moneyFractionalSeparator = appConfig.ui.moneyFractionalSeparator;
+    }
+
+    if (appConfig.ui.moneySeparator) {
+        betHandler.moneySeparator = appConfig.ui.moneySeparator;
+    }
+
+    if (appConfig.ui.fractionalDigitsCount) {
+        betHandler.fractionalDigitsCount = appConfig.ui.fractionalDigitsCount;
+    }
+
+    const numericTextHandler: any = ko.bindingHandlers["numericText"];
+    numericTextHandler.defaultPositions = 0;
+    if (appConfig.ui.moneySeparator) {
+        numericTextHandler.separator = appConfig.ui.moneySeparator;
+    }
+}
+
+export function registerTableView() {
+    window["TableView"] = TableView;
+    window["ActionBlock"] = ActionBlock;
+}
+
+export function bootstrap(localConfiguration?: Partial<AppConfig>, animationSettingsOverride?: Partial<AnimationSettings>) {
     overrideConfiguration(localConfiguration || {});
+    AnimationSettings.setOverride(animationSettingsOverride || {});
 
     // tslint:disable:no-string-literal
     window["ko"] = ko;
-    window["TableView"] = TableView;
-    window["ActionBlock"] = ActionBlock;
     // tslint:enable:no-string-literal
 
     // Enable hammer events on whole document
     Hammer(document);
 
     registerBindings();
+    configureBindings();
     registerExtenders();
     registerComponents();
     updateDefaultMessages();
@@ -56,10 +104,6 @@ export function bootstrap(localConfiguration?: Partial<AppConfig>) {
     $.connection.hub.url = baseUrl + "/signalr";
     $.connection.hub.logging = false;
     // GameActionsQueue.waitDisabled = true;
-    // tslint:disable-next-line:no-string-literal
-    const numericTextHandler: any = ko.bindingHandlers["numericText"];
-    numericTextHandler.defaultPositions = 0;
-    numericTextHandler.separator = ",";
     moment.locale("ru");
 
     // This function prevents the rotation from
@@ -89,14 +133,20 @@ export function bootstrap(localConfiguration?: Partial<AppConfig>) {
         }
 
         // tslint:disable-next-line:no-string-literal
-        window["appInsights"].trackException(error, "window.onerror");
+        if (window["appInsights"]) {
+            // tslint:disable-next-line:no-string-literal
+            window["appInsights"].trackException(error, "window.onerror");
+        }
     };
     window.addEventListener("unhandledrejection", function (event: any) {
         console.log("Unhandled promise rejection");
         if (event) {
             console.error(event);
             // tslint:disable-next-line:no-string-literal
-            window["appInsights"].trackException(event.reason, "Promise");
+            if (window["appInsights"]) {
+                // tslint:disable-next-line:no-string-literal
+                window["appInsights"].trackException(event.reason, "Promise");
+            }
         } else {
             console.log("No promise rejection reason specified.");
         }
@@ -107,7 +157,10 @@ export function bootstrap(localConfiguration?: Partial<AppConfig>) {
         if (error) {
             console.error(error);
             // tslint:disable-next-line:no-string-literal
-            window["appInsights"].trackException(error, "Knockout");
+            if (window["appInsights"]) {
+                // tslint:disable-next-line:no-string-literal
+                window["appInsights"].trackException(error, "Knockout");
+            }
         } else {
             console.log("No KO error specified.");
         }
@@ -122,5 +175,3 @@ export function bootstrap(localConfiguration?: Partial<AppConfig>) {
         }
     }
 }
-
-// bootstrap();

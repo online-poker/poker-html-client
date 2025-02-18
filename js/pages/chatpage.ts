@@ -7,21 +7,20 @@ import { connectionService, keyboardActivationService } from "../services";
 import { PlayerMessage } from "../table/playerMessage";
 import * as timeService from "../timeservice";
 
-declare var host: string;
-declare var app: App;
+declare const host: string;
+declare const app: App;
 
 export class ChatPage implements Page {
-    public currentMessage: KnockoutObservable<string>;
-    public messages: KnockoutObservableArray<PlayerMessage>;
-    public loading: KnockoutObservable<boolean>;
+    public currentMessage: ko.Observable<string>;
+    public messages: ko.ObservableArray<PlayerMessage>;
+    public loading: ko.Observable<boolean>;
     public timeoutHandler: number = 0;
 
     constructor() {
         this.currentMessage = ko.observable<string>();
         this.messages = ko.observableArray<PlayerMessage>([]);
         this.loading = ko.observable(false);
-        const self = this;
-        connectionService.newConnection.add(function() {
+        connectionService.newConnection.add(() => {
             const chatHub = connectionService.currentConnection.connection.createHubProxy("chat");
             const handler = (...msg: any[]) => {
                 const messageId = msg[0];
@@ -34,13 +33,13 @@ export class ChatPage implements Page {
                     return;
                 }
 
-                self.loading(false);
-                self.addMessage(messageId, sender, message);
+                this.loading(false);
+                this.addMessage(messageId, sender, message);
             };
             chatHub.on("Message", handler);
-            connectionService.terminatedConnection.addOnce(function() {
+            connectionService.terminatedConnection.addOnce(function () {
                 chatHub.off("Message", handler);
-            }, self, 0);
+            }, this, 0);
         });
     }
     public deactivate() {
@@ -49,11 +48,10 @@ export class ChatPage implements Page {
         }
     }
     public activate() {
-        const self = this;
         this.loading(true);
-        this.timeoutHandler = timeService.setTimeout(function() {
-            self.loading(false);
-            self.timeoutHandler = 0;
+        this.timeoutHandler = timeService.setTimeout(() => {
+            this.loading(false);
+            this.timeoutHandler = 0;
         }, 2000);
     }
     public back() {

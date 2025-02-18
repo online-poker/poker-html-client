@@ -7,22 +7,22 @@ import { keyboardActivationService } from "../services";
 import { settings } from "../settings";
 import { PopupBase } from "../ui/popupbase";
 
-declare var app: App;
+declare const app: App;
 
 export class AuthPopup extends PopupBase {
-    public login: KnockoutObservable<string>;
-    public password: KnockoutObservable<string>;
+    public login: ko.Observable<string>;
+    public password: ko.Observable<string>;
     public validationLogin = ko.observable<string>().extend({ required: true, maxLength: 12 });
     public validationPassword = ko.observable<string>().extend({ required: true, maxLength: 16 });
-    public errorMessage: KnockoutObservable<string>;
-    public rememberMe: KnockoutObservable<boolean>;
-    public allowSelfRegistration: KnockoutObservable<boolean>;
-    public allowRememberMe: KnockoutObservable<boolean>;
-    public allowPasswordRecovery: KnockoutObservable<boolean>;
+    public errorMessage: ko.Observable<string>;
+    public rememberMe: ko.Observable<boolean>;
+    public allowSelfRegistration: ko.Observable<boolean>;
+    public allowRememberMe: ko.Observable<boolean>;
+    public allowPasswordRecovery: ko.Observable<boolean>;
 
-    public errors: KnockoutValidationErrors;
-    public loading: KnockoutObservable<boolean>;
-    private validationModel: KnockoutObservable<AuthPopup>;
+    public errors: ko.ValidationErrors;
+    public loading: ko.Observable<boolean>;
+    private validationModel: ko.Observable<this>;
 
     constructor() {
         super();
@@ -45,7 +45,6 @@ export class AuthPopup extends PopupBase {
         super.shown(args);
     }
     public async logon() {
-        const self = this;
         if (authManager.authenticated()) {
             return;
         }
@@ -60,27 +59,27 @@ export class AuthPopup extends PopupBase {
 
         if (!this.loading()) {
             this.loading(true);
-            const login = this.login();
+            const login = this.login().trim();
             const password = this.password();
             const rememberMe = this.rememberMe();
-            self.errorMessage(null);
+            this.errorMessage(null);
             try {
                 const result = await authManager.authenticate(login, password, rememberMe);
                 if (result === "Ok") {
-                    self.login(null);
-                    self.password(null);
+                    this.login(null);
+                    this.password(null);
                     keyboardActivationService.forceHideKeyboard();
-                    self.close();
+                    this.close();
                 } else {
                     // Report authentication or authorization errors
                     if (result) {
-                        self.errorMessage(_("errors." + result));
+                        this.errorMessage(_("errors." + result));
                     } else {
-                        self.errorMessage(_("auth.unspecifiedError"));
+                        this.errorMessage(_("auth.unspecifiedError"));
                     }
                 }
             } finally {
-                self.loading(false);
+                this.loading(false);
             }
         }
     }

@@ -1,8 +1,8 @@
-﻿import { TableReload } from "@poker/api-server";
+﻿import { TableReload, TableReloadInformation } from "@poker/api-server";
 import { authManager } from "poker/authmanager";
 import { appConfig } from "../appconfig";
 
-declare var host: string;
+declare const host: string;
 
 export class AppReloadService {
     public async getReload(tableId: number) {
@@ -27,7 +27,7 @@ export class AppReloadService {
             console.log("Normal reload requested.");
             if (appConfig.game.seatMode) {
                 const seatId = parseInt(authManager.login().replace("Игрок", ""), 10);
-                const propertyName = `seat${seatId}Reloaded`;
+                const propertyName: keyof TableReloadInformation = `seat${seatId}Reloaded` as any;
                 if (reloadData[propertyName] === false) {
                     console.log(`Reloading seat ${seatId}.`);
                     const api = this.getApi();
