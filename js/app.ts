@@ -1265,23 +1265,16 @@ export class App {
         slowInternetService.manualDisconnect = false;
         tableManager.connectTables();
         tableManager.connectTournaments();
-        const connection = wrapper.connection;
         try {
             this.logEvent("Joining lobby chat.");
-            connection.Chat.server.join(0);
+            wrapper.joinChat(0);
         } catch (error) {
             console.log(error);
             throw new Error("Could not join chat after establishingConnection");
         }
 
         this.logEvent("Listening lobby chat messages.");
-        const chatHub = connection.createHubProxy("chat");
-        chatHub.on("Message", function(...msg: any[]) {
-            const messageId = msg[0];
-            const tableId = msg[1];
-            const type = msg[2];
-            const sender = msg[3];
-            const message = msg[4];
+        wrapper.onMessage(function(messageId, tableId, type, sender, message) {
             if (tableId !== 0) {
                 return;
             }

@@ -49,7 +49,7 @@ export class ChatControl {
                 return;
             }
 
-            wrapper.connection.Chat.server.join(this.tableId());
+            wrapper.joinChat(this.tableId());
         });
         this.timeoutHandler = timeService.setTimeout(() => {
             this.loading(false);
@@ -62,7 +62,7 @@ export class ChatControl {
                 return;
             }
 
-            wrapper.connection.Chat.server.leave(this.tableId());
+            wrapper.leaveChat(this.tableId());
         });
         this.messages([]);
         if (this.timeoutHandler !== 0) {

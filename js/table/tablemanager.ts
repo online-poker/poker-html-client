@@ -606,8 +606,7 @@ export class TableManager {
     }
 
     private initializeChatHub(wrapper: ConnectionWrapper) {
-        const chatHub = wrapper.connection.Chat;
-        chatHub.client.ChatConnected = (tableId, lastMessageId) => {
+        wrapper.onChatConnected((tableId, lastMessageId) => {
             if (wrapper.terminated) {
                 return;
             }
@@ -619,8 +618,8 @@ export class TableManager {
             }
 
             tableView.lastMessageId = lastMessageId;
-        };
-        chatHub.client.Message = (messageId, tableId, type, sender, message) => {
+        });
+        wrapper.onMessage((messageId, tableId, type, sender, message) => {
             if (wrapper.terminated) {
                 return;
             }
@@ -642,8 +641,8 @@ export class TableManager {
             if (type === "B") {
                 broadcastService.displayMessage(message);
             }
-        };
-        chatHub.client.MessageChanged = (messageId, tableId, type, sender, message) => {
+        });
+        wrapper.onMessageChanged((messageId, tableId, type, sender, message) => {
             if (wrapper.terminated) {
                 return;
             }
@@ -661,7 +660,7 @@ export class TableManager {
             if (type === "S") {
                 tableView.updateSystemMessage(messageId, message);
             }
-        };
+        });
     }
     private initializeGameHub(wrapper: ConnectionWrapper) {
         const gameHub = wrapper.connection.Game;

@@ -143,7 +143,7 @@ export class TournamentView {
         // this.connecting(true);
         const currentLoadingRequest = $.Deferred();
         const wrapper = connectionService.currentConnection;
-        let hubId = wrapper.connection.id;
+        let hubId = wrapper.getConnectionId();
         const connectionInfo = "HID:" + hubId;
         this.log("Connecting to tournament " + this.tournamentId + " on connection " + connectionInfo);
         const startConnection = app.buildStartConnection();
@@ -152,7 +152,7 @@ export class TournamentView {
                 return;
             }
 
-            hubId = wrapper.connection.id;
+            hubId = wrapper.getConnectionId();
             this.log("Attempting to connect to table and chat over connection " + hubId);
 
             const joinTournamentRequest = this.joinTournament(wrapper);
@@ -200,7 +200,7 @@ export class TournamentView {
             return result;
         }
 
-        const hubId = connectionService.currentConnection.connection.id;
+        const hubId = connectionService.currentConnection.getConnectionId();
         const connectionInfo = "HID:" + hubId;
         this.log("Joining tournament on connection " + connectionInfo);
         let cancelled = false;
@@ -216,10 +216,10 @@ export class TournamentView {
                 return;
             }
 
-            const connectionId = wrapper.connection.id;
-            const connectionState = wrapper.connection.state;
+            const connectionId = wrapper.getConnectionId();
+            const connectionState = wrapper.getConnectionState();
             this.log(`Executing Game.subscribeTournament on connection ${connectionId} in state ${connectionState}`);
-            const operation = wrapper.connection.Game.server.subscribeTournament(this.tournamentId)
+            const operation = wrapper.subscribeTournament(this.tournamentId)
                 .then(function() {
                     if (wrapper.terminated) {
                         cancelOperation();
