@@ -823,7 +823,7 @@ export class TableView {
             return;
         }
 
-        let hubId = wrapper.connection.id;
+        let hubId = wrapper.getConnectionId();
         const connectionInfo = "HID:" + hubId;
         this.log("Connecting to table " + this.tableId + " on connection " + connectionInfo);
         const startConnection = app.buildStartConnection();
@@ -839,7 +839,7 @@ export class TableView {
                 return;
             }
 
-            hubId = wrapper.connection.id;
+            hubId = wrapper.getConnectionId();
             this.log("Attempting to connect to table and chat over connection " + hubId);
 
             const joinTableRequest = this.joinTable(wrapper);
@@ -904,7 +904,7 @@ export class TableView {
             return result;
         }
 
-        const hubId = connectionService.currentConnection.connection.id;
+        const hubId = connectionService.currentConnection.getConnectionId();
         const connectionInfo = "HID:" + hubId;
         this.log("Joining table on connection " + connectionInfo);
         let cancelled = false;
@@ -920,8 +920,8 @@ export class TableView {
                 return;
             }
 
-            this.log(`Executing Game.join on connection ${wrapper.connection.id} in state ${wrapper.connection.state}`);
-            const operation = wrapper.connection.Game.server.join(this.tableId)
+            this.log(`Executing Game.join on connection ${wrapper.getConnectionId()} in state ${wrapper.getConnectionState()}`);
+            const operation = wrapper.joinTable(this.tableId)
                 .then(function () {
                     if (wrapper.terminated) {
                         cancelOperation();
@@ -986,8 +986,8 @@ export class TableView {
                 return;
             }
 
-            this.log(`Executing Game.join on connection ${wrapper.connection.id} in state ${wrapper.connection.state}`);
-            const operation = wrapper.connection.Chat.server.join(this.tableId)
+            this.log(`Executing Game.join on connection ${wrapper.getConnectionId()} in state ${wrapper.getConnectionState()}`);
+            const operation = wrapper.joinChat(this.tableId)
                 .then(function () {
                     if (wrapper.terminated) {
                         cancelOperation();
@@ -2049,7 +2049,7 @@ export class TableView {
         const gameApi = this.apiProvider.getGame();
         if (appConfig.game.useSignalR) {
             // TODO: We should provide notification, which will return any error from the server.
-            connectionService.currentConnection.connection.Game.server.fold(this.tableId);
+            connectionService.currentConnection.fold(this.tableId);
         } else {
             try {
                 const data = await gameApi.fold(this.tableId);
@@ -2077,7 +2077,7 @@ export class TableView {
         const gameApi = this.apiProvider.getGame();
         if (appConfig.game.useSignalR) {
             // TODO: We should provide notification, which will return any error from the server.
-            connectionService.currentConnection.connection.Game.server.checkOrCall(this.tableId);
+            connectionService.currentConnection.checkOrCall(this.tableId);
         } else {
             try {
                 const data = await gameApi.checkOrCall(this.tableId);
@@ -2106,7 +2106,7 @@ export class TableView {
         const amount: number = this.currentRaise() - this.currentBet();
         if (appConfig.game.useSignalR) {
             // TODO: We should provide notification, which will return any error from the server.
-            connectionService.currentConnection.connection.Game.server.betOrRaise(this.tableId, amount);
+            connectionService.currentConnection.betOrRaise(this.tableId, amount);
         } else {
             try {
                 const data = await gameApi.betOrRaise(this.tableId, amount);

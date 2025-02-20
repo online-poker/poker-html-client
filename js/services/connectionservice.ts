@@ -5,8 +5,9 @@ import * as $ from "jquery";
 import * as signals from "signals";
 import { debugSettings } from "../debugsettings";
 import { CancelToken } from "./cancelToken";
-import { ConnectionWrapper } from "./connectionwrapper";
+import { ConnectionWrapper, SignalRConnectionWrapper } from "./connectionwrapper";
 import { slowInternetService } from "./index";
+import * as signalR from "@microsoft/signalr";
 
 type CancelConnectionCallback = (reason: string) => void;
 
@@ -46,6 +47,13 @@ export class ConnectionService {
             return;
         }
 
+        if (false) {
+            const connectionNew = new signalR.HubConnectionBuilder()
+                .withUrl(baseUrl)
+                .configureLogging($.connection.hub.logging ? signalR.LogLevel.Trace : signalR.LogLevel.Information)
+                .build();
+        }
+
         const connection = $.hubConnection(baseUrl);
         connection.logging = $.connection.hub.logging;
         const authToken = getAuthToken();
@@ -56,7 +64,7 @@ export class ConnectionService {
         }
 
         this.isDisconnected = true;
-        this.currentConnection = new ConnectionWrapper(connection);
+        this.currentConnection = new SignalRConnectionWrapper(connection);
         $.extend(connection, connection.createHubProxies());
         this.newConnection.dispatch(this.currentConnection);
     }
@@ -70,13 +78,7 @@ export class ConnectionService {
             return;
         }
 
-        let hubId: string;
-        if (this.currentConnection.connection !== null) {
-            hubId = this.currentConnection.connection.id;
-        } else {
-            hubId = "NULL";
-        }
-
+        const hubId = this.currentConnection.getConnectionId();
         const connectionInfo = "HID:" + hubId;
         this.logEvent("Terminating connection " + connectionInfo);
         const oldConnection = this.currentConnection;

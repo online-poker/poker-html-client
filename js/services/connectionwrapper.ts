@@ -5,8 +5,34 @@ import * as timeService from "../timeservice";
 import { CancelToken } from "./cancelToken";
 import { ConnectionService } from "./connectionservice";
 import { connectionService, slowInternetService } from "./index";
+import * as signalR from "@microsoft/signalr";
 
-export class ConnectionWrapper {
+export interface ConnectionWrapper {
+    terminated: boolean;
+    connection: SignalR.Hub.Connection;
+    getConnectionId(): string;
+    getConnectionState(): number;
+    establishConnection(maxAttempts?: number): JQueryDeferred<ConnectionWrapper>;
+    establishConnectionAsync(maxAttempts?: number, cancellationToken?: CancelToken): Promise<ConnectionWrapper>;
+    terminateConnection(forceDisconnect?: boolean): void;
+    buildStartConnection() : () => Promise<void>;
+    buildStartConnectionAsync() : Promise<void>;
+    // Chat hub wrapper
+    onChatConnected(handler: (tableId: number, lastMessageId: number) => void): void;
+    onMessage(handler: (messageId: number, tableId: number, type: string, sender: string, message: string) => void): void;
+    onMessageChanged(handler: (messageId: number, tableId: number, type: string, sender: string, message: string) => void): void;
+    joinChat(tableId: number): Promise<void>;
+    leaveChat(tableId: number): Promise<void>;
+
+    // Game hub wrapper
+    subscribeTournament(tournamentId: number): Promise<void>;
+    joinTable(tableId: number): Promise<void>;
+    fold(tableId: number): Promise<void>;
+    checkOrCall(tableId: number): Promise<void>;
+    betOrRaise(tableId: number, amount: number): Promise<void>;
+}
+
+export class SignalRConnectionWrapper implements ConnectionWrapper {
     public terminated = false;
     private refreshHandle: number | null = null;
     constructor(public connection: SignalR.Hub.Connection) {
@@ -102,6 +128,18 @@ export class ConnectionWrapper {
             console.warn(error);
         });
     }
+
+    public getConnectionId() {
+        if (this.connection !== null) {
+            return this.connection.id;
+        } else {
+            return "NULL";
+        }
+    }
+
+    public getConnectionState() {
+        return this.connection.state;
+    }
     public terminateConnection(forceDisconnect = false) {
         const hubId = this.connection.id;
         const connectionInfo = "HID:" + hubId;
@@ -123,7 +161,7 @@ export class ConnectionWrapper {
         const result = this.establishConnectionCore(maxAttempts);
         return result;
     }
-    public async establishConnectionAsync(maxAttempts = 3, cancellationToken?: CancelToken) {
+    public async establishConnectionAsync(maxAttempts = 3, cancellationToken?: CancelToken): Promise<ConnectionWrapper> {
         const attempts = connectionService.attempts++;
         connectionService.lastAttempt = attempts;
         return await this.establishConnectionCoreAsync(maxAttempts, cancellationToken);
@@ -238,6 +276,36 @@ export class ConnectionWrapper {
 
         return await tryConnection(30);
     }
+    public onChatConnected(handler: (tableId: number, lastMessageId: number) => void): void {
+        this.connection.Chat.client.ChatConnected = handler;
+    }
+    public onMessage(handler: (messageId: number, tableId: number, type: string, sender: string, message: string) => void): void {
+        this.connection.Chat.client.Message = handler;
+    }
+    public onMessageChanged(handler: (messageId: number, tableId: number, type: string, sender: string, message: string) => void): void {
+        this.connection.Chat.client.MessageChanged = handler;
+    }
+    public joinChat(tableId: number): Promise<void> {
+        return this.connection.Chat.server.join(tableId);
+    }
+    public leaveChat(tableId: number): Promise<void> {
+        return this.connection.Chat.server.leave(tableId);
+    }
+    public joinTable(tableId: number): Promise<void> {
+        return this.connection.Game.server.join(tableId);
+    }
+    public subscribeTournament(tournamentId: number): Promise<void> {
+        return this.connection.Game.server.subscribeTournament(tournamentId);
+    }
+    public fold(tableId: number): Promise<void> {
+        return this.connection.Game.server.fold(tableId);
+    }
+    public checkOrCall(tableId: number): Promise<void> {
+        return this.connection.Game.server.checkOrCall(tableId);
+    }
+    public betOrRaise(tableId: number, amount: number): Promise<void> {
+        return this.connection.Game.server.betOrRaise(tableId, amount);
+    }
     private onConnectionStateChanged(state: SignalR.StateChanged) {
         this.logEvent("SignalR state changed from: " + ConnectionService.stateConversion[state.oldState as 0|1|2|4]
             + " to: " + ConnectionService.stateConversion[state.newState as 0|1|2|4]);
@@ -296,7 +364,7 @@ export class ConnectionWrapper {
         });
         return result;
     }
-    private async establishConnectionCoreAsync(maxAttempts: number, cancellationToken?: CancelToken) {
+    private async establishConnectionCoreAsync(maxAttempts: number, cancellationToken?: CancelToken): Promise<ConnectionWrapper> {
         if (maxAttempts <= 0) {
             this.logEvent("Stop connection attempts");
             slowInternetService.onDisconnected();
@@ -318,7 +386,7 @@ export class ConnectionWrapper {
             const hubId = this.connection.id;
             const connectionInfo = "HID:" + hubId;
             this.logEvent("Connected to server! Connection " + connectionInfo);
-            return this;
+            return this as ConnectionWrapper;
         } catch (e: any) {
             this.logEvent("Could not Connect!" + e.message);
             return new Promise<ConnectionWrapper>((resolve, reject) => {

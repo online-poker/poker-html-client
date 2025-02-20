@@ -69,6 +69,7 @@
     "webpack-cli": "5.1.4"
   },
   "dependencies": {
+    "@microsoft/signalr": "^8.0.7",
     "@poker/api-server": "0.1.0-dev.20231113120601",
     "@types/applicationinsights-js": "^1.0.5",
     "iframe-touch-relay": "^0.1.2",
