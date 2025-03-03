@@ -209,11 +209,8 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         app.tabBar.visible(true);
         app.tabBar.select("tables", false);
         app.processing(true);
-        const oldColor = $(".progress-background").css("background-color");
-        $(".progress-background").css("background-color", "black");
         timeService.setTimeout(() => {
             app.processing(false);
-            $(".progress-background").css("background-color", oldColor);
         }, 500);
         /* tslint:disable:no-string-literal no-unused-expression */
         window["StatusBar"] && StatusBar.show();
