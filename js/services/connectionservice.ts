@@ -7,7 +7,6 @@ import { debugSettings } from "../debugsettings";
 import { CancelToken } from "./cancelToken";
 import { ConnectionWrapper, SignalRConnectionWrapper } from "./connectionwrapper";
 import { slowInternetService } from "./index";
-import * as signalR from "@microsoft/signalr";
 
 type CancelConnectionCallback = (reason: string) => void;
 
@@ -45,13 +44,6 @@ export class ConnectionService {
     public initializeConnection() {
         if (this.currentConnection !== null) {
             return;
-        }
-
-        if (false) {
-            const connectionNew = new signalR.HubConnectionBuilder()
-                .withUrl(baseUrl)
-                .configureLogging($.connection.hub.logging ? signalR.LogLevel.Trace : signalR.LogLevel.Information)
-                .build();
         }
 
         const connection = $.hubConnection(baseUrl);
