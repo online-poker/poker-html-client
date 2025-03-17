@@ -105,6 +105,7 @@ export class AppConfig {
         debugTouches: false,
         touchToggleCards: false,
         fastTouch: false,
+        advancedBets: false,
     };
 }
 

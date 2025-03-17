@@ -142,6 +142,7 @@ export class TableSlider {
     public setStep(step: number) {
         this.step = step;
     }
+    public getStep() { return this.step; }
     public increase() {
         let current = this.current();
         current = Math.min(current + this.step, this.maximum());
@@ -151,6 +152,11 @@ export class TableSlider {
     public decrease() {
         let current = this.current();
         current = Math.max(current - this.step, this.minimum());
+        this.current(current);
+        this.position.notifySubscribers();
+    }
+    public setValueSafe(value: number) {
+        const current = Math.min(value, this.maximum());
         this.current(current);
         this.position.notifySubscribers();
     }

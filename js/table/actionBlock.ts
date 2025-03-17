@@ -212,6 +212,25 @@ export class ActionBlock {
      */
     public gameFinished: ko.Observable<boolean>;
 
+    /**
+     * Indicate whether this action block allow advanced bet placing mode.
+     */
+    public advancedModeAllowed = ko.observable(appConfig.ui.advancedBets);
+
+    /**
+     * Indicate whether this action block displayed advanced bet UI buttons.
+     */
+    public advancedBetUIOpened = ko.observable(false);
+
+    public increaseStep1Amount: ko.Computed<number>;
+    public increaseStep2Amount: ko.Computed<number>;
+    public increaseStep3Amount: ko.Computed<number>;
+    public increaseStep4Amount: ko.Computed<number>;
+    public increaseStep1Caption: ko.Computed<string>;
+    public increaseStep2Caption: ko.Computed<string>;
+    public increaseStep3Caption: ko.Computed<string>;
+    public increaseStep4Caption: ko.Computed<string>;
+
     public cardsOverlayVisible = ko.observable(true);
 
     private myPlayerWasInGame: ko.Observable<boolean>;
@@ -267,6 +286,15 @@ export class ActionBlock {
         this.button2Amount = ko.observable(0);
         this.button3Amount = ko.observable(0);
 
+        this.increaseStep1Amount = ko.pureComputed(() => this.tableView.minimalBuyIn());
+        this.increaseStep1Caption = ko.pureComputed(() => _("table.increaseStep1", { amount: this.increaseStep1Amount() }));
+        this.increaseStep2Amount = ko.pureComputed(() => this.tableView.minimalBuyIn() * 5);
+        this.increaseStep2Caption = ko.pureComputed(() => _("table.increaseStep2", { amount: this.increaseStep2Amount() }));
+        this.increaseStep3Amount = ko.pureComputed(() => this.tableView.minimalBuyIn() * 10);
+        this.increaseStep3Caption = ko.pureComputed(() => _("table.increaseStep3", { amount: this.increaseStep3Amount() }));
+        this.increaseStep4Amount = ko.pureComputed(() => this.tableView.minimalBuyIn() * 50);
+        this.increaseStep4Caption = ko.pureComputed(() => _("table.increaseStep4", { amount: this.increaseStep3Amount() }));
+
         this.foldExecuted = new signals.Signal();
         this.checkOrCallExecuted = new signals.Signal();
         this.betOrRaiseExecuted = new signals.Signal();
@@ -280,9 +308,8 @@ export class ActionBlock {
                 return false;
             }
 
-            // tslint:disable-next-line:no-unused-variable
             const maxAmountOfMoneyForOtherActivePlayers = this.maxAmountOfMoneyForOtherActivePlayers();
-            const otherPlayersHasMoneyToSupport = this.maxAmountOfMoneyForOtherActivePlayers() > this.callAmount();
+            const otherPlayersHasMoneyToSupport = maxAmountOfMoneyForOtherActivePlayers > this.callAmount();
             return otherPlayersHasMoneyToSupport;
         });
         this.isAllInDuringCheckOrCall = ko.computed(() => {
@@ -621,6 +648,46 @@ export class ActionBlock {
 
         this.expanded(false);
         this.betOrRaiseExecuted.dispatch();
+    }
+    public toggleAdvancedBetUI() {
+        if (!this.advancedModeAllowed()) {
+            return;
+        }
+        this.advancedBetUIOpened(!this.advancedBetUIOpened());
+    }
+    public closeAdvancedBetUI() {
+        if (!this.advancedModeAllowed()) {
+            return;
+        }
+        this.advancedBetUIOpened(false);
+    }
+    public openAdvancedBetUI() {
+        if (!this.advancedModeAllowed()) {
+            return;
+        }
+        this.advancedBetUIOpened(true);
+    }
+    public resetBetOrRaise() {
+        this.tableSlider.currentValue(this.tableView.minimumRaiseAmount().toString());
+    }
+    public increaseBetOrRaiseScale1() {
+        const nextValue = this.tableSlider.current() + this.increaseStep1Amount()
+        this.tableSlider.setValueSafe(nextValue);
+    }
+    public increaseBetOrRaiseScale2() {
+        const nextValue = this.tableSlider.current() + this.increaseStep2Amount();
+        this.tableSlider.setValueSafe(nextValue);
+    }
+    public increaseBetOrRaiseScale3() {
+        const nextValue = this.tableSlider.current() + this.increaseStep3Amount();
+        this.tableSlider.setValueSafe(nextValue);
+    }
+    public increaseBetOrRaiseScale4() {
+        const nextValue = this.tableSlider.current() + this.increaseStep4Amount();
+        this.tableSlider.setValueSafe(nextValue);
+    }
+    public setAllIn() {
+        this.tableSlider.currentValue(this.maxAmountOfMoneyForOtherActivePlayers().toString());
     }
     public showChatPopup() {
         app.tableChatPopup.attach(this.tableView);
