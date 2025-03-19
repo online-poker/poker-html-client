@@ -102,11 +102,13 @@ export class ActionBlock {
     public maxAmountOfMoneyForOtherActivePlayers: ko.Observable<number>;
 
     public callAmount: ko.Observable<number>;
+    public increasesCount: ko.Observable<number>;
     public playerMoney: ko.Observable<number>;
     public couldRaise: ko.Computed<boolean>;
     public checkCallButtonCaption: ko.Computed<string>;
     public raiseBetButtonCaption: ko.Computed<string>;
     public checkOrCallAmount: ko.Observable<number>;
+    public currentRaiseAmount: ko.Computed<number>;
     public notMyTurn: ko.Observable<boolean>;
     public isInGame: ko.Observable<boolean>;
     public button1Caption: ko.Observable<string>;
@@ -230,6 +232,7 @@ export class ActionBlock {
     public increaseStep2Caption: ko.Computed<string>;
     public increaseStep3Caption: ko.Computed<string>;
     public increaseStep4Caption: ko.Computed<string>;
+    public closeOrResetBetOrRaiseCaption: ko.Computed<string>;
 
     public cardsOverlayVisible = ko.observable(true);
 
@@ -247,6 +250,8 @@ export class ActionBlock {
         this.isCheck = ko.observable(false);
         this.isRaise = ko.observable(true);
         this.callAmount = ko.observable(0);
+        this.currentRaiseAmount = ko.computed(() => this.tableSlider.current());
+        this.increasesCount = ko.observable(0);
         this.playerMoney = ko.observable(0);
         this.supportDirectAmount = ko.observable(false);
         this.supportAny = ko.observable(false);
@@ -294,6 +299,8 @@ export class ActionBlock {
         this.increaseStep3Caption = ko.pureComputed(() => _("table.increaseStep3", { amount: this.increaseStep3Amount() }));
         this.increaseStep4Amount = ko.pureComputed(() => this.tableView.minimalBuyIn() * 50);
         this.increaseStep4Caption = ko.pureComputed(() => _("table.increaseStep4", { amount: this.increaseStep3Amount() }));
+        this.closeOrResetBetOrRaiseCaption = ko.pureComputed(() => 
+            this.tableSlider.current() > this.tableView.minimumRaiseAmount() ? _("table.resetBetOrRaise") : _("table.closeAdvancedBetUI"));
 
         this.foldExecuted = new signals.Signal();
         this.checkOrCallExecuted = new signals.Signal();
@@ -668,23 +675,39 @@ export class ActionBlock {
         this.advancedBetUIOpened(true);
     }
     public resetBetOrRaise() {
+        this.increasesCount(0);
         this.tableSlider.currentValue(this.tableView.minimumRaiseAmount().toString());
+    }
+    public closeOrResetBetOrRaise() {
+        if (!this.advancedModeAllowed()) {
+            return;
+        }
+
+        if (this.tableSlider.current() > this.tableView.minimumRaiseAmount()) {
+            this.resetBetOrRaise();
+        } else {
+            this.advancedBetUIOpened(false);
+        }
     }
     public increaseBetOrRaiseScale1() {
         const nextValue = this.tableSlider.current() + this.increaseStep1Amount()
         this.tableSlider.setValueSafe(nextValue);
+        this.increasesCount(this.increasesCount() + 1);
     }
     public increaseBetOrRaiseScale2() {
         const nextValue = this.tableSlider.current() + this.increaseStep2Amount();
         this.tableSlider.setValueSafe(nextValue);
+        this.increasesCount(this.increasesCount() + 1);
     }
     public increaseBetOrRaiseScale3() {
         const nextValue = this.tableSlider.current() + this.increaseStep3Amount();
         this.tableSlider.setValueSafe(nextValue);
+        this.increasesCount(this.increasesCount() + 1);
     }
     public increaseBetOrRaiseScale4() {
         const nextValue = this.tableSlider.current() + this.increaseStep4Amount();
         this.tableSlider.setValueSafe(nextValue);
+        this.increasesCount(this.increasesCount() + 1);
     }
     public setAllIn() {
         this.tableSlider.currentValue(this.maxAmountOfMoneyForOtherActivePlayers().toString());
