@@ -249,7 +249,7 @@ export function registerBindings() {
         },
     };
     function preventDefaultEvents(evt: Event) {
-        if (evt.originalEvent.gesture) {
+        if (evt.originalEvent && evt.originalEvent.gesture) {
             evt.originalEvent.gesture.stopPropagation();
             evt.originalEvent.gesture.preventDefault();
         }
