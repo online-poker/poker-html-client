@@ -505,7 +505,7 @@ function decodeCoordinates(element: HTMLElement, x: number, y: number) {
         }
         
         if (appConfig.ui.debugTouches) {
-            console.log("Element ", element, " has angle ", angle, `. (${clientX},${clientY}) => (${result.clientX},${result.clientY})`);
+            console.log("Element ", element, " has angle ", angle, `. (${x},${y}) => (${result.clientX},${result.clientY})`);
         }
 
         return result;
