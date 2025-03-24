@@ -167,12 +167,60 @@ describe("advanced bet buttons", function () {
             view1.onBet(1, 2, 20, 2);
             await drainQueue(view1.queue);
             view1.actionBlock.openAdvancedBetUI();
+            expect(view1.actionBlock.advancedBetUIOpened()).toEqual(true);
+            view1.actionBlock.closeOrResetBetOrRaise();
+            expect(view1.actionBlock.advancedBetUIOpened()).toEqual(false);
+        });
+        it("clear/close advanced ui after increase", async function () {
+            const view1 = getTestTableView();
+            view1.currentLogin("Player2");
+            const actionBlock = view1.actionBlock;
+            await simpleInitialization(view1, 1, [400, 200]);
+            login("Player2");
+            loginId(2);
+            authenticated(true);
+            expect(view1.myPlayer() != null).toBeTruthy();
+            // blinds
+            log("Blinds round started");
+            view1.onBet(1, 0, 10, 2);
+            view1.onBet(2, 0, 20, 1);
+            view1.onPlayerCards(1, [1, 2]);
+            view1.onPlayerCards(2, [254, 254]);
+            // preflop
+            log("Preflop round started");
+            view1.onBet(1, 2, 20, 2);
+            await drainQueue(view1.queue);
+            view1.actionBlock.openAdvancedBetUI();
             view1.actionBlock.increaseBetOrRaiseScale1();
             view1.actionBlock.closeOrResetBetOrRaise();
             expect(view1.actionBlock.advancedBetUIOpened()).toEqual(true);
             expect(view1.currentRaise()).toEqual(40);
             view1.actionBlock.closeOrResetBetOrRaise();
             expect(view1.actionBlock.advancedBetUIOpened()).toEqual(false);
+        });
+        it("opening advanced ui closes secondary panel", async function () {
+            const view1 = getTestTableView();
+            view1.currentLogin("Player2");
+            const actionBlock = view1.actionBlock;
+            await simpleInitialization(view1, 1, [400, 200]);
+            login("Player2");
+            loginId(2);
+            authenticated(true);
+            expect(view1.myPlayer() != null).toBeTruthy();
+            // blinds
+            log("Blinds round started");
+            view1.onBet(1, 0, 10, 2);
+            view1.onBet(2, 0, 20, 1);
+            view1.onPlayerCards(1, [1, 2]);
+            view1.onPlayerCards(2, [254, 254]);
+            // preflop
+            log("Preflop round started");
+            view1.onBet(1, 2, 20, 2);
+            await drainQueue(view1.queue);
+            view1.actionBlock.expand();
+            view1.actionBlock.openAdvancedBetUI();
+            expect(view1.actionBlock.advancedBetUIOpened()).toEqual(true);
+            expect(view1.actionBlock.expanded()).toEqual(false);
         });
         it("increase step1", async function () {
             const view1 = getTestTableView();

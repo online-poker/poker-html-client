@@ -673,6 +673,7 @@ export class ActionBlock {
             return;
         }
         this.advancedBetUIOpened(true);
+        this.expanded(false);
     }
     public resetBetOrRaise() {
         this.increasesCount(0);
