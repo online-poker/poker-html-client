@@ -99,6 +99,7 @@ export class ActionBlock {
     public allInCaption: ko.Observable<string>;
     public halfPotCaption: ko.Observable<string>;
     public potCaption: ko.Observable<string>;
+    public verticalSlider = ko.observable(appConfig.ui.verticalSlider);
     public maxAmountOfMoneyForOtherActivePlayers: ko.Observable<number>;
 
     public callAmount: ko.Observable<number>;
@@ -740,11 +741,12 @@ export class ActionBlock {
     public updateBounds() {
         // tslint:disable-next-line:no-string-literal
         if (window["$"] && $(".slider-line").length > 0) {
-            const lineWidth = $(".slider-line").width();
-            const handleWidth = $(".slider-handle").width();
-            const adj = -5;
+            const lineWidth = this.verticalSlider() ? $(".slider-line").height() : $(".slider-line").width();
+            const handleWidth = this.verticalSlider() ? $(".slider-handle").height() : $(".slider-handle").width();
+            const adj = this.verticalSlider() ? 0 : -5;
             const translator = (pageX: number) => {
-                const startOffset = $(".slider-line").offset().left;
+                const uiOffset = $(".slider-line").offset();
+                const startOffset = this.verticalSlider() ? uiOffset.top : uiOffset.left;
                 return pageX - startOffset + adj;
             };
             // -5 is base adjustment from one size; width - 5(base adj.) - 10(?)

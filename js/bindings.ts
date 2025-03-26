@@ -276,6 +276,12 @@ export function registerBindings() {
 
             let wrapperValueAccessor: () => any;
             const handler = function(viewMovel: any, event: Event) {
+                performance.mark('handle-command', {
+                    detail: {
+                        commandTag : typeof commandTag === "string" ? commandTag : "[Function]",
+                        preventDefault
+                    }
+                })
                 if (preventDefault) {
                     preventDefaultEvents(event);
                 }
