@@ -1,5 +1,6 @@
 ﻿import * as ko from "knockout";
 import * as timeService from "../timeservice";
+import { appConfig } from "poker/appconfig";
 
 interface TapGestureEvent {
     gesture: {
@@ -23,6 +24,7 @@ export class TableSlider {
     private step: number;
     private minRelative: ko.Observable<number>;
     private maxRelative: ko.Observable<number>;
+    public verticalSlider = ko.observable(appConfig.ui.verticalSlider);
     private translator: (x: number) => number;
 
     constructor() {
@@ -185,12 +187,18 @@ export class TableSlider {
     }
     public selectManually(event: MouseEvent & TapEvent) {
         if (event.pageX) {
-            const relativePosition = this.translator(event.pageX);
+            const uiPosition = this.verticalSlider()
+                ? event.pageY
+                : event.pageX;
+            const relativePosition = this.translator(uiPosition);
             this.setPosition(relativePosition);
             return true;
         } else {
             if (event.originalEvent.gesture) {
-                const relativePosition = this.translator(event.originalEvent.gesture.center.pageX);
+                const uiPosition = this.verticalSlider()
+                    ? event.originalEvent.gesture.center.pageY
+                    : event.originalEvent.gesture.center.pageX;
+                const relativePosition = this.translator(uiPosition);
                 this.setPosition(relativePosition);
                 return true;
             } else {

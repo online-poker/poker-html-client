@@ -106,6 +106,7 @@ export class AppConfig {
         touchToggleCards: false,
         fastTouch: false,
         advancedBets: false,
+        verticalSlider: false,
     };
 }
 

@@ -10,7 +10,7 @@
         </div>
         <div class="slider-line-wrapper" data-bind="handle: position, command: selectManually">
             <div class="slider-line">
-                <div class="slider-handle" data-bind="style: { left: position() + 'px' }"></div>
+                <div class="slider-handle" data-bind="style: { left: verticalSlider() ? undefined: position() + 'px', top: !verticalSlider() ? undefined: position() + 'px' }"></div>
             </div>
         </div>
     </div>
