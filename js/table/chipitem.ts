@@ -1,6 +1,6 @@
 ﻿import * as ko from "knockout";
 
-interface ChipStack {
+export interface ChipStack {
     type: number;
     amount: number;
 }
@@ -21,7 +21,7 @@ export class ChipItem {
     public getData(amount: number | ChipStack[]) {
         const list = [1, 5, 10, 50, 100, 500].map((item) => (item * this.baseAmount()));
         const stack = typeof amount === "number" ? this.calculateStackSimple(amount, list) : amount;
-        return this.transform(stack);
+        return (typeof amount === "number" || this.maxStackCount > 1) ? this.transform(stack) : this.transformSimple(stack);
     }
 
     public transform(stack: ChipStack[]) {
@@ -32,6 +32,26 @@ export class ChipItem {
                 item.push(stack[i].type);
             }
 
+            result.push(item);
+        }
+
+        return result;
+    }
+
+    public transformSimple(stack: ChipStack[]) {
+        const result = [] as number[][];
+        const item = [] as number[];
+        for (let i = 0; i < stack.length; i++) {
+            for (let j = 0; j < stack[i].amount; j++) {
+                if (item.length == this.maxStackSize) {
+                    break;
+                }
+
+                item.push(stack[i].type);
+            }
+        }
+
+        if (stack.length > 0) {
             result.push(item);
         }
 

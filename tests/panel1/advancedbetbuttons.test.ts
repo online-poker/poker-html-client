@@ -8,6 +8,7 @@ import {
 } from "../../js/table/tableview";
 import { drainQueue, getTable, getTestTableView, printTableView, simpleInitialization } from "../table/helper";
 import { appConfig } from "poker/appconfig";
+import { AddMoneyPopup } from "poker/popups";
 
 const authenticated = authManager.authenticated;
 const login = authManager.login;
@@ -344,6 +345,37 @@ describe("advanced bet buttons", function () {
             view1.actionBlock.openAdvancedBetUI();
             view1.actionBlock.setAllIn();
             expect(view1.currentRaise()).toEqual(200);
+        });
+
+        
+        it("increase multiple bets", async function () {
+            const view1 = getTestTableView();
+            view1.currentLogin("Player2");
+            const actionBlock = view1.actionBlock;
+            await simpleInitialization(view1, 1, [400, 200]);
+            login("Player2");
+            loginId(2);
+            authenticated(true);
+            expect(view1.myPlayer() != null).toBeTruthy();
+            // blinds
+            log("Blinds round started");
+            view1.onBet(1, 0, 10, 2);
+            view1.onBet(2, 0, 20, 1);
+            view1.onPlayerCards(1, [1, 2]);
+            view1.onPlayerCards(2, [254, 254]);
+            // preflop
+            log("Preflop round started");
+            view1.onBet(1, 2, 20, 2);
+            await drainQueue(view1.queue);
+            view1.actionBlock.openAdvancedBetUI();
+            view1.actionBlock.increaseBetOrRaiseScale4();
+            view1.actionBlock.increaseBetOrRaiseScale4();
+            view1.actionBlock.increaseBetOrRaiseScale3();
+            view1.actionBlock.increaseBetOrRaiseScale2();
+            view1.actionBlock.increaseBetOrRaiseScale4();
+            expect(view1.minimalBuyIn()).toEqual(10);
+            expect(view1.actionBlock.currrentBetChips())
+                .toEqual([{type: 1, amount: 1}, {type: 4, amount: 2}, {type: 3, amount: 1}, {type: 2, amount: 1}, {type: 4, amount: 1}]);
         });
     });
 });
