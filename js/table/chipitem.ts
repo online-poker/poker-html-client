@@ -13,15 +13,14 @@ interface ChipStackCalcIntermediate {
 
 export class ChipItem {
     public baseAmount: ko.Observable<number>;
-    private maxStackCount = 5;
 
-    constructor(base: number) {
+    constructor(base: number, private maxStackCount: number = 2, private maxStackSize: number = 5) {
         this.baseAmount = ko.observable(base);
     }
 
-    public getData(amount: number) {
+    public getData(amount: number | ChipStack[]) {
         const list = [1, 5, 10, 50, 100, 500].map((item) => (item * this.baseAmount()));
-        const stack = this.calculateStackSimple(amount, list);
+        const stack = typeof amount === "number" ? this.calculateStackSimple(amount, list) : amount;
         return this.transform(stack);
     }
 
@@ -41,19 +40,19 @@ export class ChipItem {
 
     public calculateStack(amount: number, chipAmounts: number[]) {
         let stack = this.calculateStackInternal(amount, chipAmounts);
-        if (stack.length > this.maxStackCount) {
+        if (stack.length > this.maxStackSize) {
             stack = this.calculateStackInternal(amount, chipAmounts.slice(0, stack.length - 1));
-            if (stack.length > this.maxStackCount) {
+            if (stack.length > this.maxStackSize) {
                 stack = this.calculateStackInternal(amount, chipAmounts.slice(0, stack.length - 1));
-                if (stack.length > this.maxStackCount) {
+                if (stack.length > this.maxStackSize) {
                     stack = this.calculateStackInternal(amount, chipAmounts.slice(0, stack.length - 1));
-                    if (stack.length > this.maxStackCount) {
+                    if (stack.length > this.maxStackSize) {
                         stack = this.calculateStackInternal(amount, chipAmounts.slice(0, stack.length - 1));
-                        if (stack.length > this.maxStackCount) {
+                        if (stack.length > this.maxStackSize) {
                             stack = this.calculateStackInternal(amount, chipAmounts.slice(0, stack.length - 1));
-                            if (stack.length > this.maxStackCount) {
+                            if (stack.length > this.maxStackSize) {
                                 stack = this.calculateStackInternal(amount, chipAmounts.slice(0, stack.length - 1));
-                                if (stack.length > this.maxStackCount) {
+                                if (stack.length > this.maxStackSize) {
                                     throw new Error("Could not divide stack for amount " + amount);
                                 }
                             }
@@ -71,8 +70,8 @@ export class ChipItem {
             return [] as ChipStack[];
         }
 
-        const item1 = this.calculateStackSimpleInternal(amount, chipAmounts, false);
-        if (item1.difference > 0) {
+        const item1 = this.calculateStackSimpleInternal(amount, chipAmounts, this.maxStackCount == 1);
+        if (item1.difference > 0 && this.maxStackCount > 1) {
             const item2 = this.calculateStackSimpleInternal(item1.difference, chipAmounts, true);
             if (item2.count === 0) {
                 return [{
@@ -85,6 +84,13 @@ export class ChipItem {
                 return [{
                     amount: Math.max(item2.count, 1),
                     type: item2.index,
+                }];
+            }
+
+            if (this.maxStackCount === 1) {
+                [{
+                    amount: Math.min(Math.max(item1.count + item2.count, 1), this.maxStackSize),
+                    type: item1.index,
                 }];
             }
 
@@ -131,23 +137,23 @@ export class ChipItem {
         if (allowOveradd) {
             target = effectiveChipsAmount.map((item) => ({
                 amount: item,
-                chipsAmount: Math.min(Math.floor((amount + item - 1) / item), this.maxStackCount),
+                chipsAmount: Math.min(Math.floor((amount + item - 1) / item), this.maxStackSize),
                 difference: 0,
             }));
             target = target.concat(effectiveChipsAmount.map((item) => ({
                 amount: item,
-                chipsAmount: Math.min(Math.floor(amount / item), this.maxStackCount),
+                chipsAmount: Math.min(Math.floor(amount / item), this.maxStackSize),
                 difference: 0,
             })));
         } else {
             target = effectiveChipsAmount.map((item) => ({
                 amount: item,
-                chipsAmount: Math.min(Math.floor(amount / item), this.maxStackCount),
+                chipsAmount: Math.min(Math.floor(amount / item), this.maxStackSize),
                 difference: 0,
             }));
         }
 
-        target = target.filter((item) => item.chipsAmount <= this.maxStackCount)
+        target = target.filter((item) => item.chipsAmount <= this.maxStackSize)
             .map(function(item) {
                 return {
                     amount: item.amount,

@@ -610,7 +610,7 @@ export function registerBindings() {
                     element.removeChild(element.firstChild);
                 }
 
-                const chipItem = new ChipItem(1);
+                const chipItem = new ChipItem(1, appConfig.ui.maxChipsStacksCount, appConfig.ui.maxChipsStackSize);
                 const stackInfo = chipItem.getData(value);
                 const container = document.createElement("div");
                 if (stackInfo.length === 1) {

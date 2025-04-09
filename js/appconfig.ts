@@ -107,6 +107,8 @@ export class AppConfig {
         fastTouch: false,
         advancedBets: false,
         verticalSlider: false,
+        maxChipsStackSize: 5,
+        maxChipsStacksCount: 2,
     };
 }
 

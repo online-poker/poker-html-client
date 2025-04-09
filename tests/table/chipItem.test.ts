@@ -10,4 +10,14 @@ describe("chipItem", function () {
             expect(stackItem.amount).toEqual(5);
         }
     });
+    it("test 58 - two stack", function () {
+        const chipItem = new ChipItem(1);
+        const stackData = chipItem.getData(5 * 10 + 4 * 2);
+        expect(stackData.length).toEqual(2);      
+    });
+    it("test 58 - single stack", function () {
+        const chipItem = new ChipItem(1, 1);
+        const stackData = chipItem.getData(5 * 10 + 4 * 2);
+        expect(stackData.length).toEqual(1);
+    });
 });
