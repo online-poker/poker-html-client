@@ -2622,6 +2622,7 @@ export class TableView {
         if (myself !== null) {
             const requiredBet = this.maximumBet() - this.myBet();
             this.actionBlock.advancedBetUIOpened(false);
+            this.actionBlock.currrentBetChips([{type: 1, amount: 1}]);
             this.actionBlock.updateSupportDirectAmountStatus(requiredBet);
             if (nextPlayerId === myself.PlayerId()) {
                 if (!allBetsRounded && userActions) {

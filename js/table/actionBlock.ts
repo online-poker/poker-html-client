@@ -16,6 +16,7 @@ import { SystemMessage } from "./SystemMessage";
 import { TableSlider } from "./tableSlider";
 import { TableView } from "./tableview";
 import { TablePlaceModel } from "./tabpleplacemodel";
+import { ChipStack } from "./chipitem";
 
 declare const host: string;
 declare const app: App;
@@ -234,6 +235,7 @@ export class ActionBlock {
     public increaseStep3Caption: ko.Computed<string>;
     public increaseStep4Caption: ko.Computed<string>;
     public closeOrResetBetOrRaiseCaption: ko.Computed<string>;
+    public currrentBetChips: ko.Observable<ChipStack[]> = ko.observable([]);
 
     public cardsOverlayVisible = ko.observable(true);
 
@@ -679,6 +681,7 @@ export class ActionBlock {
     public resetBetOrRaise() {
         this.increasesCount(0);
         this.tableSlider.currentValue(this.tableView.minimumRaiseAmount().toString());
+        this.currrentBetChips([{type: 1, amount: 1}]);
     }
     public closeOrResetBetOrRaise() {
         if (!this.advancedModeAllowed()) {
@@ -695,21 +698,37 @@ export class ActionBlock {
         const nextValue = this.tableSlider.current() + this.increaseStep1Amount()
         this.tableSlider.setValueSafe(nextValue);
         this.increasesCount(this.increasesCount() + 1);
+        this.increaseCurrrentBetChips(1);
     }
     public increaseBetOrRaiseScale2() {
         const nextValue = this.tableSlider.current() + this.increaseStep2Amount();
         this.tableSlider.setValueSafe(nextValue);
         this.increasesCount(this.increasesCount() + 1);
+        this.increaseCurrrentBetChips(2);
     }
     public increaseBetOrRaiseScale3() {
         const nextValue = this.tableSlider.current() + this.increaseStep3Amount();
         this.tableSlider.setValueSafe(nextValue);
         this.increasesCount(this.increasesCount() + 1);
+        this.increaseCurrrentBetChips(3);
     }
     public increaseBetOrRaiseScale4() {
         const nextValue = this.tableSlider.current() + this.increaseStep4Amount();
         this.tableSlider.setValueSafe(nextValue);
         this.increasesCount(this.increasesCount() + 1);
+        this.increaseCurrrentBetChips(4);
+    }
+    private increaseCurrrentBetChips(type: number) {
+        let bets = this.currrentBetChips();
+        if (bets.length > 0 && bets[bets.length - 1].type === type) {
+            bets = [...bets]
+            bets[bets.length - 1].amount += 1;
+        }
+        else {
+            bets = [...bets, {type: type, amount: 1}]
+        }
+
+        this.currrentBetChips(bets);
     }
     public setAllIn() {
         this.tableSlider.currentValue(this.maxAmountOfMoneyForOtherActivePlayers().toString());
