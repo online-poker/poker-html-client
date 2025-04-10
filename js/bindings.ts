@@ -635,10 +635,11 @@ export function registerBindings() {
                 element.appendChild(container);
                 const label = document.createElement("div");
                 label.setAttribute("class", "label");
+                const amount = typeof value === "number" ? value : value.amount;
                 if (betHandler.useShortMoneyRepresentationForBets) {
-                    label.innerText = siFormatter(value, betHandler.fractionalDigitsCount, betHandler.moneySeparator, betHandler.moneyFractionalSeparator, betHandler.minConvertibleValue);
+                    label.innerText = siFormatter(amount, betHandler.fractionalDigitsCount, betHandler.moneySeparator, betHandler.moneyFractionalSeparator, betHandler.minConvertibleValue);
                 } else {
-                    label.innerText = withCommas(value.toFixed(0), ",");
+                    label.innerText = withCommas(amount.toFixed(0), ",");
                 }
 
                 element.appendChild(label);

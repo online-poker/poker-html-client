@@ -18,9 +18,11 @@ export class ChipItem {
         this.baseAmount = ko.observable(base);
     }
 
-    public getData(amount: number | ChipStack[]) {
+    public getData(amount: number | { amount: number; stack: ChipStack[] }) {
         const list = [1, 5, 10, 50, 100, 500].map((item) => (item * this.baseAmount()));
-        const stack = typeof amount === "number" ? this.calculateStackSimple(amount, list) : amount;
+        const stack = typeof amount === "number"
+            ? this.calculateStackSimple(amount, list)
+            : amount.stack;
         return (typeof amount === "number" || this.maxStackCount > 1) ? this.transform(stack) : this.transformSimple(stack);
     }
 
