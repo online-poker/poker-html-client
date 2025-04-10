@@ -36,7 +36,8 @@ describe("chipItem", function () {
     });
     it("manual stack", function () {
         const chipItem = new ChipItem(1, 1);
-        const stackData = chipItem.getData([{amount: 1, type: 3}, {amount: 2, type: 2}, {amount: 2, type: 4}]);
+        const customStack = [{amount: 1, type: 3}, {amount: 2, type: 2}, {amount: 2, type: 4}];
+        const stackData = chipItem.getData({ amount: 100, stack: customStack });
         expect(stackData.length).toEqual(1);
         expect(stackData[0][0]).toEqual(3);
         expect(stackData[0][1]).toEqual(2);
@@ -46,7 +47,8 @@ describe("chipItem", function () {
     });
     it("manual stack - never more then max", function () {
         const chipItem = new ChipItem(1, 1, 4);
-        const stackData = chipItem.getData([{amount: 1, type: 3}, {amount: 2, type: 2}, {amount: 2, type: 4}]);
+        const customStack = [{amount: 1, type: 3}, {amount: 2, type: 2}, {amount: 2, type: 4}];
+        const stackData = chipItem.getData({ amount: 100, stack: customStack });
         expect(stackData.length).toEqual(1);
         expect(stackData[0].length).toEqual(4);
         expect(stackData[0][0]).toEqual(3);
