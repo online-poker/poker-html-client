@@ -409,12 +409,16 @@ export class ActionBlock {
             if (this.isAllInDuringBetOrRaise()) {
                 const myself = this.myPlayer();
                 if (myself != null) {
-                    return _("table.confirmRaiseOrBet").replace("#amount", withCommas(playerMoney, ",").toString());
+                    return _("table.confirmAllIn").replace("#amount", withCommas(playerMoney, ",").toString());
                 }
 
                 return "";
             } else {
-                return _("table.confirmRaiseOrBet").replace("#amount", withCommas(currentAmount, ",").toString());
+                if (this.isRaise()) {
+                    return _("table.confirmRaise").replace("#amount", withCommas(currentAmount, ",").toString());
+                } else {
+                    return _("table.confirmBet").replace("#amount", withCommas(currentAmount, ",").toString());
+                }
             }
         });
 
