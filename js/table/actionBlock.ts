@@ -110,6 +110,7 @@ export class ActionBlock {
     public checkCallButtonCaption: ko.Computed<string>;
     public raiseBetButtonCaption: ko.Computed<string>;
     public checkOrCallAmount: ko.Observable<number>;
+    public confirmRaiseBetButtonCaption: ko.Computed<string>;
     public currentRaiseAmount: ko.Computed<number>;
     public notMyTurn: ko.Observable<boolean>;
     public isInGame: ko.Observable<boolean>;
@@ -393,6 +394,27 @@ export class ActionBlock {
                 } else {
                     return _("table.bet").replace("#amount", withCommas(currentAmount, ",").toString());
                 }
+            }
+        });
+        this.confirmRaiseBetButtonCaption = ko.computed(() => {
+            let currentAmount = this.tableSlider.current();
+            currentAmount = currentAmount == null ? 0 : currentAmount;
+            const player = this.myPlayer();
+            let playerMoney = this.playerMoney();
+            if (player != null) {
+                playerMoney += player.Bet();
+            }
+
+            playerMoney = playerMoney == null ? 0 : playerMoney;
+            if (this.isAllInDuringBetOrRaise()) {
+                const myself = this.myPlayer();
+                if (myself != null) {
+                    return _("table.confirmRaiseOrBet").replace("#amount", withCommas(playerMoney, ",").toString());
+                }
+
+                return "";
+            } else {
+                return _("table.confirmRaiseOrBet").replace("#amount", withCommas(currentAmount, ",").toString());
             }
         });
 
