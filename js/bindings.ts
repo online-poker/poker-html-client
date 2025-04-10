@@ -635,7 +635,7 @@ export function registerBindings() {
                 element.appendChild(container);
                 const label = document.createElement("div");
                 label.setAttribute("class", "label");
-                const amount = typeof value === "number" ? value : value.amount;
+                const amount = typeof value === "number" ? value : (value.amount || 0);
                 if (betHandler.useShortMoneyRepresentationForBets) {
                     label.innerText = siFormatter(amount, betHandler.fractionalDigitsCount, betHandler.moneySeparator, betHandler.moneyFractionalSeparator, betHandler.minConvertibleValue);
                 } else {
