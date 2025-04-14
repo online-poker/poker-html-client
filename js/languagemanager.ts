@@ -10,8 +10,14 @@ export interface LanguageDescriptor {
 export class LanguageManager {
     public currentLang: Observable<string> = observable("ru");
 
+    constructor() {
+        const lang = localStorage.getItem("lang") || "ru";
+        this.currentLang(lang);
+    }
+
     public setLang(lang: string): void {
         this.currentLang(lang);
+        localStorage.setItem("lang", lang);
     }
     public getSupportedLanguages(): LanguageDescriptor[] {
         return [
