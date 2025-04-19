@@ -22,6 +22,7 @@ class GameActionBlock {
 export interface TimeSettings {
     moveTime?: number | undefined;
     updateTimeFromServer?: boolean | undefined;
+    openCardsTime?: number | undefined;
 }
 
 export class AppConfig {
