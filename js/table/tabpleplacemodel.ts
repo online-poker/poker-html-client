@@ -36,7 +36,16 @@ export class TablePlaceModel {
     public IsBigBlind: ko.Observable<boolean>;
     public IsSmallBlind: ko.Observable<boolean>;
     public Money: ko.Observable<number>;
+
+    /**
+     * Seat number for accounting purposes.
+     */
     public Seat: ko.Observable<number>;
+
+    /**
+     * User friendly name of the seat.
+     */
+    public SeatName: ko.Computed<string>;
 
     /**
      * Cards which player has as displayed in the UI
@@ -178,6 +187,10 @@ export class TablePlaceModel {
         this.IsSmallBlind = ko.observable(data.IsSmallBlind);
         this.Money = ko.observable(data.Money);
         this.Seat = ko.observable(data.Seat);
+        this.SeatName = ko.computed(() => {
+            return this.Seat() === null ? "" : _("table.seatName", { seat: this.Seat() });
+        }, this);
+
         const cards = decodeCardsArray(data.Cards || null);
         const cardClasses = convertToCards(cards);
         this.RawCards = ko.observableArray(cards);
