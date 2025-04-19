@@ -23,6 +23,11 @@
         moveTime: 60,
 
         /**
+         * Time to open cards at the end of game in seconds.
+         */
+        openCardsTime: 5,
+
+        /**
          * Enables or disables flag indicating whether auto-fold
          * and auto-check functionality would be reset each new game.
          */

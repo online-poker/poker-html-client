@@ -91,6 +91,7 @@ export class TableView {
     public systemMessages: ko.ObservableArray<SystemMessage>;
     public lastRaise: ko.Observable<number>;
     public timePass: ko.Observable<number>;
+    public timePassGameFinished: ko.Observable<number>;
     /**
      * Count of actual actions which was performed by the players during the current game
      */
@@ -150,6 +151,8 @@ export class TableView {
 
     public timeLeft: ko.Computed<number>;
     public timerInterval: number = 0;
+    public openCardsTimeLeft: ko.Computed<number>;
+    public gameFinishedTimerInterval: number = 0;
     public chipWidth: number;
 
     public chatMessage: ko.Observable<string>;
@@ -281,6 +284,7 @@ export class TableView {
         this.minimalBuyIn = ko.observable<number>();
         this.lastRaise = ko.observable<number>();
         this.timePass = ko.observable<number>();
+        this.timePassGameFinished = ko.observable<number>();
         this.gameFinished = ko.observable(true);
         this.prizesDistributed = ko.observable(true);
         this.gameStarted = ko.observable(false);
@@ -377,6 +381,15 @@ export class TableView {
             let pass = this.timePass();
             pass = pass === null ? 0 : pass;
             const moveTime = appConfig.timeSettings.moveTime || runtimeSettings.game.moveTime;
+            return moveTime - pass;
+        });
+        this.openCardsTimeLeft = ko.computed(() => {
+            if (this.frozen()) {
+                return -1;
+            }
+
+            const pass = this.timePassGameFinished() ?? 0;
+            const moveTime = appConfig.timeSettings.openCardsTime || runtimeSettings.game.openCardsTime;
             return moveTime - pass;
         });
         this.currentRaise = ko.computed<number>({
@@ -742,6 +755,10 @@ export class TableView {
 
             myPlayer.DisplayedHandCards(getBackCardsFromGameType(this.gameType()));
         });
+
+        this.gameFinished.subscribe((value) => {
+            
+        });
         this.actionBlock.attach(this);
 
         this.initHandHistory();
@@ -795,6 +812,23 @@ export class TableView {
     public clearTimer() {
         timeService.clearInterval(this.timerInterval);
         this.timePass(null);
+    }
+    public startGameFinishedTimer() {
+        if (this.frozen()) {
+            return;
+        }
+
+        this.timePassGameFinished(1);
+        this.gameFinishedTimerInterval = timeService.setInterval(() => {
+            if (runtimeSettings.updateTimer) {
+                const time = this.timePass();
+                this.timePassGameFinished(time + 1);
+            }
+        }, 1000);
+    }
+    public clearGameFinshedTimer() {
+        timeService.clearInterval(this.gameFinishedTimerInterval);
+        this.timePassGameFinished(null);
     }
     public clearInformation() {
         this.messages([]);
@@ -1224,10 +1258,12 @@ export class TableView {
     public onFrozen() {
         this.frozen(true);
         this.clearTimer();
+        this.clearGameFinshedTimer();
     }
     public onUnfrozen() {
         this.frozen(false);
         this.startTimer();
+        this.startGameFinishedTimer();
     }
     public onOpened() {
         this.pushCallback(() => {
@@ -1348,6 +1384,10 @@ export class TableView {
             this.clearTimer();
             const playSound = this.isInGame() && !gameFinished;
             this.startTimer(timePass, playSound);
+            if (gameFinished) {
+                this.startGameFinishedTimer();
+            }
+
             this.cardsReceived = true;
 
             if (cards != null) {
@@ -1419,6 +1459,7 @@ export class TableView {
             this.queue.pushCallback(() => {
                 this.logGameEvent("Game finished");
                 this.gameFinished(true);
+                this.startGameFinishedTimer();
                 this.actionBlock.expanded(false);
                 this.gameStarted(false);
                 this.gamePlayers([]);
@@ -1460,6 +1501,7 @@ export class TableView {
             this.queue.pushCallback(() => {
                 this.logGameEvent("Game finished");
                 this.gameFinished(true);
+                this.startGameFinishedTimer();
                 this.actionBlock.expanded(false);
                 this.gameStarted(false);
                 this.gamePlayers([]);
@@ -2673,6 +2715,7 @@ export class TableView {
         actions: GameActionStartInformation[],
         dealerSeat: number) {
         this.gameFinished(false);
+        this.clearGameFinshedTimer();
         this.prizesDistributed(false);
         this.currentGameId(gameId);
         this.gameId(gameId);
@@ -2858,6 +2901,7 @@ export class TableView {
     }
     private cleanTableAfterGameFinish() {
         if (this.gameFinished()) {
+            this.clearGameFinshedTimer();
             this.anteDetected = false;
             this.prizesDistributed(true);
             this.tableCards.CardsHightlighted(false);
