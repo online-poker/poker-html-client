@@ -388,7 +388,7 @@ export class TableView {
                 return -1;
             }
 
-            const pass = this.timePassGameFinished() ?? 0;
+            const pass = this.timePassGameFinished() ?? 100;
             const moveTime = appConfig.timeSettings.openCardsTime || runtimeSettings.game.openCardsTime;
             return moveTime - pass;
         });
@@ -821,7 +821,7 @@ export class TableView {
         this.timePassGameFinished(1);
         this.gameFinishedTimerInterval = timeService.setInterval(() => {
             if (runtimeSettings.updateTimer) {
-                const time = this.timePass();
+                const time = this.timePassGameFinished();
                 this.timePassGameFinished(time + 1);
             }
         }, 1000);
