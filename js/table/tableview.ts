@@ -52,6 +52,11 @@ export class TableView {
     public currentLogin: ko.Observable<string>;
 
     /**
+     * Gets name of the current seat when running in seat mode.
+     */
+    public currrentSeatName: ko.Computed<string>;
+
+    /**
      * Represents the value indicating that information
      * about the table is retreiving.
      */
@@ -369,6 +374,17 @@ export class TableView {
         }, this);
 
         this.currentLogin = ko.observable(authManager.login());
+        this.currrentSeatName = ko.computed(() => {
+            if (appConfig.game.seatMode) {
+                const seatNoMatch = this.currentLogin().match(/(\d+)/);
+                if (seatNoMatch.length) {
+                    const seat = seatNoMatch[0];
+                    return _("table.seatName", { seat: seat });
+                }
+            }
+
+            return "";
+        }, this);
         authManager.registerAuthenticationChangedHandler((value) => {
             this.currentLogin(authManager.login());
         });
