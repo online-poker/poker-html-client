@@ -376,6 +376,10 @@ export class TableView {
         this.currentLogin = ko.observable(authManager.login());
         this.currrentSeatName = ko.computed(() => {
             if (appConfig.game.seatMode) {
+                if (!this.currentLogin()) {
+                    return "";
+                }
+
                 const seatNoMatch = this.currentLogin().match(/(\d+)/);
                 if (seatNoMatch.length) {
                     const seat = seatNoMatch[0];
