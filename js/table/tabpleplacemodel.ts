@@ -38,6 +38,11 @@ export class TablePlaceModel {
     public Money: ko.Observable<number>;
 
     /**
+     * User friendly amount of money which player has.
+     */
+    public SeatName: ko.Computed<string>;
+
+    /**
      * Seat number for accounting purposes.
      */
     public Seat: ko.Observable<number>;
@@ -45,7 +50,7 @@ export class TablePlaceModel {
     /**
      * User friendly name of the seat.
      */
-    public SeatName: ko.Computed<string>;
+    public MoneyInformation: ko.Computed<string>;
 
     /**
      * Cards which player has as displayed in the UI
@@ -186,6 +191,9 @@ export class TablePlaceModel {
         this.IsBigBlind = ko.observable(data.IsBigBlind);
         this.IsSmallBlind = ko.observable(data.IsSmallBlind);
         this.Money = ko.observable(data.Money);
+        this.MoneyInformation = ko.computed(() => {
+            return this.Money() === null ? "" : _("table.playerBalance", { amount: this.Money() });
+        }, this);
         this.Seat = ko.observable(data.Seat);
         this.SeatName = ko.computed(() => {
             return this.Seat() === null ? "" : _("table.seatName", { seat: this.Seat() });
@@ -445,12 +453,12 @@ export class TablePlaceModel {
 
         // When player fold cards.
         if (this.IsCardsFolded()) {
-            return _("table.helpMessage.goodLuck");
+            return _("table.helpMessage.cardsFolded");
         }
 
         // This is fallback case for situations in the
         // beginning of the game start, pause between move confirmation.
-        return _("table.helpMessage.goodLuck");
+        return _("table.helpMessage.unknownSituation");
     }
 
     public getCombination(tableCards: number[]) {
