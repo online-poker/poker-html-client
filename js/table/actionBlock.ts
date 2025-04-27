@@ -789,10 +789,12 @@ export class ActionBlock {
             const lineWidth = this.verticalSlider() ? $(".slider-line").height() : $(".slider-line").width();
             const handleWidth = this.verticalSlider() ? $(".slider-handle").height() : $(".slider-handle").width();
             const adj = this.verticalSlider() ? 0 : -5;
-            const translator = (pageX: number) => {
+            const translator = (uiPosition: number) => {
                 const uiOffset = $(".slider-line").offset();
-                const startOffset = this.verticalSlider() ? uiOffset.top : uiOffset.left;
-                return pageX - startOffset + adj;
+                const startOffset = this.verticalSlider() 
+                    ? uiOffset.top - uiPosition + adj
+                    : uiPosition - uiOffset.left + adj;
+                return startOffset;
             };
             // -5 is base adjustment from one size; width - 5(base adj.) - 10(?)
             this.tableSlider.setBounds(adj, lineWidth - handleWidth + (-adj), translator);
