@@ -785,7 +785,7 @@ export class ActionBlock {
     }
     public updateBounds() {
         // tslint:disable-next-line:no-string-literal
-        if (window["$"] && $(".slider-line").length > 0) {
+        if ((window["$"] || $) && $(".slider-line").length > 0) {
             const lineWidth = this.verticalSlider() ? $(".slider-line").height() : $(".slider-line").width();
             const handleWidth = this.verticalSlider() ? $(".slider-handle").height() : $(".slider-handle").width();
             const adj = this.verticalSlider() ? -15 : -5;
