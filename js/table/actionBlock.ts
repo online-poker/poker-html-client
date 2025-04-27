@@ -788,11 +788,11 @@ export class ActionBlock {
         if (window["$"] && $(".slider-line").length > 0) {
             const lineWidth = this.verticalSlider() ? $(".slider-line").height() : $(".slider-line").width();
             const handleWidth = this.verticalSlider() ? $(".slider-handle").height() : $(".slider-handle").width();
-            const adj = this.verticalSlider() ? 0 : -5;
+            const adj = this.verticalSlider() ? -15 : -5;
             const translator = (uiPosition: number) => {
                 const uiOffset = $(".slider-line").offset();
-                const startOffset = this.verticalSlider() 
-                    ? uiOffset.top - uiPosition + adj
+                const startOffset = this.verticalSlider()
+                    ? uiPosition - uiOffset.top + adj
                     : uiPosition - uiOffset.left + adj;
                 return startOffset;
             };
