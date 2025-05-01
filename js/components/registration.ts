@@ -172,6 +172,6 @@ export function registerComponents() {
     });
     ko.components.register("keypad", {
         template: getTemplateDefinition("keypad/keypad.html"),
-        viewModel: (params?: any) => new Keypad(params.value),
+        viewModel: (params?: any) => new Keypad(params.value, params.maxLength),
     });
 }

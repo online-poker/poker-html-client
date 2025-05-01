@@ -5,7 +5,7 @@ export class Keypad {
     public onKeyPressed = new signals.Signal();
     public onKeyCancel = new signals.Signal();
 
-    constructor(private textValue: ko.Observable<string>) {
+    constructor(private textValue: ko.Observable<string>, private maxLength?: number) {
     }
 
     public typeValue(value: string) {
@@ -15,10 +15,17 @@ export class Keypad {
             return;
         }
 
-        this.textValue(this.textValue() + value);
+        if (this.textValue().length < (this.maxLength || 100)) {
+            this.textValue(this.textValue() + value);
+        }
     }
 
     public deleteLastSign() {
+        this.onKeyCancel.dispatch();
+        this.textValue(this.textValue().substring(0, this.textValue().length - 1));
+    }
+
+    public deleteLastDigit() {
         this.onKeyCancel.dispatch();
         this.textValue(this.textValue().substring(0, this.textValue().length - 1));
     }
