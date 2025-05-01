@@ -302,7 +302,7 @@ export class ActionBlock {
         this.increaseStep3Amount = ko.pureComputed(() => this.tableView.minimalBuyIn() * 10);
         this.increaseStep3Caption = ko.pureComputed(() => _("table.increaseStep3", { amount: this.increaseStep3Amount() }));
         this.increaseStep4Amount = ko.pureComputed(() => this.tableView.minimalBuyIn() * 50);
-        this.increaseStep4Caption = ko.pureComputed(() => _("table.increaseStep4", { amount: this.increaseStep3Amount() }));
+        this.increaseStep4Caption = ko.pureComputed(() => _("table.increaseStep4", { amount: this.increaseStep4Amount() }));
         this.closeOrResetBetOrRaiseCaption = ko.pureComputed(() => 
             this.tableSlider.current() > this.tableView.minimumRaiseAmount() ? _("table.resetBetOrRaise") : _("table.closeAdvancedBetUI"));
 
