@@ -166,9 +166,9 @@ export class TableMenuPopup {
         const myPlayer = currentTable.myPlayer();
         const playerIsInGame = myPlayer != null;
         this.toggleSkipDealsAllowed(playerIsInGame);
-        this.addMoneyAvailable(currentTable.tournament() == null && currentTable.opened());
+        this.addMoneyAvailable(currentTable.addMoneyAvailable());
         this.addMoneyAllowed(currentTable.couldAddChips());
-        this.handHistoryAllowed(playerIsInGame && currentTable.lastHandHistory() != null);
+        this.handHistoryAllowed(currentTable.handHistoryAllowed());
         const leaveAllowed = myPlayer != null && !currentTable.myPlayerInGame() && myPlayer.IsSitoutStatus();
         this.leaveAllowed(!appConfig.game.seatMode || leaveAllowed);
         this.accountStatusAllowed(this.authInformation.authenticated());
@@ -242,8 +242,7 @@ export class TableMenuPopup {
         }
 
         const currentTable = this.currentTableProvider.currentTable();
-        app.handHistoryPopup.tableView(currentTable);
-        app.showPopup("handHistory");
+        currentTable.displayHandHistory();
     }
     public async addMoney() {
         if (!this.addMoneyAllowed()) {
@@ -251,12 +250,7 @@ export class TableMenuPopup {
         }
 
         const currentTable = this.currentTableProvider.currentTable();
-        app.addMoneyPopup.tableView(currentTable);
-        app.closePopup();
-        const results: { name: string; result: any } = await app.showPopup("addMoney");
-        if (results.result === "cancel") {
-            this.commandExecutor.executeCommand("popup.tableMenu");
-        }
+        currentTable.addMoney();
     }
     public showTournamentInformation() {
         if (!this.tournamentInformationAllowed()) {
