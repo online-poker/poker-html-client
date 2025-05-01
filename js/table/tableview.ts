@@ -85,6 +85,8 @@ export class TableView {
     public nextGameInformation: ko.Computed<string>;
     public nextGameTypeInformation: ko.Computed<string>;
     public currentCombinationVisible: ko.Computed<boolean>;
+    public handHistoryAllowed: ko.Computed<boolean>;
+    public addMoneyAvailable: ko.Computed<boolean>;
     /**
      * Minimal amount of money which currently authenticated player
      * could bring on the table if he stand up from the table lately.
@@ -794,6 +796,17 @@ export class TableView {
             }
 
             myPlayer.DisplayedHandCards(getBackCardsFromGameType(this.gameType()));
+        });
+        this.handHistoryAllowed = ko.pureComputed(() => {
+            const myPlayer = this.myPlayer();
+            if (!myPlayer) {
+                return false;
+            }
+
+            return this.lastHandHistory() !== null;
+        });
+        this.addMoneyAvailable = ko.pureComputed(() => {
+            return this.tournament() == null && this.opened();
         });
 
         this.gameFinished.subscribe((value) => {
@@ -2111,6 +2124,28 @@ export class TableView {
 
     public updateSystemMessage(messageId: number, message: string) {
         // TODO: Implement updating messages.
+    }
+
+    public displayHandHistory() {
+        if (!this.handHistoryAllowed()) {
+            return;
+        }
+
+        app.handHistoryPopup.tableView(this);
+        app.showPopup("handHistory");
+    }
+
+    public async addMoney() {
+        if (!this.couldAddChips()) {
+            return;
+        }
+
+        app.addMoneyPopup.tableView(this);
+        app.closePopup();
+        const results: { name: string; result: any } = await app.showPopup("addMoney");
+        if (results.result === "cancel") {
+            app.executeCommand("popup.tableMenu");
+        }
     }
 
     /**
