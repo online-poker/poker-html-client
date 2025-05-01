@@ -286,7 +286,7 @@ export class TableView {
             for (let i = 0; i < pots.length; i++) {
                 potsInformation.push({
                     PotNumber: i + 1,
-                    PotName: i ? _("table.sidePot", { pot: i }) : _("table.mainPot"),
+                    PotName: i ? _("table.sidePot", { pot: i, amount: pots[i] }) : _("table.mainPot", { amount: pots[i] }),
                     Amount: pots[i],
                 });
             }
