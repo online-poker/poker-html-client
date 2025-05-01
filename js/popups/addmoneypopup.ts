@@ -28,7 +28,7 @@ export class AddMoneyPopup {
     private validationModel: ko.Observable<this>;
 
     constructor() {
-        this.buyin = ko.observable<number>().extend({ required: appConfig.tournament.enabled, validatable: true });
+        this.buyin = ko.observable<number>().extend({ required: appConfig.tournament.enabled && appConfig.joinTable.allowUsePersonalAccount, validatable: true });
         this.ticketCode = ko.observable<string>("").extend({ required: appConfig.game.seatMode, validatable: true });
         this.tableView = ko.observable<TableView>();
         this.accountTotal = ko.observable<number>(0);
