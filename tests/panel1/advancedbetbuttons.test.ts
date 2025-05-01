@@ -321,7 +321,7 @@ describe("advanced bet buttons", function () {
             view1.actionBlock.increaseBetOrRaiseScale4();
             expect(view1.minimalBuyIn()).toEqual(10);
             expect(view1.currentRaise()).toEqual(200);
-            expect(view1.actionBlock.increaseStep4Caption()).toEqual("100");
+            expect(view1.actionBlock.increaseStep4Caption()).toEqual("500");
         });
         it("allin", async function () {
             const view1 = getTestTableView();
