@@ -42,6 +42,12 @@ interface CardsRepresentation {
     Suits: number[];
 }
 
+export interface PotInformation {
+    PotNumber: number;
+    PotName: string;
+    Amount: number;
+}
+
 export class TableView {
     public static MaxMessagesCount: number = 100;
     public tableName: ko.Observable<string>;
@@ -91,6 +97,7 @@ export class TableView {
     public gamePlayers: ko.ObservableArray<number>;
     public places: ko.Computed<TablePlaceModel[]>;
     public pots: ko.ObservableArray<number>;
+    public potsInformation: ko.Computed<PotInformation[]>;
     public tableCards: TableCardsPlace;
     public messages: ko.ObservableArray<PlayerMessage>;
     public systemMessages: ko.ObservableArray<SystemMessage>;
@@ -273,6 +280,19 @@ export class TableView {
         this.connecting = ko.observable(true);
         this.gamePlayers = ko.observableArray<number>([]);
         this.pots = ko.observableArray<number>([]);
+        this.potsInformation = ko.pureComputed(() => {
+            const pots = this.pots();
+            const potsInformation: PotInformation[] = [];
+            for (let i = 0; i < pots.length; i++) {
+                potsInformation.push({
+                    PotNumber: i + 1,
+                    PotName: i ? _("table.sidePot", { pot: i }) : _("table.mainPot"),
+                    Amount: pots[i],
+                });
+            }
+
+            return potsInformation;
+        });
         this.tableCards = new TableCardsPlace();
         this.messages = ko.observableArray<PlayerMessage>([]);
         this.systemMessages = ko.observableArray<SystemMessage>([]);
