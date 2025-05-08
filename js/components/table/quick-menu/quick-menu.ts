@@ -31,6 +31,4 @@ export class QuickTableMenuComponent {
             }
         }
     }
-
-    public bool depositEnabled
 }
