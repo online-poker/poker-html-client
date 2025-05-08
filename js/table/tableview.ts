@@ -2256,6 +2256,9 @@ export class TableView {
             const data = await gameApi.showCards(this.tableId);
             if (data.Status !== "Ok") {
                 this.reportApiError(data.Status);
+            } else {
+                this.actionBlock.showHoleCard1Enabled(false);
+                this.actionBlock.showHoleCard2Enabled(false);
             }
         } catch (e) {
             if (app.currentPopup !== SlowInternetService.popupName) {
@@ -2317,6 +2320,10 @@ export class TableView {
             const data = await gameApi.showHoleCard(this.tableId, cardPosition);
             if (data.Status !== "Ok") {
                 this.reportApiError(data.Status);
+            } else {
+                if (!this.actionBlock.showHoleCard1Enabled() && !this.actionBlock.showHoleCard2Enabled()) {
+                    this.actionBlock.showCardsEnabled(false);
+                }
             }
         } catch (e) {
             if (app.currentPopup !== SlowInternetService.popupName) {
