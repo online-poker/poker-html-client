@@ -134,9 +134,9 @@ export class HandHistory extends TableMonitor {
 
             let description: string;
             if (winAmount > 0) {
-                description = "" + playerName + " выиграл " + winAmount + " " + combination;
+                description = _("handhistory.playerWon", { playerName, winAmount, combination })
             } else {
-                description = "" + playerName + " проиграл " + " " + combination;
+                description = _("handhistory.playerLose", { playerName, combination })
             }
 
             this.addShortOperation(description);
