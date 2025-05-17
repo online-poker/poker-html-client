@@ -2932,7 +2932,7 @@ export class TableView {
                         currentPlayer.WinAmount(currentPlayer.WinAmount() + currentWinner.Amount);
                     }
 
-                    if (needHightlightCards) {
+                    if (needHightlightCards && currentPlayer.WinnerCombination()) {
                         currentPlayer.WinNotification(_("table.winNotificationWithCombination", { 
                             winAmount: currentPlayer.WinAmount(),
                             combination: currentPlayer.WinnerCombination()
