@@ -610,8 +610,10 @@ export function registerBindings() {
                     element.removeChild(element.firstChild);
                 }
 
-                const chipItem = new ChipItem(1, appConfig.ui.maxChipsStacksCount, appConfig.ui.maxChipsStackSize);
-                const stackInfo = chipItem.getData(value);
+                const amount = typeof value === "number" ? value : (value.amount || 0);
+                const baseAmount = typeof value === "number" ? 1 : (value.chipBase || 1);
+                const chipItem = new ChipItem(baseAmount, appConfig.ui.maxChipsStacksCount, appConfig.ui.maxChipsStackSize);
+                const stackInfo = chipItem.getData(amount);
                 const container = document.createElement("div");
                 if (stackInfo.length === 1) {
                     container.setAttribute("class", "chip-container stack1");
@@ -635,7 +637,6 @@ export function registerBindings() {
                 element.appendChild(container);
                 const label = document.createElement("div");
                 label.setAttribute("class", "label");
-                const amount = typeof value === "number" ? value : (value.amount || 0);
                 if (betHandler.useShortMoneyRepresentationForBets) {
                     label.innerText = siFormatter(amount, betHandler.fractionalDigitsCount, betHandler.moneySeparator, betHandler.moneyFractionalSeparator, betHandler.minConvertibleValue);
                 } else {
