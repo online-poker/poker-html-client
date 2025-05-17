@@ -2931,6 +2931,17 @@ export class TableView {
                     } else {
                         currentPlayer.WinAmount(currentPlayer.WinAmount() + currentWinner.Amount);
                     }
+
+                    if (needHightlightCards) {
+                        currentPlayer.WinNotification(_("table.winNotificationWithCombination", { 
+                            winAmount: currentPlayer.WinAmount(),
+                            combination: currentPlayer.WinnerCombination()
+                        }));
+                    } else {
+                        currentPlayer.WinNotification(_("table.winNotification", { 
+                            winAmount: currentPlayer.WinAmount()
+                        }));
+                    }
                 }
             }
         }

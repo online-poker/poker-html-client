@@ -160,6 +160,11 @@ export class TablePlaceModel {
      */
     public WinnerCombination = ko.observable<string>();
 
+    /**
+     * Notification about winning to the player
+     */
+    public WinNotification = ko.observable<string>();
+
     public cardsOverlayVisible = ko.observable(true);
     public needCardsOverlay = ko.observable(false);
 
@@ -306,6 +311,7 @@ export class TablePlaceModel {
         this.CardsHightlighted(false);
         this.markCardsHidden();
         this.WinnerCombination(null);
+        this.WinNotification(null);
     }
     public initializeForNewGame(money: number) {
         this.IsInGameStatus(true);
