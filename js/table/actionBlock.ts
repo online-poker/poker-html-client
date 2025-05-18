@@ -227,6 +227,11 @@ export class ActionBlock {
      */
     public advancedBetUIOpened = ko.observable(false);
 
+    /**
+     * Indicate whether open cards block is visible.
+     */
+    public isOpenCardsBlockVisible: ko.Computed<boolean>;
+
     public increaseStep1Amount: ko.Computed<number>;
     public increaseStep2Amount: ko.Computed<number>;
     public increaseStep3Amount: ko.Computed<number>;
@@ -496,6 +501,18 @@ export class ActionBlock {
             return !this.raiseBlockVisible()
                 && !this.gameClosed();
         });
+        this.isOpenCardsBlockVisible = ko.pureComputed(() => {
+            const item = this.tableView.currentPlayer();
+            const gameStateAllowOpenCards = !item.IsSitoutStatus() 
+                && (item.IsDealCards() || item.WasInGame()) && this.tableView.gameFinished()
+                && this.tableView.openCardsTimeLeft() > 0
+            return gameStateAllowOpenCards &&
+                (this.showCardsEnabled() && !item.IsCardsOpened() 
+                    ||
+                    (this.tableView.has2Cards() 
+                        && (this.showHoleCard1Enabled() && !item.IsHoleCard1Opened() 
+                        || this.showHoleCard2Enabled() && !item.IsHoleCard2Opened())))
+        })
 
         if (debugSettings.actionBlock.traceBlocksVisbility) {
             this.waitBigBlindBlockVisible.subscribe((visbile) => {
