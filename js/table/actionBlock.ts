@@ -502,7 +502,7 @@ export class ActionBlock {
                 && !this.gameClosed();
         });
         this.isOpenCardsBlockVisible = ko.pureComputed(() => {
-            const item = this.tableView.currentPlayer();
+            const item = this.tableView.myPlayer();
             const gameStateAllowOpenCards = !item.IsSitoutStatus() 
                 && (item.IsDealCards() || item.WasInGame()) && this.tableView.gameFinished()
                 && this.tableView.openCardsTimeLeft() > 0
