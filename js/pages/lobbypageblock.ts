@@ -1,4 +1,5 @@
 ﻿import { TournamentDefinition } from "@poker/api-server";
+import { appConfig } from "poker/appconfig";
 import { authManager } from "poker/authmanager";
 import { UIManager } from "poker/services/uimanager";
 import { App } from "../app";
@@ -18,7 +19,7 @@ export class LobbyPageBlock extends PageBlock {
     public tablesListPage: TablesListPage;
 
     constructor() {
-        const lobbyPage = new LobbyPage();
+        const lobbyPage = new LobbyPage(appConfig);
         UIManager.addTabBarItemMapping("lobby", "tablesFilter");
         UIManager.addTabBarItemMapping("lobby", "tournamentsFilter");
         UIManager.addTabBarItemMapping("lobby", "sngFilter");

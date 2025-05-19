@@ -9,7 +9,7 @@ import { authManager } from "poker/authmanager";
 import { AccountManager } from "poker/services/accountManager";
 import { settings } from "poker/settings";
 import { App } from "../app";
-import { appConfig } from "../appconfig";
+import { AppConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
 import { _ } from "../languagemanager";
 import * as metadataManager from "../metadatamanager";
@@ -162,7 +162,7 @@ export class LobbyPage extends PageBase {
     public sngTablesEnabled: ko.Observable<boolean>;
     public showScreenOverlay: ko.Computed<boolean>;
 
-    constructor() {
+    constructor(private appConfig: AppConfig) {
         super();
         this.showScreenOverlay = ko.computed(() => {
             if (!appConfig.ui.enableScreenOverlay) {
@@ -216,7 +216,9 @@ export class LobbyPage extends PageBase {
             this.sngTablesEnabled(false);
         }
 
-        if (appConfig.tournament.enableTournamentOnly) {
+        if (appConfig.tournament.enableTournamentOnly && appConfig.tournament.enabled) {
+            this.cashTablesEnabled(false);
+            this.sngTablesEnabled(false);
             this.slider.enabled(false);
             this.slider.currentIndex(1);
         }
@@ -339,7 +341,7 @@ export class LobbyPage extends PageBase {
         const betLevels = options.bets();
         const moneyType = options.currency();
         const limitType = options.limits();
-        const data = await gameApi.getTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType, appConfig.game.showTournamentTables);
+        const data = await gameApi.getTables(fullTables, privateTables, maxPlayers, betLevels, moneyType, limitType, this.appConfig.game.showTournamentTables);
         if (!this.visible()) {
             return;
         }
@@ -351,11 +353,11 @@ export class LobbyPage extends PageBase {
                 item.IsOpened = tableManager.isOpened(item.TableId);
             });
             this.tables(tables);
-            if (appConfig.auth.automaticTableSelection && tables.length === 1) {
+            if (this.appConfig.auth.automaticTableSelection && tables.length === 1) {
                 this.selectTable(tables[0]);
             }
 
-            if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
+            if (this.appConfig.game.seatMode || this.appConfig.game.tablePreviewMode) {
                 const tableIdString = localStorage.getItem("tableId");
                 if (tableIdString !== null) {
                     const tableIdInt = parseInt(tableIdString, 10);
@@ -408,19 +410,19 @@ export class LobbyPage extends PageBase {
             authenticated: false,
             wasAuthenticated: false,
         };
-        const authResult = appConfig.lobby.openTableRequireAuthentication
-            ? appConfig.auth.allowGuest ? await app.requireGuestAuthentication() : await app.requireAuthentication()
+        const authResult = this.appConfig.lobby.openTableRequireAuthentication
+            ? this.appConfig.auth.allowGuest ? await app.requireGuestAuthentication() : await app.requireAuthentication()
             : notAuthenticatedResult;
         if (authResult.authenticated) {
             app.executeCommand("app.selectTable", [table, authResult.wasAuthenticated]);
 
-            if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
+            if (this.appConfig.game.seatMode || this.appConfig.game.tablePreviewMode) {
                 const tableId = table.TableId.toString();
                 console.log("Save table id " + tableId + " for future auto select of this table.");
                 localStorage.setItem("tableId", tableId);
             }
 
-            if (appConfig.game.seatMode) {
+            if (this.appConfig.game.seatMode) {
                 app.executeCommand("page.seats");
             } else {
                 app.executeCommand("page.tables");
