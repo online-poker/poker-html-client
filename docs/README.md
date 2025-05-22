@@ -9,7 +9,7 @@ This product is UI application which run in following form-factors
 
 ## Application parts
 
-The application consist from multple UI areas. Each UI area represent a place where player can perform specific function.
+The application consists of multple UI areas. Each UI area represent a place where player can perform specific function.
 Areas:
 
 -   Login area
@@ -23,18 +23,18 @@ This area responsible for authorization in the application or user in the system
 
 ## Lobby area
 
-This is where user select a game to play. This area is responsible for game selection, filterig. Same for tournaments.
+This is where user select a game to play. This area is responsible for game selection, filtering. Same for tournaments.
 
 ## Table area
 
 This is where user play the game.
-This area is responsible for displaying tables, cards, chips, players, actions, chat, game log.
+This area is responsible for displaying tables, cards, chips, players, actions, chat, and the game log.
 For online individual games, this area also can contain control panel for the games
 
 This area represented by one of the following files
 
--   [html\pages\main\tables.html](Poker.Application.Shared\html\pages\main\tables.html)
--   [html\pages\main\tables-inline.html](Poker.Application.Shared\html\pages\main\tables-inline.html)
+-   [html/pages/main/tables.html](Poker.Application.Shared/html/pages/main/tables.html)
+-   [html/pages/main/tables-inline.html](Poker.Application.Shared/html/pages/main/tables-inline.html)
 
 ## Seat area
 
@@ -54,7 +54,7 @@ The game table has following structure:
 -   Game seats/Player in the game information like cards, chips, money.
 -   Control panel.
 
-Each Seat/Table player is separate component which embededed into different areas.
+Each Seat/Table player is a separate component which embededed into different areas.
 For example game seat in the online display this component, and Seat area in the offline also display this component + Control panel to represent the seat of the player.
 
 # Common templates
@@ -79,7 +79,7 @@ Table pots represented by the `table-pots-template` template.
 
 ## Player cards
 
-Whether I you need to display player cards, please use `player-cards-template` template.`
+If you need to display player cards, please use `player-cards-template` template.`
 
 # Player cards
 
@@ -91,7 +91,7 @@ In order to display player cards on the hands, we develop rather complicated mac
 - Adorment for the cards
 
 Cards on hand used for displaying actual cards value to the player, and participate in the animation.
-Folded cards used only for displaying folded cards. Both cards on hands and folded cards mutually exclusive to each other. 
+Folded cards used only for displaying folded cards. Both cards on hands and folded cards blocks mutually exclusive to each other. 
 If you have cards on hand, you will never have folded cards and vice versa.
 Closed cards is block which display closed cards for the player. They server as overlay over cards on hands or folded cards, 
 and as interactive control for opening card to the player. 
@@ -99,7 +99,7 @@ Adorment for the cards provide additional static arrangements for the cards, lik
 
 ## CSS classes which control blocks
 
-There following CSS classes which control UI
+The following CSS classes control the UI:
 
 - player-cards
 - on-hand
@@ -119,7 +119,7 @@ There following CSS classes which control UI
 - show-hole-card1
 - show-hole-card2
 
-`player-cards` class represent player cards. That's abstract concept and include UI block which displays 2 or 4 cards.
+`player-cards` represents the container component for player cards. That's abstract concept and include UI block which displays 2 or 4 cards.
 
 `on-hand` is an indication that this is player cards on hand. They always prominently visible in the UI.
 
