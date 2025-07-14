@@ -4,8 +4,9 @@ export class AnimationSettings {
 
     public static platform = "default";
 
-    public static setOverride(configuration: Partial<AnimationSettings>): void {
+    public static setOverride(configuration: Partial<AnimationSettings>, tabletConfiguration: Partial<AnimationSettings>): void {
         AnimationSettings.configurationOverride = configuration;
+        AnimationSettings.tabletConfigurationOverride = tabletConfiguration;
     }
 
     public static getSettings(): AnimationSettings {
@@ -16,6 +17,9 @@ export class AnimationSettings {
                 break;
             case "tablet":
                 settings = AnimationSettings.tabletSettings();
+                if (AnimationSettings.tabletConfigurationOverride) {
+                    settings = mergeDeep(settings, AnimationSettings.tabletConfigurationOverride);
+                }
                 break;
             default:
                 settings = AnimationSettings.defaultSettings();
@@ -40,11 +44,12 @@ export class AnimationSettings {
 
     public static tabletSettings() {
         const settings = new AnimationSettings();
-        settings.dealCardsTime = 500;
+        settings.dealCardsTime = 1500;
         return settings;
     }
 
     private static configurationOverride?: Partial<AnimationSettings>;
+    private static tabletConfigurationOverride?: Partial<AnimationSettings>;
 
     public dealCardsTime: number = 300;
     public finishGamePrePause: number = 100;
