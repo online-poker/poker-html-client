@@ -1,6 +1,7 @@
 ﻿import * as ko from "knockout";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
+import { _ } from "../languagemanager";
 import { GameActionsQueue } from "../table/gameactionsqueue";
 import { PlayerWinInformation } from "../table/handhistory";
 import { TableView } from "../table/tableview";
@@ -64,7 +65,7 @@ export class HandHistoryPopup extends PopupBase {
         this.detailedOperations(lastHand.detailedOperations());
         this.shortOperations(lastHand.shortOperations());
         this.cards(lastHand.cards());
-        this.lastHandTitle("История раздачи №" + lastHand.id);
+        this.lastHandTitle(_("handhistory.caption", { handId: lastHand.id }));
         this.playersData(lastHand.playersData());
         GameActionsQueue.waitDisabled = true;
         app.tablesPage.tablesShown(false);
