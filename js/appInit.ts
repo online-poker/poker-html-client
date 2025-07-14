@@ -74,9 +74,9 @@ export function registerTableView() {
     window["ActionBlock"] = ActionBlock;
 }
 
-export function bootstrap(localConfiguration?: Partial<AppConfig>, animationSettingsOverride?: Partial<AnimationSettings>) {
+export function bootstrap(localConfiguration?: Partial<AppConfig>, animationSettingsOverride?: Partial<AnimationSettings>, tabletAnimationSettingsOverride?: Partial<AnimationSettings>) {
     overrideConfiguration(localConfiguration || {});
-    AnimationSettings.setOverride(animationSettingsOverride || {});
+    AnimationSettings.setOverride(animationSettingsOverride || {}, tabletAnimationSettingsOverride || {});
 
     // tslint:disable:no-string-literal
     window["ko"] = ko;
