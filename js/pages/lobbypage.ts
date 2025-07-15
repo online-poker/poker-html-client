@@ -413,6 +413,7 @@ export class LobbyPage extends PageBase {
                 const tableId = table.TableId.toString();
                 console.log("Save table id " + table.TableId + " for future auto select of this table.");
                 settings.selectedTableId(table.TableId);
+                settings.saveSettings();
             }
 
             if (appConfig.game.seatMode) {
