@@ -51,12 +51,8 @@ export class HomePage extends PageBase {
                 return false;
             }
 
-            if ((/iphone|ipod|ipad/gi).test(navigator.platform)) {
-                if (!navigator.standalone) {
-                    return true;
-                }
-
-                return false;
+            if (document.body.classList.contains("poker-feature-single-seat")) {
+                return settings.login() !== "";
             }
 
             return false;

@@ -17,6 +17,7 @@ class Settings {
     public isGuest = ko.observable<boolean>(false);
     public cardsVariant = ko.observable<string>();
     public orientation = ko.observable<ScreenOrientation>();
+    public selectedTableId = ko.observable<number>();
 
     constructor() {
         this.login = ko.observable<string>();
@@ -40,6 +41,7 @@ class Settings {
         this.lastPage(this.getItemString("reload.lastPage", "main"));
         this.authToken(this.getItemString("reload.authToken", null));
         this.cardsVariant(this.getItemString("cardsVariant", "down"));
+        this.selectedTableId(this.getItemNumber("tableId", 0));
 
         const defaultOrientation = PageBlock.useDoubleView ? "landscape" : appConfig.ui.defaultOrientation;
         this.orientation(this.getItemString("orientation", defaultOrientation) as ScreenOrientation);

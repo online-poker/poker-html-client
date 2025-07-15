@@ -596,9 +596,8 @@ export class TableManager {
         }
     }
     private async getSavedSittingTables() {
-        const tableIdString = localStorage.getItem("tableId");
-        if (tableIdString !== null) {
-            const tableId = parseInt(tableIdString, 10);
+        const tableId = settings.selectedTableId();
+        if (tableId !== 0) {
             return [tableId];
         }
 
