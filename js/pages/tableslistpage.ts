@@ -1,5 +1,6 @@
 import { Game } from "@poker/api-server";
 import * as ko from "knockout";
+import { settings } from "poker/settings";
 import { App } from "../app";
 import { appConfig } from "../appconfig";
 import { debugSettings } from "../debugsettings";
@@ -15,9 +16,21 @@ export class TablesListPage extends PageBase {
     public tablesCaption: ko.Computed<string>;
     public tables: ko.ObservableArray<any>;
     public loading: ko.Observable<boolean>;
+    public showScreenOverlay: ko.Computed<boolean>;
 
     constructor() {
         super();
+        this.showScreenOverlay = ko.computed(() => {
+            if (!appConfig.ui.enableScreenOverlay) {
+                return false;
+            }
+
+            if (document.body.classList.contains("poker-feature-single-seat")) {
+                return settings.selectedTableId() !== 0;
+            }
+
+            return false;
+        });
         this.tables = ko.observableArray([]);
         this.tablesCaption = ko.computed(() => {
             return _("tablesList.headerCaption")
