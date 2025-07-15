@@ -60,6 +60,7 @@ class Settings {
         this.setItemNumber("reload.lastTime", this.lastTime(), 0);
         this.setItemString("cardsVariant", this.cardsVariant());
         this.setItemString("orientation", this.orientation());
+        this.setItemNumber("tableId", this.selectedTableId(), 0);
     }
     private getItemBoolean(name: string, defaultValue: boolean = false) {
         const item = localStorage.getItem(name) as string;
