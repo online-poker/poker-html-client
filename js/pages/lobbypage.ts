@@ -169,12 +169,8 @@ export class LobbyPage extends PageBase {
                 return false;
             }
 
-            if ((/iphone|ipod|ipad/gi).test(navigator.platform)) {
-                if (!navigator.standalone) {
-                    return true;
-                }
-
-                return false;
+            if (document.body.classList.contains("poker-feature-single-seat")) {
+                return settings.selectedTableId() !== 0;
             }
 
             return false;
@@ -356,10 +352,9 @@ export class LobbyPage extends PageBase {
             }
 
             if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
-                const tableIdString = localStorage.getItem("tableId");
-                if (tableIdString !== null) {
-                    const tableIdInt = parseInt(tableIdString, 10);
-                    const tableData = await gameApi.getTableById(tableIdInt);
+                const tableId = settings.selectedTableId();
+                if (tableId !== 0) {
+                    const tableData = await gameApi.getTableById(tableId);
                     if (tableData.Data) {
                         this.selectTable(tableData.Data);
                     }
@@ -416,8 +411,8 @@ export class LobbyPage extends PageBase {
 
             if (appConfig.game.seatMode || appConfig.game.tablePreviewMode) {
                 const tableId = table.TableId.toString();
-                console.log("Save table id " + tableId + " for future auto select of this table.");
-                localStorage.setItem("tableId", tableId);
+                console.log("Save table id " + table.TableId + " for future auto select of this table.");
+                settings.selectedTableId(table.TableId);
             }
 
             if (appConfig.game.seatMode) {
