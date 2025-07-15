@@ -1,5 +1,5 @@
 ﻿import * as ko from "knockout";
-import { _ } from "../languagemanager";
+import { _, l } from "../languagemanager";
 import {
     allBacksClassesFourCards,
     allBacksClassesTwoCards,
@@ -133,10 +133,11 @@ export class HandHistory extends TableMonitor {
             }
 
             let description: string;
+            const localizedPlayerName = l.currentLang() === "ru" ? playerName : playerName.replace("Игрок", "Player");
             if (winAmount > 0) {
-                description = _("handhistory.playerWon", { playerName, winAmount, combination })
+                description = _("handhistory.playerWon", { playerName: localizedPlayerName, winAmount, combination })
             } else {
-                description = _("handhistory.playerLose", { playerName, combination })
+                description = _("handhistory.playerLose", { playerName: localizedPlayerName, combination })
             }
 
             this.addShortOperation(description);
