@@ -248,6 +248,12 @@ export class TableView {
     public hasNotification = ko.observable(false);
     public notification = ko.observable("");
     public couldAddChips: ko.Computed<boolean>;
+    
+    /**
+     * Independent counter for the table. This component can be used for interactivity testing.
+     * It does not affect the game logic.
+     */
+    public flipper: ko.Observable<number> = ko.observable(0);
 
     /* If of the last message Id starting from which messages could be displayed */
     public lastMessageId = 0;
