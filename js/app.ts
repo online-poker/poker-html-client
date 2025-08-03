@@ -1154,11 +1154,11 @@ export class App {
         $("body").on("keyup", "input", function(event) {
             $(this).trigger("change");
         });
-        $("body").on("touchstart", ".button, .actionable", function(event) {
+        $("body").on("pointerdown", ".button, .actionable", function(event) {
             $(this).addClass("pressed");
-        }).on("touchend", ".button, .actionable", function(event) {
+        }).on("pointerup", ".button, .actionable", function(event) {
             $(this).removeClass("pressed");
-        }).on("touchcancel", ".button, .actionable", function(event) {
+        }).on("pointercancel", ".button, .actionable", function(event) {
             $(this).removeClass("pressed");
         });
     }

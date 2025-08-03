@@ -211,18 +211,18 @@ export class SoundManager {
             }
             /* tslint:enable:no-string-literal */
 
-            if (context.state === "suspended" && "ontouchstart" in window) {
+            if (context.state === "suspended" && "pointerdown" in window) {
                 const unlock = function () {
                     context.resume().then(function () {
-                        document.body.removeEventListener("touchstart", unlock);
-                        document.body.removeEventListener("touchend", unlock);
+                        document.body.removeEventListener("pointerdown", unlock);
+                        document.body.removeEventListener("pointerup", unlock);
 
                         resolve(true);
                     }, reject);
                 };
 
-                document.body.addEventListener("touchstart", unlock, false);
-                document.body.addEventListener("touchend", unlock, false);
+                document.body.addEventListener("pointerdown", unlock, false);
+                document.body.addEventListener("pointerup", unlock, false);
             } else {
                 resolve(false);
             }

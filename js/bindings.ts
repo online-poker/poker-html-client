@@ -300,7 +300,7 @@ export function registerBindings() {
                 wrapperValueAccessor = function(): any {
                     if (isFast) {
                         return {
-                            touchstart: handler,
+                            pointerdown: handler,
                         };
                     }
 
@@ -660,7 +660,7 @@ export function registerBindings() {
                     currentTargetElement.focus();
                 }, 0);
             };
-            ko.bindingHandlers.event.init(element, function() { return { touchstart: handler }; },
+            ko.bindingHandlers.event.init(element, function() { return { pointerdown: handler }; },
                 allBindings, viewModel, bindingContext);
         },
     };
