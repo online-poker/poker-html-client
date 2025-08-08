@@ -3398,7 +3398,11 @@ export class TableView {
             return "//" + window.location.hostname + ":" + (parseInt(window.location.port, 10) + seat) + "/embedded/seat";
         }
 
-        return "//seat" + seat + "." + window.location.host + "/embedded/seat";
+        if (window.location.hostname.split('.').length == 2) {
+            return "//seat" + seat + "." + window.location.host + "/embedded/seat";
+        }
+
+        return "//seat" + seat + window.location.host + "/embedded/seat";
     }
 
     /**
