@@ -19,7 +19,7 @@ export class TablePlaceModel {
      * Default avatar for unspecified images, and
      * images from unknown locations.
      */
-    public static DefaultAvatarUrl = "img/1px.png";
+    public static DefaultAvatarUrl = "/img/1px.png";
 
     /**
      * Id of the player
