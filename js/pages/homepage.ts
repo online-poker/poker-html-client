@@ -46,13 +46,13 @@ export class HomePage extends PageBase {
 
     constructor() {
         super();
-        this.showScreenOverlay = ko.computed(() => {
+        this.showScreenOverlay = ko.pureComputed(() => {
             if (!appConfig.ui.enableScreenOverlay) {
                 return false;
             }
 
-            if (document.body.classList.contains("poker-feature-single-seat")) {
-                return settings.login() !== "";
+            if (appConfig.game.seatMode) {
+                return !!settings.login()?.trim();
             }
 
             return false;
