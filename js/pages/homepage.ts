@@ -52,7 +52,7 @@ export class HomePage extends PageBase {
             }
 
             if (appConfig.game.seatMode) {
-                return !!settings.login();
+                return !!settings.login()?.trim();
             }
 
             return false;

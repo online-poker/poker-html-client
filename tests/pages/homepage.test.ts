@@ -50,6 +50,12 @@ describe("Home page", function () {
 
             expect(homePage.showScreenOverlay()).toEqual(false);
         });
+        it("if no login specified ('  ') in the configuration, allow enter login password", function () {
+            settings.login("  ");
+            const homePage = new HomePage();
+
+            expect(homePage.showScreenOverlay()).toEqual(false);
+        });
         it("if login specified in the configuration, enable screen overlay", function () {
             settings.login("user");
             const homePage = new HomePage();
