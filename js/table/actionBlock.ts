@@ -2,7 +2,7 @@
 import * as $ from "jquery";
 import * as ko from "knockout";
 import { authManager } from "poker/authmanager";
-import { orientationService } from "poker/services";
+import { getSoundManager, orientationService } from "poker/services";
 import { settings } from "poker/settings";
 import * as signals from "signals";
 import { App } from "../app";
@@ -742,24 +742,32 @@ export class ActionBlock {
         this.tableSlider.setValueSafe(nextValue);
         this.increasesCount(this.increasesCount() + 1);
         this.increaseCurrrentBetChips(1);
+        const soundManager = getSoundManager();
+        soundManager.playIncreaseBetOrRaise();
     }
     public increaseBetOrRaiseScale2() {
         const nextValue = this.tableSlider.current() + this.increaseStep2Amount();
         this.tableSlider.setValueSafe(nextValue);
         this.increasesCount(this.increasesCount() + 1);
         this.increaseCurrrentBetChips(2);
+        const soundManager = getSoundManager();
+        soundManager.playIncreaseBetOrRaise();
     }
     public increaseBetOrRaiseScale3() {
         const nextValue = this.tableSlider.current() + this.increaseStep3Amount();
         this.tableSlider.setValueSafe(nextValue);
         this.increasesCount(this.increasesCount() + 1);
         this.increaseCurrrentBetChips(3);
+        const soundManager = getSoundManager();
+        soundManager.playIncreaseBetOrRaise();
     }
     public increaseBetOrRaiseScale4() {
         const nextValue = this.tableSlider.current() + this.increaseStep4Amount();
         this.tableSlider.setValueSafe(nextValue);
         this.increasesCount(this.increasesCount() + 1);
         this.increaseCurrrentBetChips(4);
+        const soundManager = getSoundManager();
+        soundManager.playIncreaseBetOrRaise();
     }
     private increaseCurrrentBetChips(type: number) {
         let bets = this.currrentBetChips();
@@ -775,6 +783,8 @@ export class ActionBlock {
     }
     public setAllIn() {
         this.tableSlider.currentValue(this.maxAmountOfMoneyForOtherActivePlayers().toString());
+        const soundManager = getSoundManager();
+        soundManager.playIncreaseBetOrRaise();
     }
     public showChatPopup() {
         app.tableChatPopup.attach(this.tableView);
