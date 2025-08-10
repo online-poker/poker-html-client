@@ -172,6 +172,13 @@ export class SoundManager {
             this.quickPlay(`${this.basePath}/${this.variant}/flip_b.mp3`);
         }
     }
+    public playIncreaseBetOrRaise() {
+        if (!this.enabled() || !this.tableSoundsEnabled()) {
+            return;
+        }
+
+        this.quickPlay(`${this.basePath}/${this.variant}/bet.mp3`);
+    }
     private quickPlay(fileName: string) {
         /* tslint:disable:no-string-literal */
         if (window["Audio"] != null) {
