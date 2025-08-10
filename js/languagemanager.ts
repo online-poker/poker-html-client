@@ -1,4 +1,5 @@
 import { observable, Observable } from "knockout";
+import { appConfig } from "poker/appconfig"
 
 declare let messages: any;
 
@@ -8,10 +9,10 @@ export interface LanguageDescriptor {
 }
 
 export class LanguageManager {
-    public currentLang: Observable<string> = observable("ru");
+    public currentLang: Observable<string> = observable("en");
 
     constructor() {
-        const lang = localStorage.getItem("lang") || "ru";
+        const lang = localStorage.getItem("lang") || (appConfig.ui.defaultUILanguage || "en");
         this.currentLang(lang);
     }
 
