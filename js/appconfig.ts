@@ -91,6 +91,7 @@ export class AppConfig {
         isDesktopApp: false,
         realMoneyCurrencySymbol: "$",
         gameMoneySymbol: "",
+        defaultUILanguage: "en",
         allowExpandActionBlockGuestureOnlyOnMyTurn: false,
         usePortraitAndLandscapeOrientationModes: false,
         defaultOrientation: "landscape",
