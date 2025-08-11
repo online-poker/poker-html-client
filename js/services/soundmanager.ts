@@ -173,11 +173,10 @@ export class SoundManager {
         }
     }
     public playIncreaseBetOrRaise() {
-        if (!this.enabled() || !this.tableSoundsEnabled()) {
-            return;
-        }
-
-        this.quickPlay(`${this.basePath}/${this.variant}/bet.mp3`);
+        // if (!this.enabled() || !this.tableSoundsEnabled()) {
+        //     return;
+        // }
+        this.quickPlay(`${this.basePath}/${this.variant}/money.mp3`);
     }
     private quickPlay(fileName: string) {
         /* tslint:disable:no-string-literal */
