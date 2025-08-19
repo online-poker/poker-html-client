@@ -315,6 +315,12 @@ export class TableMenuPopup {
             this.commandExecutor.executeCommand("popup.rules");
         }
     }
+    public async showCombinations() {
+        const value = await app.requireAuthentication();
+        if (value.authenticated) {
+            this.commandExecutor.executeCommand("popup.combinations");
+        }
+    }
     public async showSweepstakesRules() {
         const value = await app.requireAuthentication();
         if (value.authenticated) {

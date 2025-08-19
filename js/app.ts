@@ -31,6 +31,7 @@ import {
     ChangePasswordPopup,
     ChatPopup,
     ContinueForgetPasswordPopup,
+    CombinationsPopup,
     CustomPopup,
     ForgetPasswordPopup,
     HandHistoryPopup,
@@ -106,6 +107,7 @@ export class App {
     public accountStatusPopup: AccountStatusPopup;
     public settingsPopup: SettingsPopup;
     public rulesPopup: RulesPopup;
+    public combinationsPopup: CombinationsPopup;
     public sweepstakesRulesPopup: SweepstakesRulesPopup;
     public newsPopup = new NewsPopup();
     public selectAvatarPopup = new SelectAvatarPopup();
@@ -147,6 +149,7 @@ export class App {
         this.joinTablePopup = new JoinTablePopup();
         this.settingsPopup = new SettingsPopup();
         this.rulesPopup = new RulesPopup();
+        this.combinationsPopup = new CombinationsPopup();
         this.sweepstakesRulesPopup = new SweepstakesRulesPopup();
         this.tableMenuPopup = new TableMenuPopup(this.tablesPage, this.commandManager, new AccountManager(), authManager);
         this.addMoneyPopup = new AddMoneyPopup();
@@ -178,6 +181,7 @@ export class App {
         this.bindPopup("joinTable", this.joinTablePopup);
         this.bindPopup("settings", this.settingsPopup);
         this.bindPopup("rules", this.rulesPopup);
+        this.bindPopup("combinations", this.combinationsPopup);
         this.bindPopup("sweepstakesRules", this.sweepstakesRulesPopup);
         this.bindPopup("tableMenu", this.tableMenuPopup);
         this.bindPopup("addMoney", this.addMoneyPopup);
