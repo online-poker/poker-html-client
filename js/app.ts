@@ -36,6 +36,7 @@ import {
     ForgetPasswordPopup,
     HandHistoryPopup,
     JoinTablePopup,
+    LanguageSelectionPopup,
     MorePopup,
     NewsPopup,
     OkCancelPopup,
@@ -108,6 +109,7 @@ export class App {
     public settingsPopup: SettingsPopup;
     public rulesPopup: RulesPopup;
     public combinationsPopup: CombinationsPopup;
+    public languageSelectionPopup: LanguageSelectionPopup;
     public sweepstakesRulesPopup: SweepstakesRulesPopup;
     public newsPopup = new NewsPopup();
     public selectAvatarPopup = new SelectAvatarPopup();
@@ -157,6 +159,7 @@ export class App {
         this.tableChatPopup = new ChatPopup();
         this.handHistoryPopup = new HandHistoryPopup();
         this.accountStatusPopup = new AccountStatusPopup();
+        this.languageSelectionPopup = new LanguageSelectionPopup();
 
         this.morePopup = new MorePopup();
 
@@ -191,6 +194,7 @@ export class App {
         this.bindPopup("accountStatus", this.accountStatusPopup);
         this.bindPopup("news", this.newsPopup);
         this.bindPopup("selectAvatar", this.selectAvatarPopup);
+        this.bindPopup("languageSelection", this.languageSelectionPopup);
         this.bindPageBlock("lobby", this.lobbyPageBlock);
         this.bindPageBlock("other", this.otherPageBlock);
         this.bindPageBlock("cashier", this.cashierPageBlock);
