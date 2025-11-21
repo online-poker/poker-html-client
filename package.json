@@ -72,7 +72,7 @@
     "@microsoft/signalr": "^8.0.7",
     "@poker/api-server": "0.1.0-dev.20231113120601",
     "@types/applicationinsights-js": "^1.0.5",
-    "iframe-touch-relay": "^0.1.2",
+    "iframe-touch-relay": "^0.1.3",
     "isomorphic-fetch": "^3.0.0",
     "jest-environment-jsdom": "^29.7.0",
     "jquery": "3.7.1",

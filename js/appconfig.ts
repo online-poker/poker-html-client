@@ -105,6 +105,8 @@ export class AppConfig {
         hasKeyPad: false,
         relayTouches: false,
         debugTouches: false,
+        usePointerEvents: false,
+        useTap: true,
         touchToggleCards: false,
         fastTouch: false,
         advancedBets: false,

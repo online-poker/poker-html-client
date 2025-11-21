@@ -16,6 +16,8 @@ import * as timeService from "./timeservice";
 
 declare const app: App;
 const fastDefault = appConfig.ui.fastTouch;
+const usePointerEvents = appConfig.ui.usePointerEvents;
+const useTap = appConfig.ui.useTap;
 
 export function registerBindings() {
     // Binding set loading variable for short amount of time.
@@ -299,14 +301,26 @@ export function registerBindings() {
             if (platformInfo.hasTouch()) {
                 wrapperValueAccessor = function(): any {
                     if (isFast) {
-                        return {
-                            pointerdown: handler,
-                        };
+                        if (usePointerEvents) {
+                            return {
+                                pointerdown: handler,
+                            };
+                        } else {
+                            return {
+                                touchstart: handler,
+                            };
+                        }
                     }
 
-                    return {
-                        tap: handler,
-                    };
+                    if (useTap) {
+                        return {
+                            tap: handler,
+                        };
+                    } else {
+                      return {
+                          click: handler,
+                      };
+                    }
                 };
             } else {
                 wrapperValueAccessor = function() {
