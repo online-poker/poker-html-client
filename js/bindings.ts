@@ -16,10 +16,12 @@ import * as timeService from "./timeservice";
 
 declare const app: App;
 const fastDefault = appConfig.ui.fastTouch;
-const usePointerEvents = appConfig.ui.usePointerEvents;
-const useTap = appConfig.ui.useTap;
+let usePointerEvents = appConfig.ui.usePointerEvents;
+let useTap = appConfig.ui.useTap;
 
 export function registerBindings() {
+    usePointerEvents = appConfig.ui.usePointerEvents;
+    useTap = appConfig.ui.useTap;
     // Binding set loading variable for short amount of time.
     ko.bindingHandlers["loading"] = {
         update(
