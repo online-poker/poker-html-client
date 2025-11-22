@@ -267,7 +267,13 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
         if (appConfig.game.tablePreviewMode && appConfig.ui.relayTouches) {
             setTimeout(function() {
                 zones = document.getElementsByTagName("iframe");
-                attachRelayToPage(zones, { decodeCoordinates, debug: appConfig.ui.debugTouches });
+                attachRelayToPage(zones, { 
+                  decodeCoordinates, 
+                  debug: appConfig.ui.debugTouches,
+                  attachMouseEvents: true,
+                  attachPointerEvents: appConfig.ui.usePointerEvents,
+                  attachTouchEvents: appConfig.ui.useTap,
+                });
             }, 1000);
         }
 
