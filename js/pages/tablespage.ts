@@ -453,7 +453,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
 
 function getZonesAngle(element: HTMLElement) {
     if (zones.length == 2) {
-        const angle = element === zones[0] ? 90 : -90;
+        const angle = element === zones[0] ? -90 : 90;
         return angle;
     } else if (zones.length == 6) {
         const angle = element === zones[0] ? 180 :
