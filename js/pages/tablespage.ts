@@ -452,10 +452,15 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
 }
 
 function getZonesAngle(element: HTMLElement) {
-    if (zones.length == 2) {
+    if (!zones) {
+      console.warn("No zones for iframe-relay-touch provided. This indicates error in HTML files authoring");
+      return 0;
+    }
+
+    if (zones.length === 2) {
         const angle = element === zones[0] ? -90 : 90;
         return angle;
-    } else if (zones.length == 6) {
+    } else if (zones.length === 6) {
         const angle = element === zones[0] ? 180 :
             element === zones[1] ? 90 :
             element === zones[2] ? 0 :
@@ -463,7 +468,7 @@ function getZonesAngle(element: HTMLElement) {
             element === zones[4] ? -90 :
             element === zones[5] ? 180 : 0;
         return angle;
-    } else if (zones.length == 8) {
+    } else if (zones.length === 8) {
         const angle = element === zones[0] ? 180 :
             element === zones[1] ? 45 :
             element === zones[2] ? -45 :
