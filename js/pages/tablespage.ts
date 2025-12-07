@@ -451,7 +451,7 @@ export class TablesPage extends PageBase implements ICurrentTableProvider {
     }
 }
 
-function getZonesAngle(element: HTMLElement) {
+export function getZonesAngle(element: HTMLElement) {
     if (!zones) {
       console.warn("No zones for iframe-relay-touch provided. This indicates error in HTML files authoring");
       return 0;
@@ -470,19 +470,23 @@ function getZonesAngle(element: HTMLElement) {
         return angle;
     } else if (zones.length === 8) {
         const angle = element === zones[0] ? 180 :
-            element === zones[1] ? 45 :
-            element === zones[2] ? -45 :
+            element === zones[1] ? 45 + 180 :
+            element === zones[2] ? -45 + 180 :
             element === zones[3] ? 0 :
             element === zones[4] ? 0 :
-            element === zones[5] ? -135 :
-            element === zones[6] ? 135 :
+            element === zones[5] ? -135 + 180 :
+            element === zones[6] ? 135 + 180 :
             element === zones[7] ? 180 : 0;
         return angle;
     } 
     return 0;
 }
 
-function decodeCoordinates(element: HTMLElement, x: number, y: number) {
+export function debugSetZones(zoneElements: HTMLElement[]) {
+    zones = zoneElements;
+}
+
+export function decodeCoordinates(element: HTMLElement, x: number, y: number) {
     const boundary = element.getBoundingClientRect();
     const clientX = x - boundary.left;
     const clientY = y - boundary.top;
@@ -511,6 +515,54 @@ function decodeCoordinates(element: HTMLElement, x: number, y: number) {
             result = { clientX: clientY, clientY: totalHeight - clientX };
         } else if (angle === 90) {
             result = { clientX: totalWidth - clientY, clientY: clientX };
+        // handle 225 degree rotation
+        } else if (angle === 225) {
+            const clientX = x - boundary.right;
+            const clientY = y - boundary.bottom;
+            const transX = clientX + totalHeight * (Math.sqrt(2) / 2);
+            const transY = clientY;
+            result = { 
+                clientX: - (transX + transY) / Math.sqrt(2),
+                //clientX: transX,
+                clientY: - (-transX + transY) / Math.sqrt(2),
+                //clientY: transY,
+            };
+        // handle 45 degree rotation
+        } else if (angle === 45) {
+            const clientX = x - boundary.left;
+            const clientY = y - boundary.top;
+            const transX = clientX - totalHeight / Math.sqrt(2);
+            const transY = clientY;
+            result = { 
+                clientX: (transX + transY) / Math.sqrt(2),
+                clientY: (-transX + transY) / Math.sqrt(2),
+                // clientX: transX,
+                // clientY: transY,
+            };
+        // handle 135 degree rotation
+        } else if (angle === 135) {
+            const clientX = x - boundary.left;
+            const clientY = y - boundary.top;
+            const transX = clientX;
+            const transY = clientY - totalWidth/ Math.sqrt(2);
+            result = { 
+                clientX: (transX - transY) / Math.sqrt(2),
+                clientY: (transX + transY) / Math.sqrt(2),
+                //clientX: transX,
+                //clientY: transY,
+            };
+        // handle 315 degree rotation
+        } else if (angle === 315) {
+            const clientX = x - boundary.right;
+            const clientY = y - boundary.top;
+            const transX = clientX;
+            const transY = clientY - totalHeight/ Math.sqrt(2);
+            result = { 
+                clientX: -(transX - transY) / Math.sqrt(2),
+                clientY: -(transX + transY) / Math.sqrt(2),
+                //clientX: transX,
+                //clientY: transY,
+            };
         } else {
             result = { clientX, clientY };
         }
