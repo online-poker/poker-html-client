@@ -2813,6 +2813,7 @@ export class TableView {
         actions: GameActionStartInformation[],
         dealerSeat: number) {
         this.gameFinished(false);
+        this.dealsFinished(false);
         this.clearGameFinshedTimer();
         this.prizesDistributed(false);
         this.currentGameId(gameId);
