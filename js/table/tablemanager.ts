@@ -1055,6 +1055,20 @@ export class TableManager {
 
             tableView.onTableGameTypeChanged(gameType);
         };
+
+        gameHub.client.DealsFinished = (tableId, gameId) => {
+            if (wrapper.terminated) {
+                return;
+            }
+
+            const tableView = this.getTableById(tableId);
+            if (tableView == null) {
+                console.warn(`Receive unexpected DealsFinished(${tableId},${gameId})`);
+                return;
+            }
+
+            tableView.onDealsFinished(gameId);
+        };
         gameHub.client.TableTournamentChanged = (tableId, tournamentId) => {
             if (wrapper.terminated) {
                 return;
