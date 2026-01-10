@@ -332,6 +332,13 @@ interface GameHubClient {
     FinalTableCardsOpened: (tableId: number, cards: string) => void;
 
     /**
+     * Informs that you cannot make deals in the game.
+     * @param tableId Id of the table where deals finished.
+     * @param gameId Id of the game where deals finished.
+     */
+    DealsFinished: (tableId: number, gameId: number) => void;
+
+    /**
      * Inform that table bet parameters changed.
      * @param tableId Id of the table where bet paramters changed.
      * @param smallBlind New value of small blind on the table
