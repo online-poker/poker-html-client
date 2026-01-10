@@ -332,7 +332,7 @@ interface GameHubClient {
     FinalTableCardsOpened: (tableId: number, cards: string) => void;
 
     /**
-     * Informs that you cannot make deals in the game.
+     * Informs that dealing has finished in the game.
      * @param tableId Id of the table where deals finished.
      * @param gameId Id of the game where deals finished.
      */

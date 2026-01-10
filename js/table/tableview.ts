@@ -256,7 +256,7 @@ export class TableView {
     public flipper: ko.Observable<number> = ko.observable(0);
 
     /**
-     * Indicates if making deals possible in the game
+     * Indicates that all deals in the current game have finished.
      */
     public dealsFinished = ko.observable(false);
 
