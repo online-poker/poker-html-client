@@ -1063,7 +1063,7 @@ export class TableManager {
 
             const tableView = this.getTableById(tableId);
             if (tableView == null) {
-                console.warn(`Receive unexpected TableBetParametersChanged(${tableId},${gameId}`);
+                console.warn(`Receive unexpected DealsFinished(${tableId},${gameId})`);
                 return;
             }
 
