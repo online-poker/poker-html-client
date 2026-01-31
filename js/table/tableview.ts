@@ -3353,7 +3353,7 @@ export class TableView {
      */
     private initHandHistory() {
         this.handHistory = new HandHistory(this);
-        this.lastHandHistory = ko.observable<HandHistory>();
+        this.lastHandHistory = ko.observable<HandHistory | null>(null);
         this.hasPreviousHand = ko.computed(() => {
             const lastHand = this.lastHandHistory();
             return lastHand != null
