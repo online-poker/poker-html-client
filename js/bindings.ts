@@ -616,7 +616,13 @@ export function registerBindings() {
             ko.bindingHandlers["command"].init!(element, function(): any {
                 return {
                     command: function() {
-                        element.parentElement!.scrollBy({ top: direction === "down" ? 100 : -100, behavior: "smooth" });
+                        const parentElement = element.parentElement;
+                        if (parentElement) {
+                            parentElement.scrollBy({ 
+                                top: direction === "down" ? 100 : -100,
+                                behavior: "smooth"
+                            });
+                        }
                     }
                 }
             }, allBindingsAccessor, viewModel, bindingContext);
