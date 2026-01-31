@@ -205,7 +205,7 @@ export class TableView {
     public onMyTurn: Signal;
     public onGamefinished: Signal;
     public tablePlaces: TablePlaces;
-    public lastHandHistory: ko.Observable<HandHistory>;
+    public lastHandHistory: ko.Observable<HandHistory | null> = ko.observable<HandHistory | null>(null);
     public hasPreviousHand: ko.Computed<boolean>;
     public tableBetsCaption: ko.Computed<string>;
     public currentHandCaption: ko.Computed<string>;
