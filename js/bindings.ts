@@ -608,6 +608,27 @@ export function registerBindings() {
         },
     };
     ko.bindingHandlers["scroll"] = scrollHandler as any;
+    const scrollControlHandler = {
+        init(
+            element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: ko.AllBindings,
+            viewModel: any, bindingContext: ScrollKnockoutBindingContext) {
+            const direction = valueAccessor() as string;
+            ko.bindingHandlers["command"].init!(element, function(): any {
+                return {
+                    command: function() {
+                        const parentElement = element.parentElement;
+                        if (parentElement) {
+                            parentElement.scrollBy({ 
+                                top: direction === "down" ? 100 : -100,
+                                behavior: "smooth"
+                            });
+                        }
+                    }
+                }
+            }, allBindingsAccessor, viewModel, bindingContext);
+        },
+    };
+    ko.bindingHandlers["scrollcontrol"] = scrollControlHandler as any;
     const betHandler = {
         useShortMoneyRepresentationForBets: false,
         minConvertibleValue: 10000,
