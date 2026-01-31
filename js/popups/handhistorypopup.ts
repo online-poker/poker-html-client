@@ -60,13 +60,15 @@ export class HandHistoryPopup extends PopupBase {
         this.showHistoryModeSelector(handHistoryConfig.showPictureHistory && handHistoryConfig.showTextHistory);
         const view = this.tableView();
         const lastHand = view.lastHandHistory();
-        this.has2Cards = ko.observable<boolean>(lastHand.gameType() === 1 ? true : false);
-        this.has4Cards = ko.observable<boolean>(lastHand.gameType() === 1 ? false : true);
-        this.detailedOperations(lastHand.detailedOperations());
-        this.shortOperations(lastHand.shortOperations());
-        this.cards(lastHand.cards());
-        this.lastHandTitle(_("handhistory.caption", { handId: lastHand.id }));
-        this.playersData(lastHand.playersData());
+        if (lastHand) {
+            this.has2Cards = ko.observable<boolean>(lastHand.gameType() === 1 ? true : false);
+            this.has4Cards = ko.observable<boolean>(lastHand.gameType() === 1 ? false : true);
+            this.detailedOperations(lastHand.detailedOperations());
+            this.shortOperations(lastHand.shortOperations());
+            this.cards(lastHand.cards());
+            this.lastHandTitle(_("handhistory.caption", { handId: lastHand.id }));
+            this.playersData(lastHand.playersData());
+        }
         GameActionsQueue.waitDisabled = true;
         app.tablesPage.tablesShown(false);
         app.popupClosed.addOnce(function (popupName: string) {
