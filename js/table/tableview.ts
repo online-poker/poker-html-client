@@ -255,6 +255,11 @@ export class TableView {
      */
     public flipper: ko.Observable<number> = ko.observable(0);
 
+    /**
+     * Indicates that all deals in the current game have finished.
+     */
+    public dealsFinished = ko.observable(false);
+
     /* If of the last message Id starting from which messages could be displayed */
     public lastMessageId = 0;
 
@@ -1356,6 +1361,12 @@ export class TableView {
         this.setTableGameTypeNextGame(gameType);
     }
 
+    public onDealsFinished(gameId: number) {
+        this.dealsFinished(true);
+        this.actionBlock.dealsAllowed(false);
+        this.startGameFinishedTimer();
+    }
+
     /**
      * Notifies that table is tournament table.
      * @param tournamentId Id of the tournament to which table becomes belonging.
@@ -1432,6 +1443,7 @@ export class TableView {
             this.actionBlock.showHoleCard1Enabled(true);
             this.actionBlock.showHoleCard2Enabled(true);
             this.actionBlock.dealsAllowed(true);
+            this.dealsFinished(false);
             timeService.setTimeout(() => {
                 this.actionBlock.updateBounds();
             }, 500);
@@ -1518,7 +1530,6 @@ export class TableView {
             this.queue.pushCallback(() => {
                 this.logGameEvent("Game finished");
                 this.gameFinished(true);
-                this.startGameFinishedTimer();
                 this.actionBlock.expanded(false);
                 this.gameStarted(false);
                 this.gamePlayers([]);
@@ -1560,7 +1571,6 @@ export class TableView {
             this.queue.pushCallback(() => {
                 this.logGameEvent("Game finished");
                 this.gameFinished(true);
-                this.startGameFinishedTimer();
                 this.actionBlock.expanded(false);
                 this.gameStarted(false);
                 this.gamePlayers([]);
@@ -2803,6 +2813,7 @@ export class TableView {
         actions: GameActionStartInformation[],
         dealerSeat: number) {
         this.gameFinished(false);
+        this.dealsFinished(false);
         this.clearGameFinshedTimer();
         this.prizesDistributed(false);
         this.currentGameId(gameId);
@@ -3040,6 +3051,7 @@ export class TableView {
             // Allow deals only when your cards is recived.
             if (!oldCardsReceived) {
                 this.actionBlock.dealsAllowed(true);
+                this.dealsFinished(false);
                 this.gameStarted(true);
                 isHoleCards = true;
                 this.handHistory.onPlayerHoleCards(playerId, cards);
