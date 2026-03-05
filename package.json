@@ -74,7 +74,7 @@
     "@types/applicationinsights-js": "^1.0.5",
     "iframe-touch-relay": "^0.1.4",
     "isomorphic-fetch": "^3.0.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "jest-environment-jsdom": "^30.2.0",
     "jquery": "3.7.1",
     "knockout": "3.5.1",
     "knockout.validation": "^2.0.4",
